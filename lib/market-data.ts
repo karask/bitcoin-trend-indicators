@@ -1,19 +1,33 @@
 import type { Candle, Timeframe } from "./regimes";
 
 export type SourceId = "bitstamp" | "binance" | "kraken" | "coinbase";
+export type AssetId = "btc" | "eth" | "sol";
+
+export interface AssetDefinition {
+  id: AssetId;
+  label: string;
+  symbol: string;
+  defaultSource: SourceId;
+}
 
 export interface SourceDefinition {
+  asset: AssetId;
   id: SourceId;
   label: string;
   market: string;
   denomination: string;
   historyNote: string;
+  providerSymbol: string;
+  historyStart: number;
 }
 
 export interface MarketDataset {
+  asset: AssetId;
+  assetLabel: string;
   source: SourceId;
   sourceLabel: string;
   market: string;
+  denomination: string;
   timeframe: Timeframe;
   candles: Candle[];
   retrievedAt: string;
@@ -31,6 +45,7 @@ export interface MarketDataset {
 }
 
 export interface SpotQuote {
+  asset: AssetId;
   source: SourceId;
   sourceLabel: string;
   market: string;
@@ -39,12 +54,36 @@ export interface SpotQuote {
   retrievedAt: string;
 }
 
-export const SOURCES: SourceDefinition[] = [
-  { id: "bitstamp", label: "Bitstamp", market: "BTC/USD", denomination: "USD", historyNote: "Canonical long-history daily series" },
-  { id: "binance", label: "Binance", market: "BTC/USDT", denomination: "USDT", historyNote: "UTC cross-venue validation" },
-  { id: "kraken", label: "Kraken", market: "BTC/USD", denomination: "USD", historyNote: "REST validation; unfinished candle excluded" },
-  { id: "coinbase", label: "Coinbase Exchange", market: "BTC/USD", denomination: "USD", historyNote: "USD-denominated validation venue" },
+export const ASSETS: AssetDefinition[] = [
+  { id: "btc", label: "Bitcoin", symbol: "BTC", defaultSource: "bitstamp" },
+  { id: "eth", label: "Ethereum", symbol: "ETH", defaultSource: "bitstamp" },
+  { id: "sol", label: "Solana", symbol: "SOL", defaultSource: "binance" },
 ];
+
+export const SOURCES: SourceDefinition[] = [
+  { asset: "btc", id: "bitstamp", label: "Bitstamp", market: "BTC/USD", denomination: "USD", providerSymbol: "btcusd", historyStart: Date.UTC(2011, 7, 18), historyNote: "Canonical long-history BTC/USD daily series" },
+  { asset: "btc", id: "binance", label: "Binance", market: "BTC/USDT", denomination: "USDT", providerSymbol: "BTCUSDT", historyStart: Date.UTC(2017, 7, 17), historyNote: "UTC cross-venue validation from August 2017" },
+  { asset: "btc", id: "kraken", label: "Kraken", market: "BTC/USD", denomination: "USD", providerSymbol: "XBTUSD", historyStart: Date.UTC(2013, 9, 6), historyNote: "REST validation window; unfinished candle excluded" },
+  { asset: "btc", id: "coinbase", label: "Coinbase Exchange", market: "BTC/USD", denomination: "USD", providerSymbol: "BTC-USD", historyStart: Date.UTC(2015, 6, 20), historyNote: "USD-denominated validation history" },
+  { asset: "eth", id: "bitstamp", label: "Bitstamp", market: "ETH/USD", denomination: "USD", providerSymbol: "ethusd", historyStart: Date.UTC(2017, 7, 16), historyNote: "Continuous ETH/USD history from August 2017" },
+  { asset: "eth", id: "binance", label: "Binance", market: "ETH/USDT", denomination: "USDT", providerSymbol: "ETHUSDT", historyStart: Date.UTC(2017, 7, 17), historyNote: "UTC ETH/USDT history from August 2017" },
+  { asset: "eth", id: "kraken", label: "Kraken", market: "ETH/USD", denomination: "USD", providerSymbol: "ETHUSD", historyStart: Date.UTC(2015, 7, 8), historyNote: "Venue dates to 2015; public REST returns its latest 720 candles" },
+  { asset: "eth", id: "coinbase", label: "Coinbase Exchange", market: "ETH/USD", denomination: "USD", providerSymbol: "ETH-USD", historyStart: Date.UTC(2016, 4, 18), historyNote: "Long ETH/USD validation history from May 2016" },
+  { asset: "sol", id: "bitstamp", label: "Bitstamp", market: "SOL/USD", denomination: "USD", providerSymbol: "solusd", historyStart: Date.UTC(2022, 7, 18), historyNote: "SOL/USD validation history from August 2022" },
+  { asset: "sol", id: "binance", label: "Binance", market: "SOL/USDT", denomination: "USDT", providerSymbol: "SOLUSDT", historyStart: Date.UTC(2020, 7, 11), historyNote: "Canonical long-history SOL/USDT series from August 2020" },
+  { asset: "sol", id: "kraken", label: "Kraken", market: "SOL/USD", denomination: "USD", providerSymbol: "SOLUSD", historyStart: Date.UTC(2021, 5, 17), historyNote: "SOL/USD validation; public REST returns its latest 720 candles" },
+  { asset: "sol", id: "coinbase", label: "Coinbase Exchange", market: "SOL/USD", denomination: "USD", providerSymbol: "SOL-USD", historyStart: Date.UTC(2021, 5, 17), historyNote: "SOL/USD validation history from June 2021" },
+];
+
+export function sourcesForAsset(asset: AssetId): SourceDefinition[] {
+  return SOURCES.filter(source => source.asset === asset);
+}
+
+export function marketDefinition(asset: AssetId, source: SourceId): SourceDefinition {
+  const definition = SOURCES.find(item => item.asset === asset && item.id === source);
+  if (!definition) throw new Error(`Unsupported ${asset.toUpperCase()} market source`);
+  return definition;
+}
 
 const DAY = 86_400_000;
 
@@ -112,19 +151,19 @@ export function parseSpotPrice(source: SourceId, body: unknown): number {
   return price;
 }
 
-export async function getSpotQuote(source: SourceId): Promise<SpotQuote> {
-  const sourceDef = SOURCES.find(item => item.id === source);
-  if (!sourceDef) throw new Error("Unsupported market source");
+export async function getSpotQuote(asset: AssetId, source: SourceId): Promise<SpotQuote> {
+  const sourceDef = marketDefinition(asset, source);
   const url = source === "bitstamp"
-    ? "https://www.bitstamp.net/api/v2/ticker/btcusd/"
+    ? `https://www.bitstamp.net/api/v2/ticker/${sourceDef.providerSymbol}/`
     : source === "binance"
-      ? "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
+      ? `https://api.binance.com/api/v3/ticker/price?symbol=${sourceDef.providerSymbol}`
       : source === "kraken"
-        ? "https://api.kraken.com/0/public/Ticker?pair=XBTUSD"
-        : "https://api.exchange.coinbase.com/products/BTC-USD/ticker";
-  const headers = source === "coinbase" ? { "User-Agent": "BTC-Regime-Lab/1.0" } : undefined;
+        ? `https://api.kraken.com/0/public/Ticker?pair=${sourceDef.providerSymbol}`
+        : `https://api.exchange.coinbase.com/products/${sourceDef.providerSymbol}/ticker`;
+  const headers = source === "coinbase" ? { "User-Agent": "Crypto-Regime-Lab/1.0" } : undefined;
   const body = await fetchJson(url, headers);
   return {
+    asset,
     source,
     sourceLabel: sourceDef.label,
     market: sourceDef.market,
@@ -134,11 +173,12 @@ export async function getSpotQuote(source: SourceId): Promise<SpotQuote> {
   };
 }
 
-async function bitstampDaily(): Promise<Candle[]> {
+async function bitstampDaily(sourceDef: SourceDefinition): Promise<Candle[]> {
   const found = new Map<number, Candle>();
   let end = Math.floor(Date.now() / 1000);
-  for (let page = 0; page < 7; page++) {
-    const url = `https://www.bitstamp.net/api/v2/ohlc/btcusd/?step=86400&limit=1000&end=${end}&exclude_current_candle=true`;
+  const pages = Math.min(20, Math.ceil((Date.now() - sourceDef.historyStart) / (1000 * DAY)) + 1);
+  for (let page = 0; page < pages; page++) {
+    const url = `https://www.bitstamp.net/api/v2/ohlc/${sourceDef.providerSymbol}/?step=86400&limit=1000&end=${end}&exclude_current_candle=true`;
     const body = await fetchJson(url) as { data?: { ohlc?: Array<Record<string, string>> } };
     const rows = body.data?.ohlc ?? [];
     for (const row of rows) {
@@ -151,11 +191,11 @@ async function bitstampDaily(): Promise<Candle[]> {
   return [...found.values()];
 }
 
-async function binanceDaily(): Promise<Candle[]> {
+async function binanceDaily(sourceDef: SourceDefinition): Promise<Candle[]> {
   const found: Candle[] = [];
-  let startTime = Date.UTC(2017, 7, 17);
-  for (let page = 0; page < 5; page++) {
-    const url = `https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=1000&startTime=${startTime}`;
+  let startTime = sourceDef.historyStart;
+  for (let page = 0; page < 20; page++) {
+    const url = `https://api.binance.com/api/v3/klines?symbol=${sourceDef.providerSymbol}&interval=1d&limit=1000&startTime=${startTime}`;
     const rows = await fetchJson(url) as Array<Array<number | string>>;
     if (!rows.length) break;
     for (const row of rows) found.push(asCandle(row[0], row[1], row[2], row[3], row[4], row[5]));
@@ -166,27 +206,29 @@ async function binanceDaily(): Promise<Candle[]> {
   return found.filter(c => c.time < today);
 }
 
-async function krakenCandles(timeframe: Timeframe): Promise<Candle[]> {
+async function krakenCandles(sourceDef: SourceDefinition, timeframe: Timeframe): Promise<Candle[]> {
   const interval = timeframe === "1w" ? 10080 : 1440;
-  const body = await fetchJson(`https://api.kraken.com/0/public/OHLC?pair=XBTUSD&interval=${interval}`) as { error?: string[]; result?: Record<string, unknown> };
+  const body = await fetchJson(`https://api.kraken.com/0/public/OHLC?pair=${sourceDef.providerSymbol}&interval=${interval}`) as { error?: string[]; result?: Record<string, unknown> };
   if (body.error?.length) throw new Error(body.error.join(", "));
   const key = Object.keys(body.result ?? {}).find(k => k !== "last");
   const rows = key ? body.result?.[key] as Array<Array<number | string>> : [];
   return rows.slice(0, -1).map(row => asCandle(Number(row[0]) * 1000, row[1], row[2], row[3], row[4], row[6]));
 }
 
-async function coinbaseDaily(): Promise<Candle[]> {
+async function coinbaseDaily(sourceDef: SourceDefinition): Promise<Candle[]> {
   const found = new Map<number, Candle>();
   let end = new Date(Date.now() - DAY);
-  for (let page = 0; page < 8; page++) {
+  const pages = Math.min(30, Math.ceil((Date.now() - sourceDef.historyStart) / (299 * DAY)) + 1);
+  for (let page = 0; page < pages; page++) {
     const start = new Date(end.getTime() - 299 * DAY);
     const params = new URLSearchParams({ granularity: "86400", start: start.toISOString(), end: end.toISOString() });
-    const rows = await fetchJson(`https://api.exchange.coinbase.com/products/BTC-USD/candles?${params}`, { "User-Agent": "BTC-Regime-Lab/1.0" }) as Array<Array<number>>;
+    const rows = await fetchJson(`https://api.exchange.coinbase.com/products/${sourceDef.providerSymbol}/candles?${params}`, { "User-Agent": "Crypto-Regime-Lab/1.0" }) as Array<Array<number>>;
     for (const row of rows) found.set(row[0] * 1000, asCandle(row[0] * 1000, row[3], row[2], row[1], row[4], row[5]));
     if (rows.length < 2) break;
     end = new Date(Math.min(...rows.map(row => row[0])) * 1000 - DAY);
+    if (end.getTime() < sourceDef.historyStart) break;
   }
-  return [...found.values()];
+  return [...found.values()].filter(candle => candle.time >= sourceDef.historyStart);
 }
 
 export function aggregateWeekly(daily: Candle[]): Candle[] {
@@ -207,14 +249,20 @@ export function aggregateWeekly(daily: Candle[]): Candle[] {
   });
 }
 
-function fallbackDaily(): Candle[] {
+function fallbackDaily(asset: AssetId): Candle[] {
   const candles: Candle[] = [];
-  const start = Date.UTC(2011, 7, 18);
-  let previous = 10.2;
+  const seeds: Record<AssetId, { start: number; first: number; target: number }> = {
+    btc: { start: Date.UTC(2011, 7, 18), first: 10.2, target: 100_000 },
+    eth: { start: Date.UTC(2015, 7, 8), first: 1.1, target: 4_000 },
+    sol: { start: Date.UTC(2020, 7, 11), first: 3.0, target: 180 },
+  };
+  const seed = seeds[asset];
+  const start = seed.start;
+  let previous = seed.first;
   const count = Math.floor((Date.now() - start) / DAY) - 1;
   for (let i = 0; i < count; i++) {
     const time = start + i * DAY;
-    const trend = Math.exp(Math.log(100_000 / 10.2) * i / count);
+    const trend = seed.first * Math.exp(Math.log(seed.target / seed.first) * i / count);
     const cycle = 1 + 0.34 * Math.sin(i / 195) + 0.1 * Math.sin(i / 29);
     const close = Math.max(2, trend * cycle);
     const open = previous;
@@ -225,22 +273,30 @@ function fallbackDaily(): Candle[] {
   return candles;
 }
 
-export async function getMarketData(source: SourceId, timeframe: Timeframe): Promise<MarketDataset> {
-  const sourceDef = SOURCES.find(item => item.id === source) ?? SOURCES[0];
+export async function getMarketData(asset: AssetId, source: SourceId, timeframe: Timeframe): Promise<MarketDataset> {
+  const sourceDef = marketDefinition(asset, source);
+  const assetDef = ASSETS.find(item => item.id === asset)!;
   try {
     const { readStoredDataset } = await import("./market-store");
-    const stored = await readStoredDataset(sourceDef.id, timeframe);
+    const stored = await readStoredDataset(asset, sourceDef.id, timeframe);
     if (stored) return stored;
   } catch {
     // The provider remains a safe fallback if the local SQLite cache is unavailable.
   }
   let raw: Candle[] = [], demo = false, warning: string | null = null;
   try {
-    raw = source === "bitstamp" ? await cached("bitstamp-daily", bitstampDaily) : source === "binance" ? await cached("binance-daily", binanceDaily) : source === "kraken" ? await cached(`kraken-${timeframe}`, () => krakenCandles(timeframe)) : await cached("coinbase-daily", coinbaseDaily);
+    const cacheKey = `${asset}-${source}-${source === "kraken" ? timeframe : "daily"}`;
+    raw = source === "bitstamp"
+      ? await cached(cacheKey, () => bitstampDaily(sourceDef))
+      : source === "binance"
+        ? await cached(cacheKey, () => binanceDaily(sourceDef))
+        : source === "kraken"
+          ? await cached(cacheKey, () => krakenCandles(sourceDef, timeframe))
+          : await cached(cacheKey, () => coinbaseDaily(sourceDef));
     if (raw.length < (timeframe === "1w" ? 120 : 250)) throw new Error(`Only ${raw.length} completed candles were returned`);
   } catch (error) {
     demo = true;
-    raw = fallbackDaily();
+    raw = fallbackDaily(asset);
     warning = `Live ${sourceDef.label} data was unavailable. Deterministic demonstration history is shown and cannot confirm a new flip. ${error instanceof Error ? error.message : "Unknown provider error"}`;
   }
 
@@ -257,9 +313,12 @@ export async function getMarketData(source: SourceId, timeframe: Timeframe): Pro
   const maxAge = timeframe === "1d" ? 3 * DAY : 14 * DAY;
   const stale = demo || Date.now() - lastTime > maxAge;
   const dataset: MarketDataset = {
+    asset,
+    assetLabel: assetDef.label,
     source: sourceDef.id,
     sourceLabel: sourceDef.label,
     market: sourceDef.market,
+    denomination: sourceDef.denomination,
     timeframe,
     candles,
     retrievedAt: new Date().toISOString(),

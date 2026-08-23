@@ -22,6 +22,7 @@ class Candle:
 
 @dataclass(slots=True)
 class Dataset:
+    asset: str
     source: str
     market: str
     timeframe: str
@@ -33,6 +34,6 @@ class Dataset:
     warning: str | None = None
 
     @classmethod
-    def create(cls, source: str, market: str, timeframe: str, candles: list[Candle], raw: bytes, provisional: Candle | None = None) -> "Dataset":
+    def create(cls, asset: str, source: str, market: str, timeframe: str, candles: list[Candle], raw: bytes, provisional: Candle | None = None) -> "Dataset":
         normalized = json.dumps([c.as_dict() for c in candles], sort_keys=True, separators=(",", ":")).encode()
-        return cls(source, market, timeframe, candles, datetime.now(timezone.utc).isoformat(), sha256(normalized).hexdigest(), sha256(raw).hexdigest(), provisional)
+        return cls(asset, source, market, timeframe, candles, datetime.now(timezone.utc).isoformat(), sha256(normalized).hexdigest(), sha256(raw).hexdigest(), provisional)

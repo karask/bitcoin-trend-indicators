@@ -1,16 +1,17 @@
-import { getSpotQuote, SOURCES, type SourceId } from "../../../../lib/market-data";
+import { ASSETS, getSpotQuote, marketDefinition, type AssetId, type SourceId } from "../../../../lib/market-data";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const requested = url.searchParams.get("source") ?? "bitstamp";
-  if (!SOURCES.some(source => source.id === requested)) {
-    return Response.json({ error: "Unsupported market source" }, { status: 400, headers: { "Cache-Control": "no-store" } });
-  }
+  const requestedAsset = url.searchParams.get("asset") ?? "btc";
+  if (!ASSETS.some(asset => asset.id === requestedAsset)) return Response.json({ error: "Unsupported asset" }, { status: 400 });
+  const asset = requestedAsset as AssetId;
+  const requested = url.searchParams.get("source") ?? ASSETS.find(item => item.id === asset)!.defaultSource;
   try {
-    return Response.json(await getSpotQuote(requested as SourceId), { headers: { "Cache-Control": "no-store, max-age=0" } });
+    marketDefinition(asset, requested as SourceId);
+    return Response.json(await getSpotQuote(asset, requested as SourceId), { headers: { "Cache-Control": "no-store, max-age=0" } });
   } catch (error) {
     return Response.json({ error: error instanceof Error ? error.message : "Unable to fetch current spot price" }, { status: 502, headers: { "Cache-Control": "no-store" } });
   }

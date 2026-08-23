@@ -1,5 +1,5 @@
 import { backtest, calculateIndicators, familyAgreement, INDICATOR_SPECS, type Candle, type SignalSnapshot, type Timeframe } from "./regimes";
-import { getMarketData, SOURCES, type SourceId } from "./market-data";
+import { ASSETS, getMarketData, sourcesForAsset, type AssetId, type SourceId } from "./market-data";
 
 function flips(candles: Candle[], states: SignalSnapshot["states"]) {
   const result: Array<{ time: number; from: string; to: string; close: number }> = [];
@@ -13,8 +13,8 @@ function flips(candles: Candle[], states: SignalSnapshot["states"]) {
   return result;
 }
 
-function nextCondition(signal: SignalSnapshot): string {
-  const format = (value: number) => `$${Math.round(value).toLocaleString("en-US")}`;
+function nextCondition(signal: SignalSnapshot, denomination: string): string {
+  const format = (value: number) => denomination === "USD" ? new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: value < 100 ? 2 : 0 }).format(value) : `${value.toLocaleString("en-US", { maximumFractionDigits: value < 100 ? 2 : 0 })} USDT`;
   if (signal.thresholdKind === "conditional") return "Conditional";
   if (signal.state === "bull" && signal.bearTrigger != null) return `Below ${format(signal.bearTrigger)}`;
   if (signal.state === "bear" && signal.bullTrigger != null) return `Above ${format(signal.bullTrigger)}`;
@@ -23,7 +23,7 @@ function nextCondition(signal: SignalSnapshot): string {
   return signal.thresholdKind === "provisional" ? "Provisional" : "Conditional";
 }
 
-function slimMatrix(signal: SignalSnapshot, candles: Candle[]) {
+function slimMatrix(signal: SignalSnapshot, candles: Candle[], denomination: string) {
   return {
     id: signal.id,
     displayName: signal.displayName,
@@ -34,7 +34,7 @@ function slimMatrix(signal: SignalSnapshot, candles: Candle[]) {
     previousState: signal.previousState,
     lastFlip: signal.lastFlip,
     thresholdKind: signal.thresholdKind,
-    nextCondition: nextCondition(signal),
+    nextCondition: nextCondition(signal, denomination),
     bullTrigger: signal.bullTrigger,
     bearTrigger: signal.bearTrigger,
     triggerLabel: signal.triggerLabel,
@@ -64,15 +64,15 @@ function monthlyFaber(candles: Candle[]) {
   return { state: close >= sma10 ? "bull" : "bear", close, sma10 };
 }
 
-export async function dashboardPayload(source: SourceId, timeframe: Timeframe, indicatorId: string) {
-  const [daily, weekly] = await Promise.all([getMarketData(source, "1d"), getMarketData(source, "1w")]);
+export async function dashboardPayload(asset: AssetId, source: SourceId, timeframe: Timeframe, indicatorId: string) {
+  const [daily, weekly] = await Promise.all([getMarketData(asset, source, "1d"), getMarketData(asset, source, "1w")]);
   const selectedDataset = timeframe === "1d" ? daily : weekly;
   const dailySignals = calculateIndicators(daily.candles, "1d");
   const weeklySignals = calculateIndicators(weekly.candles, "1w");
   const signals = timeframe === "1d" ? dailySignals : weeklySignals;
   try {
     const { persistSignalSnapshots } = await import("./market-store");
-    await persistSignalSnapshots(source, timeframe, selectedDataset.candles.at(-1)?.time ?? null, signals);
+    await persistSignalSnapshots(asset, source, timeframe, selectedDataset.candles.at(-1)?.time ?? null, signals);
   } catch {
     // The dashboard remains readable if local signal storage is unavailable.
   }
@@ -82,7 +82,7 @@ export async function dashboardPayload(source: SourceId, timeframe: Timeframe, i
   const visibleCandles = selectedDataset.candles.slice(start);
   const visibleTimes = new Set(visibleCandles.map(c => c.time));
   const selectedView = {
-    ...slimMatrix(selected, selectedDataset.candles),
+    ...slimMatrix(selected, selectedDataset.candles, selectedDataset.denomination),
     states: selected.states.slice(start),
     overlays: selected.overlays.map(line => ({ ...line, points: line.points.filter(point => visibleTimes.has(point.time)) })),
     flips: flips(selectedDataset.candles, selected.states).filter(item => visibleTimes.has(item.time)),
@@ -91,7 +91,7 @@ export async function dashboardPayload(source: SourceId, timeframe: Timeframe, i
   const matrix = signals.filter(signal => signal.role === "regime").map(signal => {
     const other = counterpart.find(item => item.id === signal.id);
     return {
-      ...slimMatrix(signal, selectedDataset.candles),
+      ...slimMatrix(signal, selectedDataset.candles, selectedDataset.denomination),
       dailyState: timeframe === "1d" ? signal.state : other?.state ?? null,
       weeklyState: timeframe === "1w" ? signal.state : other?.state ?? null,
       dailyLastFlip: timeframe === "1d" ? signal.lastFlip : other?.lastFlip ?? null,
@@ -101,11 +101,15 @@ export async function dashboardPayload(source: SourceId, timeframe: Timeframe, i
   return {
     generatedAt: new Date().toISOString(),
     registry: INDICATOR_SPECS,
-    sources: SOURCES,
+    assets: ASSETS,
+    sources: sourcesForAsset(asset),
     dataset: {
+      asset: selectedDataset.asset,
+      assetLabel: selectedDataset.assetLabel,
       source: selectedDataset.source,
       sourceLabel: selectedDataset.sourceLabel,
       market: selectedDataset.market,
+      denomination: selectedDataset.denomination,
       timeframe,
       retrievedAt: selectedDataset.retrievedAt,
       checksum: selectedDataset.checksum,
@@ -122,7 +126,7 @@ export async function dashboardPayload(source: SourceId, timeframe: Timeframe, i
     candles: visibleCandles,
     selected: selectedView,
     matrix,
-    supporting: signals.filter(signal => signal.role !== "regime").map(signal => slimMatrix(signal, selectedDataset.candles)),
+    supporting: signals.filter(signal => signal.role !== "regime").map(signal => slimMatrix(signal, selectedDataset.candles, selectedDataset.denomination)),
     familyAgreement: familyAgreement(signals),
     backtests: backtest(selectedDataset.candles, signals, timeframe),
     research: {
@@ -133,7 +137,7 @@ export async function dashboardPayload(source: SourceId, timeframe: Timeframe, i
   };
 }
 
-export async function rawSeriesPayload(source: SourceId, timeframe: Timeframe) {
-  const dataset = await getMarketData(source, timeframe);
+export async function rawSeriesPayload(asset: AssetId, source: SourceId, timeframe: Timeframe) {
+  const dataset = await getMarketData(asset, source, timeframe);
   return { ...dataset, indicators: calculateIndicators(dataset.candles, timeframe) };
 }

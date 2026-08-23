@@ -32,12 +32,14 @@ test("server-renders the research PWA shell", async t => {
   assert.ok(response, `Next.js did not start. ${diagnostics}`);
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /<title>BTC Regime Lab<\/title>/i);
+  assert.match(html, /<title>Crypto Regime Lab<\/title>/i);
   assert.match(html, /Trend regimes, without the black box/i);
   assert.match(html, /Loading market research/i);
   assert.match(html, /Next weekly close/i);
   assert.match(html, /Sunday 23:59:59 UTC/i);
-  assert.match(html, /LIVE SPOT/i);
+  assert.match(html, /LIVE.*BTC.*SPOT/i);
+  assert.match(html, /Ethereum/i);
+  assert.match(html, /Solana/i);
   assert.match(html, /manifest\.webmanifest/i);
   assert.doesNotMatch(html, /Your site is taking shape|react-loading-skeleton/i);
 });

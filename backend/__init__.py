@@ -1,1 +1,1 @@
-"""BTC Regime Lab research backend."""
+"""Crypto Regime Lab research backend."""

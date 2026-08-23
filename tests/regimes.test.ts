@@ -3,7 +3,9 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { aggregateWeekly, parseSpotPrice, validateCandles, type MarketDataset } from "../lib/market-data.ts";
+import { DatabaseSync } from "node:sqlite";
+import { ensureMarketSchema } from "../db/index.ts";
+import { ASSETS, SOURCES, aggregateWeekly, marketDefinition, parseSpotPrice, sourcesForAsset, validateCandles, type MarketDataset } from "../lib/market-data.ts";
 import { backtest, calculateIndicators, INDICATOR_SPECS, type Candle, type SignalSnapshot } from "../lib/regimes.ts";
 import { completedBoundary, confirmationClock } from "../lib/confirmation-clock.ts";
 
@@ -95,6 +97,29 @@ test("spot ticker payloads are parsed for every supported venue", () => {
   assert.throws(() => parseSpotPrice("bitstamp", { last: "not-a-price" }), /invalid spot price/);
 });
 
+test("BTC, ETH, and SOL expose isolated venue definitions and useful history", () => {
+  assert.deepEqual(ASSETS.map(asset => asset.id), ["btc", "eth", "sol"]);
+  for (const asset of ASSETS) assert.equal(sourcesForAsset(asset.id).length, 4);
+  assert.equal(SOURCES.length, 12);
+  assert.equal(marketDefinition("eth", "bitstamp").providerSymbol, "ethusd");
+  assert.equal(marketDefinition("sol", "binance").providerSymbol, "SOLUSDT");
+  assert.equal(marketDefinition("sol", "binance").historyStart, Date.UTC(2020, 7, 11));
+});
+
+test("legacy BTC-only SQLite tables migrate in place without losing candles", () => {
+  const database = new DatabaseSync(":memory:");
+  database.exec("CREATE TABLE market_candles (source TEXT NOT NULL, timeframe TEXT NOT NULL, time INTEGER NOT NULL, market TEXT NOT NULL, open REAL NOT NULL, high REAL NOT NULL, low REAL NOT NULL, close REAL NOT NULL, volume REAL NOT NULL, complete INTEGER NOT NULL, PRIMARY KEY (source,timeframe,time))");
+  database.exec("CREATE TABLE provider_snapshots (source TEXT NOT NULL, timeframe TEXT NOT NULL, market TEXT NOT NULL, retrieved_at TEXT NOT NULL, checksum TEXT NOT NULL, warning TEXT, first_candle INTEGER, last_candle INTEGER, candle_count INTEGER NOT NULL, PRIMARY KEY (source,timeframe))");
+  database.exec("CREATE TABLE signal_snapshots (source TEXT NOT NULL, timeframe TEXT NOT NULL, indicator_id TEXT NOT NULL, candle_close INTEGER NOT NULL, state TEXT NOT NULL, prior_state TEXT NOT NULL, last_flip INTEGER, threshold_kind TEXT NOT NULL, bull_trigger REAL, bear_trigger REAL, payload TEXT NOT NULL, generated_at TEXT NOT NULL, PRIMARY KEY (source,timeframe,indicator_id))");
+  database.prepare("INSERT INTO market_candles VALUES (?,?,?,?,?,?,?,?,?,?)").run("bitstamp", "1d", 123, "BTC/USD", 1, 2, 0.5, 1.5, 10, 1);
+  ensureMarketSchema(database);
+  const row = database.prepare("SELECT asset,source,market,close FROM market_candles").get() as { asset: string; source: string; market: string; close: number };
+  assert.deepEqual({ ...row }, { asset: "btc", source: "bitstamp", market: "BTC/USD", close: 1.5 });
+  const primaryKey = (database.prepare("PRAGMA table_info(market_candles)").all() as Array<{ name: string; pk: number }>).filter(column => column.pk).sort((a, b) => a.pk - b.pk).map(column => column.name);
+  assert.deepEqual(primaryKey, ["asset", "source", "timeframe", "time"]);
+  database.close();
+});
+
 test("local SQLite storage persists normalized candles between reads", async () => {
   const directory = mkdtempSync(path.join(tmpdir(), "btc-regime-sqlite-"));
   const priorPath = process.env.REGIME_SQLITE;
@@ -103,9 +128,12 @@ test("local SQLite storage persists normalized candles between reads", async () 
     const { persistDataset, readStoredDataset } = await import(`../lib/market-store.ts?test=${Date.now()}`);
     const boundary = completedBoundary("1d");
     const dataset = {
+      asset: "btc",
+      assetLabel: "Bitcoin",
       source: "bitstamp",
       sourceLabel: "Bitstamp",
       market: "BTC/USD",
+      denomination: "USD",
       timeframe: "1d",
       candles: [boundary - DAY, boundary].map((time, index) => ({ time, open: 100 + index, high: 103 + index, low: 99 + index, close: 102 + index, volume: 10, complete: true })),
       retrievedAt: new Date().toISOString(),
@@ -118,11 +146,23 @@ test("local SQLite storage persists normalized candles between reads", async () 
       quality: { gaps: 0, duplicates: 0, malformed: 0 },
     } satisfies MarketDataset;
     await persistDataset(dataset);
-    const stored = await readStoredDataset("bitstamp", "1d");
+    const ethDataset = {
+      ...dataset,
+      asset: "eth",
+      assetLabel: "Ethereum",
+      market: "ETH/USD",
+      candles: dataset.candles.map(candle => ({ ...candle, open: candle.open / 10, high: candle.high / 10, low: candle.low / 10, close: candle.close / 10 })),
+      checksum: "eth-test-checksum",
+    } satisfies MarketDataset;
+    await persistDataset(ethDataset);
+    const stored = await readStoredDataset("btc", "bitstamp", "1d");
+    const storedEth = await readStoredDataset("eth", "bitstamp", "1d");
     assert.ok(stored);
+    assert.ok(storedEth);
     assert.equal(stored.storage, "sqlite");
     assert.equal(stored.candles.length, 2);
     assert.equal(stored.candles.at(-1)?.close, 103);
+    assert.equal(storedEth.candles.at(-1)?.close, 10.3);
     const { getDatabase } = await import("../db/index.ts");
     const tables = getDatabase().prepare("SELECT name FROM sqlite_schema WHERE type='table' ORDER BY name").all() as Array<{ name: string }>;
     assert.deepEqual(tables.map(row => row.name), ["market_candles", "provider_snapshots", "signal_snapshots"]);

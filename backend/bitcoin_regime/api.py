@@ -19,53 +19,54 @@ async def lifespan(_: FastAPI):
     refresh.cancel(); schedule.cancel()
 
 
-app = FastAPI(title="BTC Regime Lab Research API", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="Crypto Regime Lab Research API", version="0.2.0", lifespan=lifespan)
 
 
 @app.get("/api/v1/registry")
 def registry():
-    return {"indicators": service.registry()}
+    return {"assets": ["btc", "eth", "sol"], "indicators": service.registry()}
 
 
 @app.get("/api/v1/candles")
-def candles(source: str = "bitstamp", timeframe: str = "1w", limit: int = Query(1000, ge=1, le=10000)):
-    return {"source": source, "timeframe": timeframe, "candles": service.repository.candles(source, timeframe, limit)}
+def candles(asset: str = "btc", source: str = "bitstamp", timeframe: str = "1w", limit: int = Query(1000, ge=1, le=10000)):
+    return {"asset": asset, "source": source, "timeframe": timeframe, "candles": service.repository.candles(asset, source, timeframe, limit)}
 
 
 @app.get("/api/v1/indicators/{indicator_id}")
-def indicator_series(indicator_id: str, source: str = "bitstamp", timeframe: str = "1w"):
-    series = service.repository.series(source, timeframe, indicator_id)
+def indicator_series(indicator_id: str, asset: str = "btc", source: str = "bitstamp", timeframe: str = "1w"):
+    series = service.repository.series(asset, source, timeframe, indicator_id)
     if not series: raise HTTPException(404, "No stored series for this source, timeframe, and indicator")
-    return {"source": source, "timeframe": timeframe, "indicator": indicator_id, "series": series}
+    return {"asset": asset, "source": source, "timeframe": timeframe, "indicator": indicator_id, "series": series}
 
 
 @app.get("/api/v1/states")
-def states(source: str = "bitstamp", timeframe: str = "1w"):
-    rows = service.repository.matrix(source, timeframe)
+def states(asset: str = "btc", source: str = "bitstamp", timeframe: str = "1w"):
+    rows = service.repository.matrix(asset, source, timeframe)
     for row in rows:
         row["payload"] = json.loads(row["payload"])
-    return {"source": source, "timeframe": timeframe, "states": rows}
+    return {"asset": asset, "source": source, "timeframe": timeframe, "states": rows}
 
 
 @app.get("/api/v1/flips")
-def flips(source: str = "bitstamp", timeframe: str = "1w", indicator: str | None = None):
-    sql = "SELECT indicator_id,time,prior_state,state,confirmed_at,effective_at FROM indicator_series WHERE source=? AND timeframe=? AND is_flip"
-    params: list = [source, timeframe]
+def flips(asset: str = "btc", source: str = "bitstamp", timeframe: str = "1w", indicator: str | None = None):
+    sql = "SELECT indicator_id,time,prior_state,state,confirmed_at,effective_at FROM indicator_series WHERE asset=? AND source=? AND timeframe=? AND is_flip"
+    params: list = [asset, source, timeframe]
     if indicator: sql += " AND indicator_id=?"; params.append(indicator)
     sql += " ORDER BY time"
     return {"flips": service.repository.rows(sql, params)}
 
 
 @app.get("/api/v1/triggers")
-def triggers(source: str = "bitstamp", timeframe: str = "1w"):
-    rows = service.repository.rows("SELECT indicator_id,generated_at,payload FROM signal_reports WHERE source=? AND timeframe=? ORDER BY indicator_id", [source, timeframe])
+def triggers(asset: str = "btc", source: str = "bitstamp", timeframe: str = "1w"):
+    rows = service.repository.rows("SELECT indicator_id,generated_at,payload FROM signal_reports WHERE asset=? AND source=? AND timeframe=? ORDER BY indicator_id", [asset, source, timeframe])
     for row in rows: row["payload"] = json.loads(row["payload"])
-    return {"source": source, "timeframe": timeframe, "triggers": rows}
+    return {"asset": asset, "source": source, "timeframe": timeframe, "triggers": rows}
 
 
 @app.get("/api/v1/health")
-def health():
-    return {"sources": service.repository.rows("SELECT * FROM source_health ORDER BY source")}
+def health(asset: str | None = None):
+    rows = service.repository.rows("SELECT * FROM source_health WHERE asset=? ORDER BY source", [asset]) if asset else service.repository.rows("SELECT * FROM source_health ORDER BY asset,source")
+    return {"sources": rows}
 
 
 @app.get("/api/v1/reports")

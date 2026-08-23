@@ -1,10 +1,11 @@
-# BTC Regime Lab
+# Crypto Regime Lab
 
-A transparent, installable Bitcoin regime-indicator research platform. It compares fixed, documented trend models without claiming to reproduce private MoneyLine or Larsson Line formulas and without producing orders or allocation recommendations.
+A transparent, installable BTC, ETH, and SOL regime-indicator research platform. It compares fixed, documented trend models without claiming to reproduce private MoneyLine or Larsson Line formulas and without producing orders or allocation recommendations.
 
 ## What is implemented
 
-- Daily and Monday–Sunday UTC weekly views for Bitstamp BTC/USD, Binance BTC/USDT, Kraken BTC/USD, and Coinbase BTC/USD.
+- An asset selector for BTC, ETH, and SOL, with daily and Monday–Sunday UTC weekly views from Bitstamp, Binance, Kraken, and Coinbase Exchange.
+- Venue-specific markets are never spliced: USD and USDT histories remain separately labeled and independently cached.
 - Completed-candle signals for Support Band, SuperTrend, the Larsson-style SMMA proxy, Long SMA, two Donchian presets, Ichimoku, MACD, Parabolic SAR, Vortex, Heikin Ashi, absolute momentum, and the daily Golden/Death Cross.
 - Separate ADX/DMI confirmation, Chandelier exit, and Mayer/200W valuation views.
 - Canvas candlesticks, indicator overlays, regime shading, historical flip markers, and fixed/provisional/conditional trigger labels.
@@ -35,11 +36,20 @@ The confirmation clock follows the selected timeframe: daily closes confirm at 0
 
 The confirmation box also shows a live ticker quote from the selected venue. It refreshes on every page load, source change, and five-minute background refresh. This quote is informational only and never enters confirmed indicator or backtest calculations.
 
-The local PWA database is `data/bitcoin-regime.sqlite`. Set `REGIME_SQLITE=/absolute/path/market.sqlite` to place it elsewhere. The database is created automatically on the first API request and stays on your machine; there is no Sites or D1 dependency.
+The local PWA database is `data/bitcoin-regime.sqlite`. Set `REGIME_SQLITE=/absolute/path/market.sqlite` to place it elsewhere. The database is created automatically on the first API request and stays on your machine; there is no Sites or D1 dependency. Existing BTC-only databases migrate in place: prior rows are retained as `asset=btc`, and the cache primary keys isolate asset, venue, timeframe, and timestamp.
 
 If you open the development server through the machine's LAN address, `192.168.100.16` is allowlisted for Next.js development assets. Restart `npm run dev` after changing `next.config.ts`. For Docker, both SQLite and DuckDB live under the mounted `/data` volume.
 
-Indicator calculations use the complete normalized series available for each venue. The visible chart is intentionally smaller: the last 180 daily candles or 120 weekly candles. Current provider limits yield up to seven 1,000-candle Bitstamp pages, full Binance history from August 2017, eight 300-candle Coinbase pages, and Kraken's 720-candle REST window.
+Indicator calculations use the complete normalized series available for each venue. The visible chart is intentionally smaller: the last 180 daily candles or 120 weekly candles. The importers paginate back to each market's own listing date (with a 20-page Bitstamp/Binance safety cap and 30-page Coinbase cap); Kraken's public REST API supplies its latest 720 candles. Canonical defaults are Bitstamp BTC/USD (2011), Bitstamp ETH/USD (2017), and Binance SOL/USDT (2020). Coinbase reaches ETH/USD in 2016 and SOL/USD in 2021; Kraken can validate all three over its REST window.
+
+All browser API routes accept `asset=btc|eth|sol`, for example:
+
+```text
+/api/v1/dashboard?asset=eth&source=bitstamp&timeframe=1w
+/api/v1/series?asset=sol&source=binance&timeframe=1d
+/api/v1/spot?asset=eth&source=coinbase
+/api/v1/health?asset=sol
+```
 
 ## Run the DuckDB research API
 
@@ -49,7 +59,7 @@ python3 -m venv .venv
 .venv/bin/python -m uvicorn backend.bitcoin_regime.api:app --reload --port 8000
 ```
 
-The Python API refreshes on startup and every day at 00:15 UTC. It exposes registry, candles, full indicator series, state matrix, flip history, trigger reports, source health, and research reports under `/api/v1/`. The calculation subprocess imports the same TypeScript indicator engine used by the PWA, keeping one formula source of truth.
+The Python API refreshes all three assets on startup and every day at 00:15 UTC. It exposes registry, candles, full indicator series, state matrix, flip history, trigger reports, source health, and per-asset research reports under `/api/v1/`. The calculation subprocess imports the same TypeScript indicator engine used by the PWA, keeping one formula source of truth. Its endpoints also accept an `asset` query parameter and its DuckDB schema isolates assets in every dataset, candle, signal, and source-health key.
 
 Set `REGIME_DB=/path/to/regimes.duckdb` to choose a research-database location. The default is `data/regimes.duckdb`. DuckDB stores the deeper research warehouse; SQLite is the PWA's fast local candle and signal cache.
 
@@ -74,9 +84,9 @@ The tests cover the complete preset registry, deterministic golden states, recur
 ## Research conventions
 
 - A state confirmed at close becomes effective at the next candle open.
-- Exposure is 100% BTC in bull, 50% in neutral, and 0% in bear; two-state models use 100%/0%.
+- Exposure is 100% of the selected crypto asset in bull, 50% in neutral, and 0% in bear; two-state models use 100%/0%.
 - Cash yield is zero. No shorts or leverage.
-- Presets are read-only in v1 and are not optimized against Bitcoin history.
+- Presets are read-only in v1 and are not optimized against BTC, ETH, or SOL history.
 - Venues are never spliced. Gaps, duplicates, malformed OHLC, and completed-history revisions fail the data refresh; prices are never forward-filled.
 - SuperTrend is presented as a transparent alternative, not a MoneyLine clone. SMMA 15/19/25/29 is labeled a community Larsson-style proxy, never the official line.
 
