@@ -6,7 +6,7 @@ A transparent, installable BTC, ETH, and SOL regime-indicator research platform.
 
 - An asset selector for BTC, ETH, and SOL, with daily and Monday–Sunday UTC weekly views from Bitstamp, Binance, Kraken, and Coinbase Exchange.
 - Venue-specific markets are never spliced: USD and USDT histories remain separately labeled and independently cached.
-- Completed-candle signals for Support Band, SuperTrend, the Larsson-style SMMA proxy, Long SMA, two Donchian presets, Ichimoku, MACD, Parabolic SAR, Vortex, Heikin Ashi, absolute momentum, and the daily Golden/Death Cross.
+- Completed-candle signals for Support Band, SuperTrend, the Larsson-style SMMA proxy, a transparent 27-EMA Super Guppy variant, Long SMA, two Donchian presets, Ichimoku, MACD, Parabolic SAR, Vortex, Heikin Ashi, absolute momentum, and the daily Golden/Death Cross.
 - Separate ADX/DMI confirmation, Chandelier exit, and Mayer/200W valuation views.
 - Canvas candlesticks, indicator overlays, regime shading, historical flip markers, and fixed/provisional/conditional trigger labels.
 - Family-level agreement instead of a misleading raw indicator count.
@@ -95,5 +95,6 @@ The tests cover the complete preset registry, deterministic golden states, recur
 - Presets are read-only in v1 and are not optimized against BTC, ETH, or SOL history.
 - Venues are never spliced. Gaps, duplicates, malformed OHLC, and completed-history revisions fail the data refresh; prices are never forward-filled.
 - SuperTrend is presented as a transparent alternative, not a MoneyLine clone. SMMA 15/19/25/29 is labeled a community Larsson-style proxy, never the official line.
+- Super Guppy uses the fixed published EMA groups (3–23 step 2 and 25–70 step 3) with an explicit full-ordering state rule. It shares the smoothing/order family vote with the other moving-average models.
 
 This is research software, not financial advice.

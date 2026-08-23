@@ -72,6 +72,7 @@ export const INDICATOR_SPECS: IndicatorSpec[] = [
   { id: "support_band", displayName: "20 SMA / 21 EMA Support Band", shortName: "Support Band", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { sma: 20, ema: 21 }, thresholdKind: "fixed", description: "Above both averages is bullish, below both is bearish, and between is neutral." },
   { id: "supertrend", displayName: "SuperTrend 10/3", shortName: "SuperTrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { atr: 10, factor: 3 }, thresholdKind: "provisional", description: "A transparent ATR trailing regime line with close-based reversals.", disclaimer: "A transparent alternative commonly compared with private one-line systems; not a MoneyLine clone.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
   { id: "smma_ribbon", displayName: "SMMA Ribbon 15/19/25/29", shortName: "SMMA Ribbon", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { lengths: "15/19/25/29", source: "HL2" }, thresholdKind: "conditional", description: "Fully ordered averages are bullish or bearish; tangled averages are neutral.", disclaimer: "Community Larsson-style proxy only. The official Larsson Line formula is private." },
+  { id: "super_guppy", displayName: "Super Guppy EMA 3–23 / 25–70", shortName: "Super Guppy", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { fast: "3–23 step 2", slow: "25–70 step 3", source: "Close", averages: 27 }, thresholdKind: "conditional", description: "All 27 close EMAs strictly ordered from shortest to longest are bullish; reverse ordering is bearish; every other configuration is neutral.", disclaimer: "Transparent fixed Super Guppy variant. Published scripts differ in their coloring, pullback, and alert rules.", sourceUrl: "https://www.tradingview.com/script/Lj6d7UxQ-Super-Guppy-R1-0-by-JustUncleL/" },
   { id: "long_sma", displayName: "Long SMA Filter", shortName: "Long SMA", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { daily: 200, weekly: 30 }, thresholdKind: "fixed", description: "Price above the long average is bullish; below is bearish." },
   { id: "donchian_20_10", displayName: "Donchian Close 20/10", shortName: "Donchian 20/10", role: "regime", family: "breakout", supportedTimeframes: ["1d", "1w"], parameters: { entry: 20, exit: 10 }, thresholdKind: "fixed", description: "Close above the prior 20-period high turns bullish; below the prior 10-period low turns bearish." },
   { id: "donchian_55_20", displayName: "Donchian Close 55/20", shortName: "Donchian 55/20", role: "regime", family: "breakout", supportedTimeframes: ["1d", "1w"], parameters: { entry: 55, exit: 20 }, thresholdKind: "fixed", description: "A slower close-confirmed adaptation of the Turtle breakout family." },
@@ -199,6 +200,35 @@ function ribbon(candles: Candle[], spec: IndicatorSpec): SignalSnapshot {
     return "neutral";
   });
   return buildSnapshot(spec, candles, states, lines.map((line, i) => points(candles, line, `SMMA ${lengths[i]}`, colors[i])), Object.fromEntries(lengths.map((n, i) => [`smma${n}`, lines[i].at(-1) ?? null])), null, null, "Ordering condition; no single guaranteed flip price");
+}
+
+function superGuppy(candles: Candle[], spec: IndicatorSpec): SignalSnapshot {
+  const fastLengths = Array.from({ length: 11 }, (_, index) => 3 + index * 2);
+  const slowLengths = Array.from({ length: 16 }, (_, index) => 25 + index * 3);
+  const lengths = [...fastLengths, ...slowLengths];
+  const closes = candles.map(candle => candle.close);
+  const lines = lengths.map(length => ema(closes, length));
+  const states = candles.map((_, candleIndex): RegimeState | null => {
+    if (candleIndex < Math.max(...lengths) - 1) return null;
+    const values = lines.map(line => line[candleIndex]);
+    if (values.some(value => !finite(value))) return null;
+    if (values.every((value, index) => index === 0 || values[index - 1]! > value!)) return "bull";
+    if (values.every((value, index) => index === 0 || values[index - 1]! < value!)) return "bear";
+    return "neutral";
+  });
+  const visible = [3, 13, 23, 25, 49, 70];
+  const colors = ["#10a7a7", "#267f8d", "#264f66", "#7f9f35", "#d7a928", "#c95545"];
+  const overlays = visible.map((length, index) => points(candles, lines[lengths.indexOf(length)], `EMA ${length}`, colors[index]));
+  const last = (length: number) => lines[lengths.indexOf(length)].at(-1) ?? null;
+  const ema3 = last(3), ema23 = last(23), ema25 = last(25), ema70 = last(70);
+  return buildSnapshot(spec, candles, states, overlays, {
+    ema3,
+    ema23,
+    ema25,
+    ema70,
+    fastSpread: finite(ema3) && finite(ema23) ? ema3 / ema23 - 1 : null,
+    slowSpread: finite(ema25) && finite(ema70) ? ema25 / ema70 - 1 : null,
+  }, null, null, "27-EMA ordering condition; six representative lines shown");
 }
 
 function longSma(candles: Candle[], spec: IndicatorSpec, timeframe: Timeframe): SignalSnapshot {
@@ -333,6 +363,7 @@ export function calculateIndicators(candles: Candle[], timeframe: Timeframe): Si
       case "support_band": return supportBand(candles, spec);
       case "supertrend": return supertrend(candles, spec);
       case "smma_ribbon": return ribbon(candles, spec);
+      case "super_guppy": return superGuppy(candles, spec);
       case "long_sma": return longSma(candles, spec, timeframe);
       case "donchian_20_10": return donchian(candles, spec, 20, 10);
       case "donchian_55_20": return donchian(candles, spec, 55, 20);

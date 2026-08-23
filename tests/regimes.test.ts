@@ -38,7 +38,7 @@ test("indicator golden states and trigger classifications remain stable", () => 
   const results = calculateIndicators(history(), "1d");
   const vector = Object.fromEntries(results.map(result => [result.id, [result.state, result.thresholdKind]]));
   assert.deepEqual(vector, {
-    support_band: ["bear", "fixed"], supertrend: ["bear", "provisional"], smma_ribbon: ["neutral", "conditional"], long_sma: ["bull", "fixed"],
+    support_band: ["bear", "fixed"], supertrend: ["bear", "provisional"], smma_ribbon: ["neutral", "conditional"], super_guppy: ["neutral", "conditional"], long_sma: ["bull", "fixed"],
     donchian_20_10: ["neutral", "fixed"], donchian_55_20: ["neutral", "fixed"], ichimoku: ["bear", "conditional"], macd: ["bear", "conditional"],
     psar: ["bear", "provisional"], vortex: ["bear", "provisional"], heikin_ashi: ["bear", "provisional"], absolute_momentum: ["bull", "fixed"],
     golden_cross: ["bull", "conditional"], adx: ["bear", "conditional"], chandelier: ["bull", "provisional"], mayer: ["neutral", "conditional"],
@@ -47,6 +47,23 @@ test("indicator golden states and trigger classifications remain stable", () => 
   const prior19 = history().slice(-19).reduce((sum, candle) => sum + candle.close, 0) / 19;
   assert.equal(support.bullTrigger, Math.max(prior19, support.values.ema!));
   assert.equal(support.bearTrigger, Math.min(prior19, support.values.ema!));
+});
+
+test("Super Guppy follows its documented 27-EMA ordering rule", () => {
+  const series = (direction: 1 | -1 | 0): Candle[] => Array.from({ length: 160 }, (_, index) => {
+    const close = direction === 0 ? 100 : direction === 1 ? 100 + index : 300 - index;
+    return { time: Date.UTC(2024, 0, 1) + index * DAY, open: close, high: close + 1, low: close - 1, close, volume: 1, complete: true };
+  });
+  const rising = calculateIndicators(series(1), "1d").find(item => item.id === "super_guppy")!;
+  const falling = calculateIndicators(series(-1), "1d").find(item => item.id === "super_guppy")!;
+  const flat = calculateIndicators(series(0), "1d").find(item => item.id === "super_guppy")!;
+  assert.equal(rising.state, "bull");
+  assert.equal(falling.state, "bear");
+  assert.equal(flat.state, "neutral");
+  assert.equal(rising.states[68], null);
+  assert.equal(rising.states[69], "bull");
+  assert.deepEqual(rising.overlays.map(line => line.name), ["EMA 3", "EMA 13", "EMA 23", "EMA 25", "EMA 49", "EMA 70"]);
+  assert.equal(INDICATOR_SPECS.findIndex(item => item.id === "super_guppy"), INDICATOR_SPECS.findIndex(item => item.id === "smma_ribbon") + 1);
 });
 
 test("Donchian uses prior-period channels and retains state between breakouts", () => {
