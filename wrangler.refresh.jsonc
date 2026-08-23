@@ -8,7 +8,7 @@
     {
       "binding": "REGIME_DB",
       "database_name": "crypto-regime-data",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "72187f3b-5d53-4b16-a7e2-731437682eb5",
       "migrations_dir": "./drizzle"
     }
   ],

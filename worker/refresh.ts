@@ -106,10 +106,18 @@ async function refreshSource(database: D1Database, definition: SourceDefinition)
     const recent = await recentCandles(definition);
     const rawChecksum = await sha256(recent.raw);
     await database.batch(recent.candles.map(item => upsertCandle(database, definition, "1d", item, retrievedAt, rawChecksum)));
-    const since = Date.now() - 42 * DAY;
+    // Kraken's native weekly endpoint is not Monday-anchored. Retain its
+    // deeper daily validation window and build the app's Monday-Sunday weeks
+    // exclusively from those daily candles.
+    const since = definition.id === "kraken" ? 0 : Date.now() - 42 * DAY;
     const dailyResult = await database.prepare("SELECT time,open,high,low,close,volume,complete FROM market_candles WHERE asset=? AND source=? AND timeframe='1d' AND time>=? ORDER BY time").bind(definition.asset, definition.id, since).all<CandleRow>();
     const weekly = aggregateWeekly(dailyResult.results.map(row => ({ ...row, complete: Boolean(row.complete) })));
-    if (weekly.length) await database.batch(weekly.map(item => upsertCandle(database, definition, "1w", item, retrievedAt, rawChecksum)));
+    if (weekly.length) {
+      if (definition.id === "kraken") {
+        await database.prepare("DELETE FROM market_candles WHERE asset=? AND source=? AND timeframe='1w' AND (time % 604800000) != 345600000").bind(definition.asset, definition.id).run();
+      }
+      await database.batch(weekly.map(item => upsertCandle(database, definition, "1w", item, retrievedAt, rawChecksum)));
+    }
     const [dailyLast, weeklyLast] = await Promise.all([
       updateSnapshot(database, definition, "1d", retrievedAt, rawChecksum),
       updateSnapshot(database, definition, "1w", retrievedAt, rawChecksum),

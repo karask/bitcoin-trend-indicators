@@ -231,19 +231,22 @@ export async function getMarketData(asset: AssetId, source: SourceId, timeframe:
   try {
     const { readStoredDataset } = await import("./market-store.ts");
     const stored = await readStoredDataset(asset, sourceDef.id, timeframe);
-    if (stored) return stored;
+    // Weekly research bars are always Monday-Sunday UTC. In particular,
+    // Kraken's native weekly endpoint uses a different anchor, so an older
+    // cache containing native bars must be rebuilt from its daily candles.
+    if (stored && (timeframe !== "1w" || stored.candles.every(item => new Date(item.time).getUTCDay() === 1))) return stored;
   } catch {
     // The provider remains a safe fallback if the local SQLite cache is unavailable.
   }
   let raw: Candle[] = [], demo = false, warning: string | null = null;
   try {
-    const cacheKey = `${asset}-${source}-${source === "kraken" ? timeframe : "daily"}`;
+    const cacheKey = `${asset}-${source}-daily`;
     raw = source === "bitstamp"
       ? await cached(cacheKey, () => bitstampDaily(sourceDef))
       : source === "binance"
         ? await cached(cacheKey, () => binanceDaily(sourceDef))
         : source === "kraken"
-          ? await cached(cacheKey, () => krakenCandles(sourceDef, timeframe))
+          ? await cached(cacheKey, () => krakenCandles(sourceDef, "1d"))
           : await cached(cacheKey, () => coinbaseDaily(sourceDef));
     if (raw.length < (timeframe === "1w" ? 120 : 250)) throw new Error(`Only ${raw.length} completed candles were returned`);
   } catch (error) {
@@ -252,9 +255,8 @@ export async function getMarketData(asset: AssetId, source: SourceId, timeframe:
     warning = `Live ${sourceDef.label} data was unavailable. Deterministic demonstration history is shown and cannot confirm a new flip. ${error instanceof Error ? error.message : "Unknown provider error"}`;
   }
 
-  const directWeekly = source === "kraken" && timeframe === "1w" && !demo;
-  const checkedDaily = validateCandles(raw, directWeekly ? 7 * DAY : DAY);
-  let candles = timeframe === "1w" && !directWeekly ? aggregateWeekly(checkedDaily.candles) : checkedDaily.candles;
+  const checkedDaily = validateCandles(raw, DAY);
+  let candles = timeframe === "1w" ? aggregateWeekly(checkedDaily.candles) : checkedDaily.candles;
   const checkedFinal = validateCandles(candles, timeframe === "1w" ? 7 * DAY : DAY);
   candles = checkedFinal.candles;
   const malformed = checkedDaily.malformed + checkedFinal.malformed;

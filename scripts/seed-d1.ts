@@ -18,13 +18,12 @@ function quoted(value: string | null): string {
 
 function candleStatements(dataset: MarketDataset): string[] {
   const rows = dataset.candles.map(item => `(${quoted(dataset.asset)},${quoted(dataset.source)},${quoted(dataset.timeframe)},${item.time},${quoted(dataset.market)},${item.open},${item.high},${item.low},${item.close},${item.volume},${item.complete ? 1 : 0},${quoted(dataset.retrievedAt)},${quoted(dataset.checksum)})`);
-  const statements: string[] = [];
+  const statements: string[] = [`DELETE FROM market_candles WHERE asset=${quoted(dataset.asset)} AND source=${quoted(dataset.source)} AND timeframe=${quoted(dataset.timeframe)};`];
   for (let index = 0; index < rows.length; index += 100) {
     statements.push(`INSERT INTO market_candles (asset,source,timeframe,time,market,open,high,low,close,volume,complete,retrieved_at,raw_checksum) VALUES\n${rows.slice(index, index + 100).join(",\n")}\nON CONFLICT(asset,source,timeframe,time) DO UPDATE SET market=excluded.market,open=excluded.open,high=excluded.high,low=excluded.low,close=excluded.close,volume=excluded.volume,complete=excluded.complete,retrieved_at=excluded.retrieved_at,raw_checksum=excluded.raw_checksum;`);
   }
   const first = dataset.candles[0]?.time ?? null;
   const last = dataset.candles.at(-1)?.time ?? null;
-  statements.push(`DELETE FROM market_candles WHERE asset=${quoted(dataset.asset)} AND source=${quoted(dataset.source)} AND timeframe=${quoted(dataset.timeframe)} AND (time<${first ?? 0} OR time>${last ?? 0});`);
   statements.push(`INSERT INTO provider_snapshots (asset,source,timeframe,market,retrieved_at,checksum,warning,first_candle,last_candle,candle_count) VALUES (${quoted(dataset.asset)},${quoted(dataset.source)},${quoted(dataset.timeframe)},${quoted(dataset.market)},${quoted(dataset.retrievedAt)},${quoted(dataset.checksum)},${quoted(dataset.warning)},${first ?? "NULL"},${last ?? "NULL"},${dataset.candles.length}) ON CONFLICT(asset,source,timeframe) DO UPDATE SET market=excluded.market,retrieved_at=excluded.retrieved_at,checksum=excluded.checksum,warning=excluded.warning,first_candle=excluded.first_candle,last_candle=excluded.last_candle,candle_count=excluded.candle_count;`);
   return statements;
 }

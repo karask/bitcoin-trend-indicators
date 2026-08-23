@@ -2,6 +2,22 @@
 
 This deployment does not use Codex Sites, does not replace GitHub Pages, and does not require changing the nameservers for `kkarasavvas.com`.
 
+## Current status
+
+The project is already deployed:
+
+- PWA: `https://bitcoin-trend-indicators.pages.dev`
+- D1 database: `crypto-regime-data` in Cloudflare's Eastern Europe region
+- Refresh Worker: `crypto-regime-refresh`
+
+The repository root means the project's top-level folder—the folder containing `package.json`. On the development computer it is:
+
+```text
+/home/kos/Documents/BitcoinTrendIndicators
+```
+
+You do **not** need to repeat the first-deployment commands below. They are retained as a recovery/rebuild reference. The only remaining optional action is attaching a custom subdomain.
+
 ## Architecture
 
 - Cloudflare Pages serves the installable static PWA.
@@ -78,4 +94,3 @@ Open the URL Wrangler prints. This uses a local D1 emulator under `.wrangler`; i
 ## Free-plan fit
 
 Static Pages assets are free. Pages Functions and the refresh Worker share the Workers Free request allowance. D1's Free plan currently includes 5 million rows read per day, 100,000 rows written per day, and 5 GB total storage. This personal dashboard is designed to stay within those limits: each scheduled refresh reads/writes only a recent window, while indicator calculation remains in the browser.
-

@@ -17,7 +17,7 @@
     "cf:d1:remote": "wrangler d1 execute crypto-regime-data --remote --file=drizzle/0001_cloudflare_d1.sql --config=wrangler.jsonc",
     "cf:seed:local": "node --experimental-strip-types scripts/seed-d1.ts --apply",
     "cf:seed:remote": "node --experimental-strip-types scripts/seed-d1.ts --all --apply --remote",
-    "cf:deploy:pages": "npm run build:pages && wrangler pages deploy --config=wrangler.jsonc",
+    "cf:deploy:pages": "npm run build:pages && wrangler pages deploy dist/cloudflare-pages --project-name=bitcoin-trend-indicators --branch=main",
     "cf:deploy:refresh": "wrangler deploy --config=wrangler.refresh.jsonc"
   },
   "dependencies": {
