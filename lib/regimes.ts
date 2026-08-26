@@ -2,6 +2,55 @@ export type RegimeState = "bull" | "bear" | "neutral";
 export type ThresholdKind = "fixed" | "provisional" | "conditional";
 export type IndicatorRole = "regime" | "confirmation" | "exit" | "valuation";
 export type Timeframe = "1d" | "1w";
+export type SuperGuppySource = "close" | "open" | "high" | "low" | "hl2" | "hlc3" | "ohlc4";
+
+export interface SuperGuppyConfig {
+  fastLengths: number[];
+  slowLengths: number[];
+  source: SuperGuppySource;
+  anchorMinutes: number;
+  showBreak: boolean;
+  showSwing: boolean;
+  requireConfluence: boolean;
+  candleChangeRetriggers: boolean;
+  lookback: number;
+  showAverages: boolean;
+  showEma200: boolean;
+  ema200Filter: boolean;
+  colorBars: boolean;
+}
+
+export interface IndicatorCalculationOptions { superGuppy?: Partial<SuperGuppyConfig> }
+
+export const SUPER_GUPPY_R12_DEFAULTS: SuperGuppyConfig = {
+  fastLengths: Array.from({ length: 11 }, (_, index) => 3 + index * 2),
+  slowLengths: Array.from({ length: 16 }, (_, index) => 25 + index * 3),
+  source: "close",
+  anchorMinutes: 0,
+  showBreak: true,
+  showSwing: true,
+  requireConfluence: false,
+  candleChangeRetriggers: false,
+  lookback: 6,
+  showAverages: false,
+  showEma200: false,
+  ema200Filter: false,
+  colorBars: false,
+};
+
+export interface GuidanceItem {
+  label: string;
+  rule: string;
+}
+
+export interface IndicatorGuidance {
+  summary: string;
+  positive: GuidanceItem;
+  neutral: GuidanceItem;
+  negative: GuidanceItem;
+  rationale: string;
+  caveats: string[];
+}
 
 export interface Candle {
   time: number;
@@ -23,12 +72,37 @@ export interface IndicatorSpec {
   parameters: Record<string, number | string>;
   thresholdKind: ThresholdKind;
   description: string;
+  guidance: IndicatorGuidance;
   disclaimer?: string;
   sourceUrl?: string;
 }
 
-export interface LinePoint { time: number; value: number }
-export interface OverlaySeries { name: string; color: string; points: LinePoint[]; dashed?: boolean }
+export interface LinePoint { time: number; value: number; color?: string }
+export interface OverlaySeries { name: string; legendLabel?: string; color: string; points: LinePoint[]; dashed?: boolean; width?: number; pointStyle?: "line" | "circles"; showInLegend?: boolean }
+
+export interface RibbonPoint { time: number; upper: number; lower: number; state: RegimeState }
+export interface RibbonBand {
+  id: string;
+  name: string;
+  palette: Record<RegimeState, string>;
+  fillOpacity: number;
+  showInLegend?: boolean;
+  points: RibbonPoint[];
+}
+
+export type SignalEventKind = "swing" | "trend_break";
+export interface SignalEvent {
+  time: number;
+  kind: SignalEventKind;
+  direction: "bull" | "bear";
+  label: string;
+  price: number;
+  color: string;
+  confirmedAt: number;
+  effectiveAt: number | null;
+}
+
+export interface BarColorPoint { time: number; color: string }
 
 export interface SignalSnapshot {
   id: string;
@@ -44,9 +118,14 @@ export interface SignalSnapshot {
   bearTrigger: number | null;
   triggerLabel: string;
   explanation: string;
+  guidance: IndicatorGuidance;
   values: Record<string, number | null>;
   disclaimer?: string;
+  sourceUrl?: string;
   overlays: OverlaySeries[];
+  ribbons: RibbonBand[];
+  events: SignalEvent[];
+  barColors: BarColorPoint[];
   states: Array<RegimeState | null>;
 }
 
@@ -68,11 +147,11 @@ export interface BacktestSummary {
   timeInState: Record<RegimeState, number>;
 }
 
-export const INDICATOR_SPECS: IndicatorSpec[] = [
+const BASE_INDICATOR_SPECS: Array<Omit<IndicatorSpec, "guidance">> = [
   { id: "support_band", displayName: "20 SMA / 21 EMA Support Band", shortName: "Support Band", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { sma: 20, ema: 21 }, thresholdKind: "fixed", description: "Above both averages is bullish, below both is bearish, and between is neutral." },
   { id: "supertrend", displayName: "SuperTrend 10/3", shortName: "SuperTrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { atr: 10, factor: 3 }, thresholdKind: "provisional", description: "A transparent ATR trailing regime line with close-based reversals.", disclaimer: "A transparent alternative commonly compared with private one-line systems; not a MoneyLine clone.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
   { id: "smma_ribbon", displayName: "SMMA Ribbon 15/19/25/29", shortName: "SMMA Ribbon", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { lengths: "15/19/25/29", source: "HL2" }, thresholdKind: "conditional", description: "Fully ordered averages are bullish or bearish; tangled averages are neutral.", disclaimer: "Community Larsson-style proxy only. The official Larsson Line formula is private." },
-  { id: "super_guppy", displayName: "Super Guppy EMA 3–23 / 25–70", shortName: "Super Guppy", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { fast: "3–23 step 2", slow: "25–70 step 3", source: "Close", averages: 27 }, thresholdKind: "conditional", description: "All 27 close EMAs strictly ordered from shortest to longest are bullish; reverse ordering is bearish; every other configuration is neutral.", disclaimer: "Transparent fixed Super Guppy variant. Published scripts differ in their coloring, pullback, and alert rules.", sourceUrl: "https://www.tradingview.com/script/Lj6d7UxQ-Super-Guppy-R1-0-by-JustUncleL/" },
+  { id: "super_guppy", displayName: "Super Guppy R1.2 by JustUncleL", shortName: "Super Guppy R1.2", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { revision: "R1.2", fast: "3–23 step 2", slow: "25–70 step 3", source: "Close", averages: 27, plottedByDefault: 14, showSwing: 1, showBreak: 1, lookback: 6, confluence: 0, ema200Filter: 0, anchorMinutes: 0 }, thresholdKind: "conditional", description: "The published R1.2 Trader and Investor EMA groups, dynamic colors, pullback signals, and aggressive trend-break signals.", disclaimer: "Independent implementation of JustUncleL's open-source Super Guppy R1.2 rules. The intraday anchor input is exposed for parity but cannot change a daily or weekly chart because its published maximum is one day.", sourceUrl: "https://www.tradingview.com/script/Lj6d7UxQ-Super-Guppy-R1-0-by-JustUncleL/" },
   { id: "long_sma", displayName: "Long SMA Filter", shortName: "Long SMA", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { daily: 200, weekly: 30 }, thresholdKind: "fixed", description: "Price above the long average is bullish; below is bearish." },
   { id: "donchian_20_10", displayName: "Donchian Close 20/10", shortName: "Donchian 20/10", role: "regime", family: "breakout", supportedTimeframes: ["1d", "1w"], parameters: { entry: 20, exit: 10 }, thresholdKind: "fixed", description: "Close above the prior 20-period high turns bullish; below the prior 10-period low turns bearish." },
   { id: "donchian_55_20", displayName: "Donchian Close 55/20", shortName: "Donchian 55/20", role: "regime", family: "breakout", supportedTimeframes: ["1d", "1w"], parameters: { entry: 55, exit: 20 }, thresholdKind: "fixed", description: "A slower close-confirmed adaptation of the Turtle breakout family." },
@@ -89,7 +168,176 @@ export const INDICATOR_SPECS: IndicatorSpec[] = [
   { id: "ma_200w", displayName: "200-Week Moving Average", shortName: "200W MA", role: "valuation", family: "valuation", supportedTimeframes: ["1w"], parameters: { average: 200 }, thresholdKind: "fixed", description: "A slow cycle reference, not an ordinary allocation switch." },
 ];
 
+const INDICATOR_GUIDANCE: Record<string, IndicatorGuidance> = {
+  support_band: {
+    summary: "Treat the two averages as a support zone and act only on completed closes outside it.",
+    positive: { label: "Positive / entry", rule: "A completed close strictly above both the 20 SMA and 21 EMA supports a bullish trend regime." },
+    neutral: { label: "Wait", rule: "A close inside or touching the band is transitional. Wait for a completed close outside the zone." },
+    negative: { label: "Negative / exit", rule: "A completed close strictly below both averages indicates that trend support has been lost." },
+    rationale: "Two nearby smoothers form a zone, making the decision less brittle than one moving-average line.",
+    caveats: ["Signals are effective at the next open, not at the historical closing price."],
+  },
+  supertrend: {
+    summary: "Use the ATR trail as a close-confirmed trend switch and trailing risk level.",
+    positive: { label: "Bullish reversal", rule: "A completed close reverses above the active upper band; the SuperTrend line then trails below price." },
+    neutral: { label: "No neutral state", rule: "Keep the prior regime until a confirmed reversal. The still-open candle remains provisional." },
+    negative: { label: "Bearish reversal / exit", rule: "A completed close reverses below the active lower band; a long/cash model moves risk-off next open." },
+    rationale: "ATR widens or narrows the reversal distance with volatility while the final bands trail favorable movement.",
+    caveats: ["Sideways markets can produce repeated reversals."],
+  },
+  smma_ribbon: {
+    summary: "Use full SMMA stacking as the signal; crossings and tangles are deliberately neutral.",
+    positive: { label: "Gold / bullish", rule: "SMMA 15 > 19 > 25 > 29 on HL2 shows agreement from fast through slow horizons." },
+    neutral: { label: "Grey / wait", rule: "Any crossing, equality, or tangled ordering means the horizons disagree. Wait for full alignment." },
+    negative: { label: "Blue / bearish", rule: "SMMA 15 < 19 < 25 < 29 shows fully aligned downside structure." },
+    rationale: "Strict stacking filters isolated crosses at the cost of later signals.",
+    caveats: ["This is a community Larsson-style proxy; the official Larsson Line formula is private."],
+  },
+  super_guppy: {
+    summary: "Read the Trader and Investor groups separately, then use R1.2 arrows as events rather than treating every gray bar as a trade.",
+    positive: { label: "Uptrend / long evidence", rule: "Aqua Trader EMAs and lime Investor EMAs show established upside alignment. A lime Swing Buy arrow marks a pullback-entry setup; an aqua Trend Break Buy arrow is the more aggressive group-average crossover setup." },
+    neutral: { label: "Gray / wait", rule: "Gray means a group is unestablished or in pullback. It is not automatically an exit; wait for renewed alignment or an explicit opposite event." },
+    negative: { label: "Downtrend / risk-off", rule: "Blue Trader EMAs and red Investor EMAs show downside structure. Red Swing Sell and blue Trend Break Sell arrows are bearish events; for long-only use they are exit/risk-off evidence." },
+    rationale: "The fast group approximates trader behavior and the slow group investor behavior. Expansion and agreement suggest trend strength; compression shows disagreement.",
+    caveats: ["The dashboard's one regime state follows the active R1.2 Swing conditions; the chart preserves both original group states.", "Confluence, EMA-200 filtering, candle recoloring, average plots, and the anchor are off in the published defaults; the R1.2 settings panel can enable them."],
+  },
+  long_sma: {
+    summary: "Use the long average as a slow trend filter, not as an early turning-point forecast.",
+    positive: { label: "Positive / invested", rule: "A completed close at or above the configured 200-day or 30-week SMA supports the long-horizon trend." },
+    neutral: { label: "No neutral state", rule: "When price is near the line, wait for the completed close rather than anticipating it." },
+    negative: { label: "Negative / cash", rule: "A completed close below the long SMA defines the negative long-horizon filter." },
+    rationale: "A slow baseline suppresses short-term noise but reacts late.",
+    caveats: ["Repeated whipsaws are possible when price hugs the average."],
+  },
+  donchian_20_10: {
+    summary: "Enter on a prior-20-bar breakout and exit on a faster prior-10-bar breakdown.",
+    positive: { label: "Breakout entry", rule: "A close strictly above the highest high of the prior 20 bars starts the bullish state." },
+    neutral: { label: "Retain prior state", rule: "Before the first breakout the state is neutral; afterward, closes between the two channels preserve the existing state." },
+    negative: { label: "Breakdown exit", rule: "A close strictly below the lowest low of the prior 10 bars ends the bullish state." },
+    rationale: "A slower entry and faster exit create hysteresis: demand meaningful upside confirmation while cutting failed trends sooner.",
+    caveats: ["Neutral in the generic backtest means 50% exposure; that is a dashboard convention, not the classic Donchian rule."],
+  },
+  donchian_55_20: {
+    summary: "Use the slower Turtle-style channel for fewer, larger trend attempts.",
+    positive: { label: "Breakout entry", rule: "A close strictly above the highest high of the prior 55 bars starts the bullish state." },
+    neutral: { label: "Retain prior state", rule: "Between-channel closes do not create a new decision; they preserve the prior state." },
+    negative: { label: "Breakdown exit", rule: "A close strictly below the lowest low of the prior 20 bars ends the bullish state." },
+    rationale: "The longer breakout window seeks larger trends and fewer entries, with greater entry lag.",
+    caveats: ["Breakout systems can give back gains before the exit channel is breached."],
+  },
+  ichimoku: {
+    summary: "Use price versus the displaced cloud as a regime filter.",
+    positive: { label: "Above cloud", rule: "A completed close strictly above both displaced cloud spans supports a positive cloud regime." },
+    neutral: { label: "Inside cloud / wait", rule: "Inside or touching the cloud signals equilibrium or uncertainty; wait for a decisive close outside." },
+    negative: { label: "Below cloud", rule: "A completed close strictly below both spans supports a negative cloud regime." },
+    rationale: "The cloud combines projected medium- and longer-horizon equilibrium.",
+    caveats: ["This implementation is price versus cloud only, not full Tenkan/Kijun/Chikou confirmation."],
+  },
+  macd: {
+    summary: "Use the MACD/signal crossover as momentum evidence, not a complete long-term trend system.",
+    positive: { label: "Improving momentum", rule: "MACD at or above its signal line means momentum is improving relative to its recent trend." },
+    neutral: { label: "No neutral state", rule: "A bullish crossover below zero is still only improving momentum, not proof of a long-term uptrend." },
+    negative: { label: "Weakening momentum", rule: "MACD below its signal line means momentum is weakening." },
+    rationale: "The difference between two EMAs measures trend acceleration; the signal EMA smooths that difference.",
+    caveats: ["Use a trend or price filter if the strategy requires directional context."],
+  },
+  psar: {
+    summary: "Use SAR as a fast trailing reversal system based on intrabar extremes.",
+    positive: { label: "Bullish reversal", rule: "A reversal occurs when the bar's high penetrates projected SAR from a bearish state; dots then move below price." },
+    neutral: { label: "No neutral state", rule: "The current bar's unfinished high or low can still change the provisional result." },
+    negative: { label: "Bearish reversal / exit", rule: "A reversal occurs when the bar's low penetrates projected SAR from a bullish state; dots move above price." },
+    rationale: "The acceleration factor tightens the trail as new extremes form.",
+    caveats: ["Its responsiveness makes it vulnerable to sideways whipsaw."],
+  },
+  vortex: {
+    summary: "Use the relative VI lines as directional evidence over the last 14 bars.",
+    positive: { label: "Positive direction", rule: "VI+ at or above VI− means positive directional movement dominates." },
+    neutral: { label: "No neutral state", rule: "Near-equal lines imply weak separation; wait for bar completion or other confirmation." },
+    negative: { label: "Negative direction", rule: "VI− above VI+ means negative directional movement dominates." },
+    rationale: "Directional path movement is normalized by true range so positive and negative evidence can be compared.",
+    caveats: ["A crossover alone does not measure whether separation is economically meaningful."],
+  },
+  heikin_ashi: {
+    summary: "Use synthetic candle color to smooth direction; do not treat synthetic prices as executable prices.",
+    positive: { label: "Bullish color", rule: "Synthetic Heikin-Ashi close at or above its synthetic open produces a bullish state." },
+    neutral: { label: "No neutral state", rule: "Wait for completion because current OHLC changes the synthetic candle; multi-bar confirmation is not implemented." },
+    negative: { label: "Bearish color / exit", rule: "Synthetic close below synthetic open produces a bearish state." },
+    rationale: "Recursive synthetic candles smooth visual noise.",
+    caveats: ["Heikin-Ashi lags and its displayed OHLC is not directly tradable."],
+  },
+  absolute_momentum: {
+    summary: "Use the sign of trailing one-year return as a simple absolute-momentum switch.",
+    positive: { label: "Non-negative momentum", rule: "Close at or above the close 365 daily or 52 weekly bars earlier supports the bullish state." },
+    neutral: { label: "No neutral state", rule: "Near the reference, the signal can flip on the next completed close." },
+    negative: { label: "Negative momentum / cash", rule: "Close below the one-year reference produces the negative state." },
+    rationale: "Persistent trends often extend across long horizons; the asset is compared with its own historical price.",
+    caveats: ["This is absolute, not relative, momentum and does not rank other assets."],
+  },
+  golden_cross: {
+    summary: "Use the 50/200 SMA relationship as a lagging long-horizon filter.",
+    positive: { label: "Golden cross", rule: "The daily 50 SMA at or above the 200 SMA defines the bullish state." },
+    neutral: { label: "No neutral state", rule: "Near convergence, wait for the completed crossover; this is not an early-entry tool." },
+    negative: { label: "Death cross", rule: "The 50 SMA below the 200 SMA defines the bearish state." },
+    rationale: "Comparing medium- and long-horizon averages filters noise.",
+    caveats: ["Both averages materially lag turning points."],
+  },
+  adx: {
+    summary: "Use DMI for direction and ADX for strength as confirmation of another regime.",
+    positive: { label: "Positive confirmation", rule: "ADX at least 20 with +DI at or above −DI confirms positive direction; 20–25 is transitional and 25+ strong." },
+    neutral: { label: "No confirmation", rule: "ADX below 20 means direction is too weak to confirm a trend, regardless of DI ordering." },
+    negative: { label: "Negative confirmation", rule: "ADX at least 20 with −DI above +DI confirms negative direction; it is not a standalone exit." },
+    rationale: "DMI supplies direction while ADX measures directional strength without regard to direction.",
+    caveats: ["Combine it with an entry/exit regime rather than trading the label in isolation."],
+  },
+  chandelier: {
+    summary: "Use the long Chandelier line as a volatility-adjusted exit, not as a new-entry signal.",
+    positive: { label: "Long stop intact", rule: "A completed close at or above the long-exit line means the long volatility stop remains intact; this is not a new-entry signal." },
+    neutral: { label: "No neutral state", rule: "Continue monitoring the stop until a completed close breach." },
+    negative: { label: "Long-exit condition", rule: "A completed close below highest high(22) − 3 × ATR(22) triggers the implemented long exit." },
+    rationale: "The stop allows more room when volatility is high and follows the highest recent price.",
+    caveats: ["The displayed short-exit reference is context for short positions, not a buy threshold."],
+  },
+  mayer: {
+    summary: "Read the multiple as continuous valuation context; this model does not issue entries or exits.",
+    positive: { label: "Lower extension", rule: "A lower multiple means less extension above the 200-day average, not an automatic buy." },
+    neutral: { label: "Reference context", rule: "A Mayer Multiple of 1.0 means price equals its 200-day SMA." },
+    negative: { label: "Higher extension", rule: "A higher multiple means greater extension, but this implementation defines no sell threshold." },
+    rationale: "Price divided by its long average creates a scale-free measure of trend-relative valuation.",
+    caveats: ["Excluded from regime agreement and backtest allocation decisions."],
+  },
+  ma_200w: {
+    summary: "Use the 200-week average as very slow cycle context, not as a precise trade switch.",
+    positive: { label: "Above cycle baseline", rule: "Price above the average is above its slow cycle baseline; that is not independently a buy instruction." },
+    neutral: { label: "Reference context", rule: "Near the line, treat it as context rather than a precise allocation decision." },
+    negative: { label: "Below cycle baseline", rule: "Price below the line indicates cycle compression, not automatically a sell and potentially the opposite from a valuation perspective." },
+    rationale: "The roughly four-year average supplies a stable but necessarily late cycle reference.",
+    caveats: ["Excluded from family agreement."],
+  },
+};
+
+export const INDICATOR_SPECS: IndicatorSpec[] = BASE_INDICATOR_SPECS.map(spec => ({ ...spec, guidance: INDICATOR_GUIDANCE[spec.id] }));
+
 const finite = (v: number | null | undefined): v is number => typeof v === "number" && Number.isFinite(v);
+
+export function normalizeSuperGuppyConfig(input: Partial<SuperGuppyConfig> = {}): SuperGuppyConfig {
+  const lengths = (candidate: number[] | undefined, fallback: number[], expected: number) => Array.isArray(candidate) && candidate.length === expected && candidate.every(value => Number.isInteger(value) && value > 0 && value <= 1000) ? [...candidate] : [...fallback];
+  const sources: SuperGuppySource[] = ["close", "open", "high", "low", "hl2", "hlc3", "ohlc4"];
+  return {
+    fastLengths: lengths(input.fastLengths, SUPER_GUPPY_R12_DEFAULTS.fastLengths, 11),
+    slowLengths: lengths(input.slowLengths, SUPER_GUPPY_R12_DEFAULTS.slowLengths, 16),
+    source: sources.includes(input.source as SuperGuppySource) ? input.source as SuperGuppySource : SUPER_GUPPY_R12_DEFAULTS.source,
+    anchorMinutes: finite(input.anchorMinutes) ? Math.max(0, Math.min(1_440, Math.round(input.anchorMinutes!))) : 0,
+    showBreak: input.showBreak ?? SUPER_GUPPY_R12_DEFAULTS.showBreak,
+    showSwing: input.showSwing ?? SUPER_GUPPY_R12_DEFAULTS.showSwing,
+    requireConfluence: input.requireConfluence ?? SUPER_GUPPY_R12_DEFAULTS.requireConfluence,
+    candleChangeRetriggers: input.candleChangeRetriggers ?? SUPER_GUPPY_R12_DEFAULTS.candleChangeRetriggers,
+    lookback: finite(input.lookback) ? Math.max(0, Math.min(100, Math.round(input.lookback!))) : SUPER_GUPPY_R12_DEFAULTS.lookback,
+    showAverages: input.showAverages ?? SUPER_GUPPY_R12_DEFAULTS.showAverages,
+    showEma200: input.showEma200 ?? SUPER_GUPPY_R12_DEFAULTS.showEma200,
+    ema200Filter: input.ema200Filter ?? SUPER_GUPPY_R12_DEFAULTS.ema200Filter,
+    colorBars: input.colorBars ?? SUPER_GUPPY_R12_DEFAULTS.colorBars,
+  };
+}
 
 function sma(values: number[], length: number): Array<number | null> {
   const out: Array<number | null> = Array(values.length).fill(null);
@@ -157,9 +405,20 @@ function lastState(states: Array<RegimeState | null>): { state: RegimeState; pre
   return { state, previous: prev, lastFlip: null, flipIndex };
 }
 
-function buildSnapshot(spec: IndicatorSpec, candles: Candle[], states: Array<RegimeState | null>, overlays: OverlaySeries[], values: Record<string, number | null>, bullTrigger: number | null, bearTrigger: number | null, triggerLabel: string, explanation?: string): SignalSnapshot {
+function buildSnapshot(
+  spec: IndicatorSpec,
+  candles: Candle[],
+  states: Array<RegimeState | null>,
+  overlays: OverlaySeries[],
+  values: Record<string, number | null>,
+  bullTrigger: number | null,
+  bearTrigger: number | null,
+  triggerLabel: string,
+  explanation?: string,
+  visuals: { ribbons?: RibbonBand[]; events?: SignalEvent[]; barColors?: BarColorPoint[] } = {},
+): SignalSnapshot {
   const stateMeta = lastState(states);
-  return { id: spec.id, displayName: spec.displayName, shortName: spec.shortName, role: spec.role, family: spec.family, state: stateMeta.state, previousState: stateMeta.previous, lastFlip: stateMeta.flipIndex === null ? null : candles[stateMeta.flipIndex]?.time ?? null, thresholdKind: spec.thresholdKind, bullTrigger, bearTrigger, triggerLabel, explanation: explanation ?? spec.description, values, disclaimer: spec.disclaimer, overlays, states };
+  return { id: spec.id, displayName: spec.displayName, shortName: spec.shortName, role: spec.role, family: spec.family, state: stateMeta.state, previousState: stateMeta.previous, lastFlip: stateMeta.flipIndex === null ? null : candles[stateMeta.flipIndex]?.time ?? null, thresholdKind: spec.thresholdKind, bullTrigger, bearTrigger, triggerLabel, explanation: explanation ?? spec.description, guidance: spec.guidance, values, disclaimer: spec.disclaimer, sourceUrl: spec.sourceUrl, overlays, ribbons: visuals.ribbons ?? [], events: visuals.events ?? [], barColors: visuals.barColors ?? [], states };
 }
 
 function supportBand(candles: Candle[], spec: IndicatorSpec): SignalSnapshot {
@@ -192,43 +451,161 @@ function supertrend(candles: Candle[], spec: IndicatorSpec): SignalSnapshot {
 }
 
 function ribbon(candles: Candle[], spec: IndicatorSpec): SignalSnapshot {
-  const source = candles.map(c => (c.high + c.low) / 2), lengths = [15, 19, 25, 29], colors = ["#0b8a61", "#d7a928", "#cf6a4c", "#264f66"], lines = lengths.map(n => rma(source, n));
+  const source = candles.map(c => (c.high + c.low) / 2), lengths = [15, 19, 25, 29], lines = lengths.map(n => rma(source, n));
   const states = candles.map((_, i): RegimeState | null => {
     const v = lines.map(line => line[i]); if (v.some(x => !finite(x))) return null;
     if (v[0]! > v[1]! && v[1]! > v[2]! && v[2]! > v[3]!) return "bull";
     if (v[0]! < v[1]! && v[1]! < v[2]! && v[2]! < v[3]!) return "bear";
     return "neutral";
   });
-  return buildSnapshot(spec, candles, states, lines.map((line, i) => points(candles, line, `SMMA ${lengths[i]}`, colors[i])), Object.fromEntries(lengths.map((n, i) => [`smma${n}`, lines[i].at(-1) ?? null])), null, null, "Ordering condition; no single guaranteed flip price");
+  const rangePoints: RibbonPoint[] = candles.flatMap((candle, i) => {
+    const values = lines.map(line => line[i]);
+    return states[i] && values.every(finite) ? [{ time: candle.time, upper: Math.max(...values as number[]), lower: Math.min(...values as number[]), state: states[i]! }] : [];
+  });
+  const overlays = lines.map((line, i) => ({ ...points(candles, line, `SMMA ${lengths[i]}`, "#66716c"), width: 0.8, showInLegend: false }));
+  return buildSnapshot(spec, candles, states, overlays, Object.fromEntries(lengths.map((n, i) => [`smma${n}`, lines[i].at(-1) ?? null])), null, null, "Gold = fully bullish · grey = tangled/neutral · blue = fully bearish", undefined, {
+    ribbons: [{ id: "smma-range", name: "SMMA regime range", palette: { bull: "#d7a928", neutral: "#919896", bear: "#264f66" }, fillOpacity: 0.5, points: rangePoints }],
+  });
 }
 
-function superGuppy(candles: Candle[], spec: IndicatorSpec): SignalSnapshot {
-  const fastLengths = Array.from({ length: 11 }, (_, index) => 3 + index * 2);
-  const slowLengths = Array.from({ length: 16 }, (_, index) => 25 + index * 3);
+function superGuppy(candles: Candle[], spec: IndicatorSpec, timeframe: Timeframe, input: Partial<SuperGuppyConfig> = {}): SignalSnapshot {
+  const config = normalizeSuperGuppyConfig(input);
+  const baseMinutes = timeframe === "1d" ? 1_440 : 7_200;
+  const anchorMultiplier = config.anchorMinutes > baseMinutes ? Math.max(1, Math.round(config.anchorMinutes / baseMinutes)) : 1;
+  const fastBaseLengths = config.fastLengths, slowBaseLengths = config.slowLengths;
+  const fastLengths = fastBaseLengths.map(length => length * anchorMultiplier);
+  const slowLengths = slowBaseLengths.map(length => length * anchorMultiplier);
   const lengths = [...fastLengths, ...slowLengths];
-  const closes = candles.map(candle => candle.close);
-  const lines = lengths.map(length => ema(closes, length));
-  const states = candles.map((_, candleIndex): RegimeState | null => {
-    if (candleIndex < Math.max(...lengths) - 1) return null;
-    const values = lines.map(line => line[candleIndex]);
-    if (values.some(value => !finite(value))) return null;
-    if (values.every((value, index) => index === 0 || values[index - 1]! > value!)) return "bull";
-    if (values.every((value, index) => index === 0 || values[index - 1]! < value!)) return "bear";
-    return "neutral";
+  const source = candles.map(candle => config.source === "open" ? candle.open : config.source === "high" ? candle.high : config.source === "low" ? candle.low : config.source === "hl2" ? (candle.high + candle.low) / 2 : config.source === "hlc3" ? (candle.high + candle.low + candle.close) / 3 : config.source === "ohlc4" ? (candle.open + candle.high + candle.low + candle.close) / 4 : candle.close);
+  const lines = lengths.map(length => ema(source, length));
+  const fastLines = lines.slice(0, fastLengths.length), slowLines = lines.slice(fastLengths.length);
+  const fastAverages: number[] = candles.map((_, i) => fastLines.reduce((sum, line) => sum + line[i]!, 0) / fastLines.length);
+  const slowAverages: number[] = candles.map((_, i) => slowLines.reduce((sum, line) => sum + line[i]!, 0) / slowLines.length);
+  const ema200 = ema(source, 200 * anchorMultiplier);
+  const fastStates: RegimeState[] = [], slowStates: RegimeState[] = [];
+  const fastLongFlags: boolean[] = [], fastShortFlags: boolean[] = [];
+  const buyConditions: boolean[] = [], sellConditions: boolean[] = [], buyBreakConditions: boolean[] = [], sellBreakConditions: boolean[] = [];
+  const states: RegimeState[] = [];
+  const strictlyFalling = (values: number[]) => values.every((value, index) => index === 0 || values[index - 1] > value);
+  const strictlyRising = (values: number[]) => values.every((value, index) => index === 0 || values[index - 1] < value);
+  for (let i = 0; i < candles.length; i++) {
+    const fast = fastLines.map(line => line[i]!), slow = slowLines.map(line => line[i]!);
+    const fastLong = strictlyFalling(fast), fastShort = strictlyRising(fast), slowLong = strictlyFalling(slow), slowShort = strictlyRising(slow);
+    fastLongFlags[i] = fastLong; fastShortFlags[i] = fastShort;
+    fastStates[i] = fastLong && slow[0] > slow.at(-1)! ? "bull" : fastShort && slow[0] < slow.at(-1)! ? "bear" : "neutral";
+    slowStates[i] = slowLong ? "bull" : slowShort ? "bear" : "neutral";
+    buyConditions[i] = fastAverages[i] > slowAverages[i] && slow[0] > slow.at(-1)! && !slowShort && fastLong && (!config.requireConfluence || slowLong) && (!config.ema200Filter || fastAverages[i] > ema200[i]!);
+    sellConditions[i] = fastAverages[i] < slowAverages[i] && slow[0] < slow.at(-1)! && !slowLong && fastShort && (!config.requireConfluence || slowShort) && (!config.ema200Filter || fastAverages[i] < ema200[i]!);
+    buyBreakConditions[i] = fastAverages[i] > slowAverages[i] && !slowShort && (!config.ema200Filter || fastAverages[i] > ema200[i]!);
+    sellBreakConditions[i] = fastAverages[i] < slowAverages[i] && !slowLong && (!config.ema200Filter || fastAverages[i] < ema200[i]!);
+    states[i] = buyConditions[i] ? "bull" : sellConditions[i] ? "bear" : "neutral";
+  }
+
+  const fastColors = fastStates.map(state => state === "bull" ? "#00ffff" : state === "bear" ? "#0000ff" : "#808080");
+  const slowColors = slowStates.map(state => state === "bull" ? "#00ff00" : state === "bear" ? "#ff0000" : "#808080");
+  const visibleIndices = new Set([0, 1, 3, 5, 7, 9, 10, ...[0, 1, 3, 5, 8, 10, 15].map(index => fastLengths.length + index)]);
+  const overlays: OverlaySeries[] = lines.flatMap((line, lineIndex) => {
+    if (!visibleIndices.has(lineIndex)) return [];
+    const fast = lineIndex < fastLengths.length, baseLength = fast ? fastBaseLengths[lineIndex] : slowBaseLengths[lineIndex - fastLengths.length], colors = fast ? fastColors : slowColors;
+    return {
+      name: `EMA ${baseLength}${anchorMultiplier > 1 ? ` × ${anchorMultiplier}` : ""}`,
+      legendLabel: lineIndex === 0 ? "Trader EMAs" : lineIndex === fastLengths.length ? "Investor EMAs" : undefined,
+      color: colors.at(-1) ?? "#808080",
+      width: 1,
+      showInLegend: lineIndex === 0 || lineIndex === fastLengths.length,
+      points: candles.map((candle, i) => ({ time: candle.time, value: line[i]!, color: colors[i] })),
+    };
   });
-  const visible = [3, 13, 23, 25, 49, 70];
-  const colors = ["#10a7a7", "#267f8d", "#264f66", "#7f9f35", "#d7a928", "#c95545"];
-  const overlays = visible.map((length, index) => points(candles, lines[lengths.indexOf(length)], `EMA ${length}`, colors[index]));
-  const last = (length: number) => lines[lengths.indexOf(length)].at(-1) ?? null;
-  const ema3 = last(3), ema23 = last(23), ema25 = last(25), ema70 = last(70);
+  if (config.showAverages) {
+    overlays.push({ name: "Trader average", color: "#ffd700", width: 1.4, pointStyle: "circles", points: candles.map((candle, i) => ({ time: candle.time, value: fastAverages[i] })) });
+    overlays.push({ name: "Investor average", color: "#ff00ff", width: 1.4, pointStyle: "circles", points: candles.map((candle, i) => ({ time: candle.time, value: slowAverages[i] })) });
+  }
+  if (config.showEma200) overlays.push(points(candles, ema200, "EMA 200", "#111111"));
+
+  const counter = (conditions: boolean[]) => {
+    const out: number[] = [];
+    for (let i = 0; i < conditions.length; i++) out[i] = conditions[i] ? (out[i - 1] ?? 0) + 1 : 0;
+    return out;
+  };
+  const swingCounter = (conditions: boolean[], direction: "bull" | "bear") => {
+    const out: number[] = [];
+    for (let i = 0; i < conditions.length; i++) {
+      out[i] = conditions[i] ? (out[i - 1] ?? 0) + 1 : 0;
+      if (!config.candleChangeRetriggers || out[i] <= 1 || i === 0) continue;
+      const changed = direction === "bull"
+        ? fastLongFlags[i] && candles[i - 1].close < candles[i - 1].open && candles[i].close > candles[i].open
+        : fastShortFlags[i] && candles[i - 1].close > candles[i - 1].open && candles[i].close < candles[i].open;
+      if (changed) out[i] = 1;
+    }
+    return out;
+  };
+  const buy = swingCounter(buyConditions, "bull"), sell = swingCounter(sellConditions, "bear"), buyBreak = counter(buyBreakConditions), sellBreak = counter(sellBreakConditions);
+  const barsSinceShiftedStart = (series: number[]) => {
+    const out: number[] = [];
+    let last = 0;
+    for (let i = 0; i < series.length; i++) {
+      if ((i === 0 ? 1 : series[i - 1]) === 1) last = i;
+      out[i] = i - last;
+    }
+    return out;
+  };
+  const sinceBuy = barsSinceShiftedStart(buy), sinceSell = barsSinceShiftedStart(sell), sinceBuyBreak = barsSinceShiftedStart(buyBreak), sinceSellBreak = barsSinceShiftedStart(sellBreak);
+  const events: SignalEvent[] = [];
+  const addEvent = (i: number, kind: SignalEventKind, direction: "bull" | "bear", label: string, color: string) => events.push({
+    time: candles[i].time,
+    kind,
+    direction,
+    label,
+    price: direction === "bull" ? candles[i].low : candles[i].high,
+    color,
+    confirmedAt: candles[i].time,
+    effectiveAt: candles[i + 1]?.time ?? null,
+  });
+  for (let i = 0; i < candles.length; i++) {
+    if (config.showSwing && buy[i] === 1 && sinceBuy[i] > config.lookback) addEvent(i, "swing", "bull", "Swing Buy", "#00ff00");
+    if (config.showSwing && sell[i] === 1 && sinceSell[i] > config.lookback) addEvent(i, "swing", "bear", "Swing Sell", "#ff0000");
+    if (config.showBreak && buyBreak[i] === 1 && sinceBuyBreak[i] > config.lookback && sinceSellBreak[i] > config.lookback) addEvent(i, "trend_break", "bull", "Trend Break Buy", "#00ffff");
+    if (config.showBreak && sellBreak[i] === 1 && sinceSellBreak[i] > config.lookback && sinceBuyBreak[i] > config.lookback) addEvent(i, "trend_break", "bear", "Trend Break Sell", "#0000ff");
+  }
+
+  const ribbons: RibbonBand[] = [
+    {
+      id: "guppy-trader",
+      name: "Trader group",
+      palette: { bull: "#c0c0c0", neutral: "#c0c0c0", bear: "#c0c0c0" },
+      fillOpacity: 0.05,
+      showInLegend: false,
+      points: candles.map((candle, i) => ({ time: candle.time, upper: Math.max(fastLines[0][i]!, fastLines.at(-1)![i]!), lower: Math.min(fastLines[0][i]!, fastLines.at(-1)![i]!), state: fastStates[i] })),
+    },
+    {
+      id: "guppy-investor",
+      name: "Investor group",
+      palette: { bull: "#c0c0c0", neutral: "#c0c0c0", bear: "#c0c0c0" },
+      fillOpacity: 0.05,
+      showInLegend: false,
+      points: candles.map((candle, i) => ({ time: candle.time, upper: Math.max(slowLines[0][i]!, slowLines.at(-1)![i]!), lower: Math.min(slowLines[0][i]!, slowLines.at(-1)![i]!), state: slowStates[i] })),
+    },
+  ];
+  const fastFirst = fastLines[0].at(-1) ?? null, fastLast = fastLines.at(-1)!.at(-1) ?? null, slowFirst = slowLines[0].at(-1) ?? null, slowLast = slowLines.at(-1)!.at(-1) ?? null;
+  const barColors: BarColorPoint[] = config.colorBars ? candles.map((candle, i) => ({ time: candle.time, color: fastColors[i] })) : [];
   return buildSnapshot(spec, candles, states, overlays, {
-    ema3,
-    ema23,
-    ema25,
-    ema70,
-    fastSpread: finite(ema3) && finite(ema23) ? ema3 / ema23 - 1 : null,
-    slowSpread: finite(ema25) && finite(ema70) ? ema25 / ema70 - 1 : null,
-  }, null, null, "27-EMA ordering condition; six representative lines shown");
+    fastFirst,
+    fastLast,
+    slowFirst,
+    slowLast,
+    fastAverage: fastAverages.at(-1) ?? null,
+    slowAverage: slowAverages.at(-1) ?? null,
+    ema200: ema200.at(-1) ?? null,
+    anchorMultiplier,
+    lookback: config.lookback,
+    confluenceEnabled: config.requireConfluence ? 1 : 0,
+    candleChangeRetriggersEnabled: config.candleChangeRetriggers ? 1 : 0,
+    ema200FilterEnabled: config.ema200Filter ? 1 : 0,
+    fastGroupState: fastStates.at(-1) === "bull" ? 1 : fastStates.at(-1) === "bear" ? -1 : 0,
+    slowGroupState: slowStates.at(-1) === "bull" ? 1 : slowStates.at(-1) === "bear" ? -1 : 0,
+    fastSpread: finite(fastFirst) && finite(fastLast) ? fastFirst / fastLast - 1 : null,
+    slowSpread: finite(slowFirst) && finite(slowLast) ? slowFirst / slowLast - 1 : null,
+  }, null, null, `R1.2 · ${config.showSwing ? "Swing on" : "Swing off"} · ${config.showBreak ? "Trend Break on" : "Trend Break off"} · ${config.lookback}-bar repeat filter`, `Trader: aqua up / blue down / gray · Investor: lime up / red down / gray · source ${config.source.toUpperCase()}`, { ribbons, events, barColors });
 }
 
 function longSma(candles: Candle[], spec: IndicatorSpec, timeframe: Timeframe): SignalSnapshot {
@@ -357,13 +734,13 @@ function valuation(candles: Candle[], spec: IndicatorSpec, timeframe: Timeframe)
   return buildSnapshot(spec, candles, states, [points(candles, avg, "200W MA", "#d7a928")], { sma200: avg.at(-1) ?? null }, avg.at(-1) ?? null, avg.at(-1) ?? null, timeframe === "1w" ? "Cycle reference only; excluded from regime agreement" : "Weekly only");
 }
 
-export function calculateIndicators(candles: Candle[], timeframe: Timeframe): SignalSnapshot[] {
+export function calculateIndicators(candles: Candle[], timeframe: Timeframe, options: IndicatorCalculationOptions = {}): SignalSnapshot[] {
   return INDICATOR_SPECS.filter(s => s.supportedTimeframes.includes(timeframe)).map(spec => {
     switch (spec.id) {
       case "support_band": return supportBand(candles, spec);
       case "supertrend": return supertrend(candles, spec);
       case "smma_ribbon": return ribbon(candles, spec);
-      case "super_guppy": return superGuppy(candles, spec);
+      case "super_guppy": return superGuppy(candles, spec, timeframe, options.superGuppy);
       case "long_sma": return longSma(candles, spec, timeframe);
       case "donchian_20_10": return donchian(candles, spec, 20, 10);
       case "donchian_55_20": return donchian(candles, spec, 55, 20);

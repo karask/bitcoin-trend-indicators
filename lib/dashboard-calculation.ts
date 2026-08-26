@@ -1,4 +1,4 @@
-import { backtest, calculateIndicators, familyAgreement, INDICATOR_SPECS, type Candle, type SignalSnapshot, type Timeframe } from "./regimes";
+import { backtest, calculateIndicators, familyAgreement, INDICATOR_SPECS, type Candle, type IndicatorCalculationOptions, type SignalSnapshot, type Timeframe } from "./regimes";
 import { ASSETS, sourcesForAsset, type AssetId, type SourceId } from "./markets";
 import type { MarketDataset } from "./market-data";
 
@@ -42,8 +42,10 @@ function slimMatrix(signal: SignalSnapshot, candles: Candle[], denomination: str
     bearTrigger: signal.bearTrigger,
     triggerLabel: signal.triggerLabel,
     explanation: signal.explanation,
+    guidance: signal.guidance,
     values: signal.values,
     disclaimer: signal.disclaimer,
+    sourceUrl: signal.sourceUrl,
     candleClose: candles.at(-1)?.time ?? null,
   };
 }
@@ -67,10 +69,10 @@ function monthlyFaber(candles: Candle[]) {
   return { state: close >= sma10 ? "bull" as const : "bear" as const, close, sma10 };
 }
 
-export function buildDashboardPayload(asset: AssetId, source: SourceId, timeframe: Timeframe, indicatorId: string, daily: MarketDataset, weekly: MarketDataset) {
+export function buildDashboardPayload(asset: AssetId, source: SourceId, timeframe: Timeframe, indicatorId: string, daily: MarketDataset, weekly: MarketDataset, options: IndicatorCalculationOptions = {}) {
   const selectedDataset = timeframe === "1d" ? daily : weekly;
-  const dailySignals = calculateIndicators(daily.candles, "1d");
-  const weeklySignals = calculateIndicators(weekly.candles, "1w");
+  const dailySignals = calculateIndicators(daily.candles, "1d", options);
+  const weeklySignals = calculateIndicators(weekly.candles, "1w", options);
   const signals = timeframe === "1d" ? dailySignals : weeklySignals;
   const selected = signals.find(item => item.id === indicatorId) ?? signals.find(item => item.id === "support_band") ?? signals[0];
   const visibleCount = timeframe === "1d" ? 180 : 120;
@@ -81,7 +83,10 @@ export function buildDashboardPayload(asset: AssetId, source: SourceId, timefram
     ...slimMatrix(selected, selectedDataset.candles, selectedDataset.denomination),
     states: selected.states.slice(start),
     overlays: selected.overlays.map(line => ({ ...line, points: line.points.filter(point => visibleTimes.has(point.time)) })),
-    flips: flips(selectedDataset.candles, selected.states).filter(item => visibleTimes.has(item.time)),
+    ribbons: selected.ribbons.map(ribbon => ({ ...ribbon, points: ribbon.points.filter(point => visibleTimes.has(point.time)) })),
+    events: selected.events.filter(event => visibleTimes.has(event.time)),
+    barColors: selected.barColors.filter(point => visibleTimes.has(point.time)),
+    flips: selected.id === "super_guppy" ? [] : flips(selectedDataset.candles, selected.states).filter(item => visibleTimes.has(item.time)),
   };
   const counterpart = timeframe === "1d" ? weeklySignals : dailySignals;
   const matrix = signals.filter(signal => signal.role === "regime").map(signal => {

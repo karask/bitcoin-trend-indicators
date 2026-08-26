@@ -135,7 +135,7 @@ class Repository:
                         if index == len(times) - 1: values = {**values, **snapshot.get("values", {})}
                         rows.append((dataset.asset, dataset.source, dataset.market, dataset.timeframe, snapshot["id"], times[index], state, prior, flip, times[index], times[index + 1] if index + 1 < len(times) else None, snapshot["thresholdKind"], json.dumps(values)))
                         prior = state
-                    report = {key: value for key, value in snapshot.items() if key not in {"states", "overlays"}}
+                    report = {key: value for key, value in snapshot.items() if key not in {"states", "overlays", "ribbons", "barColors"}}
                     db.execute("INSERT INTO signal_reports (asset,source,market,timeframe,indicator_id,payload) VALUES (?,?,?,?,?,?)", [*key, snapshot["id"], json.dumps(report)])
                 if rows: db.executemany("INSERT INTO indicator_series VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", rows)
                 db.execute("INSERT OR REPLACE INTO research_reports (report_id,payload) VALUES (?,?)", [f"backtests:{dataset.asset}:{dataset.source}:{dataset.timeframe}", json.dumps({"asset": dataset.asset, "source": dataset.source, "market": dataset.market, "timeframe": dataset.timeframe, "costSensitivity": output["backtests"], "familyAgreement": output["familyAgreement"], "buyAndHold": output["buyAndHold"], "rollingFourYear": output["rollingFourYear"]})])

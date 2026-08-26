@@ -1,9 +1,9 @@
-import { calculateIndicators, type Timeframe } from "./regimes";
+import { calculateIndicators, type IndicatorCalculationOptions, type Timeframe } from "./regimes";
 import { getMarketData } from "./market-data";
 import type { AssetId, SourceId } from "./markets";
 import { buildDashboardPayload } from "./dashboard-calculation";
 
-export async function dashboardPayload(asset: AssetId, source: SourceId, timeframe: Timeframe, indicatorId: string) {
+export async function dashboardPayload(asset: AssetId, source: SourceId, timeframe: Timeframe, indicatorId: string, options: IndicatorCalculationOptions = {}) {
   const [daily, weekly] = await Promise.all([getMarketData(asset, source, "1d"), getMarketData(asset, source, "1w")]);
   const selectedDataset = timeframe === "1d" ? daily : weekly;
   const signals = calculateIndicators(selectedDataset.candles, timeframe);
@@ -13,7 +13,7 @@ export async function dashboardPayload(asset: AssetId, source: SourceId, timefra
   } catch {
     // The dashboard remains readable if local signal storage is unavailable.
   }
-  return buildDashboardPayload(asset, source, timeframe, indicatorId, daily, weekly);
+  return buildDashboardPayload(asset, source, timeframe, indicatorId, daily, weekly, options);
 }
 
 export async function rawSeriesPayload(asset: AssetId, source: SourceId, timeframe: Timeframe) {

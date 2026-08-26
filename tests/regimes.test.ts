@@ -49,7 +49,7 @@ test("indicator golden states and trigger classifications remain stable", () => 
   assert.equal(support.bearTrigger, Math.min(prior19, support.values.ema!));
 });
 
-test("Super Guppy follows its documented 27-EMA ordering rule", () => {
+test("Super Guppy implements the published R1.2 groups, colors, and events", () => {
   const series = (direction: 1 | -1 | 0): Candle[] => Array.from({ length: 160 }, (_, index) => {
     const close = direction === 0 ? 100 : direction === 1 ? 100 + index : 300 - index;
     return { time: Date.UTC(2024, 0, 1) + index * DAY, open: close, high: close + 1, low: close - 1, close, volume: 1, complete: true };
@@ -60,10 +60,48 @@ test("Super Guppy follows its documented 27-EMA ordering rule", () => {
   assert.equal(rising.state, "bull");
   assert.equal(falling.state, "bear");
   assert.equal(flat.state, "neutral");
-  assert.equal(rising.states[68], null);
-  assert.equal(rising.states[69], "bull");
-  assert.deepEqual(rising.overlays.map(line => line.name), ["EMA 3", "EMA 13", "EMA 23", "EMA 25", "EMA 49", "EMA 70"]);
+  assert.equal(rising.states[0], "neutral");
+  assert.equal(rising.states[68], "bull");
+  assert.deepEqual(rising.overlays.map(line => line.name), ["EMA 3", "EMA 5", "EMA 9", "EMA 13", "EMA 17", "EMA 21", "EMA 23", "EMA 25", "EMA 28", "EMA 34", "EMA 40", "EMA 49", "EMA 55", "EMA 70"]);
+  assert.equal(rising.overlays[0].points.at(-1)?.color, "#00ffff");
+  assert.equal(rising.overlays[7].points.at(-1)?.color, "#00ff00");
+  assert.equal(falling.overlays[0].points.at(-1)?.color, "#0000ff");
+  assert.equal(falling.overlays[7].points.at(-1)?.color, "#ff0000");
+  assert.equal(flat.overlays[0].points.at(-1)?.color, "#808080");
+  assert.equal(rising.ribbons.length, 2);
+  assert.ok(rising.ribbons.every(ribbon => ribbon.points.length === rising.states.length));
+  assert.ok(rising.ribbons.every(ribbon => ribbon.points.every(point => point.upper >= point.lower)));
+  const events = calculateIndicators(history(), "1d").find(item => item.id === "super_guppy")!.events;
+  assert.deepEqual(events.slice(0, 6).map(event => [(event.time - history()[0].time) / DAY, event.kind, event.direction]), [[23, "swing", "bull"], [56, "trend_break", "bear"], [71, "swing", "bear"], [109, "swing", "bear"], [127, "trend_break", "bull"], [132, "swing", "bull"]]);
+  assert.ok(events.every(event => event.effectiveAt == null || event.effectiveAt > event.confirmedAt));
+  const configured = calculateIndicators(history(), "1d", { superGuppy: { showSwing: false, showBreak: false, showAverages: true, showEma200: true, ema200Filter: true, colorBars: true, source: "hlc3", fastLengths: [4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24], slowLengths: [26, 29, 32, 35, 38, 41, 44, 47, 50, 53, 56, 59, 62, 65, 68, 71] } }).find(item => item.id === "super_guppy")!;
+  assert.equal(configured.events.length, 0);
+  assert.deepEqual(configured.overlays.slice(-3).map(line => line.name), ["Trader average", "Investor average", "EMA 200"]);
+  assert.equal(configured.overlays[0].name, "EMA 4");
+  assert.equal(configured.barColors.length, history().length);
   assert.equal(INDICATOR_SPECS.findIndex(item => item.id === "super_guppy"), INDICATOR_SPECS.findIndex(item => item.id === "smma_ribbon") + 1);
+});
+
+test("every indicator exposes role-aware interpretation guidance", () => {
+  for (const spec of INDICATOR_SPECS) {
+    assert.ok(spec.guidance.summary.length > 20, spec.id);
+    assert.ok(spec.guidance.positive.rule.length > 20, spec.id);
+    assert.ok(spec.guidance.neutral.rule.length > 20, spec.id);
+    assert.ok(spec.guidance.negative.rule.length > 20, spec.id);
+    assert.ok(spec.guidance.rationale.length > 20, spec.id);
+    assert.ok(spec.guidance.caveats.length, spec.id);
+  }
+  assert.match(INDICATOR_SPECS.find(spec => spec.id === "chandelier")!.guidance.positive.rule, /not a new-entry signal/i);
+  assert.match(INDICATOR_SPECS.find(spec => spec.id === "mayer")!.guidance.summary, /does not issue entries or exits/i);
+});
+
+test("SMMA proxy renders a gold, grey, and blue range without warm-up misclassification", () => {
+  const result = calculateIndicators(history(120), "1d").find(item => item.id === "smma_ribbon")!;
+  assert.equal(result.ribbons.length, 1);
+  assert.deepEqual(result.ribbons[0].palette, { bull: "#d7a928", neutral: "#919896", bear: "#264f66" });
+  assert.equal(result.ribbons[0].points[0].time, history(120)[28].time);
+  assert.ok(result.ribbons[0].points.every(point => point.upper >= point.lower));
+  assert.ok(result.overlays.every(overlay => overlay.showInLegend === false));
 });
 
 test("Donchian uses prior-period channels and retains state between breakouts", () => {
@@ -93,7 +131,7 @@ test("quality validation rejects malformed bars, detects gaps and deduplicates w
 
 test("backtest enters at the next open and charges one-way turnover", () => {
   const candles: Candle[] = [100, 100, 200, 200].map((open, i) => ({ time: i * DAY, open, high: open, low: open, close: open, volume: 1, complete: true }));
-  const snapshot = { id: "test", displayName: "Test", shortName: "Test", role: "regime", family: "test", state: "bull", previousState: "bull", lastFlip: 0, thresholdKind: "fixed", bullTrigger: null, bearTrigger: null, triggerLabel: "", explanation: "", values: {}, overlays: [], states: ["bull", "bull", "bull", "bull"] } satisfies SignalSnapshot;
+  const snapshot = { id: "test", displayName: "Test", shortName: "Test", role: "regime", family: "test", state: "bull", previousState: "bull", lastFlip: 0, thresholdKind: "fixed", bullTrigger: null, bearTrigger: null, triggerLabel: "", explanation: "", guidance: INDICATOR_SPECS[0].guidance, values: {}, overlays: [], ribbons: [], events: [], barColors: [], states: ["bull", "bull", "bull", "bull"] } satisfies SignalSnapshot;
   const result = backtest(candles, [snapshot], "1d", 15)[0];
   assert.ok(Math.abs(result.totalReturn - 0.9985) < 1e-10); assert.equal(result.turnover, 1);
 });
@@ -142,7 +180,7 @@ test("local SQLite storage persists normalized candles between reads", async () 
   const priorPath = process.env.REGIME_SQLITE;
   process.env.REGIME_SQLITE = path.join(directory, "market.sqlite");
   try {
-    const { persistDataset, readStoredDataset } = await import(`../lib/market-store.ts?test=${Date.now()}`);
+    const { persistDataset, persistSignalSnapshots, readStoredDataset } = await import(`../lib/market-store.ts?test=${Date.now()}`);
     const boundary = completedBoundary("1d");
     const dataset = {
       asset: "btc",
@@ -180,7 +218,14 @@ test("local SQLite storage persists normalized candles between reads", async () 
     assert.equal(stored.candles.length, 2);
     assert.equal(stored.candles.at(-1)?.close, 103);
     assert.equal(storedEth.candles.at(-1)?.close, 10.3);
+    await persistSignalSnapshots("btc", "bitstamp", "1d", dataset.candles.at(-1)!.time, calculateIndicators(dataset.candles, "1d"));
     const { getDatabase } = await import("../db/index.ts");
+    const signalPayload = JSON.parse((getDatabase().prepare("SELECT payload FROM signal_snapshots WHERE asset='btc' AND source='bitstamp' AND timeframe='1d' AND indicator_id='super_guppy'").get() as { payload: string }).payload);
+    assert.equal(signalPayload.schemaVersion, 2);
+    assert.ok(signalPayload.guidance.summary);
+    assert.equal(signalPayload.ribbons.length, 2);
+    assert.ok(Array.isArray(signalPayload.events));
+    assert.ok(Array.isArray(signalPayload.barColors));
     const tables = getDatabase().prepare("SELECT name FROM sqlite_schema WHERE type='table' ORDER BY name").all() as Array<{ name: string }>;
     assert.deepEqual(tables.map(row => row.name), ["market_candles", "provider_snapshots", "signal_snapshots"]);
     getDatabase().close();

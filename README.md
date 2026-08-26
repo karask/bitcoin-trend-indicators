@@ -6,9 +6,10 @@ A transparent, installable BTC, ETH, and SOL regime-indicator research platform.
 
 - An asset selector for BTC, ETH, and SOL, with daily and Monday–Sunday UTC weekly views from Bitstamp, Binance, Kraken, and Coinbase Exchange.
 - Venue-specific markets are never spliced: USD and USDT histories remain separately labeled and independently cached.
-- Completed-candle signals for Support Band, SuperTrend, the Larsson-style SMMA proxy, a transparent 27-EMA Super Guppy variant, Long SMA, two Donchian presets, Ichimoku, MACD, Parabolic SAR, Vortex, Heikin Ashi, absolute momentum, and the daily Golden/Death Cross.
+- Completed-candle signals for Support Band, SuperTrend, the Larsson-style SMMA proxy, JustUncleL Super Guppy R1.2, Long SMA, two Donchian presets, Ichimoku, MACD, Parabolic SAR, Vortex, Heikin Ashi, absolute momentum, and the daily Golden/Death Cross.
 - Separate ADX/DMI confirmation, Chandelier exit, and Mayer/200W valuation views.
-- Canvas candlesticks, indicator overlays, regime shading, historical flip markers, and fixed/provisional/conditional trigger labels.
+- Canvas candlesticks, indicator overlays, filled SMMA ranges, all 27 calculated R1.2 Guppy EMAs with the 14 plots enabled by the published script, R1.2 Swing/Trend Break arrows, regime shading, historical flip markers, and fixed/provisional/conditional trigger labels.
+- A role-aware interpretation guide for every model: completed-close entry/positive rules, wait/neutral behavior, exit/negative rules, rationale, and important caveats. Valuation and confirmation models are explicitly not mislabeled as trade orders.
 - Family-level agreement instead of a misleading raw indicator count.
 - Next-open, long/cash backtests with 5/15/30 bps cost sensitivity, buy-and-hold, rolling four-year reports, cross-venue median Calmar ranking, and the return/drawdown Pareto set.
 - A DuckDB-backed Python research service storing normalized candles, indicator states/values, flips, reports, checksums, retrieval times, and source health.
@@ -92,9 +93,10 @@ The tests cover the complete preset registry, deterministic golden states, recur
 - A state confirmed at close becomes effective at the next candle open.
 - Exposure is 100% of the selected crypto asset in bull, 50% in neutral, and 0% in bear; two-state models use 100%/0%.
 - Cash yield is zero. No shorts or leverage.
-- Presets are read-only in v1 and are not optimized against BTC, ETH, or SOL history.
+- Presets are not optimized against BTC, ETH, or SOL history. The named presets remain fixed except for Super Guppy's explicitly exposed R1.2 inputs.
 - Venues are never spliced. Gaps, duplicates, malformed OHLC, and completed-history revisions fail the data refresh; prices are never forward-filled.
 - SuperTrend is presented as a transparent alternative, not a MoneyLine clone. SMMA 15/19/25/29 is labeled a community Larsson-style proxy, never the official line.
-- Super Guppy uses the fixed published EMA groups (3–23 step 2 and 25–70 step 3) with an explicit full-ordering state rule. It shares the smoothing/order family vote with the other moving-average models.
+- Super Guppy independently implements JustUncleL R1.2's 11-EMA Trader group (3–23 step 2), 16-EMA Investor group (25–70 step 3), group-average conditions, dynamic aqua/blue/gray and lime/red/gray colors, default Swing signals, aggressive Trend Break signals, and six-bar repeat filter. Its settings panel exposes the published signal toggles, confluence, candle-change retriggers, group averages, EMA-200 display/filter, candle coloring, source, lookback, anchor, and all 27 lengths. The anchor cannot alter this app's daily/weekly charts because the published input is capped at 1,440 minutes.
+- For comparison and next-open backtesting, Super Guppy's single dashboard state follows the published default Swing condition: bullish when its long condition is active, bearish when its short condition is active, and neutral otherwise. The chart preserves the two R1.2 group states and event types rather than pretending the source defines one unified band color.
 
 This is research software, not financial advice.

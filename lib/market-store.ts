@@ -53,6 +53,6 @@ export async function persistSignalSnapshots(asset: AssetId, source: SourceId, t
   const generatedAt = new Date().toISOString();
   const upsert = database.prepare("INSERT INTO signal_snapshots (asset,source,timeframe,indicator_id,candle_close,state,prior_state,last_flip,threshold_kind,bull_trigger,bear_trigger,payload,generated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(asset,source,timeframe,indicator_id) DO UPDATE SET candle_close=excluded.candle_close,state=excluded.state,prior_state=excluded.prior_state,last_flip=excluded.last_flip,threshold_kind=excluded.threshold_kind,bull_trigger=excluded.bull_trigger,bear_trigger=excluded.bear_trigger,payload=excluded.payload,generated_at=excluded.generated_at");
   runTransaction(database, () => {
-    for (const snapshot of snapshots) upsert.run(asset, source, timeframe, snapshot.id, candleClose, snapshot.state, snapshot.previousState, snapshot.lastFlip, snapshot.thresholdKind, snapshot.bullTrigger, snapshot.bearTrigger, JSON.stringify(snapshot.values), generatedAt);
+    for (const snapshot of snapshots) upsert.run(asset, source, timeframe, snapshot.id, candleClose, snapshot.state, snapshot.previousState, snapshot.lastFlip, snapshot.thresholdKind, snapshot.bullTrigger, snapshot.bearTrigger, JSON.stringify({ schemaVersion: 2, values: snapshot.values, guidance: snapshot.guidance, ribbons: snapshot.ribbons, events: snapshot.events, barColors: snapshot.barColors }), generatedAt);
   });
 }
