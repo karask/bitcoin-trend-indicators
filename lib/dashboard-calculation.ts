@@ -50,25 +50,6 @@ function slimMatrix(signal: SignalSnapshot, candles: Candle[], denomination: str
   };
 }
 
-function monthlyFaber(candles: Candle[]) {
-  const months = new Map<string, Candle[]>();
-  const now = new Date();
-  const currentMonth = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}`;
-  for (const candle of candles) {
-    const d = new Date(candle.time);
-    const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
-    if (key === currentMonth) continue;
-    const group = months.get(key) ?? [];
-    group.push(candle);
-    months.set(key, group);
-  }
-  const closes = [...months.values()].map(group => group.sort((a, b) => a.time - b.time).at(-1)!.close);
-  if (closes.length < 10) return { state: "unavailable" as const, close: null, sma10: null };
-  const close = closes.at(-1)!;
-  const sma10 = closes.slice(-10).reduce((sum, value) => sum + value, 0) / 10;
-  return { state: close >= sma10 ? "bull" as const : "bear" as const, close, sma10 };
-}
-
 export function buildDashboardPayload(asset: AssetId, source: SourceId, timeframe: Timeframe, indicatorId: string, daily: MarketDataset, weekly: MarketDataset, options: IndicatorCalculationOptions = {}) {
   const selectedDataset = timeframe === "1d" ? daily : weekly;
   const dailySignals = calculateIndicators(daily.candles, "1d", options);
@@ -131,7 +112,6 @@ export function buildDashboardPayload(asset: AssetId, source: SourceId, timefram
     familyAgreement: familyAgreement(signals),
     backtests: backtest(selectedDataset.candles, signals, timeframe),
     research: {
-      faber10Month: monthlyFaber(daily.candles),
       assumptions: { execution: "Next candle open", exposure: "Bull 100% · Neutral 50% · Bear 0%", cashYield: 0, costBps: 15, sensitivityBps: [5, 15, 30] },
       ranking: "Indicative single-venue view. Production research ranks median equal-date cross-venue Calmar and reports the Pareto set; it does not declare a universal winner.",
     },

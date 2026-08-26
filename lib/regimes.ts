@@ -154,13 +154,11 @@ const BASE_INDICATOR_SPECS: Array<Omit<IndicatorSpec, "guidance">> = [
   { id: "super_guppy", displayName: "Super Guppy R1.2 by JustUncleL", shortName: "Super Guppy R1.2", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { revision: "R1.2", fast: "3–23 step 2", slow: "25–70 step 3", source: "Close", averages: 27, plottedByDefault: 14, showSwing: 1, showBreak: 1, lookback: 6, confluence: 0, ema200Filter: 0, anchorMinutes: 0 }, thresholdKind: "conditional", description: "The published R1.2 Trader and Investor EMA groups, dynamic colors, pullback signals, and aggressive trend-break signals.", disclaimer: "Independent implementation of JustUncleL's open-source Super Guppy R1.2 rules. The intraday anchor input is exposed for parity but cannot change a daily or weekly chart because its published maximum is one day.", sourceUrl: "https://www.tradingview.com/script/Lj6d7UxQ-Super-Guppy-R1-0-by-JustUncleL/" },
   { id: "long_sma", displayName: "Long SMA Filter", shortName: "Long SMA", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { daily: 200, weekly: 30 }, thresholdKind: "fixed", description: "Price above the long average is bullish; below is bearish." },
   { id: "donchian_20_10", displayName: "Donchian Close 20/10", shortName: "Donchian 20/10", role: "regime", family: "breakout", supportedTimeframes: ["1d", "1w"], parameters: { entry: 20, exit: 10 }, thresholdKind: "fixed", description: "Close above the prior 20-period high turns bullish; below the prior 10-period low turns bearish." },
-  { id: "donchian_55_20", displayName: "Donchian Close 55/20", shortName: "Donchian 55/20", role: "regime", family: "breakout", supportedTimeframes: ["1d", "1w"], parameters: { entry: 55, exit: 20 }, thresholdKind: "fixed", description: "A slower close-confirmed adaptation of the Turtle breakout family." },
   { id: "ichimoku", displayName: "Ichimoku Cloud 9/26/52", shortName: "Ichimoku", role: "regime", family: "cloud/projected support", supportedTimeframes: ["1d", "1w"], parameters: { tenkan: 9, kijun: 26, spanB: 52 }, thresholdKind: "conditional", description: "Above the correctly displaced cloud is bullish, below is bearish, inside is neutral." },
   { id: "macd", displayName: "MACD Regime 12/26/9", shortName: "MACD", role: "regime", family: "momentum", supportedTimeframes: ["1d", "1w"], parameters: { fast: 12, slow: 26, signal: 9 }, thresholdKind: "conditional", description: "MACD above its signal line is bullish; below is bearish." },
   { id: "psar", displayName: "Parabolic SAR", shortName: "Parabolic SAR", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { step: 0.02, maximum: 0.2 }, thresholdKind: "provisional", description: "SAR below price is bullish; above price is bearish." },
   { id: "vortex", displayName: "Vortex 14", shortName: "Vortex", role: "regime", family: "momentum", supportedTimeframes: ["1d", "1w"], parameters: { length: 14 }, thresholdKind: "provisional", description: "VI+ above VI− is bullish; the inverse is bearish." },
   { id: "heikin_ashi", displayName: "Heikin Ashi Color", shortName: "Heikin Ashi", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { method: "standard recursive" }, thresholdKind: "provisional", description: "Synthetic candle color is used as an exploratory regime filter." },
-  { id: "absolute_momentum", displayName: "12-Month Absolute Momentum", shortName: "12M Momentum", role: "regime", family: "momentum", supportedTimeframes: ["1d", "1w"], parameters: { daily: 365, weekly: 52 }, thresholdKind: "fixed", description: "Price above its value one year earlier is bullish; below is bearish." },
   { id: "golden_cross", displayName: "Golden / Death Cross", shortName: "50/200 Cross", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d"], parameters: { fast: 50, slow: 200 }, thresholdKind: "conditional", description: "Daily 50 SMA above 200 SMA is bullish; below is bearish." },
   { id: "adx", displayName: "ADX / DMI 14", shortName: "ADX / DMI", role: "confirmation", family: "trend strength", supportedTimeframes: ["1d", "1w"], parameters: { length: 14, weak: 20, strong: 25 }, thresholdKind: "conditional", description: "Direction comes from DMI ordering; ADX labels trend strength rather than a price regime." },
   { id: "chandelier", displayName: "Chandelier Exit 22/3", shortName: "Chandelier", role: "exit", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { length: 22, factor: 3 }, thresholdKind: "provisional", description: "A volatility-adjusted trailing exit overlay, excluded from family agreement." },
@@ -217,14 +215,6 @@ const INDICATOR_GUIDANCE: Record<string, IndicatorGuidance> = {
     rationale: "A slower entry and faster exit create hysteresis: demand meaningful upside confirmation while cutting failed trends sooner.",
     caveats: ["Neutral in the generic backtest means 50% exposure; that is a dashboard convention, not the classic Donchian rule."],
   },
-  donchian_55_20: {
-    summary: "Use the slower Turtle-style channel for fewer, larger trend attempts.",
-    positive: { label: "Breakout entry", rule: "A close strictly above the highest high of the prior 55 bars starts the bullish state." },
-    neutral: { label: "Retain prior state", rule: "Between-channel closes do not create a new decision; they preserve the prior state." },
-    negative: { label: "Breakdown exit", rule: "A close strictly below the lowest low of the prior 20 bars ends the bullish state." },
-    rationale: "The longer breakout window seeks larger trends and fewer entries, with greater entry lag.",
-    caveats: ["Breakout systems can give back gains before the exit channel is breached."],
-  },
   ichimoku: {
     summary: "Use price versus the displaced cloud as a regime filter.",
     positive: { label: "Above cloud", rule: "A completed close strictly above both displaced cloud spans supports a positive cloud regime." },
@@ -264,14 +254,6 @@ const INDICATOR_GUIDANCE: Record<string, IndicatorGuidance> = {
     negative: { label: "Bearish color / exit", rule: "Synthetic close below synthetic open produces a bearish state." },
     rationale: "Recursive synthetic candles smooth visual noise.",
     caveats: ["Heikin-Ashi lags and its displayed OHLC is not directly tradable."],
-  },
-  absolute_momentum: {
-    summary: "Use the sign of trailing one-year return as a simple absolute-momentum switch.",
-    positive: { label: "Non-negative momentum", rule: "Close at or above the close 365 daily or 52 weekly bars earlier supports the bullish state." },
-    neutral: { label: "No neutral state", rule: "Near the reference, the signal can flip on the next completed close." },
-    negative: { label: "Negative momentum / cash", rule: "Close below the one-year reference produces the negative state." },
-    rationale: "Persistent trends often extend across long horizons; the asset is compared with its own historical price.",
-    caveats: ["This is absolute, not relative, momentum and does not rank other assets."],
   },
   golden_cross: {
     summary: "Use the 50/200 SMA relationship as a lagging long-horizon filter.",
@@ -688,13 +670,6 @@ function heikinAshi(candles: Candle[], spec: IndicatorSpec): SignalSnapshot {
   return buildSnapshot(spec, candles, states, [], { haOpen: ho.at(-1) ?? null, haHigh: hh.at(-1) ?? null, haLow: hl.at(-1) ?? null, haClose: hc.at(-1) ?? null }, null, null, "Synthetic candle color remains provisional until close");
 }
 
-function momentum(candles: Candle[], spec: IndicatorSpec, timeframe: Timeframe): SignalSnapshot {
-  const n = timeframe === "1d" ? 365 : 52, refs: Array<number | null> = candles.map((_, i) => i >= n ? candles[i - n].close : null);
-  const states = candles.map((c, i): RegimeState | null => !finite(refs[i]) ? null : c.close >= refs[i]! ? "bull" : "bear");
-  const trigger = refs.at(-1) ?? null;
-  return buildSnapshot(spec, candles, states, [], { referenceClose: trigger, return: finite(trigger) ? candles.at(-1)!.close / trigger! - 1 : null }, trigger, trigger, "Fixed reference close from one year earlier");
-}
-
 function goldenCross(candles: Candle[], spec: IndicatorSpec): SignalSnapshot {
   const closes = candles.map(c => c.close), fast = sma(closes, 50), slow = sma(closes, 200);
   const states = candles.map((_, i): RegimeState | null => !finite(fast[i]) || !finite(slow[i]) ? null : fast[i]! >= slow[i]! ? "bull" : "bear");
@@ -743,13 +718,11 @@ export function calculateIndicators(candles: Candle[], timeframe: Timeframe, opt
       case "super_guppy": return superGuppy(candles, spec, timeframe, options.superGuppy);
       case "long_sma": return longSma(candles, spec, timeframe);
       case "donchian_20_10": return donchian(candles, spec, 20, 10);
-      case "donchian_55_20": return donchian(candles, spec, 55, 20);
       case "ichimoku": return ichimoku(candles, spec);
       case "macd": return macd(candles, spec);
       case "psar": return psar(candles, spec);
       case "vortex": return vortex(candles, spec);
       case "heikin_ashi": return heikinAshi(candles, spec);
-      case "absolute_momentum": return momentum(candles, spec, timeframe);
       case "golden_cross": return goldenCross(candles, spec);
       case "adx": return adx(candles, spec);
       case "chandelier": return chandelier(candles, spec);

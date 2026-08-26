@@ -39,8 +39,8 @@ test("indicator golden states and trigger classifications remain stable", () => 
   const vector = Object.fromEntries(results.map(result => [result.id, [result.state, result.thresholdKind]]));
   assert.deepEqual(vector, {
     support_band: ["bear", "fixed"], supertrend: ["bear", "provisional"], smma_ribbon: ["neutral", "conditional"], super_guppy: ["neutral", "conditional"], long_sma: ["bull", "fixed"],
-    donchian_20_10: ["neutral", "fixed"], donchian_55_20: ["neutral", "fixed"], ichimoku: ["bear", "conditional"], macd: ["bear", "conditional"],
-    psar: ["bear", "provisional"], vortex: ["bear", "provisional"], heikin_ashi: ["bear", "provisional"], absolute_momentum: ["bull", "fixed"],
+    donchian_20_10: ["neutral", "fixed"], ichimoku: ["bear", "conditional"], macd: ["bear", "conditional"],
+    psar: ["bear", "provisional"], vortex: ["bear", "provisional"], heikin_ashi: ["bear", "provisional"],
     golden_cross: ["bull", "conditional"], adx: ["bear", "conditional"], chandelier: ["bull", "provisional"], mayer: ["neutral", "conditional"],
   });
   const support = results.find(item => item.id === "support_band")!;
