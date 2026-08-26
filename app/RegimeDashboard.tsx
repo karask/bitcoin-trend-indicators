@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import RegimeChart, { chartColorCss, type Theme } from "./RegimeChart";
 import { confirmationClock } from "../lib/confirmation-clock";
+import { resolveInitialTheme } from "../lib/chart-interaction";
 import { buildDashboardPayload } from "../lib/dashboard-calculation";
 import type { MarketDataset } from "../lib/market-data";
 import { SUPER_GUPPY_R12_DEFAULTS, type SuperGuppyConfig, type SuperGuppySource } from "../lib/regimes";
@@ -80,83 +82,6 @@ const roleStateLabel = (role: Role, id: string, state: State | null | undefined)
   return undefined;
 };
 
-function RegimeChart({ candles, selected, denomination }: { candles: Candle[]; selected: Payload["selected"]; denomination: string }) {
-  const ref = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas || !candles.length) return;
-    const render = () => {
-      const bounds = canvas.getBoundingClientRect();
-      const ratio = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.max(1, Math.round(bounds.width * ratio)); canvas.height = Math.max(1, Math.round(bounds.height * ratio));
-      const ctx = canvas.getContext("2d"); if (!ctx) return;
-      ctx.scale(ratio, ratio);
-      const w = bounds.width, h = bounds.height, pad = { t: 18, r: 76, b: 32, l: 12 }, cw = w - pad.l - pad.r, ch = h - pad.t - pad.b;
-      const values = candles.flatMap(c => [c.high, c.low]);
-      for (const overlay of selected.overlays) for (const point of overlay.points) values.push(point.value);
-      for (const ribbon of selected.ribbons) for (const point of ribbon.points) values.push(point.upper, point.lower);
-      if (selected.bullTrigger != null) values.push(selected.bullTrigger); if (selected.bearTrigger != null) values.push(selected.bearTrigger);
-      let min = Math.min(...values), max = Math.max(...values); const margin = Math.max(1, (max - min) * 0.09); min -= margin; max += margin;
-      const x = (i: number) => pad.l + (i + 0.5) * cw / candles.length;
-      const y = (v: number) => pad.t + (max - v) / (max - min) * ch;
-      ctx.clearRect(0, 0, w, h); ctx.fillStyle = "#fffefa"; ctx.fillRect(0, 0, w, h);
-      for (let i = 0; i < candles.length; i++) {
-        const state = selected.states[i]; if (!state) continue;
-        ctx.fillStyle = state === "bull" ? "rgba(15,138,97,.035)" : state === "bear" ? "rgba(201,85,69,.035)" : "rgba(145,152,150,.025)";
-        ctx.fillRect(pad.l + i * cw / candles.length, pad.t, cw / candles.length + 1, ch);
-      }
-      ctx.strokeStyle = "#e8ebe5"; ctx.lineWidth = 1; ctx.font = "10px ui-monospace, monospace"; ctx.fillStyle = "#83908a"; ctx.textAlign = "left";
-      for (let i = 0; i <= 4; i++) { const yy = pad.t + i * ch / 4; ctx.beginPath(); ctx.moveTo(pad.l, yy); ctx.lineTo(w - pad.r, yy); ctx.stroke(); ctx.fillText(formatPrice(max - i * (max - min) / 4, denomination), w - pad.r + 8, yy + 3); }
-      const indexByTime = new Map(candles.map((candle, i) => [candle.time, i]));
-      for (const ribbon of selected.ribbons) {
-        const byTime = new Map(ribbon.points.map(point => [point.time, point]));
-        ctx.save(); ctx.globalAlpha = ribbon.fillOpacity;
-        candles.forEach((candle, i) => {
-          const point = byTime.get(candle.time); if (!point) return;
-          const next = i + 1 < candles.length ? byTime.get(candles[i + 1].time) : undefined;
-          const nextUpper = next?.state === point.state ? next.upper : point.upper, nextLower = next?.state === point.state ? next.lower : point.lower;
-          const left = pad.l + i * cw / candles.length, right = pad.l + (i + 1) * cw / candles.length;
-          ctx.fillStyle = ribbon.palette[point.state]; ctx.beginPath(); ctx.moveTo(left, y(point.upper)); ctx.lineTo(right, y(nextUpper)); ctx.lineTo(right, y(nextLower)); ctx.lineTo(left, y(point.lower)); ctx.closePath(); ctx.fill();
-        });
-        ctx.restore();
-      }
-      const candleWidth = Math.max(2, Math.min(8, cw / candles.length * 0.58));
-      const barColorByTime = new Map(selected.barColors.map(point => [point.time, point.color]));
-      candles.forEach((candle, i) => { const up = candle.close >= candle.open, color = barColorByTime.get(candle.time) ?? (up ? "#0f8a61" : "#c95545"); ctx.strokeStyle = color; ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(x(i), y(candle.high)); ctx.lineTo(x(i), y(candle.low)); ctx.stroke(); const top = y(Math.max(candle.open, candle.close)), bottom = y(Math.min(candle.open, candle.close)); ctx.fillRect(x(i) - candleWidth / 2, top, candleWidth, Math.max(1.5, bottom - top)); });
-      for (const overlay of selected.overlays) {
-        const byTime = new Map(overlay.points.map(point => [point.time, point])); ctx.lineWidth = overlay.width ?? 1.7; ctx.setLineDash(overlay.dashed ? [5, 4] : []);
-        if (overlay.pointStyle === "circles") {
-          ctx.fillStyle = overlay.color;
-          candles.forEach((candle, i) => { const point = byTime.get(candle.time); if (!point) return; ctx.beginPath(); ctx.arc(x(i), y(point.value), 1.6, 0, Math.PI * 2); ctx.fill(); });
-          ctx.setLineDash([]); continue;
-        }
-        let prior: { index: number; point: { value: number; color?: string } } | null = null;
-        candles.forEach((candle, i) => {
-          const point = byTime.get(candle.time); if (!point) { prior = null; return; }
-          if (prior) { ctx.strokeStyle = point.color ?? overlay.color; ctx.beginPath(); ctx.moveTo(x(prior.index), y(prior.point.value)); ctx.lineTo(x(i), y(point.value)); ctx.stroke(); }
-          prior = { index: i, point };
-        });
-        ctx.setLineDash([]);
-      }
-      const drawTrigger = (value: number | null, color: string, label: string) => { if (value == null) return; const yy = y(value); ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(pad.l, yy); ctx.lineTo(w - pad.r, yy); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = "#fffefa"; ctx.fillRect(Math.max(pad.l, w - pad.r - 178), yy - 10, 178, 18); ctx.fillStyle = color; ctx.font = "700 9px ui-monospace, monospace"; ctx.textAlign = "right"; ctx.fillText(`${label} · ${formatPrice(value, denomination)}`, w - pad.r - 4, yy + 3); };
-      if (selected.bullTrigger === selected.bearTrigger) drawTrigger(selected.bullTrigger, "#6d756f", selected.thresholdKind.toUpperCase()); else { drawTrigger(selected.bullTrigger, "#0f8a61", `BULL · ${selected.thresholdKind}`); drawTrigger(selected.bearTrigger, "#c95545", `BEAR · ${selected.thresholdKind}`); }
-      for (const flip of selected.flips) { const i = indexByTime.get(flip.time); if (i == null) continue; const yy = flip.to === "bull" ? y(candles[i].low) + 13 : y(candles[i].high) - 13; ctx.fillStyle = flip.to === "bull" ? "#0f8a61" : flip.to === "bear" ? "#c95545" : "#c99313"; ctx.beginPath(); if (flip.to === "bull") { ctx.moveTo(x(i), yy - 7); ctx.lineTo(x(i) - 5, yy); ctx.lineTo(x(i) + 5, yy); } else { ctx.moveTo(x(i), yy + 7); ctx.lineTo(x(i) - 5, yy); ctx.lineTo(x(i) + 5, yy); } ctx.closePath(); ctx.fill(); }
-      for (const event of selected.events) {
-        const i = indexByTime.get(event.time); if (i == null) continue;
-        const yy = event.direction === "bull" ? y(candles[i].low) + (event.kind === "swing" ? 18 : 29) : y(candles[i].high) - (event.kind === "swing" ? 18 : 29);
-        ctx.fillStyle = event.color; ctx.strokeStyle = "#fffefa"; ctx.lineWidth = 1.2; ctx.beginPath();
-        if (event.direction === "bull") { ctx.moveTo(x(i), yy - 8); ctx.lineTo(x(i) - 6, yy + 1); ctx.lineTo(x(i) - 2, yy + 1); ctx.lineTo(x(i) - 2, yy + 7); ctx.lineTo(x(i) + 2, yy + 7); ctx.lineTo(x(i) + 2, yy + 1); ctx.lineTo(x(i) + 6, yy + 1); }
-        else { ctx.moveTo(x(i), yy + 8); ctx.lineTo(x(i) - 6, yy - 1); ctx.lineTo(x(i) - 2, yy - 1); ctx.lineTo(x(i) - 2, yy - 7); ctx.lineTo(x(i) + 2, yy - 7); ctx.lineTo(x(i) + 2, yy - 1); ctx.lineTo(x(i) + 6, yy - 1); }
-        ctx.closePath(); ctx.fill(); ctx.stroke();
-      }
-      ctx.fillStyle = "#83908a"; ctx.font = "10px ui-monospace, monospace"; ctx.textAlign = "center";
-      [0, Math.floor((candles.length - 1) / 3), Math.floor(2 * (candles.length - 1) / 3), candles.length - 1].forEach(i => ctx.fillText(new Intl.DateTimeFormat("en", { month: "short", year: "2-digit", timeZone: "UTC" }).format(candles[i].time), x(i), h - 9));
-    };
-    render(); const observer = new ResizeObserver(render); observer.observe(canvas); return () => observer.disconnect();
-  }, [candles, selected, denomination]);
-  return <canvas ref={ref} className="regime-canvas" role="img" aria-label={`${selected.displayName} candlestick chart with confirmed regime shading and flip markers`} />;
-}
-
 function StateBadge({ state, compact = false, label }: { state: State | null | undefined; compact?: boolean; label?: string }) {
   const value = state ?? "neutral";
   return <span className={`state-badge ${value} ${compact ? "compact" : ""}`}><i />{label ?? (state ? titleState(state) : "N/A")}</span>;
@@ -165,6 +90,7 @@ function LoadingView() { return <div className="loading-grid" aria-label="Loadin
 
 export default function RegimeDashboard() {
   const [asset, setAsset] = useState<AssetId>("btc"), [source, setSource] = useState("bitstamp"), [timeframe, setTimeframe] = useState<Timeframe>("1w"), [indicator, setIndicator] = useState("support_band"), [role, setRole] = useState<Role>("regime");
+  const [theme, setTheme] = useState<Theme>("light");
   const [data, setData] = useState<Payload | null>(null), [loading, setLoading] = useState(true), [error, setError] = useState<string | null>(null), [installPrompt, setInstallPrompt] = useState<Event | null>(null);
   const [spot, setSpot] = useState<SpotQuote | null>(null), [spotError, setSpotError] = useState<string | null>(null);
   const [guppyConfig, setGuppyConfig] = useState<SuperGuppyConfig>(freshGuppyDefaults);
@@ -172,6 +98,17 @@ export default function RegimeDashboard() {
   // Keep the server render and first browser render identical. The real clock is
   // installed immediately after hydration, then advances once per minute.
   const [clock, setClock] = useState(0), [refreshTick, setRefreshTick] = useState(0);
+  useEffect(() => {
+    const root = document.documentElement, media = window.matchMedia("(prefers-color-scheme: dark)");
+    const saved = window.localStorage.getItem("crypto-regime-theme");
+    const initial = resolveInitialTheme(saved, media.matches); root.dataset.theme = initial;
+    const frame = window.requestAnimationFrame(() => setTheme(initial));
+    const followSystem = (event: MediaQueryListEvent) => {
+      if (window.localStorage.getItem("crypto-regime-theme")) return;
+      const next: Theme = event.matches ? "dark" : "light"; root.dataset.theme = next; setTheme(next);
+    };
+    media.addEventListener("change", followSystem); return () => { window.cancelAnimationFrame(frame); media.removeEventListener("change", followSystem); };
+  }, []);
   useEffect(() => { if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => undefined); const capture = (event: Event) => { event.preventDefault(); setInstallPrompt(event); }; window.addEventListener("beforeinstallprompt", capture); return () => window.removeEventListener("beforeinstallprompt", capture); }, []);
   useEffect(() => { const frame = window.requestAnimationFrame(() => setClock(Date.now())); const timer = window.setInterval(() => setClock(Date.now()), 60_000); return () => { window.cancelAnimationFrame(frame); window.clearInterval(timer); }; }, []);
   useEffect(() => { const timer = window.setInterval(() => setRefreshTick(value => value + 1), 5 * 60_000); return () => window.clearInterval(timer); }, []);
@@ -221,18 +158,24 @@ export default function RegimeDashboard() {
     else setSlowLengthsText(guppyConfig.slowLengths.join(","));
   };
   const resetGuppy = () => { const defaults = freshGuppyDefaults(); beginRefresh(); setGuppyConfig(defaults); setFastLengthsText(defaults.fastLengths.join(",")); setSlowLengthsText(defaults.slowLengths.join(",")); };
+  const toggleTheme = () => {
+    const next: Theme = theme === "dark" ? "light" : "dark"; document.documentElement.dataset.theme = next; window.localStorage.setItem("crypto-regime-theme", next); setTheme(next);
+    let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"][data-runtime-theme]');
+    if (!meta) { meta = document.createElement("meta"); meta.name = "theme-color"; meta.dataset.runtimeTheme = "true"; document.head.append(meta); }
+    meta.content = next === "dark" ? "#101714" : "#f2f1eb";
+  };
   const triggerCard = (label: string, value: number | null, variant: string) => <div className={`trigger ${variant}`}><span>{label}</span><strong>{value == null ? "Conditional" : formatPrice(value, denomination)}</strong><small>{data?.selected.thresholdKind} · as of {formatDate(confirmedThrough, true)} UTC</small></div>;
   const triggerLabels = data?.selected.role === "exit" ? ["SHORT EXIT ABOVE", "LONG EXIT BELOW"] : data?.selected.role === "confirmation" ? ["POSITIVE ABOVE", "NEGATIVE BELOW"] : ["BULLISH ABOVE", "BEARISH BELOW"];
 
   return <main className="app-shell">
-    <header className="topbar"><div className="brand-lockup"><div className="brand-mark">{activeAsset.symbol}</div><div><p className="eyebrow">CRYPTO REGIME LAB · {activeAsset.label.toUpperCase()}</p><h1>Trend regimes, without the black box.</h1></div></div><div className="header-actions">{installPrompt && <button className="install-button" onClick={() => { (installPrompt as Event & { prompt: () => void }).prompt(); setInstallPrompt(null); }}>Install app</button>}<div className={`freshness ${data?.dataset.stale ? "stale" : ""}`}><span />{data ? `${data.dataset.stale ? "Stale" : "Confirmed through"} · ${formatDate(confirmedThrough)}` : "Loading exchange data"}</div></div></header>
+    <header className="topbar"><div className="brand-lockup"><div className="brand-mark">{activeAsset.symbol}</div><div><p className="eyebrow">CRYPTO REGIME LAB · {activeAsset.label.toUpperCase()}</p><h1>Trend regimes, without the black box.</h1></div></div><div className="header-actions">{installPrompt && <button className="install-button" onClick={() => { (installPrompt as Event & { prompt: () => void }).prompt(); setInstallPrompt(null); }}>Install app</button>}<div className={`freshness ${data?.dataset.stale ? "stale" : ""}`}><span />{data ? `${data.dataset.stale ? "Stale" : "Confirmed through"} · ${formatDate(confirmedThrough)}` : "Loading exchange data"}</div><button className="theme-toggle" type="button" onClick={toggleTheme} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`} title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}><span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span><b>{theme === "dark" ? "Light" : "Dark"}</b></button></div></header>
     {data?.dataset.warning && <div className={`data-banner ${data.dataset.demo ? "danger" : "warning"}`}><strong>{data.dataset.demo ? "Demonstration data — no confirmed signal" : "Source quality warning"}</strong><span>{data.dataset.warning}</span></div>}
     {error && <div className="data-banner danger"><strong>Research API unavailable</strong><span>{error}</span><button onClick={() => window.location.reload()}>Retry</button></div>}
     <section className="command-row" aria-label="Research controls"><div className="control-group asset-control"><label htmlFor="asset">Asset</label><select id="asset" value={asset} onChange={event => chooseAsset(event.target.value as AssetId)}>{(data?.assets ?? ASSET_OPTIONS).map(item => <option key={item.id} value={item.id}>{item.symbol} · {item.label}</option>)}</select></div><div className="control-group"><label htmlFor="market">Market source</label><select id="market" value={source} onChange={event => { beginRefresh(); setSource(event.target.value); }}>{(data?.dataset.asset === asset ? data.sources : []).length ? data!.sources.map(item => <option key={item.id} value={item.id}>{item.label} · {item.market}</option>) : <option value={source}>{source === "binance" ? "Binance" : "Bitstamp"} · {activeAsset.symbol}/{source === "binance" ? "USDT" : "USD"}</option>}</select></div><div className="control-group grow"><label htmlFor="indicator">Indicator</label><select id="indicator" value={indicator} onChange={event => { beginRefresh(); setIndicator(event.target.value); const selectedRole = data?.registry.find(item => item.id === event.target.value)?.role; if (selectedRole) setRole(selectedRole); }}>{options.map(item => <option key={item.id} value={item.id}>{item.displayName}</option>)}</select></div><div className="segmented" aria-label="Timeframe"><button className={timeframe === "1d" ? "active" : ""} onClick={() => chooseTimeframe("1d")}>1D</button><button className={timeframe === "1w" ? "active" : ""} onClick={() => chooseTimeframe("1w")}>1W</button></div></section>
     {indicator === "super_guppy" && <details className="indicator-settings" open><summary><span><b>Super Guppy R1.2 settings</b><small>Published defaults are loaded; every R1.2 input relevant to daily/weekly candles is available.</small></span><button type="button" onClick={event => { event.preventDefault(); resetGuppy(); }}>Reset defaults</button></summary><div className="settings-grid"><label><span>Source</span><select value={guppyConfig.source} onChange={event => updateGuppy("source", event.target.value as SuperGuppySource)}>{GUPPY_SOURCES.map(item => <option value={item.value} key={item.value}>{item.label}</option>)}</select></label><label><span>Repeat lookback</span><input type="number" min="0" max="100" value={guppyConfig.lookback} onChange={event => updateGuppy("lookback", Number(event.target.value))} /></label><label><span>Anchor (minutes)</span><select value={guppyConfig.anchorMinutes} onChange={event => updateGuppy("anchorMinutes", Number(event.target.value))}><option value="0">Current timeframe</option><option value="1440">1440 · Daily anchor</option></select><small>R1.2 anchor affects intraday charts only; both choices are equivalent here.</small></label><label className="length-input"><span>11 Trader EMA lengths</span><input value={fastLengthsText} onChange={event => setFastLengthsText(event.target.value)} onBlur={() => applyGuppyLengths("fast")} aria-label="Eleven comma-separated Trader EMA lengths" /></label><label className="length-input"><span>16 Investor EMA lengths</span><input value={slowLengthsText} onChange={event => setSlowLengthsText(event.target.value)} onBlur={() => applyGuppyLengths("slow")} aria-label="Sixteen comma-separated Investor EMA lengths" /></label></div><div className="setting-toggles"><label><input type="checkbox" checked={guppyConfig.showSwing} onChange={event => updateGuppy("showSwing", event.target.checked)} /><span>Swing arrows</span></label><label><input type="checkbox" checked={guppyConfig.showBreak} onChange={event => updateGuppy("showBreak", event.target.checked)} /><span>Trend Break arrows</span></label><label><input type="checkbox" checked={guppyConfig.requireConfluence} onChange={event => updateGuppy("requireConfluence", event.target.checked)} /><span>Require group confluence</span></label><label><input type="checkbox" checked={guppyConfig.candleChangeRetriggers} onChange={event => updateGuppy("candleChangeRetriggers", event.target.checked)} /><span>Candle-change Swing retriggers</span></label><label><input type="checkbox" checked={guppyConfig.showAverages} onChange={event => updateGuppy("showAverages", event.target.checked)} /><span>Show group averages</span></label><label><input type="checkbox" checked={guppyConfig.showEma200} onChange={event => updateGuppy("showEma200", event.target.checked)} /><span>Show EMA 200</span></label><label><input type="checkbox" checked={guppyConfig.ema200Filter} onChange={event => updateGuppy("ema200Filter", event.target.checked)} /><span>Use EMA 200 filter</span></label><label><input type="checkbox" checked={guppyConfig.colorBars} onChange={event => updateGuppy("colorBars", event.target.checked)} /><span>Color candles by Trader group</span></label></div></details>}
     <section className="close-countdown" aria-live="polite" aria-label={`${closeClock.title}: ${closeClock.remaining} remaining`}><div><p className="eyebrow">CONFIRMATION CLOCK · UTC</p><strong>{closeClock.title}</strong><span>{closeClock.boundary}</span></div><div className="countdown-value"><b>{closeClock.remaining}</b><small>remaining</small></div><div className="spot-price"><span>LIVE {activeAsset.symbol} SPOT · {(activeSpot?.sourceLabel ?? data?.dataset.sourceLabel ?? source).toUpperCase()}</span><b>{activeSpot ? formatPrice(activeSpot.price, activeSpot.denomination) : "—"}</b><small>{activeSpot ? `${activeSpot.fallback ? "fallback quote · " : ""}fetched ${new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: "UTC" }).format(new Date(activeSpot.retrievedAt))} UTC` : spotError ? "quote unavailable" : "fetching current price…"}</small></div><p>The live quote is informational and refreshes on page load. The open {timeframe === "1d" ? "day" : "week"} is provisional; confirmed indicators update only after its close.</p></section>
     {loading && !data ? <LoadingView /> : data && <>
-      <section className={`hero-grid ${loading ? "is-refreshing" : ""}`}><article className="chart-card"><div className="chart-heading"><div><p className="eyebrow">LAST CONFIRMED {timeframe === "1d" ? "DAILY" : "WEEKLY"} CLOSE · {data.dataset.market} · {data.dataset.sourceLabel.toUpperCase()}</p><div className="price-line"><strong>{formatPrice(current?.close, data.dataset.denomination)}</strong><span className={change != null && change < 0 ? "negative" : ""}>{formatPct(change, true)}</span></div></div><StateBadge state={data.selected.state} label={roleStateLabel(data.selected.role, data.selected.id, data.selected.state)} /></div><div className="chart-frame"><RegimeChart candles={data.candles} selected={data.selected} denomination={data.dataset.denomination} />{loading && <div className="chart-refresh">Refreshing completed candles…</div>}</div><div className="chart-legend">{data.selected.overlays.filter(line => line.showInLegend !== false).map(line => <span key={line.name}><i style={{ background: line.color }} />{line.legendLabel ?? line.name}</span>)}{data.selected.ribbons.filter(ribbon => ribbon.showInLegend !== false).flatMap(ribbon => (Object.entries(ribbon.palette) as Array<[State, string]>).map(([state, color]) => <span key={`${ribbon.id}-${state}`}><i className="range-swatch" style={{ background: color }} />{titleState(state)} range</span>))}{data.selected.id === "super_guppy" ? <><span><i style={{ background: "linear-gradient(90deg,#00ff00 0 50%,#ff0000 50%)" }} />Swing arrows</span><span><i style={{ background: "linear-gradient(90deg,#00ffff 0 50%,#0000ff 50%)" }} />Trend Break arrows</span></> : <span><i className="flip-dot" />Confirmed flip</span>}<span className="method-note">States effective next open</span></div></article>
+      <section className={`hero-grid ${loading ? "is-refreshing" : ""}`}><article className="chart-card"><div className="chart-heading"><div><p className="eyebrow">LAST CONFIRMED {timeframe === "1d" ? "DAILY" : "WEEKLY"} CLOSE · {data.dataset.market} · {data.dataset.sourceLabel.toUpperCase()}</p><div className="price-line"><strong>{formatPrice(current?.close, data.dataset.denomination)}</strong><span className={change != null && change < 0 ? "negative" : ""}>{formatPct(change, true)}</span></div></div><StateBadge state={data.selected.state} label={roleStateLabel(data.selected.role, data.selected.id, data.selected.state)} /></div><div className="chart-frame"><RegimeChart candles={data.candles} selected={data.selected} denomination={data.dataset.denomination} timeframe={timeframe} theme={theme} />{loading && <div className="chart-refresh">Refreshing completed candles…</div>}</div><div className="chart-legend">{data.selected.overlays.filter(line => line.showInLegend !== false).map(line => <span key={line.name}><i style={{ background: chartColorCss(line.color) }} />{line.legendLabel ?? line.name}</span>)}{data.selected.ribbons.filter(ribbon => ribbon.showInLegend !== false).flatMap(ribbon => (Object.entries(ribbon.palette) as Array<[State, string]>).map(([state, color]) => <span key={`${ribbon.id}-${state}`}><i className="range-swatch" style={{ background: chartColorCss(color) }} />{titleState(state)} range</span>))}{data.selected.id === "super_guppy" ? <><span><i style={{ background: "linear-gradient(90deg,var(--chart-guppy-lime) 0 50%,var(--chart-guppy-red) 50%)" }} />Swing arrows</span><span><i style={{ background: "linear-gradient(90deg,var(--chart-guppy-aqua) 0 50%,var(--chart-guppy-blue) 50%)" }} />Trend Break arrows</span></> : <span><i className="flip-dot" />Confirmed flip</span>}<span className="method-note">States effective next open</span></div></article>
         <aside className="signal-panel"><p className="eyebrow">CURRENT EVIDENCE</p><h2>{data.selected.shortName}</h2><div className="current-state-row"><StateBadge state={data.selected.state} label={roleStateLabel(data.selected.role, data.selected.id, data.selected.state)} /><span>since {formatDate(data.selected.lastFlip)}</span></div>{data.selected.role !== "valuation" && (data.selected.bullTrigger != null || data.selected.bearTrigger != null) && <>{triggerCard(triggerLabels[0], data.selected.bullTrigger, "bull-trigger")}{triggerCard(triggerLabels[1], data.selected.bearTrigger, "bear-trigger")}</>}<div className="method-card"><span>RULE</span><p>{data.selected.explanation}</p><b>{data.selected.triggerLabel}</b></div>{data.selected.disclaimer && <div className="proxy-note"><strong>Implementation note</strong>{data.selected.disclaimer}</div>}<p className="disclaimer">Research view only. No live orders or individualized allocation advice.</p></aside></section>
       <section className="guidance-card" aria-label={`${data.selected.displayName} interpretation guide`}><div className="guidance-heading"><div><p className="eyebrow">HOW TO INTERPRET IT</p><h2>{data.selected.guidance.summary}</h2></div>{data.selected.sourceUrl && <a href={data.selected.sourceUrl} target="_blank" rel="noreferrer">Published method ↗</a>}</div><div className="guidance-grid">{([data.selected.guidance.positive, data.selected.guidance.neutral, data.selected.guidance.negative] as Guidance["positive"][]).map((item, index) => <article className={["positive", "neutral", "negative"][index]} key={item.label}><span>{item.label}</span><p>{item.rule}</p></article>)}</div><div className="guidance-notes"><p><strong>Why this rule exists</strong>{data.selected.guidance.rationale}</p><ul>{data.selected.guidance.caveats.map(caveat => <li key={caveat}>{caveat}</li>)}</ul></div></section>
       <section className="family-strip" aria-label="Regime family agreement"><div><p className="eyebrow">FAMILY AGREEMENT</p><h2>Correlated models get one family voice</h2></div><div className="family-summary"><b className="bull-text">{data.familyAgreement.bull} bull</b><b className="neutral-text">{data.familyAgreement.neutral} neutral</b><b className="bear-text">{data.familyAgreement.bear} bear</b></div><div className="family-chips">{familyRows.map(row => <span key={row.family} className={row.state}><i />{row.family}<small>{row.members} model{row.members === 1 ? "" : "s"}</small></span>)}</div></section>

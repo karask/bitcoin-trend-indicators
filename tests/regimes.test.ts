@@ -8,8 +8,24 @@ import { ensureMarketSchema } from "../db/index.ts";
 import { ASSETS, SOURCES, aggregateWeekly, marketDefinition, parseSpotPrice, sourcesForAsset, validateCandles, type MarketDataset } from "../lib/market-data.ts";
 import { backtest, calculateIndicators, INDICATOR_SPECS, type Candle, type SignalSnapshot } from "../lib/regimes.ts";
 import { completedBoundary, confirmationClock } from "../lib/confirmation-clock.ts";
+import { nearestCandleIndex, periodLabel, priceAtY, resolveInitialTheme } from "../lib/chart-interaction.ts";
 
 const DAY = 86_400_000;
+
+test("chart inspection snaps safely and formats confirmed periods", () => {
+  assert.equal(nearestCandleIndex(-50, 10, 500, 100), 0);
+  assert.equal(nearestCandleIndex(260, 10, 500, 100), 50);
+  assert.equal(nearestCandleIndex(999, 10, 500, 100), 99);
+  assert.equal(nearestCandleIndex(10, 10, 0, 100), -1);
+  assert.equal(priceAtY(20, 20, 200, 100, 300), 300);
+  assert.equal(priceAtY(120, 20, 200, 100, 300), 200);
+  assert.equal(priceAtY(500, 20, 200, 100, 300), 100);
+  assert.equal(periodLabel(Date.UTC(2026, 7, 24), "1d"), "24 Aug 2026");
+  assert.equal(periodLabel(Date.UTC(2026, 7, 24), "1w"), "24 Aug 2026 – 30 Aug 2026");
+  assert.equal(resolveInitialTheme("dark", false), "dark");
+  assert.equal(resolveInitialTheme(null, true), "dark");
+  assert.equal(resolveInitialTheme("unknown", false), "light");
+});
 
 function history(count = 900): Candle[] {
   let prior = 100;

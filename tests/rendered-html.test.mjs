@@ -41,5 +41,7 @@ test("server-renders the research PWA shell", async t => {
   assert.match(html, /Ethereum/i);
   assert.match(html, /Solana/i);
   assert.match(html, /manifest\.webmanifest/i);
+  assert.match(html, /crypto-regime-theme/i);
+  assert.match(html, /Switch to dark theme/i);
   assert.doesNotMatch(html, /Your site is taking shape|react-loading-skeleton/i);
 });
