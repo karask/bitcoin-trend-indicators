@@ -1,8 +1,10 @@
 import { readFileSync } from "node:fs";
-import { backtest, buyAndHold, calculateIndicators, familyAgreement, type Candle, type Timeframe } from "../lib/regimes.ts";
+import type { AssetId } from "../lib/markets.ts";
+import { backtest, buyAndHold, calculateIndicators, familyAgreement, type Candle, type IndicatorCalculationOptions, type Timeframe } from "../lib/regimes.ts";
 
-const input = JSON.parse(readFileSync(0, "utf8")) as { candles: Candle[]; timeframe: Timeframe; costs?: number[] };
-const snapshots = calculateIndicators(input.candles, input.timeframe);
+const input = JSON.parse(readFileSync(0, "utf8")) as { asset?: AssetId; candles: Candle[]; timeframe: Timeframe; costs?: number[] };
+const options: IndicatorCalculationOptions = { asset: input.asset ?? "btc" };
+const snapshots = calculateIndicators(input.candles, input.timeframe, options);
 const windowSize = input.timeframe === "1d" ? 4 * 365 : 4 * 52;
 const step = input.timeframe === "1d" ? 365 : 52;
 const rolling = [];

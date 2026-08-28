@@ -52,8 +52,9 @@ function slimMatrix(signal: SignalSnapshot, candles: Candle[], denomination: str
 
 export function buildDashboardPayload(asset: AssetId, source: SourceId, timeframe: Timeframe, indicatorId: string, daily: MarketDataset, weekly: MarketDataset, options: IndicatorCalculationOptions = {}) {
   const selectedDataset = timeframe === "1d" ? daily : weekly;
-  const dailySignals = calculateIndicators(daily.candles, "1d", options);
-  const weeklySignals = calculateIndicators(weekly.candles, "1w", options);
+  const calculationOptions: IndicatorCalculationOptions = { ...options, asset };
+  const dailySignals = calculateIndicators(daily.candles, "1d", calculationOptions);
+  const weeklySignals = calculateIndicators(weekly.candles, "1w", calculationOptions);
   const signals = timeframe === "1d" ? dailySignals : weeklySignals;
   const selected = signals.find(item => item.id === indicatorId) ?? signals.find(item => item.id === "support_band") ?? signals[0];
   const visibleCount = timeframe === "1d" ? 180 : 120;

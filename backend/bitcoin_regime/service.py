@@ -25,7 +25,7 @@ class ResearchService:
         return json.loads(process.stdout)
 
     def _engine(self, dataset: Dataset) -> dict:
-        payload = json.dumps({"timeframe": dataset.timeframe, "candles": [candle.as_dict() for candle in dataset.candles], "costs": [5, 15, 30]}, separators=(",", ":"))
+        payload = json.dumps({"asset": dataset.asset, "timeframe": dataset.timeframe, "candles": [candle.as_dict() for candle in dataset.candles], "costs": [5, 15, 30]}, separators=(",", ":"))
         process = subprocess.run(["node", "--experimental-strip-types", str(ROOT / "scripts" / "calculate-signals.ts")], cwd=ROOT, input=payload, check=True, capture_output=True, text=True)
         return json.loads(process.stdout)
 
