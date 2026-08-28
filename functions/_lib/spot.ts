@@ -20,7 +20,7 @@ export async function spotPrice(definition: SourceDefinition): Promise<number> {
   const url = definition.id === "bitstamp"
     ? `https://www.bitstamp.net/api/v2/ticker/${definition.providerSymbol}/`
     : definition.id === "binance"
-      ? `https://api.binance.com/api/v3/ticker/price?symbol=${definition.providerSymbol}`
+      ? `https://data-api.binance.vision/api/v3/ticker/price?symbol=${definition.providerSymbol}`
       : definition.id === "kraken"
         ? `https://api.kraken.com/0/public/Ticker?pair=${definition.providerSymbol}`
         : `https://api.exchange.coinbase.com/products/${definition.providerSymbol}/ticker`;

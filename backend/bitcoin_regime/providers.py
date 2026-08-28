@@ -95,7 +95,7 @@ def binance(asset: str = "btc") -> Dataset:
     market, symbol, history_start = MARKETS[asset]["binance"]
     candles: list[Candle] = []; raw_parts: list[bytes] = []; start = int(history_start.timestamp() * 1000)
     for _ in range(20):
-        body, raw = _json("https://api.binance.com/api/v3/klines?" + urlencode({"symbol": symbol, "interval": "1d", "limit": 1000, "startTime": start})); raw_parts.append(raw)
+        body, raw = _json("https://data-api.binance.vision/api/v3/klines?" + urlencode({"symbol": symbol, "interval": "1d", "limit": 1000, "startTime": start})); raw_parts.append(raw)
         if not body: break
         candles.extend(Candle(int(row[0]), float(row[1]), float(row[2]), float(row[3]), float(row[4]), float(row[5])) for row in body)
         start = int(body[-1][0]) + DAY_MS

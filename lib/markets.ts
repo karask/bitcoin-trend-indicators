@@ -22,7 +22,7 @@ export interface SourceDefinition {
 export const ASSETS: AssetDefinition[] = [
   { id: "btc", label: "Bitcoin", symbol: "BTC", defaultSource: "bitstamp" },
   { id: "eth", label: "Ethereum", symbol: "ETH", defaultSource: "bitstamp" },
-  { id: "sol", label: "Solana", symbol: "SOL", defaultSource: "binance" },
+  { id: "sol", label: "Solana", symbol: "SOL", defaultSource: "coinbase" },
 ];
 
 export const SOURCES: SourceDefinition[] = [

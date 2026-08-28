@@ -305,6 +305,7 @@ test("spot ticker payloads are parsed for every supported venue", () => {
 test("BTC, ETH, and SOL expose isolated venue definitions and useful history", () => {
   assert.deepEqual(ASSETS.map(asset => asset.id), ["btc", "eth", "sol"]);
   for (const asset of ASSETS) assert.equal(sourcesForAsset(asset.id).length, 4);
+  assert.equal(ASSETS.find(asset => asset.id === "sol")!.defaultSource, "coinbase");
   assert.equal(SOURCES.length, 12);
   assert.equal(marketDefinition("eth", "bitstamp").providerSymbol, "ethusd");
   assert.equal(marketDefinition("sol", "binance").providerSymbol, "SOLUSDT");

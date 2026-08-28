@@ -45,7 +45,7 @@ async function recentCandles(definition: SourceDefinition): Promise<{ candles: C
     return { candles: validateRecent(rows.map(row => candle(Number(row.timestamp) * 1000, row.open, row.high, row.low, row.close, row.volume))), raw: result.raw };
   }
   if (definition.id === "binance") {
-    const result = await fetchJson(`https://api.binance.com/api/v3/klines?symbol=${definition.providerSymbol}&interval=1d&limit=35`);
+    const result = await fetchJson(`https://data-api.binance.vision/api/v3/klines?symbol=${definition.providerSymbol}&interval=1d&limit=35`);
     const rows = result.body as Array<Array<number | string>>;
     return { candles: validateRecent(rows.map(row => candle(row[0], row[1], row[2], row[3], row[4], row[5]))), raw: result.raw };
   }

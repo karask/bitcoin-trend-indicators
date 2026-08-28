@@ -108,7 +108,7 @@ export async function getSpotQuote(asset: AssetId, source: SourceId): Promise<Sp
   const url = source === "bitstamp"
     ? `https://www.bitstamp.net/api/v2/ticker/${sourceDef.providerSymbol}/`
     : source === "binance"
-      ? `https://api.binance.com/api/v3/ticker/price?symbol=${sourceDef.providerSymbol}`
+      ? `https://data-api.binance.vision/api/v3/ticker/price?symbol=${sourceDef.providerSymbol}`
       : source === "kraken"
         ? `https://api.kraken.com/0/public/Ticker?pair=${sourceDef.providerSymbol}`
         : `https://api.exchange.coinbase.com/products/${sourceDef.providerSymbol}/ticker`;
@@ -147,7 +147,7 @@ async function binanceDaily(sourceDef: SourceDefinition): Promise<Candle[]> {
   const found: Candle[] = [];
   let startTime = sourceDef.historyStart;
   for (let page = 0; page < 20; page++) {
-    const url = `https://api.binance.com/api/v3/klines?symbol=${sourceDef.providerSymbol}&interval=1d&limit=1000&startTime=${startTime}`;
+    const url = `https://data-api.binance.vision/api/v3/klines?symbol=${sourceDef.providerSymbol}&interval=1d&limit=1000&startTime=${startTime}`;
     const rows = await fetchJson(url) as Array<Array<number | string>>;
     if (!rows.length) break;
     for (const row of rows) found.push(asCandle(row[0], row[1], row[2], row[3], row[4], row[5]));

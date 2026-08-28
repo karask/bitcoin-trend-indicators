@@ -7,6 +7,8 @@ import { getMarketData, type MarketDataset } from "../lib/market-data.ts";
 const all = process.argv.includes("--all");
 const remote = process.argv.includes("--remote");
 const apply = process.argv.includes("--apply");
+const requestedAsset = process.argv.find(argument => argument.startsWith("--asset="))?.slice("--asset=".length);
+const requestedSource = process.argv.find(argument => argument.startsWith("--source="))?.slice("--source=".length);
 const output = path.join(process.cwd(), "data", "cloudflare-seed");
 const wrangler = path.join(process.cwd(), "node_modules", ".bin", "wrangler");
 
@@ -55,9 +57,12 @@ async function seed(definition: SourceDefinition): Promise<string | null> {
   return file;
 }
 
-const selected = all
-  ? SOURCES
-  : ASSETS.map(asset => SOURCES.find(source => source.asset === asset.id && source.id === asset.defaultSource)!);
+const selected = requestedAsset || requestedSource
+  ? SOURCES.filter(definition => (!requestedAsset || definition.asset === requestedAsset) && (!requestedSource || definition.id === requestedSource))
+  : all
+    ? SOURCES
+    : ASSETS.map(asset => SOURCES.find(source => source.asset === asset.id && source.id === asset.defaultSource)!);
+if (!selected.length) throw new Error(`No market matches asset=${requestedAsset ?? "*"} source=${requestedSource ?? "*"}`);
 const files: string[] = [];
 for (const definition of selected) {
   const file = await seed(definition);
