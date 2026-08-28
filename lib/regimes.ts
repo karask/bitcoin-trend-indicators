@@ -4,6 +4,7 @@ export type RegimeState = "bull" | "bear" | "neutral";
 export type ThresholdKind = "fixed" | "provisional" | "conditional";
 export type IndicatorRole = "regime" | "confirmation" | "exit" | "valuation";
 export type Timeframe = "1d" | "1w";
+export type MarketContext = "crypto" | "equity";
 export type SuperGuppySource = "close" | "open" | "high" | "low" | "hl2" | "hlc3" | "ohlc4";
 
 export interface SuperGuppyConfig {
@@ -24,11 +25,19 @@ export interface SuperGuppyConfig {
 
 export interface IndicatorCalculationOptions {
   asset?: AssetId;
+  market?: MarketContext;
+  kkSupertrendFactor?: number;
   superGuppy?: Partial<SuperGuppyConfig>;
+}
+
+export interface AnnualizationOptions {
+  market?: MarketContext;
+  periodsPerYear?: number;
 }
 
 export const KK_SUPERTREND_ATR_LENGTH = 10;
 export const KK_SUPERTREND_FACTORS = { btc: 3, eth: 2, sol: 2 } as const satisfies Record<AssetId, number>;
+export const KK_SUPERTREND_EQUITY_FACTOR = 3;
 
 export const SUPER_GUPPY_R12_DEFAULTS: SuperGuppyConfig = {
   fastLengths: Array.from({ length: 11 }, (_, index) => 3 + index * 2),
@@ -727,11 +736,13 @@ function valuation(candles: Candle[], spec: IndicatorSpec, timeframe: Timeframe)
 }
 
 export function calculateIndicators(candles: Candle[], timeframe: Timeframe, options: IndicatorCalculationOptions = {}): SignalSnapshot[] {
+  const explicitKkFactor = finite(options.kkSupertrendFactor) && options.kkSupertrendFactor! > 0 ? options.kkSupertrendFactor! : null;
+  const kkFactor = explicitKkFactor ?? (options.market === "equity" ? KK_SUPERTREND_EQUITY_FACTOR : KK_SUPERTREND_FACTORS[options.asset ?? "btc"]);
   return INDICATOR_SPECS.filter(s => s.supportedTimeframes.includes(timeframe)).map(spec => {
     switch (spec.id) {
       case "support_band": return supportBand(candles, spec);
       case "supertrend": return supertrend(candles, spec, 10, 3, { name: "SuperTrend", color: "#8769c3" });
-      case "kk_supertrend": return supertrend(candles, spec, KK_SUPERTREND_ATR_LENGTH, KK_SUPERTREND_FACTORS[options.asset ?? "btc"], { name: "KK Supertrend", color: "#d7a928" });
+      case "kk_supertrend": return supertrend(candles, spec, KK_SUPERTREND_ATR_LENGTH, kkFactor, { name: "KK Supertrend", color: "#d7a928" });
       case "smma_ribbon": return ribbon(candles, spec);
       case "super_guppy": return superGuppy(candles, spec, timeframe, options.superGuppy);
       case "long_sma": return longSma(candles, spec, timeframe);
@@ -750,8 +761,13 @@ export function calculateIndicators(candles: Candle[], timeframe: Timeframe, opt
   });
 }
 
-export function backtest(candles: Candle[], snapshots: SignalSnapshot[], timeframe: Timeframe, costBps = 15): BacktestSummary[] {
-  const periodsPerYear = timeframe === "1d" ? 365 : 52;
+function resolvePeriodsPerYear(timeframe: Timeframe, options: AnnualizationOptions): number {
+  if (finite(options.periodsPerYear) && options.periodsPerYear! > 0) return options.periodsPerYear!;
+  return timeframe === "1d" ? (options.market === "equity" ? 252 : 365) : 52;
+}
+
+export function backtest(candles: Candle[], snapshots: SignalSnapshot[], timeframe: Timeframe, costBps = 15, options: AnnualizationOptions = {}): BacktestSummary[] {
+  const periodsPerYear = resolvePeriodsPerYear(timeframe, options);
   return snapshots.filter(s => s.role === "regime").map(s => {
     let equity = 1, peak = 1, maxDrawdown = 0, turnover = 0, exposureSum = 0, flips = 0;
     const returns: number[] = [], assetReturns: number[] = [];
@@ -776,9 +792,9 @@ export function backtest(candles: Candle[], snapshots: SignalSnapshot[], timefra
   }).sort((a, b) => (b.calmar ?? -Infinity) - (a.calmar ?? -Infinity));
 }
 
-export function buyAndHold(candles: Candle[], timeframe: Timeframe, costBps = 15) {
+export function buyAndHold(candles: Candle[], timeframe: Timeframe, costBps = 15, options: AnnualizationOptions = {}) {
   if (candles.length < 2) return null;
-  const periodsPerYear = timeframe === "1d" ? 365 : 52;
+  const periodsPerYear = resolvePeriodsPerYear(timeframe, options);
   const returns = candles.slice(1).map((candle, i) => candle.open / candles[i].open - 1);
   let equity = 1 - costBps / 10_000, peak = equity, maxDrawdown = 0;
   for (const value of returns) { equity *= 1 + value; peak = Math.max(peak, equity); maxDrawdown = Math.min(maxDrawdown, equity / peak - 1); }

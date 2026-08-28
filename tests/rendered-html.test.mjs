@@ -44,4 +44,16 @@ test("server-renders the research PWA shell", async t => {
   assert.match(html, /crypto-regime-theme/i);
   assert.match(html, /Switch to dark theme/i);
   assert.doesNotMatch(html, /Your site is taking shape|react-loading-skeleton/i);
+
+  const stockResponse = await fetch(`http://127.0.0.1:${port}/stocks`, { headers: { accept: "text/html" } });
+  assert.equal(stockResponse.status, 200);
+  const stockHtml = await stockResponse.text();
+  assert.match(stockHtml, /<title>Stock Regime Lab · Crypto Regime Lab<\/title>/i);
+  assert.match(stockHtml, /Equity trends, on completed sessions/i);
+  assert.match(stockHtml, /Connect your free Tiingo API token/i);
+  assert.match(stockHtml, /TSLA/i);
+  assert.match(stockHtml, /GOOGL/i);
+  assert.match(stockHtml, /NVDA/i);
+  assert.match(stockHtml, /session storage/i);
+  assert.doesNotMatch(stockHtml, /Binance|Kraken|Live.*spot|confirmation clock/i);
 });

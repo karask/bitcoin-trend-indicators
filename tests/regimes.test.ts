@@ -6,7 +6,7 @@ import test from "node:test";
 import { DatabaseSync } from "node:sqlite";
 import { ensureMarketSchema } from "../db/index.ts";
 import { ASSETS, MIN_SOURCE_CANDLES, SOURCES, aggregateWeekly, marketDefinition, parseSpotPrice, resolveSourceForAsset, sourcesForAsset, validateCandles, type MarketDataset } from "../lib/market-data.ts";
-import { backtest, calculateIndicators, INDICATOR_SPECS, KK_SUPERTREND_ATR_LENGTH, KK_SUPERTREND_FACTORS, type Candle, type SignalSnapshot } from "../lib/regimes.ts";
+import { backtest, buyAndHold, calculateIndicators, INDICATOR_SPECS, KK_SUPERTREND_ATR_LENGTH, KK_SUPERTREND_EQUITY_FACTOR, KK_SUPERTREND_FACTORS, type Candle, type SignalSnapshot } from "../lib/regimes.ts";
 import { completedBoundary, confirmationClock } from "../lib/confirmation-clock.ts";
 import { nearestCandleIndex, periodLabel, priceAtY, resolveInitialTheme } from "../lib/chart-interaction.ts";
 
@@ -142,12 +142,13 @@ const SOL_KK_CALIBRATION: readonly OhlcRow[] = [
   [73.55, 77.75, 71.88, 76.21], [76.2, 77.23, 74.09, 74.54], [74.54, 102.7, 74.36, 95.43],
 ];
 
-test("KK Supertrend is registered immediately after SuperTrend with fixed asset presets", () => {
+test("KK Supertrend is registered immediately after SuperTrend with fixed crypto presets", () => {
   const supertrendIndex = INDICATOR_SPECS.findIndex(spec => spec.id === "supertrend");
   const kkIndex = INDICATOR_SPECS.findIndex(spec => spec.id === "kk_supertrend");
   assert.equal(kkIndex, supertrendIndex + 1);
   assert.equal(KK_SUPERTREND_ATR_LENGTH, 10);
   assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2 });
+  assert.equal(KK_SUPERTREND_EQUITY_FACTOR, 3);
   assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { atr: 10, btcFactor: 3, ethFactor: 2, solFactor: 2 });
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /screenshot-calibrated/i);
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /does not claim to reproduce/i);
@@ -180,6 +181,27 @@ test("BTC KK Supertrend is point-for-point identical to SuperTrend 10/3", () => 
   assert.equal(kk.bullTrigger, standard.bullTrigger);
   assert.equal(kk.bearTrigger, standard.bearTrigger);
   assert.deepEqual(kk.values, standard.values);
+});
+
+test("equity market context runs every applicable indicator and uses the uncalibrated factor-three KK preset", () => {
+  const candles = history();
+  for (const timeframe of ["1d", "1w"] as const) {
+    const results = calculateIndicators(candles, timeframe, { market: "equity" });
+    const expected = INDICATOR_SPECS.filter(spec => spec.supportedTimeframes.includes(timeframe)).map(spec => spec.id).sort();
+    assert.deepEqual(results.map(result => result.id).sort(), expected, timeframe);
+    assert.ok(results.every(result => result.states.length === candles.length), timeframe);
+    const standard = results.find(item => item.id === "supertrend")!;
+    const kk = results.find(item => item.id === "kk_supertrend")!;
+    assert.equal(kk.values.factor, 3, timeframe);
+    assert.deepEqual(kk.states, standard.states, timeframe);
+    assert.deepEqual(kk.overlays[0].points, standard.overlays[0].points, timeframe);
+    assert.deepEqual({ state: kk.state, flip: kk.lastFlip, bull: kk.bullTrigger, bear: kk.bearTrigger }, { state: standard.state, flip: standard.lastFlip, bull: standard.bullTrigger, bear: standard.bearTrigger }, timeframe);
+  }
+  const mayer = calculateIndicators(candles, "1d", { market: "equity" }).find(item => item.id === "mayer")!;
+  assert.ok(Number.isFinite(mayer.values.multiple));
+
+  const custom = calculateIndicators(candles, "1d", { market: "equity", kkSupertrendFactor: 2 }).find(item => item.id === "kk_supertrend")!;
+  assert.equal(custom.values.factor, 2);
 });
 
 test("KK Supertrend is included in every asset backtest and cost-sensitivity path", () => {
@@ -284,6 +306,36 @@ test("backtest enters at the next open and charges one-way turnover", () => {
   const snapshot = { id: "test", displayName: "Test", shortName: "Test", role: "regime", family: "test", state: "bull", previousState: "bull", lastFlip: 0, thresholdKind: "fixed", bullTrigger: null, bearTrigger: null, triggerLabel: "", explanation: "", guidance: INDICATOR_SPECS[0].guidance, values: {}, overlays: [], ribbons: [], events: [], barColors: [], states: ["bull", "bull", "bull", "bull"] } satisfies SignalSnapshot;
   const result = backtest(candles, [snapshot], "1d", 15)[0];
   assert.ok(Math.abs(result.totalReturn - 0.9985) < 1e-10); assert.equal(result.turnover, 1);
+  const equityResult = backtest(candles, [snapshot], "1d", 15, { market: "equity" })[0];
+  assert.equal(equityResult.totalReturn, result.totalReturn);
+  assert.equal(equityResult.turnover, result.turnover);
+});
+
+test("equity backtests and buy-and-hold annualize daily returns at 252 sessions without changing crypto defaults", () => {
+  const candles: Candle[] = Array.from({ length: 254 }, (_, i) => {
+    const open = 100 * 1.001 ** i;
+    return { time: i * DAY, open, high: open, low: open, close: open, volume: 1, complete: true };
+  });
+  const snapshot = { id: "test", displayName: "Test", shortName: "Test", role: "regime", family: "test", state: "bull", previousState: "bull", lastFlip: 0, thresholdKind: "fixed", bullTrigger: null, bearTrigger: null, triggerLabel: "", explanation: "", guidance: INDICATOR_SPECS[0].guidance, values: {}, overlays: [], ribbons: [], events: [], barColors: [], states: candles.map(() => "bull" as const) } satisfies SignalSnapshot;
+  const equity = backtest(candles, [snapshot], "1d", 0, { market: "equity" })[0];
+  const explicit = backtest(candles, [snapshot], "1d", 0, { periodsPerYear: 252 })[0];
+  const cryptoDefault = backtest(candles, [snapshot], "1d", 0)[0];
+  assert.ok(Math.abs(equity.cagr - (1.001 ** 252 - 1)) < 1e-10);
+  assert.equal(equity.cagr, explicit.cagr);
+  assert.ok(cryptoDefault.cagr > equity.cagr);
+  assert.ok(Math.abs(cryptoDefault.cagr - (1.001 ** 365 - 1)) < 1e-10);
+
+  const holdCandles = candles.slice(0, 253);
+  const equityHold = buyAndHold(holdCandles, "1d", 0, { market: "equity" })!;
+  const explicitHold = buyAndHold(holdCandles, "1d", 0, { periodsPerYear: 252 })!;
+  const cryptoHold = buyAndHold(holdCandles, "1d", 0)!;
+  assert.ok(Math.abs(equityHold.cagr - (1.001 ** 252 - 1)) < 1e-10);
+  assert.equal(equityHold.cagr, explicitHold.cagr);
+  assert.ok(cryptoHold.cagr > equityHold.cagr);
+
+  const costs = [5, 15, 30].map(costBps => backtest(candles, [snapshot], "1d", costBps, { market: "equity" })[0]);
+  assert.ok(costs[0].totalReturn > costs[1].totalReturn && costs[1].totalReturn > costs[2].totalReturn);
+  assert.ok(costs.every(result => result.turnover === 1));
 });
 
 test("confirmation clocks follow UTC daily and Monday weekly boundaries", () => {
