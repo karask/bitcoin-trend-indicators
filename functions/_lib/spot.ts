@@ -1,5 +1,7 @@
 import type { SourceDefinition, SourceId } from "../../lib/markets";
 
+const BINANCE_MARKET_DATA_BASES = ["https://data-api.binance.vision", "https://api-gcp.binance.com", "https://api1.binance.com"];
+
 function parseSpotPrice(source: SourceId, body: unknown): number {
   const record = body as Record<string, unknown>;
   let raw: unknown;
@@ -17,14 +19,22 @@ function parseSpotPrice(source: SourceId, body: unknown): number {
 }
 
 export async function spotPrice(definition: SourceDefinition): Promise<number> {
-  const url = definition.id === "bitstamp"
+  const urls = definition.id === "bitstamp"
     ? `https://www.bitstamp.net/api/v2/ticker/${definition.providerSymbol}/`
     : definition.id === "binance"
-      ? `https://data-api.binance.vision/api/v3/ticker/price?symbol=${definition.providerSymbol}`
+      ? BINANCE_MARKET_DATA_BASES.map(base => `${base}/api/v3/ticker/price?symbol=${definition.providerSymbol}`)
       : definition.id === "kraken"
         ? `https://api.kraken.com/0/public/Ticker?pair=${definition.providerSymbol}`
         : `https://api.exchange.coinbase.com/products/${definition.providerSymbol}/ticker`;
-  const response = await fetch(url, { headers: definition.id === "coinbase" ? { "User-Agent": "Crypto-Regime-Lab/1.0" } : undefined });
-  if (!response.ok) throw new Error(`${definition.label} returned HTTP ${response.status}`);
-  return parseSpotPrice(definition.id, await response.json());
+  let lastError: unknown;
+  for (const url of Array.isArray(urls) ? urls : [urls]) {
+    try {
+      const response = await fetch(url, { headers: definition.id === "coinbase" ? { "User-Agent": "Crypto-Regime-Lab/1.0" } : undefined });
+      if (!response.ok) throw new Error(`${definition.label} returned HTTP ${response.status}`);
+      return parseSpotPrice(definition.id, await response.json());
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError ?? new Error(`${definition.label} quote endpoints were unavailable`);
 }

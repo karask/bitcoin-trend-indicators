@@ -8,6 +8,7 @@ const CRON_ASSET: Record<string, AssetId> = {
   "25 0 * * *": "eth",
   "35 0 * * *": "sol",
 };
+const BINANCE_MARKET_DATA_BASES = ["https://data-api.binance.vision", "https://api-gcp.binance.com", "https://api1.binance.com"];
 
 type ScheduledController = { cron: string; scheduledTime: number };
 type ExecutionContext = { waitUntil(promise: Promise<unknown>): void };
@@ -18,10 +19,31 @@ function candle(time: unknown, open: unknown, high: unknown, low: unknown, close
 }
 
 async function fetchJson(url: string, headers?: Record<string, string>): Promise<{ body: unknown; raw: string }> {
-  const response = await fetch(url, { headers });
-  if (!response.ok) throw new Error(`Provider returned HTTP ${response.status}`);
-  const raw = await response.text();
-  return { body: JSON.parse(raw), raw };
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const response = await fetch(url, { headers });
+    if (response.ok) {
+      const raw = await response.text();
+      return { body: JSON.parse(raw), raw };
+    }
+    const retryable = response.status === 429 || response.status >= 500;
+    if (!retryable || attempt === 2) throw new Error(`Provider returned HTTP ${response.status}`);
+    const retryAfter = Number(response.headers.get("Retry-After"));
+    const delay = Number.isFinite(retryAfter) && retryAfter > 0 ? Math.min(retryAfter * 1000, 5_000) : 500 * 2 ** attempt;
+    await new Promise(resolve => setTimeout(resolve, delay));
+  }
+  throw new Error("Provider retry limit exhausted");
+}
+
+async function fetchFirstJson(urls: string[]): Promise<{ body: unknown; raw: string }> {
+  let lastError: unknown;
+  for (const url of urls) {
+    try {
+      return await fetchJson(url);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError ?? new Error("No provider endpoint was available");
 }
 
 function validateRecent(candles: Candle[]): Candle[] {
@@ -45,7 +67,8 @@ async function recentCandles(definition: SourceDefinition): Promise<{ candles: C
     return { candles: validateRecent(rows.map(row => candle(Number(row.timestamp) * 1000, row.open, row.high, row.low, row.close, row.volume))), raw: result.raw };
   }
   if (definition.id === "binance") {
-    const result = await fetchJson(`https://data-api.binance.vision/api/v3/klines?symbol=${definition.providerSymbol}&interval=1d&limit=35`);
+    const path = `/api/v3/klines?symbol=${definition.providerSymbol}&interval=1d&limit=35`;
+    const result = await fetchFirstJson(BINANCE_MARKET_DATA_BASES.map(base => `${base}${path}`));
     const rows = result.body as Array<Array<number | string>>;
     return { candles: validateRecent(rows.map(row => candle(row[0], row[1], row[2], row[3], row[4], row[5]))), raw: result.raw };
   }
