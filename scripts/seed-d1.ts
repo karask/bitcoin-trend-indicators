@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-import { ASSETS, SOURCES, type SourceDefinition } from "../lib/markets.ts";
+import { ASSETS, MIN_SOURCE_CANDLES, SOURCES, type SourceDefinition } from "../lib/markets.ts";
 import { getMarketData, type MarketDataset } from "../lib/market-data.ts";
 
 const all = process.argv.includes("--all");
@@ -44,6 +44,10 @@ async function seed(definition: SourceDefinition): Promise<string | null> {
     console.log("skipped (quality failure)");
     return null;
   }
+  if (daily.candles.length < MIN_SOURCE_CANDLES["1d"] || weekly.candles.length < MIN_SOURCE_CANDLES["1w"]) {
+    console.log("skipped (insufficient history)");
+    return null;
+  }
   const checkedAt = new Date().toISOString();
   const statements = [
     "PRAGMA foreign_keys=ON;",
@@ -64,12 +68,14 @@ const selected = requestedAsset || requestedSource
     : ASSETS.map(asset => SOURCES.find(source => source.asset === asset.id && source.id === asset.defaultSource)!);
 if (!selected.length) throw new Error(`No market matches asset=${requestedAsset ?? "*"} source=${requestedSource ?? "*"}`);
 const files: string[] = [];
+const failures: SourceDefinition[] = [];
 for (const definition of selected) {
   const file = await seed(definition);
   if (file) files.push(file);
+  else failures.push(definition);
 }
 
-if (!files.length) throw new Error("No provider histories passed validation; D1 was not changed");
+if (failures.length) throw new Error(`Seed validation failed for ${failures.map(definition => `${definition.asset}/${definition.id}`).join(", ")}; D1 was not changed`);
 
 if (apply) {
   for (const file of files) {

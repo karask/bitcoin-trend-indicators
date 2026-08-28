@@ -19,6 +19,11 @@ export interface SourceDefinition {
   historyStart: number;
 }
 
+export const MIN_SOURCE_CANDLES = {
+  "1d": 200,
+  "1w": 52,
+} as const;
+
 export const ASSETS: AssetDefinition[] = [
   { id: "btc", label: "Bitcoin", symbol: "BTC", defaultSource: "bitstamp" },
   { id: "eth", label: "Ethereum", symbol: "ETH", defaultSource: "bitstamp" },
@@ -33,7 +38,7 @@ export const SOURCES: SourceDefinition[] = [
   { asset: "eth", id: "bitstamp", label: "Bitstamp", market: "ETH/USD", denomination: "USD", providerSymbol: "ethusd", historyStart: Date.UTC(2017, 7, 16), historyNote: "Continuous ETH/USD history from August 2017" },
   { asset: "eth", id: "binance", label: "Binance", market: "ETH/USDT", denomination: "USDT", providerSymbol: "ETHUSDT", historyStart: Date.UTC(2017, 7, 17), historyNote: "UTC ETH/USDT history from August 2017" },
   { asset: "eth", id: "kraken", label: "Kraken", market: "ETH/USD", denomination: "USD", providerSymbol: "ETHUSD", historyStart: Date.UTC(2015, 7, 8), historyNote: "Venue dates to 2015; public REST returns its latest 720 candles" },
-  { asset: "eth", id: "coinbase", label: "Coinbase Exchange", market: "ETH/USD", denomination: "USD", providerSymbol: "ETH-USD", historyStart: Date.UTC(2016, 4, 18), historyNote: "Long ETH/USD validation history from May 2016" },
+  { asset: "eth", id: "coinbase", label: "Coinbase Exchange", market: "ETH/USD", denomination: "USD", providerSymbol: "ETH-USD", historyStart: Date.UTC(2016, 4, 23), historyNote: "Continuous ETH/USD validation history from May 23, 2016" },
   { asset: "sol", id: "bitstamp", label: "Bitstamp", market: "SOL/USD", denomination: "USD", providerSymbol: "solusd", historyStart: Date.UTC(2022, 7, 18), historyNote: "SOL/USD validation history from August 2022" },
   { asset: "sol", id: "binance", label: "Binance", market: "SOL/USDT", denomination: "USDT", providerSymbol: "SOLUSDT", historyStart: Date.UTC(2020, 7, 11), historyNote: "Canonical long-history SOL/USDT series from August 2020" },
   { asset: "sol", id: "kraken", label: "Kraken", market: "SOL/USD", denomination: "USD", providerSymbol: "SOLUSD", historyStart: Date.UTC(2021, 5, 17), historyNote: "SOL/USD validation; public REST returns its latest 720 candles" },

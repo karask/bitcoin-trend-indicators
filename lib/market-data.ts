@@ -1,7 +1,7 @@
 import type { Candle, Timeframe } from "./regimes";
 import { ASSETS, marketDefinition, type AssetId, type SourceDefinition, type SourceId } from "./markets.ts";
 
-export { ASSETS, SOURCES, marketDefinition, sourcesForAsset } from "./markets.ts";
+export { ASSETS, MIN_SOURCE_CANDLES, SOURCES, marketDefinition, sourcesForAsset } from "./markets.ts";
 export type { AssetDefinition, AssetId, SourceDefinition, SourceId } from "./markets.ts";
 
 export interface MarketDataset {

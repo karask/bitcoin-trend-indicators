@@ -21,7 +21,7 @@ MARKETS = {
         "bitstamp": ("ETH/USD", "ethusd", datetime(2017, 8, 16, tzinfo=timezone.utc)),
         "binance": ("ETH/USDT", "ETHUSDT", datetime(2017, 8, 17, tzinfo=timezone.utc)),
         "kraken": ("ETH/USD", "ETHUSD", datetime(2015, 8, 8, tzinfo=timezone.utc)),
-        "coinbase": ("ETH/USD", "ETH-USD", datetime(2016, 5, 18, tzinfo=timezone.utc)),
+        "coinbase": ("ETH/USD", "ETH-USD", datetime(2016, 5, 23, tzinfo=timezone.utc)),
     },
     "sol": {
         "bitstamp": ("SOL/USD", "solusd", datetime(2022, 8, 18, tzinfo=timezone.utc)),

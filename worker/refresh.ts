@@ -1,4 +1,4 @@
-import { sourcesForAsset, type AssetId, type SourceDefinition } from "../lib/markets";
+import { MIN_SOURCE_CANDLES, sourcesForAsset, type AssetId, type SourceDefinition } from "../lib/markets";
 import type { Candle } from "../lib/regimes";
 import type { CloudflareEnv, D1Database, D1PreparedStatement } from "../functions/_lib/cloudflare";
 
@@ -13,6 +13,7 @@ const BINANCE_MARKET_DATA_BASES = ["https://data-api.binance.vision", "https://a
 type ScheduledController = { cron: string; scheduledTime: number };
 type ExecutionContext = { waitUntil(promise: Promise<unknown>): void };
 type CandleRow = { time: number; open: number; high: number; low: number; close: number; volume: number; complete: number };
+type CoverageRow = { timeframe: "1d" | "1w"; candle_count: number };
 
 function candle(time: unknown, open: unknown, high: unknown, low: unknown, close: unknown, volume: unknown): Candle {
   return { time: Number(time), open: Number(open), high: Number(high), low: Number(low), close: Number(close), volume: Number(volume) || 0, complete: true };
@@ -126,6 +127,11 @@ async function updateSnapshot(database: D1Database, definition: SourceDefinition
 async function refreshSource(database: D1Database, definition: SourceDefinition): Promise<{ source: string; status: string; daily: number; weekly: number }> {
   const retrievedAt = new Date().toISOString();
   try {
+    const baseline = await database.prepare("SELECT timeframe,candle_count FROM provider_snapshots WHERE asset=? AND source=? AND timeframe IN ('1d','1w')").bind(definition.asset, definition.id).all<CoverageRow>();
+    const coverage = new Map(baseline.results.map(row => [row.timeframe, row.candle_count]));
+    if ((coverage.get("1d") ?? 0) < MIN_SOURCE_CANDLES["1d"] || (coverage.get("1w") ?? 0) < MIN_SOURCE_CANDLES["1w"]) {
+      throw new Error(`Full history seed required before refreshing ${definition.asset.toUpperCase()} ${definition.id}`);
+    }
     const recent = await recentCandles(definition);
     const rawChecksum = await sha256(recent.raw);
     await database.batch(recent.candles.map(item => upsertCandle(database, definition, "1d", item, retrievedAt, rawChecksum)));

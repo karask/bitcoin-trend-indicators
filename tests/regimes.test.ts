@@ -5,7 +5,7 @@ import path from "node:path";
 import test from "node:test";
 import { DatabaseSync } from "node:sqlite";
 import { ensureMarketSchema } from "../db/index.ts";
-import { ASSETS, SOURCES, aggregateWeekly, marketDefinition, parseSpotPrice, sourcesForAsset, validateCandles, type MarketDataset } from "../lib/market-data.ts";
+import { ASSETS, MIN_SOURCE_CANDLES, SOURCES, aggregateWeekly, marketDefinition, parseSpotPrice, sourcesForAsset, validateCandles, type MarketDataset } from "../lib/market-data.ts";
 import { backtest, calculateIndicators, INDICATOR_SPECS, KK_SUPERTREND_ATR_LENGTH, KK_SUPERTREND_FACTORS, type Candle, type SignalSnapshot } from "../lib/regimes.ts";
 import { completedBoundary, confirmationClock } from "../lib/confirmation-clock.ts";
 import { nearestCandleIndex, periodLabel, priceAtY, resolveInitialTheme } from "../lib/chart-interaction.ts";
@@ -308,8 +308,10 @@ test("BTC, ETH, and SOL expose isolated venue definitions and useful history", (
   assert.equal(ASSETS.find(asset => asset.id === "sol")!.defaultSource, "coinbase");
   assert.equal(SOURCES.length, 12);
   assert.equal(marketDefinition("eth", "bitstamp").providerSymbol, "ethusd");
+  assert.equal(marketDefinition("eth", "coinbase").historyStart, Date.UTC(2016, 4, 23));
   assert.equal(marketDefinition("sol", "binance").providerSymbol, "SOLUSDT");
   assert.equal(marketDefinition("sol", "binance").historyStart, Date.UTC(2020, 7, 11));
+  assert.deepEqual(MIN_SOURCE_CANDLES, { "1d": 200, "1w": 52 });
 });
 
 test("legacy BTC-only SQLite tables migrate in place without losing candles", () => {
