@@ -49,6 +49,11 @@ export function sourcesForAsset(asset: AssetId): SourceDefinition[] {
   return SOURCES.filter(source => source.asset === asset);
 }
 
+export function resolveSourceForAsset(asset: AssetId, preferred: string): SourceId {
+  const supported = SOURCES.find(source => source.asset === asset && source.id === preferred);
+  return supported?.id ?? ASSETS.find(item => item.id === asset)!.defaultSource;
+}
+
 export function marketDefinition(asset: AssetId, source: SourceId): SourceDefinition {
   const definition = SOURCES.find(item => item.asset === asset && item.id === source);
   if (!definition) throw new Error(`Unsupported ${asset.toUpperCase()} market source`);
