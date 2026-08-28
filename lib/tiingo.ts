@@ -100,6 +100,17 @@ export function stockSymbolFromRequest(request: Request): StockSymbol {
   return requested;
 }
 
+export function stockStartDateFromRequest(request: Request, symbol: StockSymbol, asOfMs: number): string {
+  const stock = stockDefinition(symbol);
+  const requested = new URL(request.url).searchParams.get("startDate") ?? stock.historyStart;
+  const epoch = xnasDateEpoch(requested);
+  const latestRequired = latestRequiredTiingoSession(asOfMs);
+  if (epoch == null || requested < stock.historyStart || !latestRequired || requested > latestRequired.date) {
+    throw new StockApiError(400, "Unsupported stock history start date");
+  }
+  return requested;
+}
+
 export function tiingoAuthorization(request: Request): string {
   const authorization = request.headers.get("Authorization") ?? "";
   if (!/^Token\s+\S+$/i.test(authorization)) throw new StockApiError(401, "Tiingo API token is required");
@@ -139,10 +150,18 @@ export async function fetchTiingoStockHistory(
   authorization: string,
   fetchImpl: FetchLike = fetch,
   asOfMs = Date.now(),
+  requestedStart?: string,
 ): Promise<StockHistoryResponse> {
   const stock = stockDefinition(symbol);
+  const latestExpected = latestRequiredTiingoSession(asOfMs);
+  if (!latestExpected) throw new StockApiError(502, "Tiingo history is outside the supported XNAS calendar");
+  const startDate = requestedStart ?? stock.historyStart;
+  const startEpoch = xnasDateEpoch(startDate);
+  if (startEpoch == null || startDate < stock.historyStart || startDate > latestExpected.date) {
+    throw new StockApiError(400, "Unsupported stock history start date");
+  }
   const url = new URL(`https://api.tiingo.com/tiingo/daily/${stock.ticker}/prices`);
-  url.searchParams.set("startDate", stock.historyStart);
+  url.searchParams.set("startDate", startDate);
   url.searchParams.set("resampleFreq", "daily");
   url.searchParams.set("format", "json");
   let response: Response;
@@ -166,10 +185,8 @@ export async function fetchTiingoStockHistory(
   }
   const normalized = normalizeTiingoHistory(body, asOfMs);
   if (!normalized.candles.length) throw new StockApiError(502, "Tiingo returned no completed stock history");
-  const latestExpected = latestRequiredTiingoSession(asOfMs);
-  if (!latestExpected) throw new StockApiError(502, "Tiingo history is outside the supported XNAS calendar");
   const returnedDates = new Set(normalized.candles.map(candle => xnasDateKey(candle.time)));
-  normalized.quality.gaps = xnasSessionsBetween(stock.historyStart, latestExpected.date)
+  normalized.quality.gaps = xnasSessionsBetween(startDate, latestExpected.date)
     .reduce((count, session) => count + (returnedDates.has(session.date) ? 0 : 1), 0);
   if (Object.values(normalized.quality).some(count => count > 0)) {
     throw new StockApiError(502, "Tiingo history failed exchange-session quality checks");
@@ -180,6 +197,8 @@ export async function fetchTiingoStockHistory(
     providerUrl: STOCK_DATA_PROVIDER_URL,
     exchange: stock.exchange,
     timeframe: "1d",
+    requestedStart: startDate,
+    requiredThrough: latestExpected.date,
     retrievedAt: new Date(asOfMs).toISOString(),
     adjustment: STOCK_DATA_ADJUSTMENT,
     candles: normalized.candles,
@@ -202,8 +221,9 @@ function privateJson(body: unknown, status = 200): Response {
 export async function handleStockHistoryRequest(request: Request, fetchImpl: FetchLike = fetch, asOfMs = Date.now()): Promise<Response> {
   try {
     const symbol = stockSymbolFromRequest(request);
+    const startDate = stockStartDateFromRequest(request, symbol, asOfMs);
     const authorization = tiingoAuthorization(request);
-    return privateJson(await fetchTiingoStockHistory(symbol, authorization, fetchImpl, asOfMs));
+    return privateJson(await fetchTiingoStockHistory(symbol, authorization, fetchImpl, asOfMs, startDate));
   } catch (error) {
     const safe = error instanceof StockApiError ? error : new StockApiError(500, "Unable to load stock history");
     return privateJson({ error: safe.message }, safe.status);

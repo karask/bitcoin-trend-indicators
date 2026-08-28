@@ -41,6 +41,8 @@ export interface StockHistoryResponse {
   providerUrl: typeof STOCK_DATA_PROVIDER_URL;
   exchange: "NASDAQ";
   timeframe: "1d";
+  requestedStart: string;
+  requiredThrough: string;
   retrievedAt: string;
   adjustment: typeof STOCK_DATA_ADJUSTMENT;
   candles: Candle[];

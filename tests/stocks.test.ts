@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { aggregateStockWeeks, isStockId, isStockSymbol, STOCKS, stockDefinition, type StockHistoryResponse } from "../lib/stocks.ts";
+import { mergeIncrementalStockHistory, stockIncrementalStartDate } from "../lib/stock-cache.ts";
 import { handleStockHistoryRequest, latestRequiredTiingoSession, normalizeTiingoHistory } from "../lib/tiingo.ts";
-import { isXnasSessionDate, xnasSession, xnasSessionsBetween, xnasSessionsForYear } from "../lib/xnas-calendar.ts";
+import { isXnasSessionDate, xnasDateKey, xnasSession, xnasSessionsBetween, xnasSessionsForYear } from "../lib/xnas-calendar.ts";
 import type { Candle } from "../lib/regimes.ts";
 
 const DAY = 86_400_000;
@@ -13,6 +14,28 @@ function candle(date: string, open: number, high: number, low: number, close: nu
 
 function tiingoRow(date: string, open: number, high: number, low: number, close: number, volume = 1) {
   return { date: `${date}T00:00:00.000Z`, adjOpen: open, adjHigh: high, adjLow: low, adjClose: close, adjVolume: volume };
+}
+
+function stockResponse(
+  dates: string[],
+  requestedStart: string,
+  requiredThrough: string,
+  overrides: Partial<Record<string, Partial<Candle>>> = {},
+): StockHistoryResponse {
+  const stock = stockDefinition("TSLA");
+  return {
+    stock,
+    provider: { id: "tiingo", label: "Tiingo" },
+    providerUrl: "https://www.tiingo.com/documentation/end-of-day",
+    exchange: "NASDAQ",
+    timeframe: "1d",
+    requestedStart,
+    requiredThrough,
+    retrievedAt: "2010-07-08T01:00:00.000Z",
+    adjustment: "split-and-dividend-adjusted",
+    candles: dates.map((date, index) => ({ ...candle(date, 20 + index, 22 + index, 19 + index, 21 + index, 100 + index), ...overrides[date] })),
+    quality: { gaps: 0, duplicates: 0, malformed: 0, unexpectedSessions: 0 },
+  };
 }
 
 test("stock definitions remain separate, complete, and type guarded", () => {
@@ -180,8 +203,79 @@ test("stock history relay forwards the token only in Authorization and returns p
   assert.equal(body.providerUrl, "https://www.tiingo.com/documentation/end-of-day");
   assert.equal(body.exchange, "NASDAQ");
   assert.equal(body.adjustment, "split-and-dividend-adjusted");
+  assert.equal(body.requestedStart, "2010-06-29");
+  assert.equal(body.requiredThrough, "2010-06-29");
   assert.equal(body.retrievedAt, new Date(now).toISOString());
   assert.equal(body.candles.length, 2);
+});
+
+test("stock history relay validates and forwards an incremental start date", async () => {
+  let observedUrl = "";
+  let calls = 0;
+  const fetchStub = async (input: string | URL | Request) => {
+    calls++;
+    observedUrl = String(input);
+    return Response.json([
+      tiingoRow("2010-06-30", 20, 22, 19, 21, 100),
+      tiingoRow("2010-07-01", 21, 23, 20, 22, 101),
+    ]);
+  };
+  const now = Date.parse("2010-07-02T01:00:00.000Z"); // July 1 at 21:00 Eastern
+  const request = new Request("https://example.test/api/v1/stocks/history?symbol=TSLA&startDate=2010-06-30", { headers: { Authorization: "Token test-token" } });
+  const response = await handleStockHistoryRequest(request, fetchStub, now);
+  assert.equal(response.status, 200);
+  assert.match(observedUrl, /startDate=2010-06-30/);
+  const body = await response.json() as StockHistoryResponse;
+  assert.equal(body.requestedStart, "2010-06-30");
+  assert.equal(body.requiredThrough, "2010-07-01");
+  assert.equal(body.candles.length, 2);
+
+  for (const startDate of ["2010-06-28", "not-a-date", "2010-07-02"]) {
+    const invalid = await handleStockHistoryRequest(new Request(`https://example.test/api/v1/stocks/history?symbol=TSLA&startDate=${startDate}`, { headers: { Authorization: "Token test-token" } }), fetchStub, now);
+    assert.equal(invalid.status, 400);
+    assert.deepEqual(await invalid.json(), { error: "Unsupported stock history start date" });
+  }
+  assert.equal(calls, 1);
+});
+
+test("incremental stock history reuses unchanged candles and detects adjusted-price rebases", () => {
+  const cached = stockResponse(
+    ["2010-06-29", "2010-06-30", "2010-07-01", "2010-07-02"],
+    "2010-06-29",
+    "2010-07-02",
+  );
+  const incoming = stockResponse(
+    ["2010-07-01", "2010-07-02", "2010-07-06", "2010-07-07"],
+    "2010-07-01",
+    "2010-07-07",
+    {
+      "2010-07-01": cached.candles[2],
+      "2010-07-02": cached.candles[3],
+    },
+  );
+  const merged = mergeIncrementalStockHistory(cached, incoming);
+  assert.equal(merged.requiresFullRefresh, false);
+  assert.equal(merged.reason, "none");
+  assert.equal(merged.response?.requestedStart, "2010-06-29");
+  assert.equal(merged.response?.requiredThrough, "2010-07-07");
+  assert.deepEqual(merged.response?.candles.map(row => xnasDateKey(row.time)), ["2010-06-29", "2010-06-30", "2010-07-01", "2010-07-02", "2010-07-06", "2010-07-07"]);
+
+  const rebased = stockResponse(
+    ["2010-07-01", "2010-07-02", "2010-07-06", "2010-07-07"],
+    "2010-07-01",
+    "2010-07-07",
+    {
+      "2010-07-01": { ...cached.candles[2], close: cached.candles[2].close * 0.99 },
+      "2010-07-02": cached.candles[3],
+    },
+  );
+  const rebaseResult = mergeIncrementalStockHistory(cached, rebased);
+  assert.equal(rebaseResult.requiresFullRefresh, true);
+  assert.equal(rebaseResult.reason, "adjustment-rebase");
+  assert.equal(rebaseResult.response, null);
+
+  assert.equal(stockIncrementalStartDate("TSLA", cached.candles), "2010-06-29");
+  assert.equal(stockIncrementalStartDate("TSLA", [candle("2025-01-10", 1, 1, 1, 1)]), "2023-12-07");
 });
 
 test("stock history relay sanitizes Tiingo authentication, rate, and server errors", async () => {

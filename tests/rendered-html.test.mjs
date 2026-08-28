@@ -55,5 +55,7 @@ test("server-renders the research PWA shell", async t => {
   assert.match(stockHtml, /GOOGL/i);
   assert.match(stockHtml, /NVDA/i);
   assert.match(stockHtml, /session storage/i);
+  assert.match(stockHtml, /IndexedDB/i);
+  assert.match(stockHtml, /overlap plus new sessions/i);
   assert.doesNotMatch(stockHtml, /Binance|Kraken|Live.*spot|confirmation clock/i);
 });

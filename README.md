@@ -30,7 +30,7 @@ Open `http://localhost:3000`. The local API routes are:
 - `/api/v1/spot`
 - `/api/v1/series`
 - `/api/v1/health`
-- `/api/v1/stocks/history?symbol=TSLA` (requires the visitor's Tiingo token in the `Authorization` header)
+- `/api/v1/stocks/history?symbol=TSLA&startDate=2025-01-01` (`startDate` is optional; requires the visitor's Tiingo token in the `Authorization` header)
 
 If an exchange is unavailable, the UI uses a deterministic demonstration history, displays a blocking warning, and labels the series stale. It never treats fallback data as a confirmed live signal.
 
@@ -42,9 +42,11 @@ The confirmation box also shows a live ticker quote from the selected venue. It 
 
 Open `/stocks` for a separate end-of-day research view of Tesla (`TSLA`), Alphabet Class A (`GOOGL`), and NVIDIA (`NVDA`). Stock symbols are deliberately kept out of the crypto asset and exchange registries, so the stock page never offers Bitstamp, Binance, Kraken, or Coinbase as historical-data sources.
 
-Stock history comes from Tiingo's bring-your-own-key developer model. Each visitor supplies their own Tiingo API token; the token is sent only in an `Authorization` header, retained in browser `sessionStorage`, and never written to the repository, shared databases, URLs, service-worker caches, or public stock-series endpoints. The stock page provides a visible **Forget token** action. See Tiingo's [developer-program rules](https://www.tiingo.com/documentation/appendix/developers) and [free-tier limits](https://www.tiingo.com/about/pricing).
+Stock history comes from Tiingo's bring-your-own-key developer model. Each visitor supplies their own Tiingo API token; the token is sent only in an `Authorization` header, retained in browser `sessionStorage`, and never written to the repository, shared databases, URLs, service-worker caches, or public stock-series endpoints. Tiingo explicitly requires a redistribution license before its history can be pre-populated into a shared application database, so this project does not copy Tiingo candles into D1. See Tiingo's [developer-program rules](https://www.tiingo.com/documentation/appendix/developers) and [free-tier limits](https://www.tiingo.com/about/pricing).
 
-The page uses Tiingo's split- and dividend-adjusted daily OHLCV fields, constructs Monday-based NASDAQ trading weeks without forward-filling holidays, and excludes incomplete weeks. It shows the latest completed end-of-day close rather than presenting a delayed quote as live. Calculations and reports run in the browser: every registered indicator remains available, stock KK Supertrend is explicitly labeled as an uncalibrated ATR-10/factor-3 preset, and daily backtests use 252 periods per year while retaining next-session-open execution and 5/15/30 bps cost sensitivity. Stock candles and reports are not stored in SQLite, D1, or DuckDB.
+After the first authorized download, adjusted candles are persisted in private IndexedDB storage in that browser. Later visits render the saved history immediately, even without a token in the tab, and an authorized refresh requests only a 400-calendar-day overlap plus newer sessions. The overlap detects dividend, split, and provider-correction rebases; if adjusted OHLCV changed, the app safely replaces the full local history. **Forget token** removes only the session token, while **Clear saved history** removes that symbol's local candles.
+
+The page uses Tiingo's split- and dividend-adjusted daily OHLCV fields, constructs Monday-based NASDAQ trading weeks without forward-filling holidays, and excludes incomplete weeks. It shows the latest completed end-of-day close rather than presenting a delayed quote as live. Calculations and reports run in the browser: every registered indicator remains available, stock KK Supertrend is explicitly labeled as an uncalibrated ATR-10/factor-3 preset, and daily backtests use 252 periods per year while retaining next-session-open execution and 5/15/30 bps cost sensitivity. Stock candles and reports are not stored in SQLite, D1, DuckDB, the service worker, or any shared cache.
 
 The local PWA database is `data/bitcoin-regime.sqlite`. Set `REGIME_SQLITE=/absolute/path/market.sqlite` to place it elsewhere. The database is created automatically on the first API request and stays on your machine; there is no Sites or D1 dependency. Existing BTC-only databases migrate in place: prior rows are retained as `asset=btc`, and the cache primary keys isolate asset, venue, timeframe, and timestamp.
 

@@ -1,4 +1,4 @@
-const SHELL = "crypto-regime-shell-v6";
+const SHELL = "crypto-regime-shell-v7";
 const ASSETS = ["/", "/stocks/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png"];
 self.addEventListener("install", event => event.waitUntil(caches.open(SHELL).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting())));
 self.addEventListener("activate", event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== SHELL).map(key => caches.delete(key)))).then(() => self.clients.claim())));
