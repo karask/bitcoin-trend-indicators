@@ -181,9 +181,11 @@ test("stock history relay requires a token and whitelists symbols before fetchin
 test("stock history relay forwards the token only in Authorization and returns provenance", async () => {
   let observedUrl = "";
   let observedAuthorization = "";
+  let observedRedirect: RequestRedirect | undefined;
   const fetchStub = async (input: string | URL | Request, init?: RequestInit) => {
     observedUrl = String(input);
     observedAuthorization = new Headers(init?.headers).get("Authorization") ?? "";
+    observedRedirect = init?.redirect;
     return Response.json([
       tiingoRow("2010-06-29", 20, 22, 19, 21, 100),
       tiingoRow("2010-06-30", 21, 23, 20, 22, 101),
@@ -194,6 +196,7 @@ test("stock history relay forwards the token only in Authorization and returns p
   assert.equal(response.status, 200);
   assert.equal(response.headers.get("Cache-Control"), "private, no-store");
   assert.equal(observedAuthorization, "Token test-token");
+  assert.equal(observedRedirect, "manual");
   assert.doesNotMatch(observedUrl, /test-token/);
   assert.match(observedUrl, /\/TSLA\/prices/);
   assert.match(observedUrl, /startDate=2010-06-29/);
@@ -283,12 +286,14 @@ test("stock history relay sanitizes Tiingo authentication, rate, and server erro
     { upstream: 401, expected: 401, message: "Tiingo rejected the API token" },
     { upstream: 429, expected: 429, message: "Tiingo request limit reached; try again later" },
     { upstream: 503, expected: 502, message: "Tiingo history is temporarily unavailable" },
+    { upstream: 302, expected: 502, message: "Tiingo history is temporarily unavailable" },
   ];
   for (const item of cases) {
     const fetchStub = async () => new Response("upstream secret diagnostic", { status: item.upstream });
     const response = await handleStockHistoryRequest(new Request("https://example.test/api/v1/stocks/history?symbol=NVDA", { headers: { Authorization: "Token test-token" } }), fetchStub);
     assert.equal(response.status, item.expected);
     assert.deepEqual(await response.json(), { error: item.message });
+    if (item.upstream === 302) assert.equal(response.headers.get("X-Stock-Error"), "tiingo_redirect");
   }
 });
 

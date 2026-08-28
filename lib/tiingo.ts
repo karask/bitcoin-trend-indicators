@@ -29,10 +29,12 @@ export interface NormalizedTiingoHistory {
 
 export class StockApiError extends Error {
   readonly status: number;
+  readonly code: string;
 
-  constructor(status: number, message: string) {
+  constructor(status: number, message: string, code = "stock_api_error") {
     super(message);
     this.status = status;
+    this.code = code;
     this.name = "StockApiError";
   }
 }
@@ -118,9 +120,9 @@ export function tiingoAuthorization(request: Request): string {
 }
 
 function publicProviderError(status: number): StockApiError {
-  if (status === 401 || status === 403) return new StockApiError(401, "Tiingo rejected the API token");
-  if (status === 429) return new StockApiError(429, "Tiingo request limit reached; try again later");
-  return new StockApiError(502, "Tiingo history is temporarily unavailable");
+  if (status === 401 || status === 403) return new StockApiError(401, "Tiingo rejected the API token", "tiingo_auth");
+  if (status === 429) return new StockApiError(429, "Tiingo request limit reached; try again later", "tiingo_rate_limit");
+  return new StockApiError(502, "Tiingo history is temporarily unavailable", `tiingo_status_${status}`);
 }
 
 const TIINGO_EOD_READY_HOUR_EASTERN = 20;
@@ -169,11 +171,18 @@ export async function fetchTiingoStockHistory(
     response = await fetchImpl(url, {
       headers: { Authorization: authorization, Accept: "application/json" },
       cache: "no-store",
-      redirect: "error",
+      // Cloudflare Workers supports follow/manual but rejects redirect:error.
+      // Manual mode prevents the Authorization header from being forwarded to
+      // another origin; any redirect is rejected below.
+      redirect: "manual",
       signal: AbortSignal.timeout(20_000),
     });
-  } catch {
-    throw new StockApiError(502, "Tiingo history is temporarily unavailable");
+  } catch (error) {
+    const code = error instanceof Error && error.name === "TimeoutError" ? "tiingo_timeout" : "tiingo_fetch_failed";
+    throw new StockApiError(502, "Tiingo history is temporarily unavailable", code);
+  }
+  if (response.status >= 300 && response.status < 400) {
+    throw new StockApiError(502, "Tiingo history is temporarily unavailable", "tiingo_redirect");
   }
   if (!response.ok) throw publicProviderError(response.status);
 
@@ -206,7 +215,7 @@ export async function fetchTiingoStockHistory(
   };
 }
 
-function privateJson(body: unknown, status = 200): Response {
+function privateJson(body: unknown, status = 200, errorCode?: string): Response {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
@@ -214,6 +223,7 @@ function privateJson(body: unknown, status = 200): Response {
       "Cache-Control": "private, no-store",
       Pragma: "no-cache",
       "X-Content-Type-Options": "nosniff",
+      ...(errorCode ? { "X-Stock-Error": errorCode } : {}),
     },
   });
 }
@@ -226,6 +236,6 @@ export async function handleStockHistoryRequest(request: Request, fetchImpl: Fet
     return privateJson(await fetchTiingoStockHistory(symbol, authorization, fetchImpl, asOfMs, startDate));
   } catch (error) {
     const safe = error instanceof StockApiError ? error : new StockApiError(500, "Unable to load stock history");
-    return privateJson({ error: safe.message }, safe.status);
+    return privateJson({ error: safe.message }, safe.status, safe.code);
   }
 }
