@@ -9,6 +9,7 @@ import { buildDashboardPayload } from "../lib/dashboard-calculation";
 import type { MarketDataset } from "../lib/market-data";
 import { marketDefinition, resolveSourceForAsset, type AssetId, type SourceId } from "../lib/markets";
 import { SUPER_GUPPY_R12_DEFAULTS, type SuperGuppyConfig, type SuperGuppySource } from "../lib/regimes";
+import { AccountControls, authenticatedFetch } from "./AuthClient";
 
 type State = "bull" | "bear" | "neutral";
 type Role = "regime" | "confirmation" | "exit" | "valuation";
@@ -110,13 +111,13 @@ export default function RegimeDashboard() {
     };
     media.addEventListener("change", followSystem); return () => { window.cancelAnimationFrame(frame); media.removeEventListener("change", followSystem); };
   }, []);
-  useEffect(() => { if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => undefined); const capture = (event: Event) => { event.preventDefault(); setInstallPrompt(event); }; window.addEventListener("beforeinstallprompt", capture); return () => window.removeEventListener("beforeinstallprompt", capture); }, []);
+  useEffect(() => { const capture = (event: Event) => { event.preventDefault(); setInstallPrompt(event); }; window.addEventListener("beforeinstallprompt", capture); return () => window.removeEventListener("beforeinstallprompt", capture); }, []);
   useEffect(() => { const frame = window.requestAnimationFrame(() => setClock(Date.now())); const timer = window.setInterval(() => setClock(Date.now()), 60_000); return () => { window.cancelAnimationFrame(frame); window.clearInterval(timer); }; }, []);
   useEffect(() => { const timer = window.setInterval(() => setRefreshTick(value => value + 1), 5 * 60_000); return () => window.clearInterval(timer); }, []);
   useEffect(() => {
     const controller = new AbortController();
     const guppyQuery = indicator === "super_guppy" ? `&guppy=${encodeURIComponent(JSON.stringify(guppyConfig))}` : "";
-    fetch(`/api/v1/dashboard?asset=${asset}&source=${source}&timeframe=${timeframe}&indicator=${indicator}${guppyQuery}`, { signal: controller.signal, cache: "no-store" }).then(async response => {
+    authenticatedFetch(`/api/v1/dashboard?asset=${asset}&source=${source}&timeframe=${timeframe}&indicator=${indicator}${guppyQuery}`, { signal: controller.signal, cache: "no-store" }).then(async response => {
       const result = await response.json() as (Payload | BrowserCalculationResponse) & { error?: string };
       if (!response.ok) throw new Error(result.error ?? `Research API returned ${response.status}`);
       const payload = "calculation" in result && result.calculation === "browser"
@@ -129,7 +130,7 @@ export default function RegimeDashboard() {
   }, [asset, source, timeframe, indicator, refreshTick, guppyConfig]);
   useEffect(() => {
     const controller = new AbortController();
-    fetch(`/api/v1/spot?asset=${asset}&source=${source}&request=${Date.now()}`, { signal: controller.signal, cache: "no-store" }).then(async response => {
+    authenticatedFetch(`/api/v1/spot?asset=${asset}&source=${source}&request=${Date.now()}`, { signal: controller.signal, cache: "no-store" }).then(async response => {
       const payload = await response.json() as SpotQuote & { error?: string };
       if (!response.ok) throw new Error(payload.error ?? `Spot API returned ${response.status}`);
       return payload;
@@ -175,7 +176,7 @@ export default function RegimeDashboard() {
   const triggerLabels = data?.selected.role === "exit" ? ["SHORT EXIT ABOVE", "LONG EXIT BELOW"] : data?.selected.role === "confirmation" ? ["POSITIVE ABOVE", "NEGATIVE BELOW"] : ["BULLISH ABOVE", "BEARISH BELOW"];
 
   return <main className="app-shell">
-    <header className="topbar"><div className="brand-lockup"><div className="brand-mark">{activeAsset.symbol}</div><div><p className="eyebrow">CRYPTO REGIME LAB · {activeAsset.label.toUpperCase()}</p><h1>Trend regimes, without the black box.</h1></div></div><div className="header-actions"><nav className="lab-nav" aria-label="Research labs"><a href="/" aria-current="page">Crypto</a><a href="/stocks">Stocks</a></nav>{installPrompt && <button className="install-button" onClick={() => { (installPrompt as Event & { prompt: () => void }).prompt(); setInstallPrompt(null); }}>Install app</button>}<div className={`freshness ${data?.dataset.stale ? "stale" : ""}`}><span />{data ? `${data.dataset.stale ? "Stale" : "Confirmed through"} · ${formatDate(confirmedThrough)}` : "Loading exchange data"}</div><button className="theme-toggle" type="button" onClick={toggleTheme} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`} title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}><span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span><b>{theme === "dark" ? "Light" : "Dark"}</b></button></div></header>
+    <header className="topbar"><div className="brand-lockup"><div className="brand-mark">{activeAsset.symbol}</div><div><p className="eyebrow">CRYPTO REGIME LAB · {activeAsset.label.toUpperCase()}</p><h1>Trend regimes, without the black box.</h1></div></div><div className="header-actions"><nav className="lab-nav" aria-label="Research labs"><a href="/" aria-current="page">Crypto</a><a href="/stocks">Stocks</a></nav>{installPrompt && <button className="install-button" onClick={() => { (installPrompt as Event & { prompt: () => void }).prompt(); setInstallPrompt(null); }}>Install app</button>}<div className={`freshness ${data?.dataset.stale ? "stale" : ""}`}><span />{data ? `${data.dataset.stale ? "Stale" : "Confirmed through"} · ${formatDate(confirmedThrough)}` : "Loading exchange data"}</div><AccountControls /><button className="theme-toggle" type="button" onClick={toggleTheme} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`} title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}><span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span><b>{theme === "dark" ? "Light" : "Dark"}</b></button></div></header>
     {data?.dataset.warning && <div className={`data-banner ${data.dataset.demo ? "danger" : "warning"}`}><strong>{data.dataset.demo ? "Demonstration data — no confirmed signal" : "Source quality warning"}</strong><span>{data.dataset.warning}</span></div>}
     {error && <div className="data-banner danger"><strong>Research API unavailable</strong><span>{error}</span><button onClick={() => window.location.reload()}>Retry</button></div>}
     <section className="command-row" aria-label="Research controls"><div className="control-group asset-control"><label htmlFor="asset">Asset</label><select id="asset" value={asset} onChange={event => chooseAsset(event.target.value as AssetId)}>{(data?.assets ?? ASSET_OPTIONS).map(item => <option key={item.id} value={item.id}>{item.symbol} · {item.label}</option>)}</select></div><div className="control-group"><label htmlFor="market">Market source</label><select id="market" value={source} onChange={event => { beginRefresh(); setSource(event.target.value as SourceId); }}>{(data?.dataset.asset === asset ? data.sources : []).length ? data!.sources.map(item => <option key={item.id} value={item.id}>{item.label} · {item.market}</option>) : <option value={source}>{activeMarket.label} · {activeMarket.market}</option>}</select></div><div className="control-group grow"><label htmlFor="indicator">Indicator</label><select id="indicator" value={indicator} onChange={event => { beginRefresh(); setIndicator(event.target.value); const selectedRole = data?.registry.find(item => item.id === event.target.value)?.role; if (selectedRole) setRole(selectedRole); }}>{options.map(item => <option key={item.id} value={item.id}>{item.displayName}</option>)}</select></div><div className="segmented" aria-label="Timeframe"><button className={timeframe === "1d" ? "active" : ""} onClick={() => chooseTimeframe("1d")}>1D</button><button className={timeframe === "1w" ? "active" : ""} onClick={() => chooseTimeframe("1w")}>1W</button></div></section>

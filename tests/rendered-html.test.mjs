@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
+import { readFile } from "node:fs/promises";
 import { createServer } from "node:net";
 import test from "node:test";
 
@@ -33,29 +34,45 @@ test("server-renders the research PWA shell", async t => {
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /<title>Crypto Regime Lab<\/title>/i);
-  assert.match(html, /Trend regimes, without the black box/i);
-  assert.match(html, /Loading market research/i);
-  assert.match(html, /Next weekly close/i);
-  assert.match(html, /Sunday 23:59:59 UTC/i);
-  assert.match(html, /LIVE.*BTC.*SPOT/i);
-  assert.match(html, /Ethereum/i);
-  assert.match(html, /Solana/i);
+  assert.match(html, /Checking your secure session/i);
+  assert.doesNotMatch(html, /LIVE.*BTC.*SPOT/i);
   assert.match(html, /manifest\.webmanifest/i);
   assert.match(html, /crypto-regime-theme/i);
-  assert.match(html, /Switch to dark theme/i);
   assert.doesNotMatch(html, /Your site is taking shape|react-loading-skeleton/i);
 
   const stockResponse = await fetch(`http://127.0.0.1:${port}/stocks`, { headers: { accept: "text/html" } });
   assert.equal(stockResponse.status, 200);
   const stockHtml = await stockResponse.text();
   assert.match(stockHtml, /<title>Stock Regime Lab · Crypto Regime Lab<\/title>/i);
-  assert.match(stockHtml, /Equity trends, on completed sessions/i);
-  assert.match(stockHtml, /Connect your free Tiingo API token/i);
-  assert.match(stockHtml, /TSLA/i);
-  assert.match(stockHtml, /GOOGL/i);
-  assert.match(stockHtml, /NVDA/i);
-  assert.match(stockHtml, /session storage/i);
-  assert.match(stockHtml, /IndexedDB/i);
-  assert.match(stockHtml, /overlap plus new sessions/i);
+  assert.match(stockHtml, /Checking your secure session/i);
   assert.doesNotMatch(stockHtml, /Binance|Kraken|Live.*spot|confirmation clock/i);
+
+  const loginResponse = await fetch(`http://127.0.0.1:${port}/login`, { headers: { accept: "text/html" } });
+  assert.equal(loginResponse.status, 200);
+  const loginHtml = await loginResponse.text();
+  assert.match(loginHtml, /<title>Register or sign in · Crypto Regime Lab<\/title>/i);
+  assert.match(loginHtml, /Continue with email/i);
+  assert.match(loginHtml, /Email me a code/i);
+  assert.match(loginHtml, /No password is needed/i);
+  assert.match(loginHtml, /privacy notice/i);
+  assert.doesNotMatch(loginHtml, /Binance|Kraken|Tiingo API token/i);
+
+  const privacyResponse = await fetch(`http://127.0.0.1:${port}/privacy`, { headers: { accept: "text/html" } });
+  assert.equal(privacyResponse.status, 200);
+  const privacyHtml = await privacyResponse.text();
+  assert.match(privacyHtml, /Authentication privacy/i);
+  assert.match(privacyHtml, /plaintext verification codes/i);
+  assert.match(privacyHtml, /Delete Account removes your email/i);
+
+  const pagesRoot = "dist/cloudflare-pages";
+  const routes = JSON.parse(await readFile(`${pagesRoot}/_routes.json`, "utf8"));
+  assert.deepEqual(routes.include, ["/*"]);
+  assert.ok(routes.exclude.includes("/_next/static/*"));
+  assert.ok(!routes.exclude.some(path => path === "/" || path.startsWith("/stocks") || path.startsWith("/api/")));
+  const serviceWorker = await readFile(`${pagesRoot}/sw.js`, "utf8");
+  assert.doesNotMatch(serviceWorker, /addEventListener\(["']fetch/);
+  assert.doesNotMatch(serviceWorker, /["']\/(?:stocks\/?)?["']/);
+  const headers = await readFile(`${pagesRoot}/_headers`, "utf8");
+  assert.match(headers, /Cache-Control: no-cache/);
+  assert.match(headers, /https:\/\/challenges\.cloudflare\.com/);
 });

@@ -2,6 +2,8 @@
 
 A transparent, installable BTC, ETH, and SOL regime-indicator research platform, with an isolated stock-research page for TSLA, GOOGL, and NVDA. It compares fixed, documented trend models without claiming to reproduce private MoneyLine or Larsson Line formulas and without producing orders or allocation recommendations.
 
+Hosted access uses passwordless email authentication. A visitor enters an email address and a single-use six-digit code; the first successful verification creates the account and later verifications sign it in. Both research labs and all market-data APIs require the resulting secure 30-day session. There are no passwords, social identities, or marketing emails.
+
 ## What is implemented
 
 - An asset selector for BTC, ETH, and SOL, with daily and Monday–Sunday UTC weekly views from Bitstamp, Binance, Kraken, and Coinbase Exchange.
@@ -31,6 +33,9 @@ Open `http://localhost:3000`. The local API routes are:
 - `/api/v1/series`
 - `/api/v1/health`
 - `/api/v1/stocks/history?symbol=TSLA&startDate=2025-01-01` (`startDate` is optional; requires the visitor's Tiingo token in the `Authorization` header)
+- `/api/v1/auth/config`, `/request-code`, `/verify-code`, `/session`, `/logout`, and `/account`
+
+Except for the authentication endpoints, local and hosted APIs require the `__Host-regime_session` cookie. For local email-login development, create an ignored `.dev.vars` containing `RESEND_API_KEY`, `AUTH_HMAC_SECRET`, `TURNSTILE_SECRET_KEY`, `TURNSTILE_SITE_KEY`, and `AUTH_FROM_EMAIL`. `npm run dev` loads that file without placing secrets in the repository.
 
 If an exchange is unavailable, the UI uses a deterministic demonstration history, displays a blocking warning, and labels the series stale. It never treats fallback data as a confirmed live signal.
 
@@ -55,6 +60,8 @@ The local PWA database is `data/bitcoin-regime.sqlite`. Set `REGIME_SQLITE=/abso
 The production build uses Cloudflare Pages, Pages Functions, D1, and a small scheduled refresh Worker. Indicator and backtest calculations run in the browser; D1 stores completed candles and provenance. Local development remains on SQLite.
 
 See [CLOUDFLARE_DEPLOYMENT.md](./CLOUDFLARE_DEPLOYMENT.md) for the complete first-deploy commands and the optional `regime.kkarasavvas.com` CNAME setup. It does not use Sites, replace existing GitHub Pages sites, or require moving the domain's nameservers to Cloudflare.
+
+Passwordless login uses the existing D1 binding, Resend's HTTPS API, and Cloudflare Turnstile; it adds no runtime npm dependency or SMTP server. Codes expire after ten minutes, new codes invalidate old ones, plaintext codes and session tokens are never stored, and all protected pages are network-only rather than service-worker fallbacks. Production must have its Resend domain, Turnstile widget, secrets, and `0002_passwordless_auth.sql` migration configured before deploying the auth-enabled Pages bundle.
 
 If you open the development server through the machine's LAN address, `192.168.100.16` is allowlisted for Next.js development assets. Restart `npm run dev` after changing `next.config.ts`. For Docker, both SQLite and DuckDB live under the mounted `/data` volume.
 

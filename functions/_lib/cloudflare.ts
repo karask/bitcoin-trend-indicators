@@ -18,8 +18,12 @@ export interface D1Database {
 
 export interface CloudflareEnv {
   REGIME_DB: D1Database;
-  ALLOWED_ORIGIN?: string;
   REFRESH_TOKEN?: string;
+  RESEND_API_KEY?: string;
+  AUTH_HMAC_SECRET?: string;
+  TURNSTILE_SECRET_KEY?: string;
+  TURNSTILE_SITE_KEY?: string;
+  AUTH_FROM_EMAIL?: string;
 }
 
 export interface PagesContext<Env = CloudflareEnv> {
@@ -32,12 +36,11 @@ export interface PagesContext<Env = CloudflareEnv> {
 export type PagesFunction<Env = CloudflareEnv> = (context: PagesContext<Env>) => Response | Promise<Response>;
 
 export function responseHeaders(request: Request, env: CloudflareEnv, maxAge = 0): HeadersInit {
-  const origin = request.headers.get("Origin");
-  const allowed = env.ALLOWED_ORIGIN;
+  void request;
+  void env;
   return {
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": maxAge ? `public, max-age=${maxAge}` : "no-store",
-    ...(origin && allowed && (allowed === "*" || origin === allowed) ? { "Access-Control-Allow-Origin": allowed === "*" ? "*" : origin, Vary: "Origin" } : {}),
   };
 }
 

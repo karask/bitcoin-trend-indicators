@@ -12,6 +12,6 @@
     }
   ],
   "vars": {
-    "ALLOWED_ORIGIN": "*"
+    "AUTH_FROM_EMAIL": "Regime Lab <login@auth.kkarasavvas.com>"
   }
 }

@@ -55,6 +55,7 @@ export function ensureMarketSchema(database = getDatabase()): void {
   } else {
     createMarketTables(database);
   }
+  createAuthTables(database);
   database.exec("PRAGMA optimize");
 }
 
@@ -62,6 +63,17 @@ function createMarketTables(database: LocalDatabase): void {
   database.exec("CREATE TABLE IF NOT EXISTS market_candles (asset TEXT NOT NULL, source TEXT NOT NULL, timeframe TEXT NOT NULL, time INTEGER NOT NULL, market TEXT NOT NULL, open REAL NOT NULL, high REAL NOT NULL, low REAL NOT NULL, close REAL NOT NULL, volume REAL NOT NULL, complete INTEGER NOT NULL, PRIMARY KEY (asset, source, timeframe, time))");
   database.exec("CREATE TABLE IF NOT EXISTS provider_snapshots (asset TEXT NOT NULL, source TEXT NOT NULL, timeframe TEXT NOT NULL, market TEXT NOT NULL, retrieved_at TEXT NOT NULL, checksum TEXT NOT NULL, warning TEXT, first_candle INTEGER, last_candle INTEGER, candle_count INTEGER NOT NULL, PRIMARY KEY (asset, source, timeframe))");
   database.exec("CREATE TABLE IF NOT EXISTS signal_snapshots (asset TEXT NOT NULL, source TEXT NOT NULL, timeframe TEXT NOT NULL, indicator_id TEXT NOT NULL, candle_close INTEGER NOT NULL, state TEXT NOT NULL, prior_state TEXT NOT NULL, last_flip INTEGER, threshold_kind TEXT NOT NULL, bull_trigger REAL, bear_trigger REAL, payload TEXT NOT NULL, generated_at TEXT NOT NULL, PRIMARY KEY (asset, source, timeframe, indicator_id))");
+}
+
+function createAuthTables(database: LocalDatabase): void {
+  database.exec("CREATE TABLE IF NOT EXISTS auth_users (id TEXT PRIMARY KEY, email TEXT NOT NULL UNIQUE, created_at INTEGER NOT NULL, verified_at INTEGER NOT NULL, last_login_at INTEGER NOT NULL)");
+  database.exec("CREATE TABLE IF NOT EXISTS auth_challenges (id TEXT PRIMARY KEY, email TEXT NOT NULL, code_hash TEXT NOT NULL, created_at INTEGER NOT NULL, expires_at INTEGER NOT NULL, attempts INTEGER NOT NULL DEFAULT 0, consumed_at INTEGER)");
+  database.exec("CREATE INDEX IF NOT EXISTS auth_challenges_email ON auth_challenges (email, created_at DESC)");
+  database.exec("CREATE TABLE IF NOT EXISTS auth_sessions (id TEXT PRIMARY KEY, user_id TEXT NOT NULL, token_hash TEXT NOT NULL UNIQUE, created_at INTEGER NOT NULL, expires_at INTEGER NOT NULL, revoked_at INTEGER, FOREIGN KEY (user_id) REFERENCES auth_users(id) ON DELETE CASCADE)");
+  database.exec("CREATE INDEX IF NOT EXISTS auth_sessions_user ON auth_sessions (user_id, created_at DESC)");
+  database.exec("CREATE INDEX IF NOT EXISTS auth_sessions_token ON auth_sessions (token_hash)");
+  database.exec("CREATE TABLE IF NOT EXISTS auth_rate_events (id TEXT PRIMARY KEY, kind TEXT NOT NULL, subject_hash TEXT NOT NULL, created_at INTEGER NOT NULL)");
+  database.exec("CREATE INDEX IF NOT EXISTS auth_rate_events_lookup ON auth_rate_events (kind, subject_hash, created_at)");
 }
 
 export function runTransaction<T>(database: LocalDatabase, operation: () => T): T {

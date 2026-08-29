@@ -170,3 +170,19 @@ export async function deleteStockHistoryCache(symbol: StockSymbol): Promise<void
     database.close();
   }
 }
+
+export async function clearAllStockHistoryCaches(): Promise<void> {
+  const database = await openCache();
+  if (!database) return;
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const transaction = database.transaction(STORE_NAME, "readwrite");
+      transaction.objectStore(STORE_NAME).clear();
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error ?? new Error("Unable to clear saved stock history"));
+      transaction.onabort = () => reject(transaction.error ?? new Error("Stock history cache clear was aborted"));
+    });
+  } finally {
+    database.close();
+  }
+}

@@ -1,9 +1,12 @@
 import { ASSETS, getMarketData, sourcesForAsset, type AssetId, type SourceId } from "../../../../lib/market-data";
+import { requireLocalAuth } from "../../../../lib/auth-local.ts";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
+  const unauthorized = await requireLocalAuth(request);
+  if (unauthorized) return unauthorized;
   const url = new URL(request.url);
   const requestedAsset = url.searchParams.get("asset") ?? "btc";
   if (!ASSETS.some(asset => asset.id === requestedAsset)) return Response.json({ error: "Unsupported asset" }, { status: 400 });

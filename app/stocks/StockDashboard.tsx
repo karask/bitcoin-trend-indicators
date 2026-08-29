@@ -19,6 +19,7 @@ import {
 } from "../../lib/regimes";
 import { aggregateStockWeeks, STOCKS, STOCK_DATA_ATTRIBUTION, type StockDefinition, type StockHistoryResponse, type StockId } from "../../lib/stocks";
 import { deleteStockHistoryCache, mergeIncrementalStockHistory, readStockHistoryCache, stockIncrementalStartDate, writeStockHistoryCache } from "../../lib/stock-cache";
+import { AccountControls, authenticatedFetch } from "../AuthClient";
 
 type StockHistory = {
   response: StockHistoryResponse;
@@ -212,10 +213,6 @@ export default function StockDashboard() {
   }, []);
 
   useEffect(() => {
-    if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => undefined);
-  }, []);
-
-  useEffect(() => {
     const saved = window.sessionStorage.getItem(TOKEN_KEY) ?? "";
     const frame = window.requestAnimationFrame(() => { if (saved) setLoading(true); setToken(saved); setTokenReady(true); });
     return () => window.cancelAnimationFrame(frame);
@@ -244,7 +241,7 @@ export default function StockDashboard() {
     const requestHistory = async (startDate?: string) => {
       const query = new URLSearchParams({ symbol: activeStock.symbol });
       if (startDate) query.set("startDate", startDate);
-      const response = await fetch(`/api/v1/stocks/history?${query}`, {
+      const response = await authenticatedFetch(`/api/v1/stocks/history?${query}`, {
         headers: { Authorization: `Token ${token}` },
         cache: "no-store",
         signal: controller.signal,
@@ -390,7 +387,7 @@ export default function StockDashboard() {
   const triggerCard = (label: string, value: number | null, variant: string) => <div className={`trigger ${variant}`}><span>{label}</span><strong>{value == null ? "Conditional" : formatPrice(value)}</strong><small>{calculation?.selected.thresholdKind} · completed {timeframe === "1d" ? "session" : "week"}</small></div>;
 
   return <main className="app-shell stock-shell">
-    <header className="topbar"><div className="brand-lockup"><div className="brand-mark stock-mark">{activeStock.symbol}</div><div><p className="eyebrow">STOCK REGIME LAB · {activeStock.label.toUpperCase()}</p><h1>Equity trends, on completed sessions.</h1></div></div><div className="header-actions"><nav className="lab-nav" aria-label="Research labs"><a href="/">Crypto</a><a href="/stocks" aria-current="page">Stocks</a></nav>{history && <div className="freshness"><span />Confirmed · {formatDate(history.daily.at(-1)?.time)}</div>}<button className="theme-toggle" type="button" onClick={toggleTheme} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}><span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span><b>{theme === "dark" ? "Light" : "Dark"}</b></button></div></header>
+    <header className="topbar"><div className="brand-lockup"><div className="brand-mark stock-mark">{activeStock.symbol}</div><div><p className="eyebrow">STOCK REGIME LAB · {activeStock.label.toUpperCase()}</p><h1>Equity trends, on completed sessions.</h1></div></div><div className="header-actions"><nav className="lab-nav" aria-label="Research labs"><a href="/">Crypto</a><a href="/stocks" aria-current="page">Stocks</a></nav>{history && <div className="freshness"><span />Confirmed · {formatDate(history.daily.at(-1)?.time)}</div>}<AccountControls /><button className="theme-toggle" type="button" onClick={toggleTheme} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}><span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span><b>{theme === "dark" ? "Light" : "Dark"}</b></button></div></header>
 
     {!token && <section className={`token-gate ${history ? "has-cache" : ""}`} aria-labelledby="tiingo-token-title"><div><p className="eyebrow">PRIVATE DATA ACCESS</p><h2 id="tiingo-token-title">{history ? "Update your saved Tiingo history" : "Connect your free Tiingo API token"}</h2><p>{history ? "Adjusted history is already available from this browser's private IndexedDB cache. Add a token only to download the latest overlap and completed sessions." : "The first download is saved in this browser's private IndexedDB cache. Later visits render it immediately and use the token only to update an overlap plus new sessions."} The token stays in this tab&apos;s session storage and is never placed in a URL, shared cache, or public dataset.</p><a href="https://www.tiingo.com/account/api/token" target="_blank" rel="noreferrer">Open Tiingo token page ↗</a></div><form onSubmit={saveToken}><label htmlFor="tiingo-token">Tiingo API token</label><div><input id="tiingo-token" type="password" value={tokenInput} onChange={event => setTokenInput(event.target.value)} autoComplete="off" spellCheck={false} placeholder={tokenReady ? "Paste a fresh token" : "Checking this browser session…"} aria-describedby="token-safety" /><button type="submit" disabled={!tokenInput.trim()}>{history ? "Update saved history" : "Load stock history"}</button></div><small id="token-safety">Use a freshly rotated token if one was ever pasted into chat, email, or another shared location.</small></form></section>}
 
