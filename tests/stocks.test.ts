@@ -39,15 +39,19 @@ function stockResponse(
 }
 
 test("stock definitions remain separate, complete, and type guarded", () => {
-  assert.deepEqual(STOCKS.map(stock => stock.id), ["tsla", "googl", "nvda"]);
-  assert.deepEqual(STOCKS.map(stock => stock.symbol), ["TSLA", "GOOGL", "NVDA"]);
+  assert.deepEqual(STOCKS.map(stock => stock.id), ["tsla", "googl", "nvda", "spcx", "mu", "sndk"]);
+  assert.deepEqual(STOCKS.map(stock => stock.symbol), ["TSLA", "GOOGL", "NVDA", "SPCX", "MU", "SNDK"]);
   assert.ok(STOCKS.every(stock => stock.exchange === "NASDAQ" && stock.currency === "USD" && stock.provider === "tiingo" && stock.calendar === "XNAS"));
   assert.ok(STOCKS.every(stock => stock.ticker === stock.symbol && stock.company === stock.label));
   assert.equal(stockDefinition("googl").label, "Alphabet Class A");
   assert.equal(stockDefinition("NVDA").historyStart, "1999-01-22");
+  assert.equal(stockDefinition("SPCX").historyStart, "2026-06-12");
+  assert.equal(stockDefinition("MU").company, "Micron Technology");
+  assert.equal(stockDefinition("SNDK").historyStart, "2025-02-24");
   assert.equal(isStockId("tsla"), true);
   assert.equal(isStockId("btc"), false);
   assert.equal(isStockSymbol("TSLA"), true);
+  assert.equal(isStockSymbol("SPCX"), true);
   assert.equal(isStockSymbol("tsla"), false);
 });
 

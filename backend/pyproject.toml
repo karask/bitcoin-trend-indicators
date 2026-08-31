@@ -1,7 +1,7 @@
 [project]
 name = "bitcoin-regime-research"
 version = "0.1.0"
-description = "DuckDB-backed research API for transparent BTC, ETH, and SOL regime indicators"
+description = "DuckDB-backed research API for transparent crypto regime indicators"
 requires-python = ">=3.12"
 dependencies = [
   "duckdb>=1.4,<2",

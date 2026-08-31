@@ -60,6 +60,8 @@ const ASSET_OPTIONS: Payload["assets"] = [
   { id: "btc", label: "Bitcoin", symbol: "BTC", defaultSource: "bitstamp" },
   { id: "eth", label: "Ethereum", symbol: "ETH", defaultSource: "bitstamp" },
   { id: "sol", label: "Solana", symbol: "SOL", defaultSource: "coinbase" },
+  { id: "doge", label: "Dogecoin", symbol: "DOGE", defaultSource: "coinbase" },
+  { id: "link", label: "Chainlink", symbol: "LINK", defaultSource: "coinbase" },
 ];
 const freshGuppyDefaults = (): SuperGuppyConfig => ({ ...SUPER_GUPPY_R12_DEFAULTS, fastLengths: [...SUPER_GUPPY_R12_DEFAULTS.fastLengths], slowLengths: [...SUPER_GUPPY_R12_DEFAULTS.slowLengths] });
 const GUPPY_SOURCES: Array<{ value: SuperGuppySource; label: string }> = [

@@ -1,8 +1,8 @@
 import type { Candle } from "./regimes.ts";
 import { isXnasSessionComplete, isXnasSessionDate, xnasDateEpoch, xnasDateKey, xnasSessionsBetween } from "./xnas-calendar.ts";
 
-export type StockId = "tsla" | "googl" | "nvda";
-export type StockSymbol = "TSLA" | "GOOGL" | "NVDA";
+export type StockId = "tsla" | "googl" | "nvda" | "spcx" | "mu" | "sndk";
+export type StockSymbol = "TSLA" | "GOOGL" | "NVDA" | "SPCX" | "MU" | "SNDK";
 
 export interface StockDefinition {
   id: StockId;
@@ -21,6 +21,9 @@ export const STOCKS: readonly StockDefinition[] = [
   { id: "tsla", company: "Tesla", ticker: "TSLA", label: "Tesla", symbol: "TSLA", exchange: "NASDAQ", currency: "USD", provider: "tiingo", calendar: "XNAS", historyStart: "2010-06-29" },
   { id: "googl", company: "Alphabet Class A", ticker: "GOOGL", label: "Alphabet Class A", symbol: "GOOGL", exchange: "NASDAQ", currency: "USD", provider: "tiingo", calendar: "XNAS", historyStart: "2004-08-19" },
   { id: "nvda", company: "NVIDIA", ticker: "NVDA", label: "NVIDIA", symbol: "NVDA", exchange: "NASDAQ", currency: "USD", provider: "tiingo", calendar: "XNAS", historyStart: "1999-01-22" },
+  { id: "spcx", company: "SpaceX", ticker: "SPCX", label: "SpaceX", symbol: "SPCX", exchange: "NASDAQ", currency: "USD", provider: "tiingo", calendar: "XNAS", historyStart: "2026-06-12" },
+  { id: "mu", company: "Micron Technology", ticker: "MU", label: "Micron Technology", symbol: "MU", exchange: "NASDAQ", currency: "USD", provider: "tiingo", calendar: "XNAS", historyStart: "1999-01-04" },
+  { id: "sndk", company: "Sandisk", ticker: "SNDK", label: "Sandisk", symbol: "SNDK", exchange: "NASDAQ", currency: "USD", provider: "tiingo", calendar: "XNAS", historyStart: "2025-02-24" },
 ];
 
 export const STOCK_DATA_ADJUSTMENT = "split-and-dividend-adjusted" as const;

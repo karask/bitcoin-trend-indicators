@@ -147,9 +147,9 @@ test("KK Supertrend is registered immediately after SuperTrend with fixed crypto
   const kkIndex = INDICATOR_SPECS.findIndex(spec => spec.id === "kk_supertrend");
   assert.equal(kkIndex, supertrendIndex + 1);
   assert.equal(KK_SUPERTREND_ATR_LENGTH, 10);
-  assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2 });
+  assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3 });
   assert.equal(KK_SUPERTREND_EQUITY_FACTOR, 3);
-  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { atr: 10, btcFactor: 3, ethFactor: 2, solFactor: 2 });
+  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { atr: 10, btcFactor: 3, ethFactor: 2, solFactor: 2, dogeFactor: 3, linkFactor: 3 });
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /screenshot-calibrated/i);
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /does not claim to reproduce/i);
 });
@@ -181,6 +181,17 @@ test("BTC KK Supertrend is point-for-point identical to SuperTrend 10/3", () => 
   assert.equal(kk.bullTrigger, standard.bullTrigger);
   assert.equal(kk.bearTrigger, standard.bearTrigger);
   assert.deepEqual(kk.values, standard.values);
+});
+
+test("DOGE and LINK KK Supertrend use the explicit uncalibrated SuperTrend 10/3 preset", () => {
+  for (const asset of ["doge", "link"] as const) {
+    const results = calculateIndicators(history(), "1d", { asset });
+    const standard = results.find(item => item.id === "supertrend")!;
+    const kk = results.find(item => item.id === "kk_supertrend")!;
+    assert.equal(kk.values.factor, 3, asset);
+    assert.deepEqual(kk.states, standard.states, asset);
+    assert.deepEqual(kk.overlays[0].points, standard.overlays[0].points, asset);
+  }
 });
 
 test("equity market context runs every applicable indicator and uses the uncalibrated factor-three KK preset", () => {
@@ -354,15 +365,19 @@ test("spot ticker payloads are parsed for every supported venue", () => {
   assert.throws(() => parseSpotPrice("bitstamp", { last: "not-a-price" }), /invalid spot price/);
 });
 
-test("BTC, ETH, and SOL expose isolated venue definitions and useful history", () => {
-  assert.deepEqual(ASSETS.map(asset => asset.id), ["btc", "eth", "sol"]);
+test("all crypto assets expose isolated venue definitions and useful history", () => {
+  assert.deepEqual(ASSETS.map(asset => asset.id), ["btc", "eth", "sol", "doge", "link"]);
   for (const asset of ASSETS) assert.equal(sourcesForAsset(asset.id).length, 4);
   assert.equal(ASSETS.find(asset => asset.id === "sol")!.defaultSource, "coinbase");
-  assert.equal(SOURCES.length, 12);
+  assert.equal(SOURCES.length, 20);
   assert.equal(marketDefinition("eth", "bitstamp").providerSymbol, "ethusd");
   assert.equal(marketDefinition("eth", "coinbase").historyStart, Date.UTC(2016, 4, 23));
   assert.equal(marketDefinition("sol", "binance").providerSymbol, "SOLUSDT");
   assert.equal(marketDefinition("sol", "binance").historyStart, Date.UTC(2020, 7, 11));
+  assert.equal(marketDefinition("doge", "kraken").providerSymbol, "XDGUSD");
+  assert.equal(marketDefinition("doge", "coinbase").historyStart, Date.UTC(2021, 5, 3));
+  assert.equal(marketDefinition("link", "binance").providerSymbol, "LINKUSDT");
+  assert.equal(marketDefinition("link", "coinbase").historyStart, Date.UTC(2019, 5, 27));
   assert.deepEqual(MIN_SOURCE_CANDLES, { "1d": 200, "1w": 52 });
 });
 

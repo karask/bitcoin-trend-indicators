@@ -1,5 +1,5 @@
 export type SourceId = "bitstamp" | "binance" | "kraken" | "coinbase";
-export type AssetId = "btc" | "eth" | "sol";
+export type AssetId = "btc" | "eth" | "sol" | "doge" | "link";
 
 export interface AssetDefinition {
   id: AssetId;
@@ -28,6 +28,8 @@ export const ASSETS: AssetDefinition[] = [
   { id: "btc", label: "Bitcoin", symbol: "BTC", defaultSource: "bitstamp" },
   { id: "eth", label: "Ethereum", symbol: "ETH", defaultSource: "bitstamp" },
   { id: "sol", label: "Solana", symbol: "SOL", defaultSource: "coinbase" },
+  { id: "doge", label: "Dogecoin", symbol: "DOGE", defaultSource: "coinbase" },
+  { id: "link", label: "Chainlink", symbol: "LINK", defaultSource: "coinbase" },
 ];
 
 export const SOURCES: SourceDefinition[] = [
@@ -43,6 +45,14 @@ export const SOURCES: SourceDefinition[] = [
   { asset: "sol", id: "binance", label: "Binance", market: "SOL/USDT", denomination: "USDT", providerSymbol: "SOLUSDT", historyStart: Date.UTC(2020, 7, 11), historyNote: "Canonical long-history SOL/USDT series from August 2020" },
   { asset: "sol", id: "kraken", label: "Kraken", market: "SOL/USD", denomination: "USD", providerSymbol: "SOLUSD", historyStart: Date.UTC(2021, 5, 17), historyNote: "SOL/USD validation; public REST returns its latest 720 candles" },
   { asset: "sol", id: "coinbase", label: "Coinbase Exchange", market: "SOL/USD", denomination: "USD", providerSymbol: "SOL-USD", historyStart: Date.UTC(2021, 5, 17), historyNote: "SOL/USD validation history from June 2021" },
+  { asset: "doge", id: "bitstamp", label: "Bitstamp", market: "DOGE/USD", denomination: "USD", providerSymbol: "dogeusd", historyStart: Date.UTC(2022, 11, 21), historyNote: "DOGE/USD validation history from December 2022" },
+  { asset: "doge", id: "binance", label: "Binance", market: "DOGE/USDT", denomination: "USDT", providerSymbol: "DOGEUSDT", historyStart: Date.UTC(2019, 6, 5), historyNote: "Canonical long-history DOGE/USDT series from July 2019" },
+  { asset: "doge", id: "kraken", label: "Kraken", market: "DOGE/USD", denomination: "USD", providerSymbol: "XDGUSD", historyStart: Date.UTC(2014, 1, 8), historyNote: "DOGE/USD validation; Kraken names Dogecoin XDG and public REST returns its latest 720 candles" },
+  { asset: "doge", id: "coinbase", label: "Coinbase Exchange", market: "DOGE/USD", denomination: "USD", providerSymbol: "DOGE-USD", historyStart: Date.UTC(2021, 5, 3), historyNote: "DOGE/USD validation history from June 2021" },
+  { asset: "link", id: "bitstamp", label: "Bitstamp", market: "LINK/USD", denomination: "USD", providerSymbol: "linkusd", historyStart: Date.UTC(2020, 9, 19), historyNote: "LINK/USD validation history from October 2020" },
+  { asset: "link", id: "binance", label: "Binance", market: "LINK/USDT", denomination: "USDT", providerSymbol: "LINKUSDT", historyStart: Date.UTC(2019, 0, 16), historyNote: "Canonical long-history LINK/USDT series from January 2019" },
+  { asset: "link", id: "kraken", label: "Kraken", market: "LINK/USD", denomination: "USD", providerSymbol: "LINKUSD", historyStart: Date.UTC(2019, 8, 25), historyNote: "LINK/USD validation; public REST returns its latest 720 candles" },
+  { asset: "link", id: "coinbase", label: "Coinbase Exchange", market: "LINK/USD", denomination: "USD", providerSymbol: "LINK-USD", historyStart: Date.UTC(2019, 5, 27), historyNote: "LINK/USD validation history from June 2019" },
 ];
 
 export function sourcesForAsset(asset: AssetId): SourceDefinition[] {

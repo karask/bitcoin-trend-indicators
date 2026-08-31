@@ -29,6 +29,18 @@ MARKETS = {
         "kraken": ("SOL/USD", "SOLUSD", datetime(2021, 6, 17, tzinfo=timezone.utc)),
         "coinbase": ("SOL/USD", "SOL-USD", datetime(2021, 6, 17, tzinfo=timezone.utc)),
     },
+    "doge": {
+        "bitstamp": ("DOGE/USD", "dogeusd", datetime(2022, 12, 21, tzinfo=timezone.utc)),
+        "binance": ("DOGE/USDT", "DOGEUSDT", datetime(2019, 7, 5, tzinfo=timezone.utc)),
+        "kraken": ("DOGE/USD", "XDGUSD", datetime(2014, 2, 8, tzinfo=timezone.utc)),
+        "coinbase": ("DOGE/USD", "DOGE-USD", datetime(2021, 6, 3, tzinfo=timezone.utc)),
+    },
+    "link": {
+        "bitstamp": ("LINK/USD", "linkusd", datetime(2020, 10, 19, tzinfo=timezone.utc)),
+        "binance": ("LINK/USDT", "LINKUSDT", datetime(2019, 1, 16, tzinfo=timezone.utc)),
+        "kraken": ("LINK/USD", "LINKUSD", datetime(2019, 9, 25, tzinfo=timezone.utc)),
+        "coinbase": ("LINK/USD", "LINK-USD", datetime(2019, 6, 27, tzinfo=timezone.utc)),
+    },
 }
 
 

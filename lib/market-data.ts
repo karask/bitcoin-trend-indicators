@@ -207,6 +207,8 @@ function fallbackDaily(asset: AssetId): Candle[] {
     btc: { start: Date.UTC(2011, 7, 18), first: 10.2, target: 100_000 },
     eth: { start: Date.UTC(2015, 7, 8), first: 1.1, target: 4_000 },
     sol: { start: Date.UTC(2020, 7, 11), first: 3.0, target: 180 },
+    doge: { start: Date.UTC(2019, 6, 5), first: 0.003, target: 0.2 },
+    link: { start: Date.UTC(2019, 0, 16), first: 0.49, target: 20 },
   };
   const seed = seeds[asset];
   const start = seed.start;

@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Crypto Regime Lab",
     short_name: "Regime Lab",
-    description: "Transparent daily and weekly BTC, ETH, and SOL trend-regime research.",
+    description: "Transparent daily and weekly crypto trend-regime research.",
     start_url: "/",
     display: "standalone",
     background_color: "#f2f1eb",

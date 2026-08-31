@@ -7,6 +7,8 @@ const CRON_ASSET: Record<string, AssetId> = {
   "15 0 * * *": "btc",
   "25 0 * * *": "eth",
   "35 0 * * *": "sol",
+  "45 0 * * *": "doge",
+  "55 0 * * *": "link",
 };
 const BINANCE_MARKET_DATA_BASES = ["https://data-api.binance.vision", "https://api-gcp.binance.com", "https://api1.binance.com"];
 
@@ -171,7 +173,7 @@ export default {
   async fetch(request: Request, env: CloudflareEnv): Promise<Response> {
     const url = new URL(request.url);
     const requested = url.searchParams.get("asset") ?? "btc";
-    if (!(["btc", "eth", "sol"] as string[]).includes(requested)) return Response.json({ error: "Unsupported asset" }, { status: 400 });
+    if (!(["btc", "eth", "sol", "doge", "link"] as string[]).includes(requested)) return Response.json({ error: "Unsupported asset" }, { status: 400 });
     if (!env.REFRESH_TOKEN || request.headers.get("Authorization") !== `Bearer ${env.REFRESH_TOKEN}`) return Response.json({ error: "Unauthorized" }, { status: 401 });
     return Response.json(await refreshAsset(env.REGIME_DB, requested as AssetId));
   },
