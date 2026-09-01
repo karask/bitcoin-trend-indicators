@@ -6,6 +6,7 @@ import { handleYahooStockHistoryRequest, handleYahooStockQuoteRequest, latestReq
 import { storedStockHistory } from "../functions/_lib/stock-history.ts";
 import type { CloudflareEnv, D1PreparedStatement } from "../functions/_lib/cloudflare.ts";
 import { isXnasSessionDate, xnasDateKey, xnasSession, xnasSessionsBetween, xnasSessionsForYear } from "../lib/xnas-calendar.ts";
+import { stockConfirmationClock } from "../lib/confirmation-clock.ts";
 import type { Candle } from "../lib/regimes.ts";
 
 const DAY = 86_400_000;
@@ -68,6 +69,17 @@ test("Yahoo completeness waits until 20:00 Eastern", () => {
   assert.equal(latestRequiredYahooSession(Date.parse("2025-07-07T21:00:00.000Z"))?.date, "2025-07-03");
   assert.equal(latestRequiredYahooSession(Date.parse("2025-07-08T00:00:00.000Z"))?.date, "2025-07-07");
   assert.equal(latestRequiredYahooSession(Date.parse("2025-07-04T00:00:00.000Z"))?.date, "2025-07-03");
+});
+
+test("stock confirmation clock follows NASDAQ sessions, holidays, early closes, and weekly boundaries", () => {
+  const beforeEarlyClose = stockConfirmationClock("1d", Date.parse("2025-07-03T16:00:00.000Z"));
+  assert.equal(beforeEarlyClose.target, Date.parse("2025-07-03T17:00:00.000Z"));
+  assert.equal(beforeEarlyClose.remaining, "1h 0m");
+  assert.match(beforeEarlyClose.boundary, /13:00 ET · early close/);
+  assert.equal(stockConfirmationClock("1d", Date.parse("2025-07-03T18:00:00.000Z")).target, Date.parse("2025-07-07T20:00:00.000Z"));
+  assert.equal(stockConfirmationClock("1w", Date.parse("2025-11-26T21:30:00.000Z")).target, Date.parse("2025-11-28T18:00:00.000Z"));
+  assert.equal(stockConfirmationClock("1w", Date.parse("2025-11-28T19:00:00.000Z")).target, Date.parse("2025-12-05T21:00:00.000Z"));
+  assert.equal(stockConfirmationClock("1d", 0).remaining, "—");
 });
 
 test("stock weeks accept holiday-shortened sessions and reject missing or open weeks", () => {

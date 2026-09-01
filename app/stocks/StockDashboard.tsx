@@ -4,6 +4,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import RegimeChart, { chartColorCss, type Theme } from "../RegimeChart";
 import { resolveInitialTheme } from "../../lib/chart-interaction";
+import { stockConfirmationClock } from "../../lib/confirmation-clock";
 import {
   INDICATOR_SPECS,
   backtest,
@@ -190,6 +191,8 @@ export default function StockDashboard() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [quote, setQuote] = useState<StockQuote | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
+  const [clock, setClock] = useState(0);
+  const [quoteRefreshTick, setQuoteRefreshTick] = useState(0);
 
   const activeStock = STOCKS.find(item => item.id === stockId) ?? STOCKS[0];
 
@@ -211,6 +214,13 @@ export default function StockDashboard() {
   }, []);
 
   useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setClock(Date.now()));
+    const clockTimer = window.setInterval(() => setClock(Date.now()), 60_000);
+    const quoteTimer = window.setInterval(() => setQuoteRefreshTick(value => value + 1), 5 * 60_000);
+    return () => { window.cancelAnimationFrame(frame); window.clearInterval(clockTimer); window.clearInterval(quoteTimer); };
+  }, []);
+
+  useEffect(() => {
     let cancelled = false;
     readStockHistoryCache(activeStock.symbol).then(cached => {
       if (cancelled || !cached) return;
@@ -224,7 +234,7 @@ export default function StockDashboard() {
       if (!cancelled) { setCacheReady(true); setLoading(false); }
     });
     return () => { cancelled = true; };
-  }, [activeStock]);
+  }, [activeStock, quoteRefreshTick]);
 
   useEffect(() => {
     if (!cacheReady) return;
@@ -334,6 +344,7 @@ export default function StockDashboard() {
     const state: RegimeState = members.length && members.every(item => item.state === "bull") ? "bull" : members.length && members.every(item => item.state === "bear") ? "bear" : "neutral";
     return { family, members: members.length, state };
   }), [calculation]);
+  const marketClock = stockConfirmationClock(timeframe, clock);
 
   const chooseStock = (next: StockId) => {
     historyRef.current = null;
@@ -374,7 +385,7 @@ export default function StockDashboard() {
     <>
       {error && <div className="data-banner danger"><strong>Stock data unavailable</strong><span>{error}</span><button type="button" onClick={refreshHistory}>Retry</button></div>}
       <section className="command-row" aria-label="Stock research controls"><div className="control-group asset-control"><label htmlFor="stock">Stock</label><select id="stock" value={stockId} onChange={event => chooseStock(event.target.value as StockId)}>{STOCKS.map(item => <option key={item.id} value={item.id}>{item.symbol} · {item.label}</option>)}</select></div><div className="control-group stock-provider"><span className="control-label">Data provider</span><div className="provider-value">Yahoo Finance · NASDAQ</div></div><div className="control-group grow"><label htmlFor="stock-indicator">Indicator</label><select id="stock-indicator" value={indicator} onChange={event => { setIndicator(event.target.value); const nextRole = INDICATOR_SPECS.find(item => item.id === event.target.value)?.role; if (nextRole) setRole(nextRole); }}>{options.map(item => <option key={item.id} value={item.id}>{item.displayName}{item.id === "kk_supertrend" ? " · uncalibrated equity preset" : ""}</option>)}</select></div><div className="segmented" aria-label="Timeframe"><button type="button" className={timeframe === "1d" ? "active" : ""} onClick={() => chooseTimeframe("1d")}>1D</button><button type="button" className={timeframe === "1w" ? "active" : ""} onClick={() => chooseTimeframe("1w")}>1W</button></div></section>
-      <section className="stock-session-strip"><div><p className="eyebrow">LATEST COMPLETED NASDAQ SESSION</p><strong>{history ? formatDate(history.daily.at(-1)?.time) : "Loading stored history…"}</strong><span>{history ? `${history.stock.symbol} · ${history.adjustmentBasis}` : "Daily and Monday-based weekly bars"}</span></div><div><span>Database snapshot</span><b>{history ? formatDate(history.retrievedAt, true) : "—"}</b><small>{cacheMessage ?? "America/New_York"}</small></div><div className="spot-price stock-spot"><span>CURRENT {activeStock.symbol} QUOTE · YAHOO FINANCE</span><b>{quote ? formatPrice(quote.price) : "—"}</b><small>{quote ? `${quote.marketState === "unknown" ? "Yahoo quote" : quote.marketState} · as of ${formatDate(quote.quoteTime, true)}` : quoteError ? "quote unavailable" : "fetching current price…"}</small></div></section>
+      <section className="close-countdown market-status-strip stock-status-strip" aria-live="polite" aria-label={`${marketClock.title}: ${marketClock.remaining} remaining`}><div className="confirmation-status"><p className="eyebrow">CONFIRMATION CLOCK · NASDAQ</p><strong>{marketClock.title}</strong><span>{marketClock.boundary}</span></div><div className="countdown-value"><b>{marketClock.remaining}</b><small>remaining</small></div><div className="snapshot-status"><span>DATA SNAPSHOT · YAHOO FINANCE</span><b>{history ? formatDate(history.retrievedAt, true) : "—"}</b><small title={cacheMessage ?? undefined}>{history ? `completed through ${formatDate(history.daily.at(-1)?.time)}` : "loading stored history…"}</small></div><div className="spot-price"><span>CURRENT {activeStock.symbol} QUOTE · YAHOO FINANCE</span><b>{quote ? formatPrice(quote.price) : "—"}</b><small>{quote ? `${quote.marketState === "unknown" ? "Yahoo quote" : quote.marketState} · as of ${formatDate(quote.quoteTime, true)}` : quoteError ? "quote unavailable" : "fetching current price…"}</small></div></section>
 
       {loading && !history ? <LoadingView /> : calculation && history && <>
         <section className={`hero-grid ${loading ? "is-refreshing" : ""}`}><article className="chart-card"><div className="chart-heading"><div><p className="eyebrow">LAST CONFIRMED {timeframe === "1d" ? "DAILY" : "WEEKLY"} ADJUSTED CLOSE · {history.stock.exchange} · YAHOO FINANCE</p><div className="price-line"><strong>{formatPrice(current?.close)}</strong><span className={change != null && change < 0 ? "negative" : ""}>{formatPct(change, true)}</span></div></div><StateBadge state={calculation.selected.state} label={roleStateLabel(calculation.selected.role, calculation.selected.id, calculation.selected.state)} /></div><div className="chart-frame"><RegimeChart candles={calculation.candles} selected={calculation.selected} denomination="USD" timeframe={timeframe} theme={theme} />{loading && <div className="chart-refresh">Refreshing stored candles…</div>}</div><div className="chart-legend">{calculation.selected.overlays.filter(line => line.showInLegend !== false).map(line => <span key={line.name}><i style={{ background: chartColorCss(line.color) }} />{line.legendLabel ?? line.name}</span>)}{calculation.selected.ribbons.filter(ribbon => ribbon.showInLegend !== false).flatMap(ribbon => (Object.entries(ribbon.palette) as Array<[RegimeState, string]>).map(([state, color]) => <span key={`${ribbon.id}-${state}`}><i className="range-swatch" style={{ background: chartColorCss(color) }} />{titleState(state)} range</span>))}<span><i className="flip-dot" />Confirmed flip</span><span className="method-note">Signals effective next session open</span></div></article>
