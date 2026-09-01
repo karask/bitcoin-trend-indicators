@@ -6,7 +6,7 @@ import test from "node:test";
 import { DatabaseSync } from "node:sqlite";
 import { ensureMarketSchema } from "../db/index.ts";
 import { ASSETS, MIN_SOURCE_CANDLES, SOURCES, aggregateWeekly, marketDefinition, parseSpotPrice, resolveSourceForAsset, sourcesForAsset, validateCandles, type MarketDataset } from "../lib/market-data.ts";
-import { backtest, buyAndHold, calculateIndicators, INDICATOR_SPECS, KK_SUPERTREND_ATR_LENGTH, KK_SUPERTREND_EQUITY_FACTOR, KK_SUPERTREND_FACTORS, type Candle, type SignalSnapshot } from "../lib/regimes.ts";
+import { backtest, buyAndHold, calculateIndicators, INDICATOR_SPECS, KK_SUPERTREND_ATR_LENGTH, KK_SUPERTREND_EQUITY_FACTOR, KK_SUPERTREND_FACTORS, KK_SUPERTREND_PRESETS, type Candle, type SignalSnapshot } from "../lib/regimes.ts";
 import { completedBoundary, confirmationClock } from "../lib/confirmation-clock.ts";
 import { nearestCandleIndex, periodLabel, priceAtY, resolveInitialTheme } from "../lib/chart-interaction.ts";
 
@@ -142,6 +142,12 @@ const SOL_KK_CALIBRATION: readonly OhlcRow[] = [
   [73.55, 77.75, 71.88, 76.21], [76.2, 77.23, 74.09, 74.54], [74.54, 102.7, 74.36, 95.43],
 ];
 
+// Fixed Monday–Sunday OHLC from Kraken XMR/USD, 7 Jul 2025–30 Aug 2026.
+// The screenshot's 31 Aug effective flip date is the next weekly open.
+const XMR_KK_CALIBRATION: readonly OhlcRow[] = `319.44,341.36,309.63,336.1;336.29,357.14,318,325.33;325.38,337.53,308,325.19;325.22,331.29,289.38,303.42;303.61,314.36,247.41,268.16;268.16,285,230.26,283.59;284.72,301,249.15,276.45;276.45,285,256,261.69;261.95,274.42,258.13,271.67;271.6,314.99,264.3,307.2;307.16,346.72,289.59,292.86;293,302,283.01,290.29;290.32,341.22,283.89,320.99;320.99,347.59,265.01,304.37;304.47,330.57,281.6,314.85;314.85,351.38,301.47,348.19;348.38,363.29,317.53,347.59;347.33,470,325.15,417.49;417.49,440,360.17,405.87;407.1,420.06,318.5,388.64;388.39,438.49,370,435;435.13,435.77,360.29,362.53;362.54,420.43,360.22,409.36;408.95,500,400.01,470.38;471.23,484,423.38,452.3;452.37,462.15,411.52,417.9;418.37,560.48,416.41,559.43;558.56,799.89,552.2,571.27;571.15,650,444.8,449.55;449.56,500.87,401.14,404.86;405.05,421.88,276.66,319.11;319.05,370,315.06,331.3;331.37,344.72,314.66,327.79;327.78,355.44,302.06,341.14;341.06,375.61,334.21,334.26;334.44,370,333.41,357.04;357.61,382.12,336.13,361.41;361.41,365,317.4,326.88;327.01,340,313.32,330.93;330.88,359.01,321.42,335.46;335.51,355.55,335.36,347.12;347.16,406.91,345.66,392.35;392.39,399.02,369.18,391.63;391.59,437.58,384.29,409.59;410.06,420.9,358.34,390.32;390.31,410.25,372.17,392.69;393.08,421.4,346.11,367.11;367.11,384.83,292,302.95;302.93,426.32,298.92,340.82;340.82,379.92,305,320.28;320.3,334,298.95,310.68;310.65,334.96,300.61,327.14;326.45,336.2,312.89,324.36;324.48,339.47,317.97,335.88;335.6,372.68,331.74,353.25;353.52,367.84,333.97,363.63;363.65,413.57,350,394.92;395.02,417.87,374,409.58;409.57,464.69,399.02,421.91;421.37,527.3,414.24,487.5`
+  .split(";")
+  .map(row => row.split(",").map(Number) as [number, number, number, number]);
+
 test("KK Supertrend is registered immediately after SuperTrend with fixed crypto presets", () => {
   const supertrendIndex = INDICATOR_SPECS.findIndex(spec => spec.id === "supertrend");
   const kkIndex = INDICATOR_SPECS.findIndex(spec => spec.id === "kk_supertrend");
@@ -149,7 +155,8 @@ test("KK Supertrend is registered immediately after SuperTrend with fixed crypto
   assert.equal(KK_SUPERTREND_ATR_LENGTH, 10);
   assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3 });
   assert.equal(KK_SUPERTREND_EQUITY_FACTOR, 3);
-  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { atr: 10, btcFactor: 3, ethFactor: 2, solFactor: 2, dogeFactor: 3, linkFactor: 3, xmrFactor: 3 });
+  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { atr: 10, btcFactor: 3, ethFactor: 2, solFactor: 2, dogeFactor: 3, linkFactor: 3, xmrDailyAtr: 10, xmrDailyFactor: 3, xmrWeeklyAtr: 15, xmrWeeklyFactor: 2 });
+  assert.deepEqual(KK_SUPERTREND_PRESETS.xmr, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /screenshot-calibrated/i);
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /does not claim to reproduce/i);
 });
@@ -170,6 +177,27 @@ test("KK Supertrend reproduces the ETH and SOL factor-two calibration levels", (
   }
 });
 
+test("weekly XMR KK Supertrend reproduces the supplied 15/2 calibration level", () => {
+  const candles = weeklyFixture(Date.UTC(2025, 6, 7), XMR_KK_CALIBRATION);
+  const calibrated = calculateIndicators(candles, "1w", { asset: "xmr" }).find(item => item.id === "kk_supertrend")!;
+  const previous = calculateIndicators(candles, "1w", { asset: "xmr", kkSupertrendAtrLength: 10, kkSupertrendFactor: 3 }).find(item => item.id === "kk_supertrend")!;
+
+  assert.equal(calibrated.state, "bull");
+  assert.equal(calibrated.values.atrLength, 15);
+  assert.equal(calibrated.values.factor, 2);
+  assert.ok(Math.abs(calibrated.bearTrigger! - 350.93) < 0.05, `XMR level ${calibrated.bearTrigger}`);
+  assert.equal(calibrated.bullTrigger, null);
+  assert.equal(calibrated.lastFlip, candles.at(-1)!.time);
+  assert.equal(previous.state, "bear");
+  assert.equal(previous.values.atrLength, 10);
+  assert.equal(previous.values.factor, 3);
+
+  const costs = [5, 15, 30].map(costBps => backtest(candles, [calibrated], "1w", costBps)[0]);
+  assert.ok(costs.every(Boolean));
+  assert.ok(costs[0]!.totalReturn >= costs[1]!.totalReturn);
+  assert.ok(costs[1]!.totalReturn >= costs[2]!.totalReturn);
+});
+
 test("BTC KK Supertrend is point-for-point identical to SuperTrend 10/3", () => {
   const results = calculateIndicators(history(), "1d", { asset: "btc" });
   const standard = results.find(item => item.id === "supertrend")!;
@@ -183,7 +211,7 @@ test("BTC KK Supertrend is point-for-point identical to SuperTrend 10/3", () => 
   assert.deepEqual(kk.values, standard.values);
 });
 
-test("DOGE, LINK, and XMR KK Supertrend use the explicit uncalibrated SuperTrend 10/3 preset", () => {
+test("DOGE, LINK, and daily XMR KK Supertrend use the explicit uncalibrated SuperTrend 10/3 preset", () => {
   for (const asset of ["doge", "link", "xmr"] as const) {
     const results = calculateIndicators(history(), "1d", { asset });
     const standard = results.find(item => item.id === "supertrend")!;

@@ -27,6 +27,7 @@ export interface IndicatorCalculationOptions {
   asset?: AssetId;
   market?: MarketContext;
   kkSupertrendFactor?: number;
+  kkSupertrendAtrLength?: number;
   superGuppy?: Partial<SuperGuppyConfig>;
 }
 
@@ -38,6 +39,14 @@ export interface AnnualizationOptions {
 export const KK_SUPERTREND_ATR_LENGTH = 10;
 export const KK_SUPERTREND_FACTORS = { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3 } as const satisfies Record<AssetId, number>;
 export const KK_SUPERTREND_EQUITY_FACTOR = 3;
+export const KK_SUPERTREND_PRESETS = {
+  btc: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
+  eth: { "1d": { atrLength: 10, factor: 2 }, "1w": { atrLength: 10, factor: 2 } },
+  sol: { "1d": { atrLength: 10, factor: 2 }, "1w": { atrLength: 10, factor: 2 } },
+  doge: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
+  link: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
+  xmr: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+} as const satisfies Record<AssetId, Record<Timeframe, { atrLength: number; factor: number }>>;
 
 export const SUPER_GUPPY_R12_DEFAULTS: SuperGuppyConfig = {
   fastLengths: Array.from({ length: 11 }, (_, index) => 3 + index * 2),
@@ -167,7 +176,7 @@ export interface BacktestSummary {
 const BASE_INDICATOR_SPECS: Array<Omit<IndicatorSpec, "guidance">> = [
   { id: "support_band", displayName: "20 SMA / 21 EMA Support Band", shortName: "Support Band", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { sma: 20, ema: 21 }, thresholdKind: "fixed", description: "Above both averages is bullish, below both is bearish, and between is neutral." },
   { id: "supertrend", displayName: "SuperTrend 10/3", shortName: "SuperTrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { atr: 10, factor: 3 }, thresholdKind: "provisional", description: "A transparent ATR trailing regime line with close-based reversals.", disclaimer: "A transparent alternative commonly compared with private one-line systems; not a MoneyLine clone.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
-  { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { atr: KK_SUPERTREND_ATR_LENGTH, btcFactor: KK_SUPERTREND_FACTORS.btc, ethFactor: KK_SUPERTREND_FACTORS.eth, solFactor: KK_SUPERTREND_FACTORS.sol, dogeFactor: KK_SUPERTREND_FACTORS.doge, linkFactor: KK_SUPERTREND_FACTORS.link, xmrFactor: KK_SUPERTREND_FACTORS.xmr }, thresholdKind: "provisional", description: "A SuperTrend variation using ATR 10: screenshot-calibrated factors for BTC (3), ETH (2), and SOL (2), with uncalibrated factor 3 presets for DOGE, LINK, and XMR.", disclaimer: "KK Supertrend is a transparent preset built on the standard SuperTrend recurrence. BTC, ETH, and SOL were screenshot-calibrated; DOGE, LINK, and XMR use an explicitly uncalibrated factor 3. It does not claim to reproduce a private or proprietary implementation.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
+  { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { atr: KK_SUPERTREND_ATR_LENGTH, btcFactor: KK_SUPERTREND_FACTORS.btc, ethFactor: KK_SUPERTREND_FACTORS.eth, solFactor: KK_SUPERTREND_FACTORS.sol, dogeFactor: KK_SUPERTREND_FACTORS.doge, linkFactor: KK_SUPERTREND_FACTORS.link, xmrDailyAtr: 10, xmrDailyFactor: 3, xmrWeeklyAtr: 15, xmrWeeklyFactor: 2 }, thresholdKind: "provisional", description: "A SuperTrend variation with fixed screenshot-calibrated weekly presets: BTC ATR 10/factor 3, ETH and SOL ATR 10/factor 2, and XMR ATR 15/factor 2. DOGE, LINK, and daily XMR retain uncalibrated 10/3 presets.", disclaimer: "KK Supertrend is a transparent preset built on the standard SuperTrend recurrence. BTC, ETH, SOL, and weekly XMR use screenshot-calibrated presets; DOGE, LINK, and daily XMR use an explicitly uncalibrated factor 3. It does not claim to reproduce a private or proprietary implementation.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
   { id: "smma_ribbon", displayName: "SMMA Ribbon 15/19/25/29", shortName: "SMMA Ribbon", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { lengths: "15/19/25/29", source: "HL2" }, thresholdKind: "conditional", description: "Fully ordered averages are bullish or bearish; tangled averages are neutral.", disclaimer: "Community Larsson-style proxy only. The official Larsson Line formula is private." },
   { id: "super_guppy", displayName: "Super Guppy R1.2 by JustUncleL", shortName: "Super Guppy R1.2", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { revision: "R1.2", fast: "3–23 step 2", slow: "25–70 step 3", source: "Close", averages: 27, plottedByDefault: 14, showSwing: 1, showBreak: 1, lookback: 6, confluence: 0, ema200Filter: 0, anchorMinutes: 0 }, thresholdKind: "conditional", description: "The published R1.2 Trader and Investor EMA groups, dynamic colors, pullback signals, and aggressive trend-break signals.", disclaimer: "Independent implementation of JustUncleL's open-source Super Guppy R1.2 rules. The intraday anchor input is exposed for parity but cannot change a daily or weekly chart because its published maximum is one day.", sourceUrl: "https://www.tradingview.com/script/Lj6d7UxQ-Super-Guppy-R1-0-by-JustUncleL/" },
   { id: "long_sma", displayName: "Long SMA Filter", shortName: "Long SMA", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { daily: 200, weekly: 30 }, thresholdKind: "fixed", description: "Price above the long average is bullish; below is bearish." },
@@ -206,8 +215,8 @@ const INDICATOR_GUIDANCE: Record<string, IndicatorGuidance> = {
     positive: { label: "Bullish reversal", rule: "A completed close above the active upper band reverses the preset bullish; its KK Supertrend line then trails below price." },
     neutral: { label: "No neutral state", rule: "Retain the prior regime until a completed close confirms a reversal; an unfinished daily or weekly candle remains provisional." },
     negative: { label: "Bearish reversal / exit", rule: "A completed close below the active lower band reverses the preset bearish; the long/cash backtest moves risk-off at the next open." },
-    rationale: "ATR 10 adapts the trail to current volatility, while the fixed factor is 3 for BTC and 2 for ETH and SOL to match the supplied chart references.",
-    caveats: ["The calibration is fixed by asset rather than optimized by venue or timeframe, so exchange candles can produce small line and flip differences.", "Sideways markets can still cause repeated reversals, especially with the tighter factor-2 trail."],
+    rationale: "Wilder ATR adapts the trail to current volatility. Supplied weekly references fit 10/3 for BTC, 10/2 for ETH and SOL, and the slower-smoothed 15/2 preset for XMR.",
+    caveats: ["The calibration is fixed by asset and, for XMR, timeframe rather than optimized for backtest performance; venue candles can still produce small line and flip differences.", "Shorter ATR lengths react faster to new volatility; smaller factors pull the trail closer and can cause earlier but more frequent reversals."],
   },
   smma_ribbon: {
     summary: "Use full SMMA stacking as the signal; crossings and tangles are deliberately neutral.",
@@ -455,7 +464,7 @@ function supertrend(candles: Candle[], spec: IndicatorSpec, length: number, fact
     st[i] = states[i] === "bull" ? lower[i] : upper[i];
   }
   const meta = lastState(states), level = st.at(-1) ?? null;
-  return buildSnapshot(spec, candles, states, [points(candles, st, overlay.name, overlay.color)], { atr: atr.at(-1) ?? null, supertrend: level, factor }, meta.state === "bear" ? level : null, meta.state === "bull" ? level : null, "Provisional until the open candle completes");
+  return buildSnapshot(spec, candles, states, [points(candles, st, overlay.name, overlay.color)], { atr: atr.at(-1) ?? null, atrLength: length, supertrend: level, factor }, meta.state === "bear" ? level : null, meta.state === "bull" ? level : null, "Provisional until the open candle completes");
 }
 
 function ribbon(candles: Candle[], spec: IndicatorSpec): SignalSnapshot {
@@ -736,13 +745,18 @@ function valuation(candles: Candle[], spec: IndicatorSpec, timeframe: Timeframe)
 }
 
 export function calculateIndicators(candles: Candle[], timeframe: Timeframe, options: IndicatorCalculationOptions = {}): SignalSnapshot[] {
+  const configuredKk = options.market === "equity"
+    ? { atrLength: KK_SUPERTREND_ATR_LENGTH, factor: KK_SUPERTREND_EQUITY_FACTOR }
+    : KK_SUPERTREND_PRESETS[options.asset ?? "btc"][timeframe];
   const explicitKkFactor = finite(options.kkSupertrendFactor) && options.kkSupertrendFactor! > 0 ? options.kkSupertrendFactor! : null;
-  const kkFactor = explicitKkFactor ?? (options.market === "equity" ? KK_SUPERTREND_EQUITY_FACTOR : KK_SUPERTREND_FACTORS[options.asset ?? "btc"]);
+  const explicitKkAtrLength = Number.isInteger(options.kkSupertrendAtrLength) && options.kkSupertrendAtrLength! > 0 ? options.kkSupertrendAtrLength! : null;
+  const kkFactor = explicitKkFactor ?? configuredKk.factor;
+  const kkAtrLength = explicitKkAtrLength ?? configuredKk.atrLength;
   return INDICATOR_SPECS.filter(s => s.supportedTimeframes.includes(timeframe)).map(spec => {
     switch (spec.id) {
       case "support_band": return supportBand(candles, spec);
       case "supertrend": return supertrend(candles, spec, 10, 3, { name: "SuperTrend", color: "#8769c3" });
-      case "kk_supertrend": return supertrend(candles, spec, KK_SUPERTREND_ATR_LENGTH, kkFactor, { name: "KK Supertrend", color: "#d7a928" });
+      case "kk_supertrend": return supertrend(candles, spec, kkAtrLength, kkFactor, { name: "KK Supertrend", color: "#d7a928" });
       case "smma_ribbon": return ribbon(candles, spec);
       case "super_guppy": return superGuppy(candles, spec, timeframe, options.superGuppy);
       case "long_sma": return longSma(candles, spec, timeframe);
