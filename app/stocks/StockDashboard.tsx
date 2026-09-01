@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-html-link-for-pages -- Static Pages output publishes independent HTML shells without route RSC payloads. */
 
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import RegimeChart, { chartColorCss, type Theme } from "../RegimeChart";
 import { resolveInitialTheme } from "../../lib/chart-interaction";
 import {
@@ -36,7 +36,6 @@ type StockHistory = {
 
 type ApiRecord = Record<string, unknown>;
 
-const TOKEN_KEY = "stock-regime-tiingo-token";
 const ROLE_OPTIONS: Array<{ id: IndicatorRole; label: string }> = [
   { id: "regime", label: "Regime" },
   { id: "confirmation", label: "Confirmation" },
@@ -76,7 +75,7 @@ function normalizeHistory(body: unknown, requested: StockDefinition): StockHisto
   const daily = asCandles(payload.candles);
   const retrievedAt = asString(payload.retrievedAt, new Date().toISOString());
   const weekly = aggregateStockWeeks(daily, Date.parse(retrievedAt));
-  if (!daily.length || !weekly.length) throw new Error("Tiingo history did not include usable daily and weekly candles.");
+  if (!daily.length || !weekly.length) throw new Error("Stored Yahoo Finance history did not include usable daily and weekly candles.");
   if (payload.stock?.symbol !== requested.symbol) throw new Error("Stock history returned a different symbol than requested.");
   return {
     response: payload,
@@ -87,7 +86,7 @@ function normalizeHistory(body: unknown, requested: StockDefinition): StockHisto
     provider: payload.provider,
     providerUrl: payload.providerUrl,
     exchange: payload.exchange,
-    adjustmentBasis: payload.adjustment === "split-and-dividend-adjusted" ? "Split- and dividend-adjusted OHLCV" : "Adjusted OHLCV",
+    adjustmentBasis: payload.adjustment === "split-adjusted" ? "Split-adjusted OHLC · reported volume" : "Adjusted OHLCV",
     quality: payload.quality,
   };
 }
@@ -182,9 +181,6 @@ export default function StockDashboard() {
   const [indicator, setIndicator] = useState("support_band");
   const [role, setRole] = useState<IndicatorRole>("regime");
   const [theme, setTheme] = useState<Theme>("light");
-  const [token, setToken] = useState("");
-  const [tokenInput, setTokenInput] = useState("");
-  const [tokenReady, setTokenReady] = useState(false);
   const [history, setHistory] = useState<StockHistory | null>(null);
   const historyRef = useRef<StockHistory | null>(null);
   const [cacheReady, setCacheReady] = useState(false);
@@ -213,12 +209,6 @@ export default function StockDashboard() {
   }, []);
 
   useEffect(() => {
-    const saved = window.sessionStorage.getItem(TOKEN_KEY) ?? "";
-    const frame = window.requestAnimationFrame(() => { if (saved) setLoading(true); setToken(saved); setTokenReady(true); });
-    return () => window.cancelAnimationFrame(frame);
-  }, []);
-
-  useEffect(() => {
     let cancelled = false;
     readStockHistoryCache(activeStock.symbol).then(cached => {
       if (cancelled || !cached) return;
@@ -235,19 +225,18 @@ export default function StockDashboard() {
   }, [activeStock]);
 
   useEffect(() => {
-    if (!token || !cacheReady) return;
+    if (!cacheReady) return;
     const controller = new AbortController();
     let cancelled = false;
     const requestHistory = async (startDate?: string) => {
       const query = new URLSearchParams({ symbol: activeStock.symbol });
       if (startDate) query.set("startDate", startDate);
       const response = await authenticatedFetch(`/api/v1/stocks/history?${query}`, {
-        headers: { Authorization: `Token ${token}` },
         cache: "no-store",
         signal: controller.signal,
       });
       const body = await response.json() as ApiRecord;
-      if (!response.ok) throw new Error(asString(body.error, response.status === 401 ? "Tiingo rejected this API token." : `Stock history returned HTTP ${response.status}.`));
+      if (!response.ok) throw new Error(asString(body.error, `Stock history returned HTTP ${response.status}.`));
       return body as unknown as StockHistoryResponse;
     };
     const refresh = async () => {
@@ -261,7 +250,7 @@ export default function StockDashboard() {
         const merged = mergeIncrementalStockHistory(cached, response);
         if (merged.requiresFullRefresh) {
           fullRefreshReason = merged.reason === "adjustment-rebase"
-            ? "Full history refreshed after Tiingo revised adjusted prices for a dividend, split, or correction."
+            ? "Full history refreshed after Yahoo Finance revised split-adjusted prices."
             : "Full history refreshed because the local cache was incomplete.";
           response = await requestHistory();
         } else {
@@ -274,8 +263,8 @@ export default function StockDashboard() {
       setHistory(normalized);
       setLoading(false);
       setCacheMessage(fullRefreshReason ?? (incrementalStart && incrementalStart !== activeStock.historyStart
-        ? `Updated only the Tiingo overlap from ${incrementalStart}; older candles stayed local.`
-        : "Saved the complete adjusted history in this browser for faster future visits."));
+        ? `Updated the stored overlap from ${incrementalStart}; older candles stayed local.`
+        : "Saved the complete database history in this browser for faster future visits."));
       try {
         await writeStockHistoryCache(response);
       } catch {
@@ -288,7 +277,7 @@ export default function StockDashboard() {
       setLoading(false);
     });
     return () => { cancelled = true; controller.abort(); };
-  }, [activeStock, cacheReady, refreshKey, token]);
+  }, [activeStock, cacheReady, refreshKey]);
 
   const calculation = useMemo(() => {
     if (!history) return null;
@@ -329,24 +318,6 @@ export default function StockDashboard() {
     return { family, members: members.length, state };
   }), [calculation]);
 
-  const saveToken = (event: FormEvent) => {
-    event.preventDefault();
-    const value = tokenInput.trim();
-    if (!value) return;
-    window.sessionStorage.setItem(TOKEN_KEY, value);
-    setError(null);
-    setLoading(true);
-    setToken(value);
-    setTokenInput("");
-  };
-  const forgetToken = () => {
-    window.sessionStorage.removeItem(TOKEN_KEY);
-    setToken("");
-    setTokenInput("");
-    setError(null);
-    setLoading(false);
-    if (historyRef.current) setCacheMessage("Showing saved history. Add a Tiingo token only when you want to update it.");
-  };
   const chooseStock = (next: StockId) => {
     historyRef.current = null;
     setStockId(next);
@@ -363,7 +334,8 @@ export default function StockDashboard() {
     setHistory(null);
     setCacheMessage(null);
     setError(null);
-    if (token) { setLoading(true); setRefreshKey(value => value + 1); }
+    setLoading(true);
+    setRefreshKey(value => value + 1);
   };
   const chooseTimeframe = (next: Timeframe) => {
     const currentSpec = INDICATOR_SPECS.find(item => item.id === indicator);
@@ -389,15 +361,13 @@ export default function StockDashboard() {
   return <main className="app-shell stock-shell">
     <header className="topbar"><div className="brand-lockup"><div className="brand-mark stock-mark">{activeStock.symbol}</div><div><p className="eyebrow">STOCK REGIME LAB · {activeStock.label.toUpperCase()}</p><h1>Equity trends, on completed sessions.</h1></div></div><div className="header-actions"><nav className="lab-nav" aria-label="Research labs"><a href="/">Crypto</a><a href="/stocks" aria-current="page">Stocks</a></nav>{history && <div className="freshness"><span />Confirmed · {formatDate(history.daily.at(-1)?.time)}</div>}<AccountControls /><button className="theme-toggle" type="button" onClick={toggleTheme} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}><span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span><b>{theme === "dark" ? "Light" : "Dark"}</b></button></div></header>
 
-    {!token && <section className={`token-gate ${history ? "has-cache" : ""}`} aria-labelledby="tiingo-token-title"><div><p className="eyebrow">PRIVATE DATA ACCESS</p><h2 id="tiingo-token-title">{history ? "Update your saved Tiingo history" : "Connect your free Tiingo API token"}</h2><p>{history ? "Adjusted history is already available from this browser's private IndexedDB cache. Add a token only to download the latest overlap and completed sessions." : "The first download is saved in this browser's private IndexedDB cache. Later visits render it immediately and use the token only to update an overlap plus new sessions."} The token stays in this tab&apos;s session storage and is never placed in a URL, shared cache, or public dataset.</p><a href="https://www.tiingo.com/account/api/token" target="_blank" rel="noreferrer">Open Tiingo token page ↗</a></div><form onSubmit={saveToken}><label htmlFor="tiingo-token">Tiingo API token</label><div><input id="tiingo-token" type="password" value={tokenInput} onChange={event => setTokenInput(event.target.value)} autoComplete="off" spellCheck={false} placeholder={tokenReady ? "Paste a fresh token" : "Checking this browser session…"} aria-describedby="token-safety" /><button type="submit" disabled={!tokenInput.trim()}>{history ? "Update saved history" : "Load stock history"}</button></div><small id="token-safety">Use a freshly rotated token if one was ever pasted into chat, email, or another shared location.</small></form></section>}
-
-    {(token || history) && <>
+    <>
       {error && <div className="data-banner danger"><strong>Stock data unavailable</strong><span>{error}</span><button type="button" onClick={refreshHistory}>Retry</button></div>}
-      <section className="command-row" aria-label="Stock research controls"><div className="control-group asset-control"><label htmlFor="stock">Stock</label><select id="stock" value={stockId} onChange={event => chooseStock(event.target.value as StockId)}>{STOCKS.map(item => <option key={item.id} value={item.id}>{item.symbol} · {item.label}</option>)}</select></div><div className="control-group stock-provider"><span className="control-label">Data provider</span><div className="provider-value">Tiingo · NASDAQ</div></div><div className="control-group grow"><label htmlFor="stock-indicator">Indicator</label><select id="stock-indicator" value={indicator} onChange={event => { setIndicator(event.target.value); const nextRole = INDICATOR_SPECS.find(item => item.id === event.target.value)?.role; if (nextRole) setRole(nextRole); }}>{options.map(item => <option key={item.id} value={item.id}>{item.displayName}{item.id === "kk_supertrend" ? " · uncalibrated equity preset" : ""}</option>)}</select></div><div className="segmented" aria-label="Timeframe"><button type="button" className={timeframe === "1d" ? "active" : ""} onClick={() => chooseTimeframe("1d")}>1D</button><button type="button" className={timeframe === "1w" ? "active" : ""} onClick={() => chooseTimeframe("1w")}>1W</button></div></section>
-      <section className="stock-session-strip"><div><p className="eyebrow">LATEST COMPLETED NASDAQ SESSION</p><strong>{history ? formatDate(history.daily.at(-1)?.time) : "Loading adjusted history…"}</strong><span>{history ? `${history.stock.symbol} · ${history.adjustmentBasis}` : "Daily and Monday-based weekly bars"}</span></div><div><span>Retrieved</span><b>{history ? formatDate(history.retrievedAt, true) : "—"}</b><small>{cacheMessage ?? "America/New_York"}</small></div><div className="stock-session-actions"><button type="button" onClick={refreshHistory} disabled={loading || !token}>↻ {!token ? "Add token to refresh" : loading ? "Refreshing…" : "Refresh data"}</button>{token && <button type="button" className="forget-token" onClick={forgetToken}>Forget token</button>}{history && <button type="button" className="forget-token" onClick={clearCachedHistory}>Clear saved history</button>}</div></section>
+      <section className="command-row" aria-label="Stock research controls"><div className="control-group asset-control"><label htmlFor="stock">Stock</label><select id="stock" value={stockId} onChange={event => chooseStock(event.target.value as StockId)}>{STOCKS.map(item => <option key={item.id} value={item.id}>{item.symbol} · {item.label}</option>)}</select></div><div className="control-group stock-provider"><span className="control-label">Data provider</span><div className="provider-value">Yahoo Finance · NASDAQ</div></div><div className="control-group grow"><label htmlFor="stock-indicator">Indicator</label><select id="stock-indicator" value={indicator} onChange={event => { setIndicator(event.target.value); const nextRole = INDICATOR_SPECS.find(item => item.id === event.target.value)?.role; if (nextRole) setRole(nextRole); }}>{options.map(item => <option key={item.id} value={item.id}>{item.displayName}{item.id === "kk_supertrend" ? " · uncalibrated equity preset" : ""}</option>)}</select></div><div className="segmented" aria-label="Timeframe"><button type="button" className={timeframe === "1d" ? "active" : ""} onClick={() => chooseTimeframe("1d")}>1D</button><button type="button" className={timeframe === "1w" ? "active" : ""} onClick={() => chooseTimeframe("1w")}>1W</button></div></section>
+      <section className="stock-session-strip"><div><p className="eyebrow">LATEST COMPLETED NASDAQ SESSION</p><strong>{history ? formatDate(history.daily.at(-1)?.time) : "Loading stored history…"}</strong><span>{history ? `${history.stock.symbol} · ${history.adjustmentBasis}` : "Daily and Monday-based weekly bars"}</span></div><div><span>Database snapshot</span><b>{history ? formatDate(history.retrievedAt, true) : "—"}</b><small>{cacheMessage ?? "America/New_York"}</small></div><div className="stock-session-actions"><button type="button" onClick={refreshHistory} disabled={loading}>↻ {loading ? "Refreshing…" : "Reload data"}</button>{history && <button type="button" className="forget-token" onClick={clearCachedHistory}>Clear browser cache</button>}</div></section>
 
       {loading && !history ? <LoadingView /> : calculation && history && <>
-        <section className={`hero-grid ${loading ? "is-refreshing" : ""}`}><article className="chart-card"><div className="chart-heading"><div><p className="eyebrow">LAST CONFIRMED {timeframe === "1d" ? "DAILY" : "WEEKLY"} ADJUSTED CLOSE · {history.stock.exchange} · TIINGO</p><div className="price-line"><strong>{formatPrice(current?.close)}</strong><span className={change != null && change < 0 ? "negative" : ""}>{formatPct(change, true)}</span></div></div><StateBadge state={calculation.selected.state} label={roleStateLabel(calculation.selected.role, calculation.selected.id, calculation.selected.state)} /></div><div className="chart-frame"><RegimeChart candles={calculation.candles} selected={calculation.selected} denomination="USD" timeframe={timeframe} theme={theme} />{loading && <div className="chart-refresh">Refreshing adjusted candles…</div>}</div><div className="chart-legend">{calculation.selected.overlays.filter(line => line.showInLegend !== false).map(line => <span key={line.name}><i style={{ background: chartColorCss(line.color) }} />{line.legendLabel ?? line.name}</span>)}{calculation.selected.ribbons.filter(ribbon => ribbon.showInLegend !== false).flatMap(ribbon => (Object.entries(ribbon.palette) as Array<[RegimeState, string]>).map(([state, color]) => <span key={`${ribbon.id}-${state}`}><i className="range-swatch" style={{ background: chartColorCss(color) }} />{titleState(state)} range</span>))}<span><i className="flip-dot" />Confirmed flip</span><span className="method-note">Signals effective next session open</span></div></article>
+        <section className={`hero-grid ${loading ? "is-refreshing" : ""}`}><article className="chart-card"><div className="chart-heading"><div><p className="eyebrow">LAST CONFIRMED {timeframe === "1d" ? "DAILY" : "WEEKLY"} ADJUSTED CLOSE · {history.stock.exchange} · YAHOO FINANCE</p><div className="price-line"><strong>{formatPrice(current?.close)}</strong><span className={change != null && change < 0 ? "negative" : ""}>{formatPct(change, true)}</span></div></div><StateBadge state={calculation.selected.state} label={roleStateLabel(calculation.selected.role, calculation.selected.id, calculation.selected.state)} /></div><div className="chart-frame"><RegimeChart candles={calculation.candles} selected={calculation.selected} denomination="USD" timeframe={timeframe} theme={theme} />{loading && <div className="chart-refresh">Refreshing stored candles…</div>}</div><div className="chart-legend">{calculation.selected.overlays.filter(line => line.showInLegend !== false).map(line => <span key={line.name}><i style={{ background: chartColorCss(line.color) }} />{line.legendLabel ?? line.name}</span>)}{calculation.selected.ribbons.filter(ribbon => ribbon.showInLegend !== false).flatMap(ribbon => (Object.entries(ribbon.palette) as Array<[RegimeState, string]>).map(([state, color]) => <span key={`${ribbon.id}-${state}`}><i className="range-swatch" style={{ background: chartColorCss(color) }} />{titleState(state)} range</span>))}<span><i className="flip-dot" />Confirmed flip</span><span className="method-note">Signals effective next session open</span></div></article>
           <aside className="signal-panel"><p className="eyebrow">CURRENT EVIDENCE</p><h2>{calculation.selected.shortName}</h2><div className="current-state-row"><StateBadge state={calculation.selected.state} label={roleStateLabel(calculation.selected.role, calculation.selected.id, calculation.selected.state)} /><span>since {formatDate(calculation.selected.lastFlip)}</span></div>{calculation.selected.role !== "valuation" && (calculation.selected.bullTrigger != null || calculation.selected.bearTrigger != null) && <>{triggerCard(triggerLabels[0], calculation.selected.bullTrigger, "bull-trigger")}{triggerCard(triggerLabels[1], calculation.selected.bearTrigger, "bear-trigger")}</>}<div className="method-card"><span>RULE</span><p>{calculation.selected.explanation}</p><b>{calculation.selected.triggerLabel}</b></div>{calculation.selected.id === "kk_supertrend" && <div className="proxy-note"><strong>Uncalibrated equity preset</strong>ATR 10 with factor 3 is used for stocks. This is identical to standard SuperTrend 10/3 and is not calibrated from the crypto screenshots.</div>}{calculation.selected.id === "mayer" && <div className="proxy-note"><strong>Equity interpretation</strong>Shown as the price-to-200-day-average ratio, not as an intrinsic valuation measure.</div>}<p className="disclaimer">Research view only. No live orders or individualized allocation advice.</p></aside></section>
 
         <section className="guidance-card" aria-label={`${calculation.selected.displayName} interpretation guide`}><div className="guidance-heading"><div><p className="eyebrow">HOW TO INTERPRET IT</p><h2>{calculation.selected.guidance.summary}</h2></div>{calculation.selected.sourceUrl && <a href={calculation.selected.sourceUrl} target="_blank" rel="noreferrer">Published method ↗</a>}</div><div className="guidance-grid">{[calculation.selected.guidance.positive, calculation.selected.guidance.neutral, calculation.selected.guidance.negative].map((item, index) => <article className={["positive", "neutral", "negative"][index]} key={item.label}><span>{item.label}</span><p>{item.rule}</p></article>)}</div><div className="guidance-notes"><p><strong>Why this rule exists</strong>{calculation.selected.guidance.rationale}</p><ul>{calculation.selected.guidance.caveats.map(caveat => <li key={caveat}>{caveat}</li>)}</ul></div></section>
@@ -410,9 +380,9 @@ export default function StockDashboard() {
           <article className="research-card"><p className="eyebrow">COST SENSITIVITY · {calculation.selected.shortName.toUpperCase()}</p><h2>5 / 15 / 30 bps turnover</h2><dl>{calculation.sensitivity.map(row => <div key={row.costBps}><dt>{row.costBps} bps</dt><dd>{row.result ? `${formatPct(row.result.cagr)} CAGR · ${row.result.calmar?.toFixed(2) ?? "—"} Calmar` : "N/A"}</dd></div>)}</dl><p>Signals execute at the next completed session&apos;s open. Bull is 100%, neutral 50%, and bear 0% exposure.</p></article>
           <article className="research-card"><p className="eyebrow">BUY-AND-HOLD COMPARISON · 15 BPS</p><h2>{activeStock.symbol} benchmark</h2><dl><div><dt>Buy-and-hold CAGR</dt><dd>{formatPct(calculation.benchmark?.cagr)}</dd></div><div><dt>Buy-and-hold max DD</dt><dd>{formatPct(calculation.benchmark?.maxDrawdown)}</dd></div><div><dt>{calculation.selected.shortName} CAGR</dt><dd>{formatPct(calculation.backtests.find(row => row.indicatorId === calculation.selected.id)?.cagr)}</dd></div><div><dt>{calculation.selected.shortName} max DD</dt><dd>{formatPct(calculation.backtests.find(row => row.indicatorId === calculation.selected.id)?.maxDrawdown)}</dd></div></dl><p>Comparison uses adjusted prices and the same next-open measurement window.</p></article>
           <article className="research-card wide"><div className="section-heading"><div><p className="eyebrow">ROLLING FOUR-YEAR RESEARCH · 15 BPS</p><h2>{calculation.selected.shortName} across annual start windows</h2></div><span className="assumption-pill">{timeframe === "1d" ? "1,008 sessions · 252 step" : "208 weeks · 52 step"}</span></div>{calculation.rollingSummary ? <><dl className="rolling-summary"><div><dt>Median window CAGR</dt><dd>{formatPct(calculation.rollingSummary.medianCagr)}</dd></div><div><dt>Positive windows</dt><dd>{calculation.rollingSummary.positiveWindows} / {calculation.rolling.length}</dd></div><div><dt>Worst window drawdown</dt><dd>{formatPct(calculation.rollingSummary.worstDrawdown)}</dd></div></dl><div className="rolling-table"><div className="rolling-head"><span>Window</span><span>CAGR</span><span>Max DD</span><span>Calmar</span></div>{calculation.rolling.slice(-6).map(row => <div className="rolling-row" key={row.start}><strong>{formatDate(row.start)} – {formatDate(row.end)}</strong><span>{formatPct(row.result.cagr)}</span><span className="negative">{formatPct(row.result.maxDrawdown)}</span><b>{row.result.calmar?.toFixed(2) ?? "—"}</b></div>)}</div></> : <p className="empty-state">Rolling four-year results apply to regime models once enough history is available.</p>}</article>
-          <article className="research-card wide"><p className="eyebrow">DATA PROVENANCE</p><h2>{history.provider.label} · {history.exchange}</h2><dl><div><dt>Calculation history</dt><dd>{calculation.historyCandleCount.toLocaleString()} adjusted bars</dd></div><div><dt>Visible chart</dt><dd>Last {calculation.candles.length.toLocaleString()} bars</dd></div><div><dt>Series begins</dt><dd>{formatDate((timeframe === "1d" ? history.daily : history.weekly)[0]?.time)}</dd></div><div><dt>Adjustment basis</dt><dd>{history.adjustmentBasis}</dd></div><div><dt>Quality</dt><dd>{Object.values(history.quality).every(value => value === 0) ? "Passed" : "Review"}</dd></div><div><dt>Storage</dt><dd>Private IndexedDB in this browser</dd></div></dl><p>{STOCK_DATA_ATTRIBUTION} via <a href={history.providerUrl} target="_blank" rel="noreferrer">Tiingo EOD</a>. Stock candles are not written to D1, SQLite, DuckDB, the service worker, or any shared application database.</p></article></section>
-        <footer><p>Stock Regime Lab separates price regimes, confirmation, exits, and price-ratio context. Presets are not optimized against {activeStock.label} history.</p><nav><a href="/">Crypto Regime Lab</a><a href="https://www.tiingo.com/documentation/end-of-day" target="_blank" rel="noreferrer">Tiingo EOD documentation</a></nav></footer>
+          <article className="research-card wide"><p className="eyebrow">DATA PROVENANCE</p><h2>{history.provider.label} · {history.exchange}</h2><dl><div><dt>Calculation history</dt><dd>{calculation.historyCandleCount.toLocaleString()} adjusted bars</dd></div><div><dt>Visible chart</dt><dd>Last {calculation.candles.length.toLocaleString()} bars</dd></div><div><dt>Series begins</dt><dd>{formatDate((timeframe === "1d" ? history.daily : history.weekly)[0]?.time)}</dd></div><div><dt>Adjustment basis</dt><dd>{history.adjustmentBasis}</dd></div><div><dt>Quality</dt><dd>{Object.values(history.quality).every(value => value === 0) ? "Passed" : "Review"}</dd></div><div><dt>Storage</dt><dd>Shared Cloudflare D1 snapshot · private browser cache</dd></div></dl><p>{STOCK_DATA_ATTRIBUTION} via <a href={history.providerUrl} target="_blank" rel="noreferrer">Yahoo Finance</a>. The service stores validated completed-session candles in D1 and keeps a browser copy for fast rendering. Yahoo Finance access is unofficial and intended here for personal research.</p></article></section>
+        <footer><p>Stock Regime Lab separates price regimes, confirmation, exits, and price-ratio context. Presets are not optimized against {activeStock.label} history.</p><nav><a href="/">Crypto Regime Lab</a><a href="https://finance.yahoo.com/" target="_blank" rel="noreferrer">Yahoo Finance</a></nav></footer>
       </>}
-    </>}
+    </>
   </main>;
 }

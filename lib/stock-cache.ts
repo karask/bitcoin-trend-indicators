@@ -52,8 +52,8 @@ function looksLikeCachedResponse(value: unknown, symbol: StockSymbol): value is 
   if (!value || typeof value !== "object") return false;
   const response = value as Partial<StockHistoryResponse>;
   return response.stock?.symbol === symbol
-    && response.provider?.id === "tiingo"
-    && response.adjustment === "split-and-dividend-adjusted"
+    && response.provider?.id === "yahoo"
+    && response.adjustment === "split-adjusted"
     && typeof response.requestedStart === "string"
     && typeof response.requiredThrough === "string"
     && typeof response.retrievedAt === "string"
@@ -83,7 +83,7 @@ export function stockIncrementalStartDate(symbol: StockSymbol, candles: Candle[]
 }
 
 /**
- * Combines a locally cached full history with a small Tiingo tail request.
+ * Combines a locally cached full history with a small database tail request.
  * Any changed adjusted OHLCV value in the overlap means a split, dividend, or
  * provider correction rebased history, so the caller must fetch the full range.
  */

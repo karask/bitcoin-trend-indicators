@@ -10,7 +10,6 @@ type AuthContextValue = { user: AuthUser | null; ready: boolean };
 
 const AuthContext = createContext<AuthContextValue>({ user: null, ready: false });
 const PUBLIC_PATHS = new Set(["/login", "/login/", "/privacy", "/privacy/"]);
-const TIINGO_TOKEN_KEY = "stock-regime-tiingo-token";
 
 function loginUrl(): string {
   const next = `${window.location.pathname}${window.location.search}`;
@@ -65,7 +64,6 @@ export function AccountControls() {
     try {
       const result = await fetch("/api/v1/auth/logout", { method: "POST", cache: "no-store" });
       if (!result.ok) throw new Error("Logout failed");
-      window.sessionStorage.removeItem(TIINGO_TOKEN_KEY);
       window.location.assign("/login");
     } catch {
       window.alert("The session could not be ended. Please try again.");
@@ -79,7 +77,6 @@ export function AccountControls() {
     try {
       const result = await fetch("/api/v1/auth/account", { method: "DELETE", cache: "no-store" });
       if (!result.ok) throw new Error("Account deletion failed");
-      window.sessionStorage.removeItem(TIINGO_TOKEN_KEY);
       await clearAllStockHistoryCaches().catch(() => undefined);
       window.location.assign("/login?deleted=1");
     } catch {

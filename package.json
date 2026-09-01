@@ -17,6 +17,7 @@
     "cf:d1:remote": "wrangler d1 migrations apply crypto-regime-data --remote --config=wrangler.jsonc",
     "cf:seed:local": "node --experimental-strip-types scripts/seed-d1.ts --apply",
     "cf:seed:remote": "node --experimental-strip-types scripts/seed-d1.ts --all --apply --remote",
+    "cf:seed:stocks:remote": "node --experimental-strip-types scripts/seed-stocks-d1.ts --apply --remote",
     "cf:deploy:pages": "npm run build:pages && wrangler pages deploy dist/cloudflare-pages --project-name=bitcoin-trend-indicators --branch=main",
     "cf:deploy:refresh": "wrangler deploy --config=wrangler.refresh.jsonc"
   },

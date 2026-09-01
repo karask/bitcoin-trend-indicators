@@ -12,24 +12,24 @@ export interface StockDefinition {
   symbol: StockSymbol;
   exchange: "NASDAQ";
   currency: "USD";
-  provider: "tiingo";
+  provider: "yahoo";
   calendar: "XNAS";
   historyStart: string;
 }
 
 export const STOCKS: readonly StockDefinition[] = [
-  { id: "tsla", company: "Tesla", ticker: "TSLA", label: "Tesla", symbol: "TSLA", exchange: "NASDAQ", currency: "USD", provider: "tiingo", calendar: "XNAS", historyStart: "2010-06-29" },
-  { id: "googl", company: "Alphabet Class A", ticker: "GOOGL", label: "Alphabet Class A", symbol: "GOOGL", exchange: "NASDAQ", currency: "USD", provider: "tiingo", calendar: "XNAS", historyStart: "2004-08-19" },
-  { id: "nvda", company: "NVIDIA", ticker: "NVDA", label: "NVIDIA", symbol: "NVDA", exchange: "NASDAQ", currency: "USD", provider: "tiingo", calendar: "XNAS", historyStart: "1999-01-22" },
-  { id: "spcx", company: "SpaceX", ticker: "SPCX", label: "SpaceX", symbol: "SPCX", exchange: "NASDAQ", currency: "USD", provider: "tiingo", calendar: "XNAS", historyStart: "2026-06-12" },
-  { id: "mu", company: "Micron Technology", ticker: "MU", label: "Micron Technology", symbol: "MU", exchange: "NASDAQ", currency: "USD", provider: "tiingo", calendar: "XNAS", historyStart: "1999-01-04" },
-  { id: "sndk", company: "Sandisk", ticker: "SNDK", label: "Sandisk", symbol: "SNDK", exchange: "NASDAQ", currency: "USD", provider: "tiingo", calendar: "XNAS", historyStart: "2025-02-24" },
+  { id: "tsla", company: "Tesla", ticker: "TSLA", label: "Tesla", symbol: "TSLA", exchange: "NASDAQ", currency: "USD", provider: "yahoo", calendar: "XNAS", historyStart: "2010-06-29" },
+  { id: "googl", company: "Alphabet Class A", ticker: "GOOGL", label: "Alphabet Class A", symbol: "GOOGL", exchange: "NASDAQ", currency: "USD", provider: "yahoo", calendar: "XNAS", historyStart: "2004-08-19" },
+  { id: "nvda", company: "NVIDIA", ticker: "NVDA", label: "NVIDIA", symbol: "NVDA", exchange: "NASDAQ", currency: "USD", provider: "yahoo", calendar: "XNAS", historyStart: "1999-01-22" },
+  { id: "spcx", company: "SpaceX", ticker: "SPCX", label: "SpaceX", symbol: "SPCX", exchange: "NASDAQ", currency: "USD", provider: "yahoo", calendar: "XNAS", historyStart: "2026-06-12" },
+  { id: "mu", company: "Micron Technology", ticker: "MU", label: "Micron Technology", symbol: "MU", exchange: "NASDAQ", currency: "USD", provider: "yahoo", calendar: "XNAS", historyStart: "1999-01-04" },
+  { id: "sndk", company: "Sandisk", ticker: "SNDK", label: "Sandisk", symbol: "SNDK", exchange: "NASDAQ", currency: "USD", provider: "yahoo", calendar: "XNAS", historyStart: "2025-02-24" },
 ];
 
-export const STOCK_DATA_ADJUSTMENT = "split-and-dividend-adjusted" as const;
-export const STOCK_DATA_PROVIDER = { id: "tiingo", label: "Tiingo" } as const;
-export const STOCK_DATA_ATTRIBUTION = "Data sourced by Tiingo";
-export const STOCK_DATA_PROVIDER_URL = "https://www.tiingo.com/documentation/end-of-day";
+export const STOCK_DATA_ADJUSTMENT = "split-adjusted" as const;
+export const STOCK_DATA_PROVIDER = { id: "yahoo", label: "Yahoo Finance" } as const;
+export const STOCK_DATA_ATTRIBUTION = "Data sourced from Yahoo Finance";
+export const STOCK_DATA_PROVIDER_URL = "https://finance.yahoo.com/";
 
 export interface StockHistoryQuality {
   gaps: number;

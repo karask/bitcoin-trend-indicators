@@ -1,5 +1,7 @@
 import { MIN_SOURCE_CANDLES, sourcesForAsset, type AssetId, type SourceDefinition } from "../lib/markets";
 import type { Candle } from "../lib/regimes";
+import { STOCKS, type StockDefinition } from "../lib/stocks";
+import { fetchYahooStockHistory } from "../lib/yahoo";
 import type { CloudflareEnv, D1Database, D1PreparedStatement } from "../functions/_lib/cloudflare";
 
 const DAY = 86_400_000;
@@ -10,6 +12,7 @@ const CRON_ASSET: Record<string, AssetId> = {
   "45 0 * * *": "doge",
   "55 0 * * *": "link",
 };
+const STOCK_REFRESH_CRON = "30 1 * * 2-6";
 const BINANCE_MARKET_DATA_BASES = ["https://data-api.binance.vision", "https://api-gcp.binance.com", "https://api1.binance.com"];
 
 type ScheduledController = { cron: string; scheduledTime: number };
@@ -169,6 +172,45 @@ async function refreshAsset(database: D1Database, asset: AssetId) {
   return { asset, refreshedAt: new Date().toISOString(), results };
 }
 
+function upsertStockCandle(database: D1Database, stock: StockDefinition, item: Candle, retrievedAt: string, checksum: string): D1PreparedStatement {
+  return database.prepare("INSERT INTO market_candles (asset,source,timeframe,time,market,open,high,low,close,volume,complete,retrieved_at,raw_checksum) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(asset,source,timeframe,time) DO UPDATE SET market=excluded.market,open=excluded.open,high=excluded.high,low=excluded.low,close=excluded.close,volume=excluded.volume,complete=excluded.complete,retrieved_at=excluded.retrieved_at,raw_checksum=excluded.raw_checksum")
+    .bind(stock.id, "yahoo", "1d", item.time, `NASDAQ:${stock.symbol}`, item.open, item.high, item.low, item.close, item.volume, 1, retrievedAt, checksum);
+}
+
+async function refreshStock(database: D1Database, stock: StockDefinition) {
+  const checkedAt = new Date().toISOString();
+  try {
+    const baseline = await database.prepare("SELECT candle_count,warning FROM provider_snapshots WHERE asset=? AND source='yahoo' AND timeframe='1d'").bind(stock.id).first<{ candle_count: number; warning: string | null }>();
+    if (!baseline?.candle_count) throw new Error(`Full Yahoo Finance seed required before refreshing ${stock.symbol}`);
+    const history = await fetchYahooStockHistory(stock.symbol);
+    let priorSplitSignature = "";
+    try { priorSplitSignature = JSON.parse(baseline.warning ?? "{}").splitSignature ?? ""; } catch { /* force a full rebase */ }
+    const fullRebase = priorSplitSignature !== history.splitSignature;
+    const rows = fullRebase ? history.candles : history.candles.slice(-500);
+    const checksum = await sha256(JSON.stringify(history.candles));
+    for (let index = 0; index < rows.length; index += 100) {
+      await database.batch(rows.slice(index, index + 100).map(item => upsertStockCandle(database, stock, item, history.retrievedAt, checksum)));
+    }
+    const summary = await database.prepare("SELECT min(time) AS first_candle,max(time) AS last_candle,count(*) AS candle_count FROM market_candles WHERE asset=? AND source='yahoo' AND timeframe='1d'").bind(stock.id).first<{ first_candle: number | null; last_candle: number | null; candle_count: number }>();
+    const metadata = JSON.stringify({ adjustment: history.adjustment, splitSignature: history.splitSignature, terms: "personal-research" });
+    await database.prepare("INSERT INTO provider_snapshots (asset,source,timeframe,market,retrieved_at,checksum,warning,first_candle,last_candle,candle_count) VALUES (?,?,?,?,?,?,?,?,?,?) ON CONFLICT(asset,source,timeframe) DO UPDATE SET market=excluded.market,retrieved_at=excluded.retrieved_at,checksum=excluded.checksum,warning=excluded.warning,first_candle=excluded.first_candle,last_candle=excluded.last_candle,candle_count=excluded.candle_count")
+      .bind(stock.id, "yahoo", "1d", `NASDAQ:${stock.symbol}`, history.retrievedAt, checksum, metadata, summary?.first_candle ?? null, summary?.last_candle ?? null, summary?.candle_count ?? 0).run();
+    await database.prepare("INSERT INTO source_health (asset,source,checked_at,status,message,daily_last,weekly_last) VALUES (?,?,?,?,?,?,?) ON CONFLICT(asset,source) DO UPDATE SET checked_at=excluded.checked_at,status=excluded.status,message=excluded.message,daily_last=excluded.daily_last")
+      .bind(stock.id, "yahoo", checkedAt, "healthy", fullRebase ? "Yahoo Finance split-adjusted history rebased" : "Yahoo Finance completed sessions refreshed", summary?.last_candle ?? null, null).run();
+    return { symbol: stock.symbol, status: "healthy", updated: rows.length, fullRebase };
+  } catch (error) {
+    await database.prepare("INSERT INTO source_health (asset,source,checked_at,status,message,daily_last,weekly_last) VALUES (?,?,?,?,?,?,?) ON CONFLICT(asset,source) DO UPDATE SET checked_at=excluded.checked_at,status=excluded.status,message=excluded.message")
+      .bind(stock.id, "yahoo", checkedAt, "failed", error instanceof Error ? error.message : String(error), null, null).run();
+    return { symbol: stock.symbol, status: "failed", updated: 0, fullRebase: false };
+  }
+}
+
+async function refreshStocks(database: D1Database) {
+  const results = [];
+  for (const stock of STOCKS) results.push(await refreshStock(database, stock));
+  return { market: "stocks", refreshedAt: new Date().toISOString(), results };
+}
+
 export default {
   async fetch(request: Request, env: CloudflareEnv): Promise<Response> {
     const url = new URL(request.url);
@@ -178,6 +220,10 @@ export default {
     return Response.json(await refreshAsset(env.REGIME_DB, requested as AssetId));
   },
   scheduled(controller: ScheduledController, env: CloudflareEnv, context: ExecutionContext): void {
+    if (controller.cron === STOCK_REFRESH_CRON) {
+      context.waitUntil(refreshStocks(env.REGIME_DB));
+      return;
+    }
     const asset = CRON_ASSET[controller.cron] ?? "btc";
     context.waitUntil(refreshAsset(env.REGIME_DB, asset));
   },
