@@ -24,7 +24,7 @@ You do **not** need to repeat the first-deployment commands below. They are reta
 - Pages Functions expose the read-only JSON API and live venue quote.
 - Cloudflare D1 stores normalized, completed daily and weekly candles.
 - The browser calculates the indicators and backtests from the stored candles.
-- One small Worker refreshes completed candles after market close. Its crypto triggers refresh BTC at 00:15, ETH at 00:25, SOL at 00:35, DOGE at 00:45, and LINK at 00:55 UTC. A weekday stock trigger refreshes stored Yahoo Finance histories at 01:30 UTC Tuesday through Saturday.
+- One small Worker refreshes completed candles after market close. Its five free-plan triggers refresh BTC at 00:15, ETH at 00:25, SOL at 00:35, DOGE at 00:45, and LINK at 01:30 UTC. The LINK trigger also refreshes stored Yahoo Finance histories Tuesday through Saturday.
 - Local development continues to use `data/bitcoin-regime.sqlite`; hosted and local databases are intentionally separate.
 - Pages middleware requires a passwordless 30-day email session before serving either dashboard or any market-data API. D1 stores verified emails, HMAC-protected challenges, hashed sessions, and hashed abuse-control counters.
 - Resend delivers six-digit login codes from `login@auth.kkarasavvas.com`; Cloudflare Turnstile protects code requests from automated quota exhaustion.

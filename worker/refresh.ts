@@ -10,9 +10,9 @@ const CRON_ASSET: Record<string, AssetId> = {
   "25 0 * * *": "eth",
   "35 0 * * *": "sol",
   "45 0 * * *": "doge",
-  "55 0 * * *": "link",
+  "30 1 * * *": "link",
 };
-const STOCK_REFRESH_CRON = "30 1 * * 2-6";
+const STOCK_REFRESH_CRON = "30 1 * * *";
 const BINANCE_MARKET_DATA_BASES = ["https://data-api.binance.vision", "https://api-gcp.binance.com", "https://api1.binance.com"];
 
 type ScheduledController = { cron: string; scheduledTime: number };
@@ -221,7 +221,10 @@ export default {
   },
   scheduled(controller: ScheduledController, env: CloudflareEnv, context: ExecutionContext): void {
     if (controller.cron === STOCK_REFRESH_CRON) {
-      context.waitUntil(refreshStocks(env.REGIME_DB));
+      const utcDay = new Date(controller.scheduledTime).getUTCDay();
+      const tasks: Promise<unknown>[] = [refreshAsset(env.REGIME_DB, "link")];
+      if (utcDay >= 2 && utcDay <= 6) tasks.push(refreshStocks(env.REGIME_DB));
+      context.waitUntil(Promise.all(tasks));
       return;
     }
     const asset = CRON_ASSET[controller.cron] ?? "btc";
