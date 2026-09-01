@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { aggregateStockWeeks, isStockId, isStockSymbol, STOCKS, stockDefinition, type StockHistoryResponse } from "../lib/stocks.ts";
+import { aggregateStockWeeks, isStockId, isStockSymbol, STOCKS, stockDefinition, type StockHistoryResponse, type StockQuote } from "../lib/stocks.ts";
 import { mergeIncrementalStockHistory, stockIncrementalStartDate } from "../lib/stock-cache.ts";
-import { handleYahooStockHistoryRequest, latestRequiredYahooSession, normalizeYahooHistory } from "../lib/yahoo.ts";
+import { handleYahooStockHistoryRequest, handleYahooStockQuoteRequest, latestRequiredYahooSession, normalizeYahooHistory } from "../lib/yahoo.ts";
 import { storedStockHistory } from "../functions/_lib/stock-history.ts";
 import type { CloudflareEnv, D1PreparedStatement } from "../functions/_lib/cloudflare.ts";
 import { isXnasSessionDate, xnasDateKey, xnasSession, xnasSessionsBetween, xnasSessionsForYear } from "../lib/xnas-calendar.ts";
@@ -118,6 +118,28 @@ test("Yahoo relay is keyless, whitelists symbols, and returns provenance", async
   const unsupported = await handleYahooStockHistoryRequest(new Request("https://example.test/api/v1/stocks/history?symbol=AAPL"), async () => { calls++; return Response.json({}); });
   assert.equal(unsupported.status, 400);
   assert.equal(calls, 0);
+});
+
+test("Yahoo current quote is keyless, no-store, and preserves market provenance", async () => {
+  let observedUrl = "";
+  const now = Date.parse("2026-08-31T18:45:00.000Z");
+  const response = await handleYahooStockQuoteRequest(new Request("https://example.test/api/v1/stocks/quote?symbol=MU"), async input => {
+    observedUrl = String(input);
+    return Response.json({ chart: { error: null, result: [{ meta: { symbol: "MU", currency: "USD", regularMarketPrice: 218.75, chartPreviousClose: 215.5, regularMarketTime: Date.parse("2026-08-31T18:44:30.000Z") / 1000, marketState: "REGULAR" } }] } });
+  }, now);
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("Cache-Control"), "private, no-store");
+  assert.match(observedUrl, /query1\.finance\.yahoo\.com\/v8\/finance\/chart\/MU/);
+  assert.match(observedUrl, /range=1d/);
+  assert.doesNotMatch(observedUrl, /token|apikey|authorization/i);
+  const quote = await response.json() as StockQuote;
+  assert.equal(quote.stock.id, "mu");
+  assert.equal(quote.price, 218.75);
+  assert.equal(quote.previousClose, 215.5);
+  assert.equal(quote.marketState, "regular");
+  assert.equal(quote.quoteTime, "2026-08-31T18:44:30.000Z");
+  const unsupported = await handleYahooStockQuoteRequest(new Request("https://example.test/api/v1/stocks/quote?symbol=AAPL"), async () => { throw new Error("must not fetch"); });
+  assert.equal(unsupported.status, 400);
 });
 
 test("production stock API returns the stored D1 snapshot without provider credentials", async () => {

@@ -321,7 +321,7 @@ test("Cloudflare middleware protects pages and APIs while leaving auth pages pub
   const db = database();
   t.after(() => db.close());
   const env = { REGIME_DB: d1(db) };
-  for (const path of ["/api/v1/dashboard", "/api/v1/health", "/api/v1/registry", "/api/v1/series", "/api/v1/spot", "/api/v1/stocks/history?symbol=TSLA"]) {
+  for (const path of ["/api/v1/dashboard", "/api/v1/health", "/api/v1/registry", "/api/v1/series", "/api/v1/spot", "/api/v1/stocks/history?symbol=TSLA", "/api/v1/stocks/quote?symbol=TSLA"]) {
     const api = await pagesAuthMiddleware({ request: new Request(`${ORIGIN}${path}`), env, next: async () => new Response("should not run"), waitUntil() {} });
     assert.equal(api.status, 401, path);
     assert.equal(api.headers.get("X-Auth-Required"), "1", path);

@@ -17,8 +17,8 @@ import {
   type SignalSnapshot,
   type Timeframe,
 } from "../../lib/regimes";
-import { aggregateStockWeeks, STOCKS, STOCK_DATA_ATTRIBUTION, type StockDefinition, type StockHistoryResponse, type StockId } from "../../lib/stocks";
-import { deleteStockHistoryCache, mergeIncrementalStockHistory, readStockHistoryCache, stockIncrementalStartDate, writeStockHistoryCache } from "../../lib/stock-cache";
+import { aggregateStockWeeks, STOCKS, STOCK_DATA_ATTRIBUTION, type StockDefinition, type StockHistoryResponse, type StockId, type StockQuote } from "../../lib/stocks";
+import { mergeIncrementalStockHistory, readStockHistoryCache, stockIncrementalStartDate, writeStockHistoryCache } from "../../lib/stock-cache";
 import { AccountControls, authenticatedFetch } from "../AuthClient";
 
 type StockHistory = {
@@ -188,6 +188,8 @@ export default function StockDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [quote, setQuote] = useState<StockQuote | null>(null);
+  const [quoteError, setQuoteError] = useState<string | null>(null);
 
   const activeStock = STOCKS.find(item => item.id === stockId) ?? STOCKS[0];
 
@@ -279,6 +281,21 @@ export default function StockDashboard() {
     return () => { cancelled = true; controller.abort(); };
   }, [activeStock, cacheReady, refreshKey]);
 
+  useEffect(() => {
+    const controller = new AbortController();
+    authenticatedFetch(`/api/v1/stocks/quote?symbol=${activeStock.symbol}&request=${Date.now()}`, { cache: "no-store", signal: controller.signal })
+      .then(async response => {
+        const body = await response.json() as StockQuote & { error?: string };
+        if (!response.ok) throw new Error(body.error ?? `Stock quote returned HTTP ${response.status}.`);
+        return body;
+      })
+      .then(body => setQuote(body))
+      .catch(reason => {
+        if (reason.name !== "AbortError") setQuoteError(reason instanceof Error ? reason.message : "Current quote is unavailable.");
+      });
+    return () => controller.abort();
+  }, [activeStock]);
+
   const calculation = useMemo(() => {
     if (!history) return null;
     const dailySignals = calculateIndicators(history.daily, "1d", EQUITY_OPTIONS);
@@ -325,18 +342,11 @@ export default function StockDashboard() {
     setCacheReady(false);
     setCacheMessage(null);
     setError(null);
+    setQuote(null);
+    setQuoteError(null);
     setLoading(true);
   };
   const refreshHistory = () => { setLoading(true); setError(null); setRefreshKey(value => value + 1); };
-  const clearCachedHistory = async () => {
-    await deleteStockHistoryCache(activeStock.symbol).catch(() => undefined);
-    historyRef.current = null;
-    setHistory(null);
-    setCacheMessage(null);
-    setError(null);
-    setLoading(true);
-    setRefreshKey(value => value + 1);
-  };
   const chooseTimeframe = (next: Timeframe) => {
     const currentSpec = INDICATOR_SPECS.find(item => item.id === indicator);
     const replacement = currentSpec?.supportedTimeframes.includes(next) ? currentSpec : INDICATOR_SPECS.find(item => item.role === role && item.supportedTimeframes.includes(next));
@@ -364,7 +374,7 @@ export default function StockDashboard() {
     <>
       {error && <div className="data-banner danger"><strong>Stock data unavailable</strong><span>{error}</span><button type="button" onClick={refreshHistory}>Retry</button></div>}
       <section className="command-row" aria-label="Stock research controls"><div className="control-group asset-control"><label htmlFor="stock">Stock</label><select id="stock" value={stockId} onChange={event => chooseStock(event.target.value as StockId)}>{STOCKS.map(item => <option key={item.id} value={item.id}>{item.symbol} · {item.label}</option>)}</select></div><div className="control-group stock-provider"><span className="control-label">Data provider</span><div className="provider-value">Yahoo Finance · NASDAQ</div></div><div className="control-group grow"><label htmlFor="stock-indicator">Indicator</label><select id="stock-indicator" value={indicator} onChange={event => { setIndicator(event.target.value); const nextRole = INDICATOR_SPECS.find(item => item.id === event.target.value)?.role; if (nextRole) setRole(nextRole); }}>{options.map(item => <option key={item.id} value={item.id}>{item.displayName}{item.id === "kk_supertrend" ? " · uncalibrated equity preset" : ""}</option>)}</select></div><div className="segmented" aria-label="Timeframe"><button type="button" className={timeframe === "1d" ? "active" : ""} onClick={() => chooseTimeframe("1d")}>1D</button><button type="button" className={timeframe === "1w" ? "active" : ""} onClick={() => chooseTimeframe("1w")}>1W</button></div></section>
-      <section className="stock-session-strip"><div><p className="eyebrow">LATEST COMPLETED NASDAQ SESSION</p><strong>{history ? formatDate(history.daily.at(-1)?.time) : "Loading stored history…"}</strong><span>{history ? `${history.stock.symbol} · ${history.adjustmentBasis}` : "Daily and Monday-based weekly bars"}</span></div><div><span>Database snapshot</span><b>{history ? formatDate(history.retrievedAt, true) : "—"}</b><small>{cacheMessage ?? "America/New_York"}</small></div><div className="stock-session-actions"><button type="button" onClick={refreshHistory} disabled={loading}>↻ {loading ? "Refreshing…" : "Reload data"}</button>{history && <button type="button" className="forget-token" onClick={clearCachedHistory}>Clear browser cache</button>}</div></section>
+      <section className="stock-session-strip"><div><p className="eyebrow">LATEST COMPLETED NASDAQ SESSION</p><strong>{history ? formatDate(history.daily.at(-1)?.time) : "Loading stored history…"}</strong><span>{history ? `${history.stock.symbol} · ${history.adjustmentBasis}` : "Daily and Monday-based weekly bars"}</span></div><div><span>Database snapshot</span><b>{history ? formatDate(history.retrievedAt, true) : "—"}</b><small>{cacheMessage ?? "America/New_York"}</small></div><div className="spot-price stock-spot"><span>CURRENT {activeStock.symbol} QUOTE · YAHOO FINANCE</span><b>{quote ? formatPrice(quote.price) : "—"}</b><small>{quote ? `${quote.marketState === "unknown" ? "Yahoo quote" : quote.marketState} · as of ${formatDate(quote.quoteTime, true)}` : quoteError ? "quote unavailable" : "fetching current price…"}</small></div></section>
 
       {loading && !history ? <LoadingView /> : calculation && history && <>
         <section className={`hero-grid ${loading ? "is-refreshing" : ""}`}><article className="chart-card"><div className="chart-heading"><div><p className="eyebrow">LAST CONFIRMED {timeframe === "1d" ? "DAILY" : "WEEKLY"} ADJUSTED CLOSE · {history.stock.exchange} · YAHOO FINANCE</p><div className="price-line"><strong>{formatPrice(current?.close)}</strong><span className={change != null && change < 0 ? "negative" : ""}>{formatPct(change, true)}</span></div></div><StateBadge state={calculation.selected.state} label={roleStateLabel(calculation.selected.role, calculation.selected.id, calculation.selected.state)} /></div><div className="chart-frame"><RegimeChart candles={calculation.candles} selected={calculation.selected} denomination="USD" timeframe={timeframe} theme={theme} />{loading && <div className="chart-refresh">Refreshing stored candles…</div>}</div><div className="chart-legend">{calculation.selected.overlays.filter(line => line.showInLegend !== false).map(line => <span key={line.name}><i style={{ background: chartColorCss(line.color) }} />{line.legendLabel ?? line.name}</span>)}{calculation.selected.ribbons.filter(ribbon => ribbon.showInLegend !== false).flatMap(ribbon => (Object.entries(ribbon.palette) as Array<[RegimeState, string]>).map(([state, color]) => <span key={`${ribbon.id}-${state}`}><i className="range-swatch" style={{ background: chartColorCss(color) }} />{titleState(state)} range</span>))}<span><i className="flip-dot" />Confirmed flip</span><span className="method-note">Signals effective next session open</span></div></article>

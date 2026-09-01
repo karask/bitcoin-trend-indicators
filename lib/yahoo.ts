@@ -7,6 +7,7 @@ import {
   stockDefinition,
   type StockHistoryQuality,
   type StockHistoryResponse,
+  type StockQuote,
   type StockSymbol,
 } from "./stocks.ts";
 import { XNAS_CALENDAR_START_YEAR, isXnasSessionComplete, isXnasSessionDate, latestCompletedXnasSession, xnasDateEpoch, xnasDateKey, xnasSessionsBetween, type XnasSession } from "./xnas-calendar.ts";
@@ -14,7 +15,7 @@ import { XNAS_CALENDAR_START_YEAR, isXnasSessionComplete, isXnasSessionDate, lat
 type FetchLike = (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
 
 interface YahooChartResult {
-  meta?: { currency?: unknown; exchangeName?: unknown; symbol?: unknown };
+  meta?: { currency?: unknown; exchangeName?: unknown; symbol?: unknown; regularMarketPrice?: unknown; chartPreviousClose?: unknown; previousClose?: unknown; regularMarketTime?: unknown; marketState?: unknown };
   timestamp?: unknown;
   indicators?: {
     quote?: Array<{ open?: unknown; high?: unknown; low?: unknown; close?: unknown; volume?: unknown }>;
@@ -213,6 +214,48 @@ export async function handleYahooStockHistoryRequest(request: Request, fetchImpl
     return privateJson(history);
   } catch (error) {
     const stockError = error instanceof StockApiError ? error : new StockApiError(500, "Stock history is unavailable");
+    return privateJson({ error: stockError.message }, stockError.status, stockError.code);
+  }
+}
+
+export async function fetchYahooStockQuote(symbol: StockSymbol, fetchImpl: FetchLike = fetch, asOfMs = Date.now()): Promise<StockQuote> {
+  const stock = stockDefinition(symbol);
+  const url = new URL(`https://query1.finance.yahoo.com/v8/finance/chart/${stock.ticker}`);
+  url.searchParams.set("range", "1d");
+  url.searchParams.set("interval", "1m");
+  let response: Response;
+  try {
+    response = await fetchImpl(url, { headers: { Accept: "application/json", "User-Agent": "Regime-Lab/1.0" }, cache: "no-store", redirect: "manual", signal: AbortSignal.timeout(10_000) });
+  } catch {
+    throw new StockApiError(502, "Yahoo Finance quote is temporarily unavailable", "yahoo_quote_fetch_failed");
+  }
+  if (response.status === 429) throw new StockApiError(429, "Yahoo Finance request limit reached; try again later", "yahoo_quote_rate_limit");
+  if (!response.ok) throw new StockApiError(502, "Yahoo Finance quote is temporarily unavailable", `yahoo_quote_status_${response.status}`);
+  let body: unknown;
+  try { body = await response.json(); } catch { throw new StockApiError(502, "Yahoo Finance returned an invalid quote payload"); }
+  const meta = resultFromBody(body).meta ?? {};
+  const price = finite(meta.regularMarketPrice);
+  if (price == null || price <= 0) throw new StockApiError(502, "Yahoo Finance returned no current quote", "yahoo_quote_empty");
+  const previousClose = finite(meta.chartPreviousClose ?? meta.previousClose);
+  const quoteEpoch = finite(meta.regularMarketTime);
+  return {
+    stock,
+    provider: STOCK_DATA_PROVIDER,
+    price,
+    previousClose: previousClose != null && previousClose > 0 ? previousClose : null,
+    currency: "USD",
+    marketState: typeof meta.marketState === "string" ? meta.marketState.toLowerCase() : "unknown",
+    quoteTime: new Date(quoteEpoch == null ? asOfMs : quoteEpoch * 1000).toISOString(),
+    retrievedAt: new Date(asOfMs).toISOString(),
+  };
+}
+
+export async function handleYahooStockQuoteRequest(request: Request, fetchImpl: FetchLike = fetch, asOfMs = Date.now()): Promise<Response> {
+  try {
+    const symbol = stockSymbolFromRequest(request);
+    return privateJson(await fetchYahooStockQuote(symbol, fetchImpl, asOfMs));
+  } catch (error) {
+    const stockError = error instanceof StockApiError ? error : new StockApiError(500, "Stock quote is unavailable");
     return privateJson({ error: stockError.message }, stockError.status, stockError.code);
   }
 }

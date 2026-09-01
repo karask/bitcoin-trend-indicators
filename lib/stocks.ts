@@ -52,6 +52,17 @@ export interface StockHistoryResponse {
   quality: StockHistoryQuality;
 }
 
+export interface StockQuote {
+  stock: StockDefinition;
+  provider: typeof STOCK_DATA_PROVIDER;
+  price: number;
+  previousClose: number | null;
+  currency: "USD";
+  marketState: string;
+  quoteTime: string;
+  retrievedAt: string;
+}
+
 export function isStockId(value: string): value is StockId {
   return STOCKS.some(stock => stock.id === value);
 }
