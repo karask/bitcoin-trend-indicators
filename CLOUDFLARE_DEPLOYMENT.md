@@ -24,7 +24,7 @@ You do **not** need to repeat the first-deployment commands below. They are reta
 - Pages Functions expose the read-only JSON API and live venue quote.
 - Cloudflare D1 stores normalized, completed daily and weekly candles.
 - The browser calculates the indicators and backtests from the stored candles.
-- One small Worker refreshes completed candles after market close. Its five free-plan triggers refresh BTC at 00:15, ETH at 00:25, SOL at 00:35, DOGE at 00:45, and LINK at 01:30 UTC. The LINK trigger also refreshes stored Yahoo Finance histories Tuesday through Saturday.
+- One small Worker refreshes completed candles after market close. Its five free-plan triggers refresh BTC at 00:15, ETH at 00:25, SOL at 00:35, DOGE at 00:45, and LINK plus XMR at 01:30 UTC. The 01:30 trigger also refreshes stored Yahoo Finance histories Tuesday through Saturday.
 - Local development continues to use `data/bitcoin-regime.sqlite`; hosted and local databases are intentionally separate.
 - Pages middleware requires a passwordless 30-day email session before serving either dashboard or any market-data API. D1 stores verified emails, HMAC-protected challenges, hashed sessions, and hashed abuse-control counters.
 - Resend delivers six-digit login codes from `login@auth.kkarasavvas.com`; Cloudflare Turnstile protects code requests from automated quota exhaustion.
@@ -52,7 +52,7 @@ npm run cf:deploy:refresh
 openssl rand -hex 32 | npx wrangler secret put REFRESH_TOKEN --config wrangler.refresh.jsonc
 ```
 
-The seed command validates all four configured venues for BTC, ETH, SOL, DOGE, and LINK. A venue with a gap, duplicate, malformed OHLC, or unavailable provider is skipped instead of silently storing bad data. The Pages source selector only lists successfully seeded venues.
+The seed command validates all configured venues for BTC, ETH, SOL, DOGE, LINK, and XMR. XMR uses Kraken only. A venue with a gap, duplicate, malformed OHLC, or unavailable provider is skipped instead of silently storing bad data. The Pages source selector only lists successfully seeded venues.
 
 The stock seed command validates complete XNAS session coverage for TSLA, GOOGL, NVDA, SPCX, MU, and SNDK before replacing each symbol's D1 snapshot. Yahoo Finance access is unofficial and intentionally limited to this personal research deployment.
 

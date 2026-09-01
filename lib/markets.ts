@@ -1,5 +1,5 @@
 export type SourceId = "bitstamp" | "binance" | "kraken" | "coinbase";
-export type AssetId = "btc" | "eth" | "sol" | "doge" | "link";
+export type AssetId = "btc" | "eth" | "sol" | "doge" | "link" | "xmr";
 
 export interface AssetDefinition {
   id: AssetId;
@@ -30,6 +30,7 @@ export const ASSETS: AssetDefinition[] = [
   { id: "sol", label: "Solana", symbol: "SOL", defaultSource: "coinbase" },
   { id: "doge", label: "Dogecoin", symbol: "DOGE", defaultSource: "coinbase" },
   { id: "link", label: "Chainlink", symbol: "LINK", defaultSource: "coinbase" },
+  { id: "xmr", label: "Monero", symbol: "XMR", defaultSource: "kraken" },
 ];
 
 export const SOURCES: SourceDefinition[] = [
@@ -53,6 +54,7 @@ export const SOURCES: SourceDefinition[] = [
   { asset: "link", id: "binance", label: "Binance", market: "LINK/USDT", denomination: "USDT", providerSymbol: "LINKUSDT", historyStart: Date.UTC(2019, 0, 16), historyNote: "Canonical long-history LINK/USDT series from January 2019" },
   { asset: "link", id: "kraken", label: "Kraken", market: "LINK/USD", denomination: "USD", providerSymbol: "LINKUSD", historyStart: Date.UTC(2019, 8, 25), historyNote: "LINK/USD validation; public REST returns its latest 720 candles" },
   { asset: "link", id: "coinbase", label: "Coinbase Exchange", market: "LINK/USD", denomination: "USD", providerSymbol: "LINK-USD", historyStart: Date.UTC(2019, 5, 27), historyNote: "LINK/USD validation history from June 2019" },
+  { asset: "xmr", id: "kraken", label: "Kraken", market: "XMR/USD", denomination: "USD", providerSymbol: "XMRUSD", historyStart: Date.UTC(2014, 7, 21), historyNote: "XMR/USD validation; Kraken public REST returns its latest 720 candles" },
 ];
 
 export function sourcesForAsset(asset: AssetId): SourceDefinition[] {

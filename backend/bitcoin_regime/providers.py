@@ -41,6 +41,9 @@ MARKETS = {
         "kraken": ("LINK/USD", "LINKUSD", datetime(2019, 9, 25, tzinfo=timezone.utc)),
         "coinbase": ("LINK/USD", "LINK-USD", datetime(2019, 6, 27, tzinfo=timezone.utc)),
     },
+    "xmr": {
+        "kraken": ("XMR/USD", "XMRUSD", datetime(2014, 8, 21, tzinfo=timezone.utc)),
+    },
 }
 
 

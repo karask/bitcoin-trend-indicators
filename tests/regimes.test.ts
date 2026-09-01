@@ -147,9 +147,9 @@ test("KK Supertrend is registered immediately after SuperTrend with fixed crypto
   const kkIndex = INDICATOR_SPECS.findIndex(spec => spec.id === "kk_supertrend");
   assert.equal(kkIndex, supertrendIndex + 1);
   assert.equal(KK_SUPERTREND_ATR_LENGTH, 10);
-  assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3 });
+  assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3 });
   assert.equal(KK_SUPERTREND_EQUITY_FACTOR, 3);
-  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { atr: 10, btcFactor: 3, ethFactor: 2, solFactor: 2, dogeFactor: 3, linkFactor: 3 });
+  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { atr: 10, btcFactor: 3, ethFactor: 2, solFactor: 2, dogeFactor: 3, linkFactor: 3, xmrFactor: 3 });
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /screenshot-calibrated/i);
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /does not claim to reproduce/i);
 });
@@ -183,8 +183,8 @@ test("BTC KK Supertrend is point-for-point identical to SuperTrend 10/3", () => 
   assert.deepEqual(kk.values, standard.values);
 });
 
-test("DOGE and LINK KK Supertrend use the explicit uncalibrated SuperTrend 10/3 preset", () => {
-  for (const asset of ["doge", "link"] as const) {
+test("DOGE, LINK, and XMR KK Supertrend use the explicit uncalibrated SuperTrend 10/3 preset", () => {
+  for (const asset of ["doge", "link", "xmr"] as const) {
     const results = calculateIndicators(history(), "1d", { asset });
     const standard = results.find(item => item.id === "supertrend")!;
     const kk = results.find(item => item.id === "kk_supertrend")!;
@@ -366,10 +366,11 @@ test("spot ticker payloads are parsed for every supported venue", () => {
 });
 
 test("all crypto assets expose isolated venue definitions and useful history", () => {
-  assert.deepEqual(ASSETS.map(asset => asset.id), ["btc", "eth", "sol", "doge", "link"]);
-  for (const asset of ASSETS) assert.equal(sourcesForAsset(asset.id).length, 4);
+  assert.deepEqual(ASSETS.map(asset => asset.id), ["btc", "eth", "sol", "doge", "link", "xmr"]);
+  for (const asset of ASSETS.filter(asset => asset.id !== "xmr")) assert.equal(sourcesForAsset(asset.id).length, 4);
+  assert.deepEqual(sourcesForAsset("xmr").map(source => source.id), ["kraken"]);
   assert.equal(ASSETS.find(asset => asset.id === "sol")!.defaultSource, "coinbase");
-  assert.equal(SOURCES.length, 20);
+  assert.equal(SOURCES.length, 21);
   assert.equal(marketDefinition("eth", "bitstamp").providerSymbol, "ethusd");
   assert.equal(marketDefinition("eth", "coinbase").historyStart, Date.UTC(2016, 4, 23));
   assert.equal(marketDefinition("sol", "binance").providerSymbol, "SOLUSDT");
@@ -378,13 +379,16 @@ test("all crypto assets expose isolated venue definitions and useful history", (
   assert.equal(marketDefinition("doge", "coinbase").historyStart, Date.UTC(2021, 5, 3));
   assert.equal(marketDefinition("link", "binance").providerSymbol, "LINKUSDT");
   assert.equal(marketDefinition("link", "coinbase").historyStart, Date.UTC(2019, 5, 27));
+  assert.equal(marketDefinition("xmr", "kraken").providerSymbol, "XMRUSD");
+  assert.equal(marketDefinition("xmr", "kraken").market, "XMR/USD");
   assert.deepEqual(MIN_SOURCE_CANDLES, { "1d": 200, "1w": 52 });
 });
 
 test("asset changes preserve the selected exchange when it supports the next asset", () => {
   for (const asset of ASSETS) {
     for (const source of ["bitstamp", "binance", "kraken", "coinbase"] as const) {
-      assert.equal(resolveSourceForAsset(asset.id, source), source, `${asset.id} should preserve ${source}`);
+      const expected = sourcesForAsset(asset.id).some(item => item.id === source) ? source : asset.defaultSource;
+      assert.equal(resolveSourceForAsset(asset.id, source), expected, `${asset.id} source resolution for ${source}`);
     }
     assert.equal(resolveSourceForAsset(asset.id, "unsupported"), asset.defaultSource);
   }

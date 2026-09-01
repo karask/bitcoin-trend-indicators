@@ -55,7 +55,7 @@ class ResearchService:
         async with self._refresh_lock:
             results = []
             for asset in MARKETS:
-                for source in PROVIDERS:
+                for source in MARKETS[asset]:
                     results.append(await asyncio.to_thread(self.refresh_source, asset, source))
             for asset in MARKETS:
                 for timeframe in ("1d", "1w"):
