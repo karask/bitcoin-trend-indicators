@@ -6,8 +6,9 @@ import RegimeChart, { chartColorCss, type Theme } from "./RegimeChart";
 import { confirmationClock } from "../lib/confirmation-clock";
 import { resolveInitialTheme } from "../lib/chart-interaction";
 import { buildDashboardPayload } from "../lib/dashboard-calculation";
+import { cryptoIncrementalStart, mergeCryptoDataset, readCryptoHistoryCache, writeCryptoHistoryCache } from "../lib/crypto-cache";
 import type { MarketDataset } from "../lib/market-data";
-import { marketDefinition, resolveSourceForAsset, type AssetId, type SourceId } from "../lib/markets";
+import { marketDefinition, resolveSourceForAsset, sourcesForAsset, type AssetId, type SourceId } from "../lib/markets";
 import { SUPER_GUPPY_R12_DEFAULTS, type SuperGuppyConfig, type SuperGuppySource } from "../lib/regimes";
 import { AccountControls, authenticatedFetch } from "./AuthClient";
 
@@ -97,13 +98,13 @@ function LoadingView() { return <div className="loading-grid" aria-label="Loadin
 export default function RegimeDashboard() {
   const [asset, setAsset] = useState<AssetId>("btc"), [source, setSource] = useState<SourceId>("bitstamp"), [timeframe, setTimeframe] = useState<Timeframe>("1w"), [indicator, setIndicator] = useState("support_band"), [role, setRole] = useState<Role>("regime");
   const [theme, setTheme] = useState<Theme>("light");
-  const [data, setData] = useState<Payload | null>(null), [loading, setLoading] = useState(true), [error, setError] = useState<string | null>(null), [installPrompt, setInstallPrompt] = useState<Event | null>(null);
+  const [marketHistory, setMarketHistory] = useState<BrowserCalculationResponse | null>(null), [loading, setLoading] = useState(true), [error, setError] = useState<string | null>(null), [installPrompt, setInstallPrompt] = useState<Event | null>(null);
   const [spot, setSpot] = useState<SpotQuote | null>(null), [spotError, setSpotError] = useState<string | null>(null);
   const [guppyConfig, setGuppyConfig] = useState<SuperGuppyConfig>(freshGuppyDefaults);
   const [fastLengthsText, setFastLengthsText] = useState(SUPER_GUPPY_R12_DEFAULTS.fastLengths.join(",")), [slowLengthsText, setSlowLengthsText] = useState(SUPER_GUPPY_R12_DEFAULTS.slowLengths.join(","));
   // Keep the server render and first browser render identical. The real clock is
   // installed immediately after hydration, then advances once per minute.
-  const [clock, setClock] = useState(0), [refreshTick, setRefreshTick] = useState(0);
+  const [clock, setClock] = useState(0);
   useEffect(() => {
     const root = document.documentElement, media = window.matchMedia("(prefers-color-scheme: dark)");
     const saved = window.localStorage.getItem("crypto-regime-theme");
@@ -117,21 +118,57 @@ export default function RegimeDashboard() {
   }, []);
   useEffect(() => { const capture = (event: Event) => { event.preventDefault(); setInstallPrompt(event); }; window.addEventListener("beforeinstallprompt", capture); return () => window.removeEventListener("beforeinstallprompt", capture); }, []);
   useEffect(() => { const frame = window.requestAnimationFrame(() => setClock(Date.now())); const timer = window.setInterval(() => setClock(Date.now()), 60_000); return () => { window.cancelAnimationFrame(frame); window.clearInterval(timer); }; }, []);
-  useEffect(() => { const timer = window.setInterval(() => setRefreshTick(value => value + 1), 5 * 60_000); return () => window.clearInterval(timer); }, []);
   useEffect(() => {
     const controller = new AbortController();
-    const guppyQuery = indicator === "super_guppy" ? `&guppy=${encodeURIComponent(JSON.stringify(guppyConfig))}` : "";
-    authenticatedFetch(`/api/v1/dashboard?asset=${asset}&source=${source}&timeframe=${timeframe}&indicator=${indicator}${guppyQuery}`, { signal: controller.signal, cache: "no-store" }).then(async response => {
-      const result = await response.json() as (Payload | BrowserCalculationResponse) & { error?: string };
-      if (!response.ok) throw new Error(result.error ?? `Research API returned ${response.status}`);
-      const payload = "calculation" in result && result.calculation === "browser"
-        ? { ...buildDashboardPayload(asset, source, timeframe, indicator, result.daily, result.weekly, { superGuppy: guppyConfig }), ...(result.sources ? { sources: result.sources } : {}) } as Payload
-        : result as Payload;
-      if (!Array.isArray(payload.candles) || !payload.dataset) throw new Error("Research API returned an incomplete dashboard payload");
-      return payload;
-    }).then((payload: Payload) => { setData(payload); setError(null); setLoading(false); }).catch(reason => { if (reason.name !== "AbortError") { setError(reason.message); setLoading(false); } });
-    return () => controller.abort();
-  }, [asset, source, timeframe, indicator, refreshTick, guppyConfig]);
+    let cancelled = false;
+    const load = async () => {
+      setLoading(true);
+      setError(null);
+      setMarketHistory(null);
+      const cached = await readCryptoHistoryCache(asset, source).catch(() => null);
+      if (cached && !cancelled) setMarketHistory({ calculation: "browser", ...cached, sources: sourcesForAsset(asset) });
+
+      await authenticatedFetch("/api/v1/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ market: "crypto", asset, source }),
+        cache: "no-store",
+        signal: controller.signal,
+      }).catch(() => null);
+
+      const dailyStart = cached ? cryptoIncrementalStart(cached.daily) : undefined;
+      const weeklyStart = cached ? cryptoIncrementalStart(cached.weekly) : undefined;
+      const query = new URLSearchParams({ asset, source });
+      if (dailyStart != null) query.set("dailyStart", String(dailyStart));
+      if (weeklyStart != null) query.set("weeklyStart", String(weeklyStart));
+      const requestHistory = async (incremental: boolean) => {
+        const requestQuery = incremental ? query : new URLSearchParams({ asset, source });
+        const response = await authenticatedFetch(`/api/v1/dashboard?${requestQuery}`, { signal: controller.signal, cache: "no-store" });
+        const result = await response.json() as BrowserCalculationResponse & { error?: string };
+        if (!response.ok) throw new Error(result.error ?? `Research API returned ${response.status}`);
+        return result;
+      };
+      let result = await requestHistory(Boolean(cached));
+      if (cached) {
+        const daily = mergeCryptoDataset(cached.daily, result.daily, dailyStart);
+        const weekly = mergeCryptoDataset(cached.weekly, result.weekly, weeklyStart);
+        if (!daily || !weekly) result = await requestHistory(false);
+        else result = { ...result, daily, weekly };
+      }
+      if (cancelled) return;
+      if (!result.daily.candles.length || !result.weekly.candles.length) throw new Error("Research API returned incomplete market history");
+      setMarketHistory(result);
+      setLoading(false);
+      await writeCryptoHistoryCache(asset, source, { daily: result.daily, weekly: result.weekly }).catch(() => undefined);
+    };
+    load().catch(reason => {
+      if (reason.name !== "AbortError" && !cancelled) {
+        setError(reason instanceof Error ? reason.message : "Market history is unavailable");
+        setLoading(false);
+      }
+    });
+    return () => { cancelled = true; controller.abort(); };
+  }, [asset, source]);
   useEffect(() => {
     const controller = new AbortController();
     authenticatedFetch(`/api/v1/spot?asset=${asset}&source=${source}&request=${Date.now()}`, { signal: controller.signal, cache: "no-store" }).then(async response => {
@@ -140,7 +177,11 @@ export default function RegimeDashboard() {
       return payload;
     }).then(payload => { setSpot(payload); setSpotError(null); }).catch(reason => { if (reason.name !== "AbortError") { setSpot(null); setSpotError(reason.message); } });
     return () => controller.abort();
-  }, [asset, source, refreshTick]);
+  }, [asset, source]);
+
+  const data = useMemo(() => marketHistory
+    ? { ...buildDashboardPayload(asset, source, timeframe, indicator, marketHistory.daily, marketHistory.weekly, { superGuppy: guppyConfig }), ...(marketHistory.sources ? { sources: marketHistory.sources } : {}) } as Payload
+    : null, [asset, source, timeframe, indicator, marketHistory, guppyConfig]);
 
   const options = useMemo(() => data?.registry.filter(item => item.supportedTimeframes.includes(timeframe)) ?? [], [data, timeframe]);
   const items = role === "regime" ? data?.matrix ?? [] : (data?.supporting ?? []).filter(item => item.role === role);
@@ -158,10 +199,10 @@ export default function RegimeDashboard() {
     return selected && !topRanked.some(row => row.indicatorId === selected.indicatorId) ? [...topRanked, selected] : topRanked;
   })() : [];
   const beginRefresh = () => { setLoading(true); setError(null); };
-  const chooseRole = (next: Role) => { beginRefresh(); setRole(next); const nextIndicator = data?.registry.find(item => item.role === next && item.supportedTimeframes.includes(timeframe)); if (nextIndicator) setIndicator(nextIndicator.id); };
-  const chooseTimeframe = (next: Timeframe) => { beginRefresh(); const currentSpec = data?.registry.find(item => item.id === indicator); const nextIndicator = currentSpec?.supportedTimeframes.includes(next) ? currentSpec : data?.registry.find(item => item.role === role && item.supportedTimeframes.includes(next)); setTimeframe(next); if (nextIndicator) setIndicator(nextIndicator.id); };
+  const chooseRole = (next: Role) => { setRole(next); const nextIndicator = data?.registry.find(item => item.role === next && item.supportedTimeframes.includes(timeframe)); if (nextIndicator) setIndicator(nextIndicator.id); };
+  const chooseTimeframe = (next: Timeframe) => { const currentSpec = data?.registry.find(item => item.id === indicator); const nextIndicator = currentSpec?.supportedTimeframes.includes(next) ? currentSpec : data?.registry.find(item => item.role === role && item.supportedTimeframes.includes(next)); setTimeframe(next); if (nextIndicator) setIndicator(nextIndicator.id); };
   const chooseAsset = (next: AssetId) => { beginRefresh(); setAsset(next); setSource(resolveSourceForAsset(next, source)); setSpot(null); };
-  const updateGuppy = <K extends keyof SuperGuppyConfig>(key: K, value: SuperGuppyConfig[K]) => { beginRefresh(); setGuppyConfig(currentConfig => ({ ...currentConfig, [key]: value })); };
+  const updateGuppy = <K extends keyof SuperGuppyConfig>(key: K, value: SuperGuppyConfig[K]) => setGuppyConfig(currentConfig => ({ ...currentConfig, [key]: value }));
   const applyGuppyLengths = (group: "fast" | "slow") => {
     const text = group === "fast" ? fastLengthsText : slowLengthsText, expected = group === "fast" ? 11 : 16;
     const parsed = text.split(",").map(value => Number(value.trim()));
@@ -169,7 +210,7 @@ export default function RegimeDashboard() {
     else if (group === "fast") setFastLengthsText(guppyConfig.fastLengths.join(","));
     else setSlowLengthsText(guppyConfig.slowLengths.join(","));
   };
-  const resetGuppy = () => { const defaults = freshGuppyDefaults(); beginRefresh(); setGuppyConfig(defaults); setFastLengthsText(defaults.fastLengths.join(",")); setSlowLengthsText(defaults.slowLengths.join(",")); };
+  const resetGuppy = () => { const defaults = freshGuppyDefaults(); setGuppyConfig(defaults); setFastLengthsText(defaults.fastLengths.join(",")); setSlowLengthsText(defaults.slowLengths.join(",")); };
   const toggleTheme = () => {
     const next: Theme = theme === "dark" ? "light" : "dark"; document.documentElement.dataset.theme = next; window.localStorage.setItem("crypto-regime-theme", next); setTheme(next);
     let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"][data-runtime-theme]');
@@ -183,7 +224,7 @@ export default function RegimeDashboard() {
     <header className="topbar"><div className="brand-lockup"><div className="brand-mark">{activeAsset.symbol}</div><div><p className="eyebrow">CRYPTO REGIME LAB · {activeAsset.label.toUpperCase()}</p><h1>Trend regimes, without the black box.</h1></div></div><div className="header-actions"><nav className="lab-nav" aria-label="Research labs"><a href="/" aria-current="page">Crypto</a><a href="/stocks">Stocks</a></nav>{installPrompt && <button className="install-button" onClick={() => { (installPrompt as Event & { prompt: () => void }).prompt(); setInstallPrompt(null); }}>Install app</button>}<div className={`freshness ${data?.dataset.stale ? "stale" : ""}`}><span />{data ? `${data.dataset.stale ? "Stale" : "Confirmed through"} · ${formatDate(confirmedThrough)}` : "Loading exchange data"}</div><AccountControls /><button className="theme-toggle" type="button" onClick={toggleTheme} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`} title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}><span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span><b>{theme === "dark" ? "Light" : "Dark"}</b></button></div></header>
     {data?.dataset.warning && <div className={`data-banner ${data.dataset.demo ? "danger" : "warning"}`}><strong>{data.dataset.demo ? "Demonstration data — no confirmed signal" : "Source quality warning"}</strong><span>{data.dataset.warning}</span></div>}
     {error && <div className="data-banner danger"><strong>Research API unavailable</strong><span>{error}</span><button onClick={() => window.location.reload()}>Retry</button></div>}
-    <section className="command-row" aria-label="Research controls"><div className="control-group asset-control"><label htmlFor="asset">Asset</label><select id="asset" value={asset} onChange={event => chooseAsset(event.target.value as AssetId)}>{(data?.assets ?? ASSET_OPTIONS).map(item => <option key={item.id} value={item.id}>{item.symbol} · {item.label}</option>)}</select></div><div className="control-group"><label htmlFor="market">Market source</label><select id="market" value={source} onChange={event => { beginRefresh(); setSource(event.target.value as SourceId); }}>{(data?.dataset.asset === asset ? data.sources : []).length ? data!.sources.map(item => <option key={item.id} value={item.id}>{item.label} · {item.market}</option>) : <option value={source}>{activeMarket.label} · {activeMarket.market}</option>}</select></div><div className="control-group grow"><label htmlFor="indicator">Indicator</label><select id="indicator" value={indicator} onChange={event => { beginRefresh(); setIndicator(event.target.value); const selectedRole = data?.registry.find(item => item.id === event.target.value)?.role; if (selectedRole) setRole(selectedRole); }}>{options.map(item => <option key={item.id} value={item.id}>{item.displayName}</option>)}</select></div><div className="segmented" aria-label="Timeframe"><button className={timeframe === "1d" ? "active" : ""} onClick={() => chooseTimeframe("1d")}>1D</button><button className={timeframe === "1w" ? "active" : ""} onClick={() => chooseTimeframe("1w")}>1W</button></div></section>
+    <section className="command-row" aria-label="Research controls"><div className="control-group asset-control"><label htmlFor="asset">Asset</label><select id="asset" value={asset} onChange={event => chooseAsset(event.target.value as AssetId)}>{(data?.assets ?? ASSET_OPTIONS).map(item => <option key={item.id} value={item.id}>{item.symbol} · {item.label}</option>)}</select></div><div className="control-group"><label htmlFor="market">Market source</label><select id="market" value={source} onChange={event => { beginRefresh(); setSource(event.target.value as SourceId); }}>{(data?.dataset.asset === asset ? data.sources : []).length ? data!.sources.map(item => <option key={item.id} value={item.id}>{item.label} · {item.market}</option>) : <option value={source}>{activeMarket.label} · {activeMarket.market}</option>}</select></div><div className="control-group grow"><label htmlFor="indicator">Indicator</label><select id="indicator" value={indicator} onChange={event => { setIndicator(event.target.value); const selectedRole = data?.registry.find(item => item.id === event.target.value)?.role; if (selectedRole) setRole(selectedRole); }}>{options.map(item => <option key={item.id} value={item.id}>{item.displayName}</option>)}</select></div><div className="segmented" aria-label="Timeframe"><button className={timeframe === "1d" ? "active" : ""} onClick={() => chooseTimeframe("1d")}>1D</button><button className={timeframe === "1w" ? "active" : ""} onClick={() => chooseTimeframe("1w")}>1W</button></div></section>
     {indicator === "super_guppy" && <details className="indicator-settings" open><summary><span><b>Super Guppy R1.2 settings</b><small>Published defaults are loaded; every R1.2 input relevant to daily/weekly candles is available.</small></span><button type="button" onClick={event => { event.preventDefault(); resetGuppy(); }}>Reset defaults</button></summary><div className="settings-grid"><label><span>Source</span><select value={guppyConfig.source} onChange={event => updateGuppy("source", event.target.value as SuperGuppySource)}>{GUPPY_SOURCES.map(item => <option value={item.value} key={item.value}>{item.label}</option>)}</select></label><label><span>Repeat lookback</span><input type="number" min="0" max="100" value={guppyConfig.lookback} onChange={event => updateGuppy("lookback", Number(event.target.value))} /></label><label><span>Anchor (minutes)</span><select value={guppyConfig.anchorMinutes} onChange={event => updateGuppy("anchorMinutes", Number(event.target.value))}><option value="0">Current timeframe</option><option value="1440">1440 · Daily anchor</option></select><small>R1.2 anchor affects intraday charts only; both choices are equivalent here.</small></label><label className="length-input"><span>11 Trader EMA lengths</span><input value={fastLengthsText} onChange={event => setFastLengthsText(event.target.value)} onBlur={() => applyGuppyLengths("fast")} aria-label="Eleven comma-separated Trader EMA lengths" /></label><label className="length-input"><span>16 Investor EMA lengths</span><input value={slowLengthsText} onChange={event => setSlowLengthsText(event.target.value)} onBlur={() => applyGuppyLengths("slow")} aria-label="Sixteen comma-separated Investor EMA lengths" /></label></div><div className="setting-toggles"><label><input type="checkbox" checked={guppyConfig.showSwing} onChange={event => updateGuppy("showSwing", event.target.checked)} /><span>Swing arrows</span></label><label><input type="checkbox" checked={guppyConfig.showBreak} onChange={event => updateGuppy("showBreak", event.target.checked)} /><span>Trend Break arrows</span></label><label><input type="checkbox" checked={guppyConfig.requireConfluence} onChange={event => updateGuppy("requireConfluence", event.target.checked)} /><span>Require group confluence</span></label><label><input type="checkbox" checked={guppyConfig.candleChangeRetriggers} onChange={event => updateGuppy("candleChangeRetriggers", event.target.checked)} /><span>Candle-change Swing retriggers</span></label><label><input type="checkbox" checked={guppyConfig.showAverages} onChange={event => updateGuppy("showAverages", event.target.checked)} /><span>Show group averages</span></label><label><input type="checkbox" checked={guppyConfig.showEma200} onChange={event => updateGuppy("showEma200", event.target.checked)} /><span>Show EMA 200</span></label><label><input type="checkbox" checked={guppyConfig.ema200Filter} onChange={event => updateGuppy("ema200Filter", event.target.checked)} /><span>Use EMA 200 filter</span></label><label><input type="checkbox" checked={guppyConfig.colorBars} onChange={event => updateGuppy("colorBars", event.target.checked)} /><span>Color candles by Trader group</span></label></div></details>}
     <section className="close-countdown market-status-strip" aria-live="polite" aria-label={`${closeClock.title}: ${closeClock.remaining} remaining`}><div className="confirmation-status"><p className="eyebrow">CONFIRMATION CLOCK · UTC</p><strong>{closeClock.title}</strong><span>{closeClock.boundary}</span></div><div className="countdown-value"><b>{closeClock.remaining}</b><small>remaining</small></div><div className="snapshot-status"><span>DATA SNAPSHOT · {(data?.dataset.sourceLabel ?? source).toUpperCase()}</span><b>{formatSnapshot(data?.dataset.retrievedAt)}</b><small>{data?.dataset.lastCandle ? `confirmed through ${formatDate(confirmedThrough)}` : "loading completed candles…"}</small></div><div className="spot-price"><span>LIVE {activeAsset.symbol} SPOT · {(activeSpot?.sourceLabel ?? data?.dataset.sourceLabel ?? source).toUpperCase()}</span><b>{activeSpot ? formatPrice(activeSpot.price, activeSpot.denomination) : "—"}</b><small>{activeSpot ? `${activeSpot.fallback ? "fallback quote · " : ""}fetched ${new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: "UTC" }).format(new Date(activeSpot.retrievedAt))} UTC` : spotError ? "quote unavailable" : "fetching current price…"}</small></div></section>
     {loading && !data ? <LoadingView /> : data && <>
@@ -191,7 +232,7 @@ export default function RegimeDashboard() {
         <aside className="signal-panel"><p className="eyebrow">CURRENT EVIDENCE</p><h2>{data.selected.shortName}</h2><div className="current-state-row"><StateBadge state={data.selected.state} label={roleStateLabel(data.selected.role, data.selected.id, data.selected.state)} /><span>since {formatDate(data.selected.lastFlip)}</span></div>{data.selected.role !== "valuation" && (data.selected.bullTrigger != null || data.selected.bearTrigger != null) && <>{triggerCard(triggerLabels[0], data.selected.bullTrigger, "bull-trigger")}{triggerCard(triggerLabels[1], data.selected.bearTrigger, "bear-trigger")}</>}<div className="method-card"><span>RULE</span><p>{data.selected.explanation}</p><b>{data.selected.triggerLabel}</b></div>{data.selected.disclaimer && <div className="proxy-note"><strong>Implementation note</strong>{data.selected.disclaimer}</div>}<p className="disclaimer">Research view only. No live orders or individualized allocation advice.</p></aside></section>
       <section className="guidance-card" aria-label={`${data.selected.displayName} interpretation guide`}><div className="guidance-heading"><div><p className="eyebrow">HOW TO INTERPRET IT</p><h2>{data.selected.guidance.summary}</h2></div>{data.selected.sourceUrl && <a href={data.selected.sourceUrl} target="_blank" rel="noreferrer">Published method ↗</a>}</div><div className="guidance-grid">{([data.selected.guidance.positive, data.selected.guidance.neutral, data.selected.guidance.negative] as Guidance["positive"][]).map((item, index) => <article className={["positive", "neutral", "negative"][index]} key={item.label}><span>{item.label}</span><p>{item.rule}</p></article>)}</div><div className="guidance-notes"><p><strong>Why this rule exists</strong>{data.selected.guidance.rationale}</p><ul>{data.selected.guidance.caveats.map(caveat => <li key={caveat}>{caveat}</li>)}</ul></div></section>
       <section className="family-strip" aria-label="Regime family agreement"><div><p className="eyebrow">FAMILY AGREEMENT</p><h2>Correlated models get one family voice</h2></div><div className="family-summary"><b className="bull-text">{data.familyAgreement.bull} bull</b><b className="neutral-text">{data.familyAgreement.neutral} neutral</b><b className="bear-text">{data.familyAgreement.bear} bear</b></div><div className="family-chips">{familyRows.map(row => <span key={row.family} className={row.state}><i />{row.family}<small>{row.members} model{row.members === 1 ? "" : "s"}</small></span>)}</div></section>
-      <section className="matrix-card"><div className="section-heading"><div><p className="eyebrow">MODEL COMPARISON</p><h2>Current state matrix</h2></div><div className="category-tabs" role="tablist">{ROLES.map(item => <button role="tab" aria-selected={role === item.id} className={role === item.id ? "active" : ""} key={item.id} onClick={() => chooseRole(item.id)}>{item.label}</button>)}</div></div><div className="matrix-table"><div className="matrix-header"><span>Model</span><span>Family</span><span>Daily</span><span>Weekly</span><span>Last flip</span><span>Next condition</span></div>{items.map(item => { const dailyState = item.dailyState ?? (timeframe === "1d" ? item.state : null), weeklyState = item.weeklyState ?? (timeframe === "1w" ? item.state : null); return <button className={`matrix-row ${indicator === item.id ? "selected" : ""}`} key={item.id} onClick={() => { beginRefresh(); setIndicator(item.id); }}><span><strong>{item.shortName}</strong><small>{item.thresholdKind}</small></span><span>{item.family}</span><StateBadge state={dailyState} label={roleStateLabel(item.role, item.id, dailyState)} compact /><StateBadge state={weeklyState} label={roleStateLabel(item.role, item.id, weeklyState)} compact /><span>{formatDate(timeframe === "1d" ? item.dailyLastFlip ?? item.lastFlip : item.weeklyLastFlip ?? item.lastFlip)}</span><b>{item.nextCondition}</b></button>; })}{!items.length && <p className="empty-state">No {role} model supports this timeframe.</p>}</div><p className="matrix-footnote">Fixed thresholds are known from prior completed candles. Provisional levels can move with unfinished OHLC. Conditional models cannot be reduced to one guaranteed price.</p></section>
+      <section className="matrix-card"><div className="section-heading"><div><p className="eyebrow">MODEL COMPARISON</p><h2>Current state matrix</h2></div><div className="category-tabs" role="tablist">{ROLES.map(item => <button role="tab" aria-selected={role === item.id} className={role === item.id ? "active" : ""} key={item.id} onClick={() => chooseRole(item.id)}>{item.label}</button>)}</div></div><div className="matrix-table"><div className="matrix-header"><span>Model</span><span>Family</span><span>Daily</span><span>Weekly</span><span>Last flip</span><span>Next condition</span></div>{items.map(item => { const dailyState = item.dailyState ?? (timeframe === "1d" ? item.state : null), weeklyState = item.weeklyState ?? (timeframe === "1w" ? item.state : null); return <button className={`matrix-row ${indicator === item.id ? "selected" : ""}`} key={item.id} onClick={() => setIndicator(item.id)}><span><strong>{item.shortName}</strong><small>{item.thresholdKind}</small></span><span>{item.family}</span><StateBadge state={dailyState} label={roleStateLabel(item.role, item.id, dailyState)} compact /><StateBadge state={weeklyState} label={roleStateLabel(item.role, item.id, weeklyState)} compact /><span>{formatDate(timeframe === "1d" ? item.dailyLastFlip ?? item.lastFlip : item.weeklyLastFlip ?? item.lastFlip)}</span><b>{item.nextCondition}</b></button>; })}{!items.length && <p className="empty-state">No {role} model supports this timeframe.</p>}</div><p className="matrix-footnote">Fixed thresholds are known from prior completed candles. Provisional levels can move with unfinished OHLC. Conditional models cannot be reduced to one guaranteed price.</p></section>
       <section className="research-grid"><article className="research-card wide"><div className="section-heading"><div><p className="eyebrow">NEXT-OPEN BACKTEST</p><h2>Fixed presets, honest execution</h2></div><span className="assumption-pill">15 bps turnover</span></div><div className="backtest-table"><div className="backtest-head"><span>Model</span><span>CAGR</span><span>Max DD</span><span>Calmar</span><span>Exposure</span><span>Flips</span></div>{visibleBacktests.map(row => <div className="backtest-row" key={row.indicatorId}><strong>{row.displayName}</strong><span>{formatPct(row.cagr)}</span><span className="negative">{formatPct(row.maxDrawdown)}</span><b>{row.calmar?.toFixed(2) ?? "—"}</b><span>{formatPct(row.exposure)}</span><span>{row.flips}</span></div>)}</div></article>
         <article className="research-card wide"><p className="eyebrow">DATA PROVENANCE</p><h2>{data.dataset.sourceLabel} · {data.dataset.market}</h2><dl><div><dt>Calculation history</dt><dd>{data.dataset.candleCount.toLocaleString()} bars</dd></div><div><dt>Visible chart</dt><dd>Last {data.dataset.chartCandleCount} bars</dd></div><div><dt>Series begins</dt><dd>{formatDate(data.dataset.firstCandle)}</dd></div><div><dt>Storage</dt><dd>{data.dataset.storage === "sqlite" ? "Local SQLite cache" : data.dataset.storage === "d1" ? "Cloudflare D1" : data.dataset.storage === "provider" ? "Fresh provider import" : "Demo only"}</dd></div><div><dt>SHA-256</dt><dd className="checksum">{data.dataset.checksum.slice(0, 12)}…</dd></div><div><dt>Quality</dt><dd>{Object.values(data.dataset.quality).every(value => value === 0) ? "Passed" : "Review"}</dd></div></dl><p>Venues are never spliced and missing prices are never forward-filled.</p></article></section>
       <footer><p>Crypto Regime Lab separates price regimes, confirmation, exits, and valuation. It does not optimize presets against {data.dataset.assetLabel} history.</p><nav><a href="/api/v1/registry">Registry JSON</a><a href={`/api/v1/series?asset=${asset}&source=${source}&timeframe=${timeframe}`}>Series JSON</a><a href={`/api/v1/health?asset=${asset}`}>Source health</a></nav></footer>

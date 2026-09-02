@@ -21,15 +21,15 @@ You do **not** need to repeat the first-deployment commands below. They are reta
 ## Architecture
 
 - Cloudflare Pages serves the installable static PWA.
-- Pages Functions expose the read-only JSON API and live venue quote.
+- Pages Functions expose the authenticated JSON APIs, current quotes, and a same-origin on-demand sync that writes only validated completed candles when the selected D1 snapshot is behind.
 - Cloudflare D1 stores normalized, completed daily and weekly candles.
-- The browser calculates the indicators and backtests from the stored candles.
+- The browser keeps full per-market history in IndexedDB, requests only overlapping D1 tails on later visits, and calculates indicators and backtests from that complete local series.
 - One small Worker refreshes completed candles after market close. Its five free-plan triggers refresh BTC at 00:15, ETH at 00:25, SOL at 00:35, DOGE at 00:45, and LINK plus XMR at 01:30 UTC. The 01:30 trigger also refreshes stored Yahoo Finance histories Tuesday through Saturday.
 - Local development continues to use `data/bitcoin-regime.sqlite`; hosted and local databases are intentionally separate.
 - Pages middleware requires a passwordless 30-day email session before serving either dashboard or any market-data API. D1 stores verified emails, HMAC-protected challenges, hashed sessions, and hashed abuse-control counters.
 - Resend delivers six-digit login codes from `login@auth.kkarasavvas.com`; Cloudflare Turnstile protects code requests from automated quota exhaustion.
 
-The PWA shell is cached. Market API responses are not cached by the service worker, so stale data is visibly labeled and cannot create a new confirmed flip.
+Only static manifest/icon assets are service-worker cached. Dashboard pages and market APIs are network-only. There is no five-minute polling: a page load or market change checks freshness, synchronizes D1 only when a completed candle is due, merges the incremental tail into IndexedDB, and fetches one current quote. Scheduled Worker refreshes remain the unattended fallback.
 
 ## First deployment
 

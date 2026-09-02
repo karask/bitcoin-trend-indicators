@@ -192,7 +192,6 @@ export default function StockDashboard() {
   const [quote, setQuote] = useState<StockQuote | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [clock, setClock] = useState(0);
-  const [quoteRefreshTick, setQuoteRefreshTick] = useState(0);
 
   const activeStock = STOCKS.find(item => item.id === stockId) ?? STOCKS[0];
 
@@ -216,8 +215,7 @@ export default function StockDashboard() {
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => setClock(Date.now()));
     const clockTimer = window.setInterval(() => setClock(Date.now()), 60_000);
-    const quoteTimer = window.setInterval(() => setQuoteRefreshTick(value => value + 1), 5 * 60_000);
-    return () => { window.cancelAnimationFrame(frame); window.clearInterval(clockTimer); window.clearInterval(quoteTimer); };
+    return () => { window.cancelAnimationFrame(frame); window.clearInterval(clockTimer); };
   }, []);
 
   useEffect(() => {
@@ -234,7 +232,7 @@ export default function StockDashboard() {
       if (!cancelled) { setCacheReady(true); setLoading(false); }
     });
     return () => { cancelled = true; };
-  }, [activeStock, quoteRefreshTick]);
+  }, [activeStock]);
 
   useEffect(() => {
     if (!cacheReady) return;
@@ -254,6 +252,13 @@ export default function StockDashboard() {
     const refresh = async () => {
       setLoading(true);
       setError(null);
+      await authenticatedFetch("/api/v1/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ market: "stock", symbol: activeStock.symbol }),
+        cache: "no-store",
+        signal: controller.signal,
+      }).catch(() => null);
       const cached = historyRef.current?.response ?? null;
       const incrementalStart = cached ? stockIncrementalStartDate(activeStock.symbol, cached.candles) : undefined;
       let response = await requestHistory(incrementalStart);
@@ -304,7 +309,7 @@ export default function StockDashboard() {
         if (reason.name !== "AbortError") setQuoteError(reason instanceof Error ? reason.message : "Current quote is unavailable.");
       });
     return () => controller.abort();
-  }, [activeStock]);
+  }, [activeStock, refreshKey]);
 
   const calculation = useMemo(() => {
     if (!history) return null;

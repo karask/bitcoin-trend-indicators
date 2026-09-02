@@ -18,13 +18,15 @@ function completedBoundary(timeframe: Timeframe, now = Date.now()): number {
   return monday - 7 * DAY;
 }
 
-async function dataset(database: D1Database, asset: AssetId, source: SourceId, timeframe: Timeframe): Promise<MarketDataset> {
+async function dataset(database: D1Database, asset: AssetId, source: SourceId, timeframe: Timeframe, startTime?: number): Promise<MarketDataset> {
   const [metadata, candleResult] = await Promise.all([
     database.prepare("SELECT market,retrieved_at,checksum,warning,first_candle,last_candle,candle_count FROM provider_snapshots WHERE asset=? AND source=? AND timeframe=?").bind(asset, source, timeframe).first<SnapshotRow>(),
-    database.prepare("SELECT time,open,high,low,close,volume,complete FROM market_candles WHERE asset=? AND source=? AND timeframe=? ORDER BY time").bind(asset, source, timeframe).all<CandleRow>(),
+    startTime == null
+      ? database.prepare("SELECT time,open,high,low,close,volume,complete FROM market_candles WHERE asset=? AND source=? AND timeframe=? ORDER BY time").bind(asset, source, timeframe).all<CandleRow>()
+      : database.prepare("SELECT time,open,high,low,close,volume,complete FROM market_candles WHERE asset=? AND source=? AND timeframe=? AND time>=? ORDER BY time").bind(asset, source, timeframe, startTime).all<CandleRow>(),
   ]);
   const minimum = MIN_SOURCE_CANDLES[timeframe];
-  if (!metadata || metadata.candle_count < minimum || candleResult.results.length < minimum) throw new Error(`No complete ${asset.toUpperCase()} ${source} ${timeframe} history is available in D1`);
+  if (!metadata || metadata.candle_count < minimum || (!startTime && candleResult.results.length < minimum)) throw new Error(`No complete ${asset.toUpperCase()} ${source} ${timeframe} history is available in D1`);
   const definition = marketDefinition(asset, source);
   const assetDefinition = ASSETS.find(item => item.id === asset)!;
   const candles: Candle[] = candleResult.results.map(row => ({ ...row, complete: Boolean(row.complete) }));
@@ -51,12 +53,21 @@ async function dataset(database: D1Database, asset: AssetId, source: SourceId, t
 
 export const onRequestGet: PagesFunction<CloudflareEnv> = async ({ request, env }) => {
   try {
-    const { asset, source } = marketRequest(request);
+    const { asset, source, url } = marketRequest(request);
+    const parseStart = (name: string) => {
+      const raw = url.searchParams.get(name);
+      if (!raw) return undefined;
+      const value = Number(raw);
+      if (!Number.isSafeInteger(value) || value < 0 || value > Date.now()) throw new Error("Unsupported incremental start");
+      return value;
+    };
+    const dailyStart = parseStart("dailyStart");
+    const weeklyStart = parseStart("weeklyStart");
     const availableResult = await env.REGIME_DB.prepare("SELECT source FROM provider_snapshots WHERE asset=? GROUP BY source HAVING count(DISTINCT timeframe)=2 AND max(CASE WHEN timeframe='1d' THEN candle_count ELSE 0 END)>=? AND max(CASE WHEN timeframe='1w' THEN candle_count ELSE 0 END)>=? ORDER BY source")
       .bind(asset, MIN_SOURCE_CANDLES["1d"], MIN_SOURCE_CANDLES["1w"]).all<AvailableRow>();
     const available = new Set(availableResult.results.map(row => row.source));
     if (!available.has(source)) throw new Error(`${asset.toUpperCase()} ${source} has not been seeded in D1 yet`);
-    const [daily, weekly] = await Promise.all([dataset(env.REGIME_DB, asset, source, "1d"), dataset(env.REGIME_DB, asset, source, "1w")]);
+    const [daily, weekly] = await Promise.all([dataset(env.REGIME_DB, asset, source, "1d", dailyStart), dataset(env.REGIME_DB, asset, source, "1w", weeklyStart)]);
     return json(request, env, {
       calculation: "browser",
       daily,

@@ -1,8 +1,8 @@
-import { MIN_SOURCE_CANDLES, sourcesForAsset, type AssetId, type SourceDefinition } from "../lib/markets";
-import type { Candle } from "../lib/regimes";
-import { STOCKS, type StockDefinition } from "../lib/stocks";
-import { fetchYahooStockHistory } from "../lib/yahoo";
-import type { CloudflareEnv, D1Database, D1PreparedStatement } from "../functions/_lib/cloudflare";
+import { MIN_SOURCE_CANDLES, sourcesForAsset, type AssetId, type SourceDefinition, type SourceId } from "../lib/markets.ts";
+import type { Candle } from "../lib/regimes.ts";
+import { STOCKS, stockDefinition, type StockDefinition, type StockSymbol } from "../lib/stocks.ts";
+import { fetchYahooStockHistory } from "../lib/yahoo.ts";
+import type { CloudflareEnv, D1Database, D1PreparedStatement } from "../functions/_lib/cloudflare.ts";
 
 const DAY = 86_400_000;
 const CRON_ASSET: Record<string, AssetId> = {
@@ -172,6 +172,13 @@ async function refreshAsset(database: D1Database, asset: AssetId) {
   return { asset, refreshedAt: new Date().toISOString(), results };
 }
 
+/** Shared by the scheduled Worker and the authenticated Pages on-demand sync. */
+export async function refreshCryptoMarket(database: D1Database, asset: AssetId, source: SourceId) {
+  const definition = sourcesForAsset(asset).find(item => item.id === source);
+  if (!definition) throw new Error("Unsupported market source");
+  return refreshSource(database, definition);
+}
+
 function upsertStockCandle(database: D1Database, stock: StockDefinition, item: Candle, retrievedAt: string, checksum: string): D1PreparedStatement {
   return database.prepare("INSERT INTO market_candles (asset,source,timeframe,time,market,open,high,low,close,volume,complete,retrieved_at,raw_checksum) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(asset,source,timeframe,time) DO UPDATE SET market=excluded.market,open=excluded.open,high=excluded.high,low=excluded.low,close=excluded.close,volume=excluded.volume,complete=excluded.complete,retrieved_at=excluded.retrieved_at,raw_checksum=excluded.raw_checksum")
     .bind(stock.id, "yahoo", "1d", item.time, `NASDAQ:${stock.symbol}`, item.open, item.high, item.low, item.close, item.volume, 1, retrievedAt, checksum);
@@ -209,6 +216,11 @@ async function refreshStocks(database: D1Database) {
   const results = [];
   for (const stock of STOCKS) results.push(await refreshStock(database, stock));
   return { market: "stocks", refreshedAt: new Date().toISOString(), results };
+}
+
+/** Refreshes one selected stock without exposing Yahoo or D1 writes to the browser. */
+export async function refreshStockMarket(database: D1Database, symbol: StockSymbol) {
+  return refreshStock(database, stockDefinition(symbol));
 }
 
 export default {

@@ -15,8 +15,8 @@ Hosted access uses passwordless email authentication. A visitor enters an email 
 - Family-level agreement instead of a misleading raw indicator count.
 - Next-open, long/cash backtests with 5/15/30 bps cost sensitivity, buy-and-hold, rolling four-year reports, cross-venue median Calmar ranking, and the return/drawdown Pareto set.
 - A DuckDB-backed Python research service storing normalized candles, indicator states/values, flips, reports, checksums, retrieval times, and source health.
-- A local SQLite cache for normalized PWA candles and current signal snapshots, so ordinary page loads do not redownload exchange history.
-- PWA shell caching only. API responses are network-only and stale/demo data cannot present a new confirmed flip.
+- A local SQLite cache plus private browser IndexedDB candle caches. First visits download complete history; later visits request only overlapping tails from D1 and calculate against the complete local series.
+- Static icon/manifest caching only. Dashboard pages and APIs are network-only, while the intentional IndexedDB history cache is validated and incrementally synchronized.
 
 ## Run the PWA
 
@@ -32,6 +32,7 @@ Open `http://localhost:3000`. The local API routes are:
 - `/api/v1/spot`
 - `/api/v1/series`
 - `/api/v1/health`
+- `POST /api/v1/sync` (authenticated, same-origin, refreshes a selected stale market before its incremental read)
 - `/api/v1/stocks/history?symbol=TSLA&startDate=2025-01-01` (`startDate` is optional; returns the authenticated app's stored Yahoo Finance snapshot)
 - `/api/v1/auth/config`, `/request-code`, `/verify-code`, `/session`, `/logout`, and `/account`
 
@@ -39,15 +40,15 @@ Except for the authentication endpoints, local and hosted APIs require the `__Ho
 
 If an exchange is unavailable, the UI uses a deterministic demonstration history, displays a blocking warning, and labels the series stale. It never treats fallback data as a confirmed live signal.
 
-The confirmation clock follows the selected timeframe: daily closes confirm at 00:00 UTC, while weekly closes confirm at the Monday 00:00 UTC boundary after Sunday 23:59:59. An open tab rechecks the API every five minutes. SQLite serves stored history until the expected completed-candle timestamp advances; only then does the API refresh that venue from its public endpoint.
+The confirmation clock follows the selected timeframe: daily closes confirm at 00:00 UTC, while weekly closes confirm at the Monday 00:00 UTC boundary after Sunday 23:59:59. Countdown text advances locally once per minute without a network request. Loading the page or changing the selected asset/source checks whether D1 is missing an expected completed candle, refreshes that one market server-side only when due, and merges a small overlapping tail into IndexedDB. Indicator and timeframe changes are local calculations and do not request candles.
 
-The confirmation box also shows a live ticker quote from the selected venue. It refreshes on every page load, source change, and five-minute background refresh. This quote is informational only and never enters confirmed indicator or backtest calculations.
+The confirmation box also shows a current ticker quote from the selected venue. It is fetched once on page load or source change; there is no background polling. This quote is informational only and never enters confirmed indicator or backtest calculations.
 
 ## Stock Regime Lab
 
 Open `/stocks` for a separate end-of-day research view of Tesla (`TSLA`), Alphabet Class A (`GOOGL`), NVIDIA (`NVDA`), SpaceX (`SPCX`), Micron Technology (`MU`), and Sandisk (`SNDK`). Stock symbols are deliberately kept out of the crypto asset and exchange registries, so the stock page never offers Bitstamp, Binance, Kraken, or Coinbase as historical-data sources.
 
-Stock history comes from Yahoo Finance's unofficial chart endpoint and is stored as validated completed-session snapshots in Cloudflare D1. The page also requests a current informational Yahoo quote on load and whenever the selected ticker changes. The stock page needs no provider account, API key, browser token, or per-symbol setup. A private IndexedDB copy remains only as a rendering accelerator; clearing it does not remove the shared D1 history.
+Stock history comes from Yahoo Finance's unofficial chart endpoint and is stored as validated completed-session snapshots in Cloudflare D1. On page load or ticker change, the server refreshes D1 only if the expected completed XNAS session is missing; the browser then merges an overlapping D1 tail into its private IndexedDB history. A current informational Yahoo quote is fetched once at the same user-driven boundaries, with no background polling. The stock page needs no provider account, API key, browser token, or per-symbol setup. Clearing IndexedDB does not remove the shared D1 history.
 
 The page uses Yahoo's split-adjusted daily OHLC and reported volume, constructs Monday-based NASDAQ trading weeks without forward-filling holidays, and excludes incomplete weeks. Dividends are deliberately excluded from the price-return research. Calculations and reports run in the browser: every registered indicator remains available, stock KK Supertrend is explicitly labeled as an uncalibrated ATR-10/factor-3 preset, and daily backtests use 252 periods per year while retaining next-session-open execution and 5/15/30 bps cost sensitivity. Yahoo access is unsupported and used here only for the owner's personal research; its endpoint can change or be rate-limited.
 
