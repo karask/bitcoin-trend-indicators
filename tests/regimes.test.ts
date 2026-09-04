@@ -160,6 +160,12 @@ const LINK_KK_CALIBRATION: readonly OhlcRow[] = "13.559,17.115,12.838,16.561;16.
   .split(";")
   .map(row => row.split(",").map(Number) as [number, number, number, number]);
 
+// Fixed Monday–Sunday OHLC from Coinbase SUI/USD, 13 May 2024–30 Aug 2026.
+// The screenshot's 3 Nov 2025 flip date is the next weekly open after the 27 Oct signal candle.
+const SUI_KK_CALIBRATION: readonly OhlcRow[] = "1.0043,1.1093,0.8847,1.0273;1.0277,1.1728,1.0087,1.0411;1.0416,1.0821,0.98,1.0171;1.0141,1.1705,0.9863,1.0935;1.0938,1.0962,0.9018,0.9691;0.9697,0.9845,0.7608,0.8805;0.8807,0.9066,0.7715,0.8187;0.8188,0.8351,0.573,0.64;0.64,0.8194,0.613,0.807;0.8081,0.892,0.786,0.8594;0.8598,0.903,0.7101,0.7496;0.75,0.7848,0.5622,0.5775;0.5776,0.96,0.4623,0.8736;0.8733,1.118,0.7977,0.8244;0.8246,1.0575,0.8108,1;1.0001,1.0145,0.7567,0.7609;0.761,0.9902,0.7415,0.9394;0.9393,1.1404,0.867,1.0785;1.0775,1.6373,1.01,1.5856;1.5858,1.8725,1.4983,1.7589;1.7593,2.0092,1.6055,1.8407;1.8403,2.3661,1.7458,2.3424;2.3437,2.3496,1.9732,2.1278;2.128,2.1779,1.65,1.7541;1.7544,2.1319,1.6001,1.9467;1.9463,3.1555,1.792,3.0352;3.0366,3.9433,2.8242,3.7853;3.7865,3.9093,3.1454,3.3953;3.397,3.6567,2.9694,3.4782;3.4787,4.49,3.1737,4.2345;4.234,4.929,3.3613,4.7828;4.7836,4.9577,3.4873,4.3221;4.3205,4.7525,3.9717,4.0848;4.0841,5.358,3.94,5.2428;5.2438,5.37,4.3867,4.7311;4.7315,5.1375,4.2588,4.5028;4.5021,4.8406,3.8549,3.8689;3.869,4.31,3.0802,3.3071;3.3075,3.9024,2.3911,2.9948;2.9962,3.7402,2.9018,3.269;3.2695,3.5734,2.91,3.3782;3.3787,3.4509,2.5155,3.193;3.1936,3.2048,2.25,2.289;2.2894,2.4487,1.961,2.2311;2.231,2.504,2.2201,2.292;2.2926,2.8316,2.2438,2.3514;2.3518,2.5472,1.8805,1.9199;1.9196,2.4875,1.7158,2.2325;2.2328,2.3514,2.0216,2.1131;2.1131,3.8107,2.1094,3.5594;3.5595,3.8748,3.155,3.2746;3.2755,4.2742,3.1132,4.0188;4.0177,4.2967,3.6422,3.9452;3.9457,4.2,3.4386,3.6018;3.6029,3.747,3.055,3.3454;3.3445,3.3945,2.8752,3.2255;3.2246,3.5626,2.8057,3.0235;3.0246,3.1598,2.2943,2.4506;2.4503,2.9286,2.3957,2.9008;2.9008,3.091,2.6476,2.9098;2.9097,3.5732,2.8263,3.4938;3.494,4.248,3.4896,3.8928;3.8925,4.4304,3.519,4.3269;4.3271,4.4444,3.2649,3.4474;3.4476,3.9999,3.3273,3.876;3.8763,4.1825,3.6,3.7659;3.7653,3.8488,3.3024,3.6804;3.681,3.74,3.2087,3.2498;3.2489,3.457,3.111,3.3963;3.396,3.8834,3.3634,3.6879;3.6879,3.9768,3.4616,3.6114;3.6106,3.6315,3.0693,3.2791;3.2792,3.6926,3.1523,3.5649;3.5651,3.7074,2,2.8108;2.8109,3.0168,2.2809,2.581;2.5813,2.6856,2.3401,2.6773;2.677,2.719,2.2063,2.3539;2.3539,2.3623,1.83,2.1447;2.1443,2.2308,1.6403,1.6782;1.678,1.7334,1.3106,1.368;1.3684,1.6163,1.3409,1.4973;1.4972,1.79,1.3058,1.5839;1.5842,1.7287,1.5191,1.5536;1.5532,1.6043,1.3261,1.4448;1.4447,1.491,1.3526,1.4452;1.4454,1.7513,1.3848,1.6928;1.6922,2.0211,1.658,1.7941;1.7941,1.9649,1.693,1.695;1.6945,1.6945,1.36,1.3987;1.3985,1.4659,1.032,1.0998;1.1004,1.1669,0.7889,0.9716;0.9717,1.0492,0.874,0.9736;0.9733,1.0042,0.8953,0.9249;0.9249,1.026,0.8266,0.8878;0.8879,0.9935,0.8657,0.8799;0.8796,1.0549,0.8792,1.0241;1.0243,1.085,0.8934,0.906;0.9059,0.9755,0.8201,0.8461;0.8462,0.9145,0.8385,0.8708;0.8709,0.9783,0.8589,0.9012;0.9013,1.0441,0.8984,0.923;0.9231,0.9765,0.9208,0.9458;0.946,0.9638,0.8811,0.9198;0.9197,1.4153,0.9128,1.3327;1.3322,1.3513,1.0117,1.0435;1.0434,1.165,0.9819,1.0316;1.0318,1.0627,0.8494,0.8948;0.895,0.9025,0.6617,0.7582;0.7582,0.8036,0.7135,0.8029;0.8032,0.8303,0.6896,0.6927;0.6928,0.7443,0.6504,0.6796;0.6795,0.7824,0.6715,0.7564;0.7559,0.7675,0.6946,0.736;0.7356,0.7676,0.707,0.7487;0.7487,0.779,0.7015,0.7228;0.7227,0.7239,0.6628,0.6893;0.6892,0.7067,0.6642,0.6862;0.686,0.6988,0.6666,0.6702;0.6701,0.9546,0.6343,0.8501;0.8501,0.8506,0.7,0.7116"
+  .split(";")
+  .map(row => row.split(",").map(Number) as [number, number, number, number]);
+
 test("KK Supertrend is registered immediately after SuperTrend with fixed crypto presets", () => {
   const supertrendIndex = INDICATOR_SPECS.findIndex(spec => spec.id === "supertrend");
   const kkIndex = INDICATOR_SPECS.findIndex(spec => spec.id === "kk_supertrend");
@@ -167,11 +173,11 @@ test("KK Supertrend is registered immediately after SuperTrend with fixed crypto
   assert.equal(KK_SUPERTREND_ATR_LENGTH, 10);
   assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3, sui: 3 });
   assert.equal(KK_SUPERTREND_EQUITY_FACTOR, 3);
-  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { atr: 10, btcFactor: 3, ethFactor: 2, solFactor: 2, dogeDailyAtr: 10, dogeDailyFactor: 3, dogeWeeklyAtr: 15, dogeWeeklyFactor: 2, linkDailyAtr: 10, linkDailyFactor: 3, linkWeeklyAtr: 15, linkWeeklyFactor: 2, xmrDailyAtr: 10, xmrDailyFactor: 3, xmrWeeklyAtr: 15, xmrWeeklyFactor: 2, suiFactor: 3 });
+  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { atr: 10, btcFactor: 3, ethFactor: 2, solFactor: 2, dogeDailyAtr: 10, dogeDailyFactor: 3, dogeWeeklyAtr: 15, dogeWeeklyFactor: 2, linkDailyAtr: 10, linkDailyFactor: 3, linkWeeklyAtr: 15, linkWeeklyFactor: 2, xmrDailyAtr: 10, xmrDailyFactor: 3, xmrWeeklyAtr: 15, xmrWeeklyFactor: 2, suiDailyAtr: 10, suiDailyFactor: 3, suiWeeklyAtr: 15, suiWeeklyFactor: 2 });
   assert.deepEqual(KK_SUPERTREND_PRESETS.doge, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.link, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.xmr, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
-  assert.deepEqual(KK_SUPERTREND_PRESETS.sui, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } });
+  assert.deepEqual(KK_SUPERTREND_PRESETS.sui, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /screenshot-calibrated/i);
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /does not claim to reproduce/i);
 });
@@ -255,6 +261,42 @@ test("weekly LINK KK Supertrend reproduces the supplied Coinbase 15/2 calibratio
   assert.ok(costs[1]!.totalReturn >= costs[2]!.totalReturn);
 });
 
+test("weekly SUI KK Supertrend reproduces the supplied Coinbase 15/2 calibration", () => {
+  const candles = weeklyFixture(Date.UTC(2024, 4, 13), SUI_KK_CALIBRATION);
+  const calibrated = calculateIndicators(candles, "1w", { asset: "sui" }).find(item => item.id === "kk_supertrend")!;
+  const previous = calculateIndicators(candles, "1w", { asset: "sui", kkSupertrendAtrLength: 10, kkSupertrendFactor: 3 }).find(item => item.id === "kk_supertrend")!;
+
+  assert.equal(calibrated.state, "bear");
+  assert.equal(calibrated.values.atrLength, 15);
+  assert.equal(calibrated.values.factor, 2);
+  assert.ok(Math.abs(calibrated.bullTrigger! - 1.0413) < 0.0002, `SUI level ${calibrated.bullTrigger}`);
+  assert.equal(calibrated.bearTrigger, null);
+  assert.equal(calibrated.lastFlip, Date.UTC(2025, 9, 27));
+  const effective = candles.find(candle => candle.time === Date.UTC(2025, 10, 3))!;
+  assert.equal(effective.open, 2.3539);
+  assert.equal(previous.state, "bear");
+  assert.ok(Math.abs(previous.bullTrigger! - calibrated.bullTrigger!) > 0.02);
+
+  const costs = [5, 15, 30].map(costBps => backtest(candles, [calibrated], "1w", costBps)[0]);
+  assert.ok(costs.every(Boolean));
+  assert.ok(costs[0]!.totalReturn >= costs[1]!.totalReturn);
+  assert.ok(costs[1]!.totalReturn >= costs[2]!.totalReturn);
+});
+
+test("existing SOL 10/2 calibration advances to the supplied 78.07 level without a parameter change", () => {
+  const candles = weeklyFixture(Date.UTC(2024, 8, 23), [...SOL_KK_CALIBRATION, [95.44, 110.65, 93.22, 101.75]]);
+  const result = calculateIndicators(candles, "1w", { asset: "sol" }).find(item => item.id === "kk_supertrend")!;
+
+  assert.equal(result.state, "bull");
+  assert.equal(result.values.atrLength, 10);
+  assert.equal(result.values.factor, 2);
+  assert.ok(Math.abs(result.bearTrigger! - 78.07) < 0.01, `SOL level ${result.bearTrigger}`);
+  assert.equal(result.bullTrigger, null);
+  assert.equal(result.lastFlip, Date.UTC(2026, 7, 17));
+  assert.equal(candles.at(-1)!.time, Date.UTC(2026, 7, 24));
+  assert.equal(candles.at(-1)!.open, 95.44);
+});
+
 test("BTC KK Supertrend is point-for-point identical to SuperTrend 10/3", () => {
   const results = calculateIndicators(history(), "1d", { asset: "btc" });
   const standard = results.find(item => item.id === "supertrend")!;
@@ -268,7 +310,7 @@ test("BTC KK Supertrend is point-for-point identical to SuperTrend 10/3", () => 
   assert.deepEqual(kk.values, standard.values);
 });
 
-test("SUI plus daily DOGE, LINK, and XMR KK Supertrend use the explicit uncalibrated SuperTrend 10/3 preset", () => {
+test("daily DOGE, LINK, XMR, and SUI KK Supertrend use the explicit uncalibrated SuperTrend 10/3 preset", () => {
   for (const asset of ["doge", "link", "xmr", "sui"] as const) {
     const results = calculateIndicators(history(), "1d", { asset });
     const standard = results.find(item => item.id === "supertrend")!;
@@ -277,8 +319,6 @@ test("SUI plus daily DOGE, LINK, and XMR KK Supertrend use the explicit uncalibr
     assert.deepEqual(kk.states, standard.states, asset);
     assert.deepEqual(kk.overlays[0].points, standard.overlays[0].points, asset);
   }
-  const weekly = calculateIndicators(history(), "1w", { asset: "sui" });
-  assert.deepEqual(weekly.find(item => item.id === "kk_supertrend")!.states, weekly.find(item => item.id === "supertrend")!.states);
 });
 
 test("equity market context runs every applicable indicator and uses the uncalibrated factor-three KK preset", () => {
