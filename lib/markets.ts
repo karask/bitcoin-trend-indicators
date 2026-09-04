@@ -1,5 +1,5 @@
 export type SourceId = "bitstamp" | "binance" | "kraken" | "coinbase";
-export type AssetId = "btc" | "eth" | "sol" | "doge" | "link" | "xmr";
+export type AssetId = "btc" | "eth" | "sol" | "doge" | "link" | "xmr" | "sui";
 
 export interface AssetDefinition {
   id: AssetId;
@@ -31,6 +31,7 @@ export const ASSETS: AssetDefinition[] = [
   { id: "doge", label: "Dogecoin", symbol: "DOGE", defaultSource: "coinbase" },
   { id: "link", label: "Chainlink", symbol: "LINK", defaultSource: "coinbase" },
   { id: "xmr", label: "Monero", symbol: "XMR", defaultSource: "kraken" },
+  { id: "sui", label: "Sui", symbol: "SUI", defaultSource: "coinbase" },
 ];
 
 export const SOURCES: SourceDefinition[] = [
@@ -55,6 +56,10 @@ export const SOURCES: SourceDefinition[] = [
   { asset: "link", id: "kraken", label: "Kraken", market: "LINK/USD", denomination: "USD", providerSymbol: "LINKUSD", historyStart: Date.UTC(2019, 8, 25), historyNote: "LINK/USD validation; public REST returns its latest 720 candles" },
   { asset: "link", id: "coinbase", label: "Coinbase Exchange", market: "LINK/USD", denomination: "USD", providerSymbol: "LINK-USD", historyStart: Date.UTC(2019, 5, 27), historyNote: "LINK/USD validation history from June 2019" },
   { asset: "xmr", id: "kraken", label: "Kraken", market: "XMR/USD", denomination: "USD", providerSymbol: "XMRUSD", historyStart: Date.UTC(2014, 7, 21), historyNote: "XMR/USD validation; Kraken public REST returns its latest 720 candles" },
+  { asset: "sui", id: "bitstamp", label: "Bitstamp", market: "SUI/USD", denomination: "USD", providerSymbol: "suiusd", historyStart: Date.UTC(2023, 4, 5), historyNote: "SUI/USD validation history from May 2023" },
+  { asset: "sui", id: "binance", label: "Binance", market: "SUI/USDT", denomination: "USDT", providerSymbol: "SUIUSDT", historyStart: Date.UTC(2023, 4, 3), historyNote: "Canonical SUI/USDT history from May 2023" },
+  { asset: "sui", id: "kraken", label: "Kraken", market: "SUI/USD", denomination: "USD", providerSymbol: "SUIUSD", historyStart: Date.UTC(2024, 8, 14), historyNote: "SUI/USD validation; public REST returns its latest 720 candles" },
+  { asset: "sui", id: "coinbase", label: "Coinbase Exchange", market: "SUI/USD", denomination: "USD", providerSymbol: "SUI-USD", historyStart: Date.UTC(2023, 4, 18), historyNote: "SUI/USD validation history from May 2023" },
 ];
 
 export function sourcesForAsset(asset: AssetId): SourceDefinition[] {

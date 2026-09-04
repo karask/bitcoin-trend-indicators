@@ -165,12 +165,13 @@ test("KK Supertrend is registered immediately after SuperTrend with fixed crypto
   const kkIndex = INDICATOR_SPECS.findIndex(spec => spec.id === "kk_supertrend");
   assert.equal(kkIndex, supertrendIndex + 1);
   assert.equal(KK_SUPERTREND_ATR_LENGTH, 10);
-  assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3 });
+  assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3, sui: 3 });
   assert.equal(KK_SUPERTREND_EQUITY_FACTOR, 3);
-  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { atr: 10, btcFactor: 3, ethFactor: 2, solFactor: 2, dogeDailyAtr: 10, dogeDailyFactor: 3, dogeWeeklyAtr: 15, dogeWeeklyFactor: 2, linkDailyAtr: 10, linkDailyFactor: 3, linkWeeklyAtr: 15, linkWeeklyFactor: 2, xmrDailyAtr: 10, xmrDailyFactor: 3, xmrWeeklyAtr: 15, xmrWeeklyFactor: 2 });
+  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { atr: 10, btcFactor: 3, ethFactor: 2, solFactor: 2, dogeDailyAtr: 10, dogeDailyFactor: 3, dogeWeeklyAtr: 15, dogeWeeklyFactor: 2, linkDailyAtr: 10, linkDailyFactor: 3, linkWeeklyAtr: 15, linkWeeklyFactor: 2, xmrDailyAtr: 10, xmrDailyFactor: 3, xmrWeeklyAtr: 15, xmrWeeklyFactor: 2, suiFactor: 3 });
   assert.deepEqual(KK_SUPERTREND_PRESETS.doge, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.link, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.xmr, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
+  assert.deepEqual(KK_SUPERTREND_PRESETS.sui, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } });
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /screenshot-calibrated/i);
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /does not claim to reproduce/i);
 });
@@ -267,8 +268,8 @@ test("BTC KK Supertrend is point-for-point identical to SuperTrend 10/3", () => 
   assert.deepEqual(kk.values, standard.values);
 });
 
-test("daily DOGE, LINK, and XMR KK Supertrend use the explicit uncalibrated SuperTrend 10/3 preset", () => {
-  for (const asset of ["doge", "link", "xmr"] as const) {
+test("SUI plus daily DOGE, LINK, and XMR KK Supertrend use the explicit uncalibrated SuperTrend 10/3 preset", () => {
+  for (const asset of ["doge", "link", "xmr", "sui"] as const) {
     const results = calculateIndicators(history(), "1d", { asset });
     const standard = results.find(item => item.id === "supertrend")!;
     const kk = results.find(item => item.id === "kk_supertrend")!;
@@ -276,6 +277,8 @@ test("daily DOGE, LINK, and XMR KK Supertrend use the explicit uncalibrated Supe
     assert.deepEqual(kk.states, standard.states, asset);
     assert.deepEqual(kk.overlays[0].points, standard.overlays[0].points, asset);
   }
+  const weekly = calculateIndicators(history(), "1w", { asset: "sui" });
+  assert.deepEqual(weekly.find(item => item.id === "kk_supertrend")!.states, weekly.find(item => item.id === "supertrend")!.states);
 });
 
 test("equity market context runs every applicable indicator and uses the uncalibrated factor-three KK preset", () => {
@@ -450,11 +453,11 @@ test("spot ticker payloads are parsed for every supported venue", () => {
 });
 
 test("all crypto assets expose isolated venue definitions and useful history", () => {
-  assert.deepEqual(ASSETS.map(asset => asset.id), ["btc", "eth", "sol", "doge", "link", "xmr"]);
+  assert.deepEqual(ASSETS.map(asset => asset.id), ["btc", "eth", "sol", "doge", "link", "xmr", "sui"]);
   for (const asset of ASSETS.filter(asset => asset.id !== "xmr")) assert.equal(sourcesForAsset(asset.id).length, 4);
   assert.deepEqual(sourcesForAsset("xmr").map(source => source.id), ["kraken"]);
   assert.equal(ASSETS.find(asset => asset.id === "sol")!.defaultSource, "coinbase");
-  assert.equal(SOURCES.length, 21);
+  assert.equal(SOURCES.length, 25);
   assert.equal(marketDefinition("eth", "bitstamp").providerSymbol, "ethusd");
   assert.equal(marketDefinition("eth", "coinbase").historyStart, Date.UTC(2016, 4, 23));
   assert.equal(marketDefinition("sol", "binance").providerSymbol, "SOLUSDT");
@@ -465,6 +468,10 @@ test("all crypto assets expose isolated venue definitions and useful history", (
   assert.equal(marketDefinition("link", "coinbase").historyStart, Date.UTC(2019, 5, 27));
   assert.equal(marketDefinition("xmr", "kraken").providerSymbol, "XMRUSD");
   assert.equal(marketDefinition("xmr", "kraken").market, "XMR/USD");
+  assert.equal(ASSETS.find(asset => asset.id === "sui")!.defaultSource, "coinbase");
+  assert.equal(marketDefinition("sui", "coinbase").providerSymbol, "SUI-USD");
+  assert.equal(marketDefinition("sui", "coinbase").market, "SUI/USD");
+  assert.equal(marketDefinition("sui", "binance").market, "SUI/USDT");
   assert.deepEqual(MIN_SOURCE_CANDLES, { "1d": 200, "1w": 52 });
 });
 

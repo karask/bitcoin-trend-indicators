@@ -44,6 +44,12 @@ MARKETS = {
     "xmr": {
         "kraken": ("XMR/USD", "XMRUSD", datetime(2014, 8, 21, tzinfo=timezone.utc)),
     },
+    "sui": {
+        "bitstamp": ("SUI/USD", "suiusd", datetime(2023, 5, 5, tzinfo=timezone.utc)),
+        "binance": ("SUI/USDT", "SUIUSDT", datetime(2023, 5, 3, tzinfo=timezone.utc)),
+        "kraken": ("SUI/USD", "SUIUSD", datetime(2024, 9, 14, tzinfo=timezone.utc)),
+        "coinbase": ("SUI/USD", "SUI-USD", datetime(2023, 5, 18, tzinfo=timezone.utc)),
+    },
 }
 
 

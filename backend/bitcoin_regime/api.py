@@ -24,7 +24,7 @@ app = FastAPI(title="Crypto Regime Lab Research API", version="0.2.0", lifespan=
 
 @app.get("/api/v1/registry")
 def registry():
-    return {"assets": ["btc", "eth", "sol", "doge", "link", "xmr"], "indicators": service.registry()}
+    return {"assets": ["btc", "eth", "sol", "doge", "link", "xmr", "sui"], "indicators": service.registry()}
 
 
 @app.get("/api/v1/candles")

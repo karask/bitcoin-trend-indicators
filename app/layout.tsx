@@ -7,7 +7,7 @@ const themeInitializer = `(function(){try{var saved=localStorage.getItem("crypto
 export const metadata: Metadata = {
   metadataBase: new URL("https://bitcoin-trend-indicators.pages.dev"),
   title: { default: "Crypto Regime Lab", template: "%s · Crypto Regime Lab" },
-  description: "Transparent daily and weekly BTC, ETH, SOL, DOGE, LINK, and XMR trend-regime research.",
+  description: "Transparent daily and weekly BTC, ETH, SOL, DOGE, LINK, XMR, and SUI trend-regime research.",
   applicationName: "Crypto Regime Lab",
   manifest: "/manifest.webmanifest",
   icons: { icon: "/favicon.png", shortcut: "/favicon.png", apple: "/icon-192.png" },

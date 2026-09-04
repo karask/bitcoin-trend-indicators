@@ -227,14 +227,14 @@ export default {
   async fetch(request: Request, env: CloudflareEnv): Promise<Response> {
     const url = new URL(request.url);
     const requested = url.searchParams.get("asset") ?? "btc";
-    if (!(["btc", "eth", "sol", "doge", "link", "xmr"] as string[]).includes(requested)) return Response.json({ error: "Unsupported asset" }, { status: 400 });
+    if (!(["btc", "eth", "sol", "doge", "link", "xmr", "sui"] as string[]).includes(requested)) return Response.json({ error: "Unsupported asset" }, { status: 400 });
     if (!env.REFRESH_TOKEN || request.headers.get("Authorization") !== `Bearer ${env.REFRESH_TOKEN}`) return Response.json({ error: "Unauthorized" }, { status: 401 });
     return Response.json(await refreshAsset(env.REGIME_DB, requested as AssetId));
   },
   scheduled(controller: ScheduledController, env: CloudflareEnv, context: ExecutionContext): void {
     if (controller.cron === STOCK_REFRESH_CRON) {
       const utcDay = new Date(controller.scheduledTime).getUTCDay();
-      const tasks: Promise<unknown>[] = [refreshAsset(env.REGIME_DB, "link"), refreshAsset(env.REGIME_DB, "xmr")];
+      const tasks: Promise<unknown>[] = [refreshAsset(env.REGIME_DB, "link"), refreshAsset(env.REGIME_DB, "xmr"), refreshAsset(env.REGIME_DB, "sui")];
       if (utcDay >= 2 && utcDay <= 6) tasks.push(refreshStocks(env.REGIME_DB));
       context.waitUntil(Promise.all(tasks));
       return;

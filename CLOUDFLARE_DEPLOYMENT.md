@@ -52,7 +52,7 @@ npm run cf:deploy:refresh
 openssl rand -hex 32 | npx wrangler secret put REFRESH_TOKEN --config wrangler.refresh.jsonc
 ```
 
-The seed command validates all configured venues for BTC, ETH, SOL, DOGE, LINK, and XMR. XMR uses Kraken only. A venue with a gap, duplicate, malformed OHLC, or unavailable provider is skipped instead of silently storing bad data. The Pages source selector only lists successfully seeded venues.
+The seed command validates all configured venues for BTC, ETH, SOL, DOGE, LINK, XMR, and SUI. XMR uses Kraken only. A venue with a gap, duplicate, malformed OHLC, or unavailable provider is skipped instead of silently storing bad data. The Pages source selector only lists successfully seeded venues.
 
 The stock seed command validates complete XNAS session coverage for TSLA, GOOGL, NVDA, SPCX, MU, and SNDK before replacing each symbol's D1 snapshot. Yahoo Finance access is unofficial and intentionally limited to this personal research deployment.
 

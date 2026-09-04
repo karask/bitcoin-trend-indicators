@@ -1,12 +1,12 @@
 # Crypto Regime Lab
 
-A transparent, installable BTC, ETH, SOL, DOGE, LINK, and XMR regime-indicator research platform, with an isolated stock-research page for TSLA, GOOGL, NVDA, SPCX, MU, and SNDK. It compares fixed, documented trend models without claiming to reproduce private MoneyLine or Larsson Line formulas and without producing orders or allocation recommendations.
+A transparent, installable BTC, ETH, SOL, DOGE, LINK, XMR, and SUI regime-indicator research platform, with an isolated stock-research page for TSLA, GOOGL, NVDA, SPCX, MU, and SNDK. It compares fixed, documented trend models without claiming to reproduce private MoneyLine or Larsson Line formulas and without producing orders or allocation recommendations.
 
 Hosted access uses passwordless email authentication. A visitor enters an email address and a single-use six-digit code; the first successful verification creates the account and later verifications sign it in. Both research labs and all market-data APIs require the resulting secure 30-day session. There are no passwords, social identities, or marketing emails.
 
 ## What is implemented
 
-- An asset selector for BTC, ETH, SOL, DOGE, LINK, and XMR, with daily and Monday–Sunday UTC weekly views from supported venues. XMR/USD is sourced exclusively from Kraken because the other configured venues do not offer that market.
+- An asset selector for BTC, ETH, SOL, DOGE, LINK, XMR, and SUI, with daily and Monday–Sunday UTC weekly views from supported venues. XMR/USD is sourced exclusively from Kraken because the other configured venues do not offer that market. SUI defaults to Coinbase SUI/USD, with Bitstamp and Kraken USD validation plus clearly labeled Binance SUI/USDT.
 - Venue-specific markets are never spliced: USD and USDT histories remain separately labeled and independently cached.
 - Completed-candle signals for Support Band, SuperTrend, the screenshot-calibrated KK Supertrend preset, the Larsson-style SMMA proxy, JustUncleL Super Guppy R1.2, Long SMA, Donchian 20/10, Ichimoku, MACD, Parabolic SAR, Vortex, Heikin Ashi, and the daily Golden/Death Cross.
 - Separate ADX/DMI confirmation, Chandelier exit, and Mayer/200W valuation views.
@@ -68,7 +68,7 @@ If you open the development server through the machine's LAN address, `192.168.1
 
 Indicator calculations use the complete normalized series available for each venue. The visible chart is intentionally smaller: the last 180 daily candles or 120 weekly candles. The importers paginate back to each market's own listing date (with a 20-page Bitstamp/Binance safety cap and 30-page Coinbase cap); Kraken's public REST API supplies its latest 720 candles. Coinbase ETH/USD starts at its continuous May 23, 2016 history because the venue omits two launch-period daily candles before that date. Cloud sources need at least 200 daily and 52 weekly candles before they are exposed or refreshed. Canonical defaults are Bitstamp BTC/USD (2011), Bitstamp ETH/USD (2017), and Coinbase SOL/USD (2021), matching the supplied SOL calibration chart. Binance retains the longer SOL/USDT history from 2020 for cross-venue research.
 
-All browser API routes accept `asset=btc|eth|sol|doge|link|xmr`, for example:
+All browser API routes accept `asset=btc|eth|sol|doge|link|xmr|sui`, for example:
 
 ```text
 /api/v1/dashboard?asset=eth&source=bitstamp&timeframe=1w
@@ -85,7 +85,7 @@ python3 -m venv .venv
 .venv/bin/python -m uvicorn backend.bitcoin_regime.api:app --reload --port 8000
 ```
 
-The Python API refreshes all five crypto assets on startup and every day at 00:15 UTC. It exposes registry, candles, full indicator series, state matrix, flip history, trigger reports, source health, and per-asset research reports under `/api/v1/`. The calculation subprocess imports the same TypeScript indicator engine used by the PWA, keeping one formula source of truth. Its endpoints also accept an `asset` query parameter and its DuckDB schema isolates assets in every dataset, candle, signal, and source-health key.
+The Python API refreshes all seven crypto assets on startup and every day at 00:15 UTC. It exposes registry, candles, full indicator series, state matrix, flip history, trigger reports, source health, and per-asset research reports under `/api/v1/`. The calculation subprocess imports the same TypeScript indicator engine used by the PWA, keeping one formula source of truth. Its endpoints also accept an `asset` query parameter and its DuckDB schema isolates assets in every dataset, candle, signal, and source-health key.
 
 Set `REGIME_DB=/path/to/regimes.duckdb` to choose a research-database location. The default is `data/regimes.duckdb`. DuckDB stores the deeper research warehouse; SQLite is the PWA's fast local candle and signal cache.
 
@@ -112,9 +112,9 @@ The tests cover the complete preset registry, deterministic golden states, recur
 - A state confirmed at close becomes effective at the next candle open.
 - Exposure is 100% of the selected crypto asset in bull, 50% in neutral, and 0% in bear; two-state models use 100%/0%.
 - Cash yield is zero. No shorts or leverage.
-- Presets are not performance-optimized against asset history. KK Supertrend is screenshot-calibrated for BTC, ETH, SOL, and weekly DOGE/LINK/XMR; daily DOGE/LINK/XMR deliberately use the uncalibrated standard 10/3 preset. The other named presets remain fixed except for Super Guppy's explicitly exposed R1.2 inputs.
+- Presets are not performance-optimized against asset history. KK Supertrend is screenshot-calibrated for BTC, ETH, SOL, and weekly DOGE/LINK/XMR; SUI plus daily DOGE/LINK/XMR deliberately use the uncalibrated standard 10/3 preset. The other named presets remain fixed except for Super Guppy's explicitly exposed R1.2 inputs.
 - Venues are never spliced. Gaps, duplicates, malformed OHLC, and completed-history revisions fail the data refresh; prices are never forward-filled.
-- SuperTrend is presented as a transparent alternative, not a MoneyLine clone. KK Supertrend applies the same documented Wilder-ATR recurrence with fixed 10/3 BTC, 10/2 ETH/SOL, and weekly 15/2 DOGE/LINK/XMR presets, calibrated to supplied screenshots rather than selected for backtest performance. Daily DOGE/LINK/XMR remain 10/3. A longer ATR length smooths the volatility estimate; a lower factor moves the trail closer to price and generally produces earlier, more frequent reversals. It is an independent comparison model and does not claim to reproduce or be endorsed by any private indicator. SMMA 15/19/25/29 is labeled a community Larsson-style proxy, never the official line.
+- SuperTrend is presented as a transparent alternative, not a MoneyLine clone. KK Supertrend applies the same documented Wilder-ATR recurrence with fixed 10/3 BTC, 10/2 ETH/SOL, and weekly 15/2 DOGE/LINK/XMR presets, calibrated to supplied screenshots rather than selected for backtest performance. SUI plus daily DOGE/LINK/XMR remain uncalibrated at 10/3. A longer ATR length smooths the volatility estimate; a lower factor moves the trail closer to price and generally produces earlier, more frequent reversals. It is an independent comparison model and does not claim to reproduce or be endorsed by any private indicator. SMMA 15/19/25/29 is labeled a community Larsson-style proxy, never the official line.
 - Super Guppy independently implements JustUncleL R1.2's 11-EMA Trader group (3–23 step 2), 16-EMA Investor group (25–70 step 3), group-average conditions, dynamic aqua/blue/gray and lime/red/gray colors, default Swing signals, aggressive Trend Break signals, and six-bar repeat filter. Its settings panel exposes the published signal toggles, confluence, candle-change retriggers, group averages, EMA-200 display/filter, candle coloring, source, lookback, anchor, and all 27 lengths. The anchor cannot alter this app's daily/weekly charts because the published input is capped at 1,440 minutes.
 - For comparison and next-open backtesting, Super Guppy's single dashboard state follows the published default Swing condition: bullish when its long condition is active, bearish when its short condition is active, and neutral otherwise. The chart preserves the two R1.2 group states and event types rather than pretending the source defines one unified band color.
 - Donchian 55/20, 12-month absolute momentum, and the Faber 10-month baseline were retired from the active dashboard on 2026-08-26. Their prior parameters and restoration reference are preserved in [RETIRED_MODELS.md](RETIRED_MODELS.md) for a possible future research section.

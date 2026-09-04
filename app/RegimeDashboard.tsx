@@ -64,6 +64,7 @@ const ASSET_OPTIONS: Payload["assets"] = [
   { id: "doge", label: "Dogecoin", symbol: "DOGE", defaultSource: "coinbase" },
   { id: "link", label: "Chainlink", symbol: "LINK", defaultSource: "coinbase" },
   { id: "xmr", label: "Monero", symbol: "XMR", defaultSource: "kraken" },
+  { id: "sui", label: "Sui", symbol: "SUI", defaultSource: "coinbase" },
 ];
 const freshGuppyDefaults = (): SuperGuppyConfig => ({ ...SUPER_GUPPY_R12_DEFAULTS, fastLengths: [...SUPER_GUPPY_R12_DEFAULTS.fastLengths], slowLengths: [...SUPER_GUPPY_R12_DEFAULTS.slowLengths] });
 const GUPPY_SOURCES: Array<{ value: SuperGuppySource; label: string }> = [
