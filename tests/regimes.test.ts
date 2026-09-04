@@ -148,6 +148,12 @@ const XMR_KK_CALIBRATION: readonly OhlcRow[] = `319.44,341.36,309.63,336.1;336.2
   .split(";")
   .map(row => row.split(",").map(Number) as [number, number, number, number]);
 
+// Fixed Monday–Sunday OHLC from Poloniex DOGE/USDT, 13 May 2024–30 Aug 2026.
+// The screenshot's 10 Nov 2025 flip date is the next weekly open after the 3 Nov signal candle.
+const DOGE_KK_CALIBRATION: readonly OhlcRow[] = `0.14136,0.159237,0.13601,0.149647;0.14964,0.17457,0.1486,0.166188;0.16622,0.173298,0.154593,0.157161;0.157104,0.165669,0.14,0.146848;0.146853,0.15053,0.13245,0.137164;0.13715,0.138234,0.1179,0.12237;0.122272,0.12862,0.1145,0.124434;0.124444,0.127451,0.092,0.104124;0.104131,0.116791,0.098814,0.115426;0.115364,0.1435,0.114547,0.140098;0.140099,0.142535,0.120191,0.130076;0.130056,0.134989,0.099052,0.103716;0.103722,0.110969,0.080604,0.10059;0.100575,0.108977,0.097581,0.100081;0.100069,0.115377,0.098603,0.10972;0.109719,0.11039,0.094109,0.095143;0.095106,0.100741,0.089032,0.096163;0.096145,0.108418,0.095684,0.102792;0.102755,0.110411,0.098463,0.106332;0.106389,0.131931,0.1042,0.124522;0.1245,0.12464,0.101097,0.111574;0.111615,0.115432,0.103257,0.111376;0.111408,0.146705,0.109341,0.142371;0.142015,0.149711,0.128072,0.144374;0.144227,0.179654,0.141147,0.151316;0.15139,0.297414,0.148277,0.278018;0.277759,0.437992,0.272868,0.366668;0.366808,0.478182,0.358,0.43006;0.430324,0.449232,0.366038,0.440426;0.440407,0.483968,0.389235,0.466628;0.466621,0.467503,0.366372,0.406584;0.406579,0.414362,0.262148,0.312612;0.312629,0.342072,0.303122,0.314325;0.314349,0.398485,0.307031,0.382267;0.382417,0.397,0.3142,0.335999;0.336219,0.43421,0.3101,0.358899;0.358386,0.403765,0.335296,0.336114;0.336063,0.342,0.256594,0.270062;0.270057,0.293776,0.223545,0.248939;0.248928,0.286073,0.241668,0.265564;0.265551,0.268829,0.234494,0.242762;0.242762,0.243959,0.181583,0.239475;0.239477,0.240713,0.165643,0.168083;0.168061,0.180935,0.142917,0.168178;0.168166,0.179112,0.163042,0.172495;0.172436,0.205712,0.164915,0.16662;0.16662,0.179846,0.146302,0.149326;0.149321,0.16948,0.13,0.16253;0.162536,0.169505,0.150239,0.155296;0.155302,0.19304,0.155036,0.179339;0.179327,0.184296,0.166951,0.170532;0.170515,0.259582,0.164333,0.231829;0.231811,0.253204,0.210829,0.232988;0.233058,0.254093,0.2141,0.224952;0.224955,0.231965,0.18567,0.193644;0.193648,0.200492,0.168093,0.184167;0.184171,0.206064,0.170001,0.175531;0.175514,0.181142,0.142824,0.151277;0.151276,0.169939,0.148621,0.169426;0.169435,0.175389,0.15666,0.171962;0.171944,0.213663,0.165678,0.198538;0.198577,0.278085,0.188559,0.273729;0.273766,0.287368,0.221054,0.240618;0.240685,0.248376,0.188587,0.198723;0.198878,0.246546,0.195689,0.233808;0.233809,0.255493,0.217326,0.234552;0.234498,0.244836,0.207979,0.231809;0.231832,0.234443,0.206005,0.213705;0.213657,0.229187,0.205001,0.228747;0.228748,0.306628,0.226541,0.277947;0.277903,0.288752,0.258173,0.260902;0.2609,0.26239,0.2208,0.2376;0.237651,0.265172,0.22647,0.252838;0.252844,0.270399,0.178259,0.207196;0.207196,0.2182,0.175801,0.195331;0.195203,0.206991,0.185195,0.205807;0.205768,0.209397,0.176562,0.186433;0.186407,0.186684,0.151896,0.179326;0.179302,0.18642,0.153823,0.158634;0.15851,0.164936,0.133333,0.144999;0.145008,0.156813,0.143006,0.145969;0.145986,0.153484,0.132,0.138567;0.138556,0.153204,0.132703,0.134099;0.134163,0.138465,0.120079,0.131164;0.131206,0.135318,0.120607,0.123914;0.123893,0.154065,0.116114,0.149507;0.14948,0.156546,0.136,0.138002;0.138091,0.151256,0.131422,0.131608;0.13168,0.13168,0.118001,0.119516;0.119516,0.127729,0.095,0.104238;0.104239,0.11071,0.080058,0.096559;0.096578,0.117482,0.087891,0.102652;0.102744,0.103664,0.094589,0.09557;0.09563,0.106068,0.08772,0.0919;0.091935,0.104237,0.086649,0.089155;0.089136,0.101933,0.08891,0.097391;0.09731,0.104467,0.089219,0.090137;0.090156,0.097911,0.088041,0.090446;0.090545,0.094479,0.089143,0.092404;0.092415,0.096,0.089973,0.090856;0.090894,0.102156,0.09072,0.093085;0.092996,0.099912,0.092924,0.099279;0.099296,0.11171,0.097006,0.108329;0.108212,0.117115,0.105615,0.112421;0.112532,0.118585,0.105842,0.108976;0.108899,0.109141,0.097493,0.102298;0.10229,0.103914,0.097,0.100422;0.100389,0.101547,0.0777,0.086301;0.086267,0.09236,0.081908,0.088878;0.088928,0.090966,0.08,0.082249;0.082128,0.084928,0.071471,0.073269;0.073325,0.079665,0.069587,0.077883;0.077854,0.07852,0.071055,0.072741;0.072898,0.07537,0.070945,0.07243;0.072387,0.0745,0.068261,0.07335;0.073419,0.073566,0.067637,0.070865;0.070901,0.071556,0.068238,0.069304;0.069314,0.072992,0.068945,0.069555;0.069578,0.100867,0.069412,0.093367;0.093432,0.093586,0.080827,0.082012`
+  .split(";")
+  .map(row => row.split(",").map(Number) as [number, number, number, number]);
+
 test("KK Supertrend is registered immediately after SuperTrend with fixed crypto presets", () => {
   const supertrendIndex = INDICATOR_SPECS.findIndex(spec => spec.id === "supertrend");
   const kkIndex = INDICATOR_SPECS.findIndex(spec => spec.id === "kk_supertrend");
@@ -155,7 +161,8 @@ test("KK Supertrend is registered immediately after SuperTrend with fixed crypto
   assert.equal(KK_SUPERTREND_ATR_LENGTH, 10);
   assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3 });
   assert.equal(KK_SUPERTREND_EQUITY_FACTOR, 3);
-  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { atr: 10, btcFactor: 3, ethFactor: 2, solFactor: 2, dogeFactor: 3, linkFactor: 3, xmrDailyAtr: 10, xmrDailyFactor: 3, xmrWeeklyAtr: 15, xmrWeeklyFactor: 2 });
+  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { atr: 10, btcFactor: 3, ethFactor: 2, solFactor: 2, dogeDailyAtr: 10, dogeDailyFactor: 3, dogeWeeklyAtr: 15, dogeWeeklyFactor: 2, linkFactor: 3, xmrDailyAtr: 10, xmrDailyFactor: 3, xmrWeeklyAtr: 15, xmrWeeklyFactor: 2 });
+  assert.deepEqual(KK_SUPERTREND_PRESETS.doge, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.xmr, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /screenshot-calibrated/i);
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /does not claim to reproduce/i);
@@ -198,6 +205,26 @@ test("weekly XMR KK Supertrend reproduces the supplied 15/2 calibration level", 
   assert.ok(costs[1]!.totalReturn >= costs[2]!.totalReturn);
 });
 
+test("weekly DOGE KK Supertrend reproduces the supplied Poloniex 15/2 calibration", () => {
+  const candles = weeklyFixture(Date.UTC(2024, 4, 13), DOGE_KK_CALIBRATION);
+  const calibrated = calculateIndicators(candles, "1w", { asset: "doge" }).find(item => item.id === "kk_supertrend")!;
+  const previous = calculateIndicators(candles, "1w", { asset: "doge", kkSupertrendAtrLength: 10, kkSupertrendFactor: 3 }).find(item => item.id === "kk_supertrend")!;
+
+  assert.equal(calibrated.state, "bear");
+  assert.equal(calibrated.values.atrLength, 15);
+  assert.equal(calibrated.values.factor, 2);
+  assert.ok(Math.abs(calibrated.bullTrigger! - 0.097006) < 0.00002, `DOGE level ${calibrated.bullTrigger}`);
+  assert.equal(calibrated.bearTrigger, null);
+  assert.equal(calibrated.lastFlip, Date.UTC(2025, 10, 3));
+  assert.equal(previous.state, "bear");
+  assert.ok(Math.abs(previous.bullTrigger! - 0.10047) < 0.0001);
+
+  const costs = [5, 15, 30].map(costBps => backtest(candles, [calibrated], "1w", costBps)[0]);
+  assert.ok(costs.every(Boolean));
+  assert.ok(costs[0]!.totalReturn >= costs[1]!.totalReturn);
+  assert.ok(costs[1]!.totalReturn >= costs[2]!.totalReturn);
+});
+
 test("BTC KK Supertrend is point-for-point identical to SuperTrend 10/3", () => {
   const results = calculateIndicators(history(), "1d", { asset: "btc" });
   const standard = results.find(item => item.id === "supertrend")!;
@@ -211,7 +238,7 @@ test("BTC KK Supertrend is point-for-point identical to SuperTrend 10/3", () => 
   assert.deepEqual(kk.values, standard.values);
 });
 
-test("DOGE, LINK, and daily XMR KK Supertrend use the explicit uncalibrated SuperTrend 10/3 preset", () => {
+test("LINK plus daily DOGE and XMR KK Supertrend use the explicit uncalibrated SuperTrend 10/3 preset", () => {
   for (const asset of ["doge", "link", "xmr"] as const) {
     const results = calculateIndicators(history(), "1d", { asset });
     const standard = results.find(item => item.id === "supertrend")!;
