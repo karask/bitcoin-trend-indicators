@@ -1,5 +1,5 @@
 import type { MarketDataset } from "./market-data.ts";
-import type { AssetId, SourceId } from "./markets.ts";
+import type { AssetId, SourceId, SourceDefinition } from "./markets.ts";
 
 const DB_NAME = "crypto-regime-history";
 const STORE_NAME = "market-history";
@@ -19,6 +19,7 @@ interface StoredCryptoHistory {
 export interface CryptoHistory {
   daily: MarketDataset;
   weekly: MarketDataset;
+  sources?: SourceDefinition[];
 }
 
 function key(asset: AssetId, source: SourceId): string {

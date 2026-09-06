@@ -1,10 +1,12 @@
-import { backtest, calculateIndicators, familyAgreement, INDICATOR_SPECS, type Candle, type IndicatorCalculationOptions, type SignalSnapshot, type Timeframe } from "./regimes";
-import { ASSETS, sourcesForAsset, type AssetId, type SourceId } from "./markets";
+import { calculateIndicators, familyAgreement, INDICATOR_SPECS, type Candle, type RegimeState, type IndicatorCalculationOptions, type SignalSnapshot, type Timeframe } from "./regimes.ts";
+import { ASSETS, sourcesForAsset, type AssetId, type SourceId } from "./markets.ts";
+import { formatPrice } from "./display.ts";
+import { buildResearch } from "./research.ts";
 import type { MarketDataset } from "./market-data";
 
 function flips(candles: Candle[], states: SignalSnapshot["states"]) {
-  const result: Array<{ time: number; from: string; to: string; close: number }> = [];
-  let prior: string | null = null;
+  const result: Array<{ time: number; from: RegimeState; to: RegimeState; close: number }> = [];
+  let prior: RegimeState | null = null;
   for (let i = 0; i < states.length; i++) {
     const state = states[i];
     if (!state) continue;
@@ -15,9 +17,8 @@ function flips(candles: Candle[], states: SignalSnapshot["states"]) {
 }
 
 function nextCondition(signal: SignalSnapshot, denomination: string): string {
-  const format = (value: number) => denomination === "USD"
-    ? new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: value < 100 ? 2 : 0 }).format(value)
-    : `${value.toLocaleString("en-US", { maximumFractionDigits: value < 100 ? 2 : 0 })} USDT`;
+  const format = (value: number) => formatPrice(value, denomination);
+  if (signal.readiness?.ready === false) return "Insufficient history";
   if (signal.thresholdKind === "conditional") return "Conditional";
   if (signal.state === "bull" && signal.bearTrigger != null) return `Below ${format(signal.bearTrigger)}`;
   if (signal.state === "bear" && signal.bullTrigger != null) return `Above ${format(signal.bullTrigger)}`;
@@ -33,7 +34,8 @@ function slimMatrix(signal: SignalSnapshot, candles: Candle[], denomination: str
     shortName: signal.shortName,
     role: signal.role,
     family: signal.family,
-    state: signal.state,
+    state: signal.readiness?.ready === false ? null : signal.state,
+    readiness: signal.readiness,
     previousState: signal.previousState,
     lastFlip: signal.lastFlip,
     thresholdKind: signal.thresholdKind,
@@ -57,9 +59,8 @@ export function buildDashboardPayload(asset: AssetId, source: SourceId, timefram
   const weeklySignals = calculateIndicators(weekly.candles, "1w", calculationOptions);
   const signals = timeframe === "1d" ? dailySignals : weeklySignals;
   const selected = signals.find(item => item.id === indicatorId) ?? signals.find(item => item.id === "support_band") ?? signals[0];
-  const visibleCount = timeframe === "1d" ? 180 : 120;
-  const start = Math.max(0, selectedDataset.candles.length - visibleCount);
-  const visibleCandles = selectedDataset.candles.slice(start);
+  const start = 0;
+  const visibleCandles = selectedDataset.candles;
   const visibleTimes = new Set(visibleCandles.map(c => c.time));
   const selectedView = {
     ...slimMatrix(selected, selectedDataset.candles, selectedDataset.denomination),
@@ -75,12 +76,13 @@ export function buildDashboardPayload(asset: AssetId, source: SourceId, timefram
     const other = counterpart.find(item => item.id === signal.id);
     return {
       ...slimMatrix(signal, selectedDataset.candles, selectedDataset.denomination),
-      dailyState: timeframe === "1d" ? signal.state : other?.state ?? null,
-      weeklyState: timeframe === "1w" ? signal.state : other?.state ?? null,
+      dailyState: timeframe === "1d" ? (signal.readiness?.ready === false ? null : signal.state) : (other?.readiness?.ready === false ? null : other?.state ?? null),
+      weeklyState: timeframe === "1w" ? (signal.readiness?.ready === false ? null : signal.state) : (other?.readiness?.ready === false ? null : other?.state ?? null),
       dailyLastFlip: timeframe === "1d" ? signal.lastFlip : other?.lastFlip ?? null,
       weeklyLastFlip: timeframe === "1w" ? signal.lastFlip : other?.lastFlip ?? null,
     };
   });
+  const comparison = buildResearch(selectedDataset.candles, signals, selected.id, timeframe);
   return {
     generatedAt: new Date().toISOString(),
     registry: INDICATOR_SPECS,
@@ -111,7 +113,8 @@ export function buildDashboardPayload(asset: AssetId, source: SourceId, timefram
     matrix,
     supporting: signals.filter(signal => signal.role !== "regime").map(signal => slimMatrix(signal, selectedDataset.candles, selectedDataset.denomination)),
     familyAgreement: familyAgreement(signals),
-    backtests: backtest(selectedDataset.candles, signals, timeframe),
+    backtests: comparison.backtests,
+    comparison,
     research: {
       assumptions: { execution: "Next candle open", exposure: "Bull 100% · Neutral 50% · Bear 0%", cashYield: 0, costBps: 15, sensitivityBps: [5, 15, 30] },
       ranking: "Indicative single-venue view. Production research ranks median equal-date cross-venue Calmar and reports the Pareto set; it does not declare a universal winner.",

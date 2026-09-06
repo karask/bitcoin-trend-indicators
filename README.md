@@ -109,6 +109,23 @@ The tests cover the complete preset registry, deterministic golden states, recur
 
 ## Research conventions
 
+### Dashboard workflow
+
+- Both labs remember their asset, venue, timeframe, and indicator as **device-local view preferences**. Validated URL parameters override these preferences; bookmarks and browser Back restore the corresponding view. Stock and crypto preferences and watchlists stay separate. No account data or tokens are saved in these preferences.
+- The KK watchlist reads the browser's existing candle caches on load. Pin the selected market (up to 12 pins per lab) and use **Check watchlist** to update its candles and quotes once. There is no polling. Rows disclose whether distance to the reversal level uses a fetched quote or a completed close, and whether daily/weekly states disagree. These are browser-local pins, not a synchronized portfolio.
+- Each lab's **Check for updates** uses the same on-demand D1/IndexedDB incremental workflow as a reload. Cached charts remain usable during checks. Provider-sync failure, cooldown, stale snapshots, quote retrieval age, and cache-save failure are visible. A sync error does not prevent reading the last good D1 snapshot. Requests and optional cache access are timeout-bounded; no API requests are service-worker cached.
+- Shared price formatting retains six significant digits for small assets (at least cents for larger ones). Chart padding scales with price, including sub-dollar coins. The full downloaded series is available through range, zoom, pan, previous/next flip, log-scale and native-fullscreen controls. Historical views hide today's trigger lines; log scale omits non-positive levels.
+- Indicators disclose required/available candles. Unready models are not displayed as neutral or counted in family agreement. Supporting-context indicators do not receive allocation backtests. Mobile model rows expand to show their rules and a link to the chart.
+
+### Calibration evidence and research comparisons
+
+- The on-site **KK calibration notebook** uses the same archived OHLC fixtures as the regression tests (`lib/kk-reference-data.ts`). Its registry (`lib/kk-calibration.ts`) records venue/denomination, reference cutoff, target state/level/flip, tolerance, previous preset and rationale. Capture timestamps that were not recorded remain explicitly unknown. It does not publish private screenshots or substitute reference fixtures for live market history.
+- Add future screenshot evidence to the registry with a fixed completed-candle fixture and regression assertions. Modify **KK only** when needed; retain earlier references and record any failed fit. A later reference that fits without changing settings is a validation observation, not a reason to refit. BTC's legacy reference and inherited daily presets are labeled honestly where independently archived evidence is absent.
+- The observed weekly groups (10/3, 10/2, 15/2) are not an automatic market-cap rule. The notebook includes ATR/price for comparable volatility context. Validate proposed group rules on later screenshots and new assets, not on backtest returns.
+- Both labs and the offline report runner use a common evaluation window after the included regime models' warmups. Unsupported/unready models or internally discontinuous signal vectors are excluded, not assigned zero performance. Dates and open-to-open observation counts are shown. Earlier candles remain available to calculate indicators.
+- Strategies and their buy-and-hold benchmark start in cash at the same evaluation open, include initial entry costs, and use the same 5/15/30-bps turnover-cost convention. Curves mark portfolios at subsequent opens, including drawdowns, with no assumed final liquidation. An execution ledger distinguishes the confirming signal candle from the following execution open.
+- Rolling four-year windows contain exactly four times the annualization count (365 crypto days, 252 equity sessions, or 52 weeks per year), start annually after warmup, and have matching benchmark windows. They overlap and are not independent trials. Too-short histories show no four-year result. Screenshot-fitted historical results remain descriptive, not out-of-sample proof.
+
 - A state confirmed at close becomes effective at the next candle open.
 - Exposure is 100% of the selected crypto asset in bull, 50% in neutral, and 0% in bear; two-state models use 100%/0%.
 - Cash yield is zero. No shorts or leverage.

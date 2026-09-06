@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
-import { nearestCandleIndex, periodLabel, priceAtY, type Theme } from "../lib/chart-interaction";
+import { nearestCandleIndex, periodLabel, priceAtY, priceDomain, type PriceScale, type Theme } from "../lib/chart-interaction";
+import { formatPrice } from "../lib/display";
 
 type State = "bull" | "bear" | "neutral";
 type Timeframe = "1d" | "1w";
 type Candle = { time: number; open: number; high: number; low: number; close: number; volume: number };
-type ChartSelected = {
+export type ChartSelected = {
   id: string;
   displayName: string;
   thresholdKind: "fixed" | "provisional" | "conditional";
@@ -40,22 +41,15 @@ export function chartColorCss(color: string) {
   return variable ? `var(${variable})` : color;
 }
 
-const formatPrice = (value: number | null | undefined, denomination = "USD") => {
-  if (value == null || !Number.isFinite(value)) return "—";
-  const maximumFractionDigits = value >= 1_000 ? 0 : value >= 10 ? 2 : 4;
-  return denomination === "USD"
-    ? new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits }).format(value)
-    : `${new Intl.NumberFormat("en-US", { maximumFractionDigits }).format(value)} USDT`;
-};
-
 const stateLabel = (state: State | null) => state === "bull" ? "Bullish" : state === "bear" ? "Bearish" : state === "neutral" ? "Neutral" : "Unavailable";
 
-export default function RegimeChart({ candles, selected, denomination, timeframe, theme }: { candles: Candle[]; selected: ChartSelected; denomination: string; timeframe: Timeframe; theme: Theme }) {
+export default function RegimeChart({ candles, selected, denomination, timeframe, theme, scale = "linear", onPan, panMode = false }: { candles: Candle[]; selected: ChartSelected; denomination: string; timeframe: Timeframe; theme: Theme; scale?: PriceScale; onPan?: (bars: number) => void; panMode?: boolean }) {
   const frameRef = useRef<HTMLDivElement>(null);
   const baseRef = useRef<HTMLCanvasElement>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null);
   const geometryRef = useRef<Geometry | null>(null);
   const touchingRef = useRef(false);
+  const dragRef = useRef<number | null>(null);
   const [selection, setSelection] = useState<Selection | null>(null);
   const [renderVersion, setRenderVersion] = useState(0);
 
@@ -83,17 +77,16 @@ export default function RegimeChart({ candles, selected, denomination, timeframe
         const variable = colorVariable(color);
         return variable ? css(variable, color) : color;
       };
-      const pad = { t: 18, r: 76, b: 32, l: 12 }, plotWidth = width - pad.l - pad.r, plotHeight = height - pad.t - pad.b;
+      const pad = { t: 18, r: 106, b: 32, l: 12 }, plotWidth = Math.max(1, width - pad.l - pad.r), plotHeight = Math.max(1, height - pad.t - pad.b);
       const values = candles.flatMap(candle => [candle.high, candle.low]);
       for (const overlay of selected.overlays) for (const point of overlay.points) values.push(point.value);
       for (const ribbon of selected.ribbons) for (const point of ribbon.points) values.push(point.upper, point.lower);
       if (selected.bullTrigger != null) values.push(selected.bullTrigger);
       if (selected.bearTrigger != null) values.push(selected.bearTrigger);
-      let minimum = Math.min(...values), maximum = Math.max(...values);
-      const margin = Math.max(1, (maximum - minimum) * 0.09); minimum -= margin; maximum += margin;
+      const { minimum, maximum } = priceDomain(values, scale);
       geometryRef.current = { width, height, ratio, left: pad.l, top: pad.t, plotWidth, plotHeight, minimum, maximum };
       const x = (index: number) => pad.l + (index + 0.5) * plotWidth / candles.length;
-      const y = (value: number) => pad.t + (maximum - value) / (maximum - minimum) * plotHeight;
+      const y = (value: number) => pad.t + (maximum - (scale === "log" ? Math.log(value) : value)) / (maximum - minimum) * plotHeight;
 
       ctx.clearRect(0, 0, width, height); ctx.fillStyle = css("--chart-bg", "#fffefa"); ctx.fillRect(0, 0, width, height);
       for (let index = 0; index < candles.length; index++) {
@@ -101,17 +94,18 @@ export default function RegimeChart({ candles, selected, denomination, timeframe
         ctx.fillStyle = css(state === "bull" ? "--chart-state-bull" : state === "bear" ? "--chart-state-bear" : "--chart-state-neutral", "transparent");
         ctx.fillRect(pad.l + index * plotWidth / candles.length, pad.t, plotWidth / candles.length + 1, plotHeight);
       }
-      ctx.strokeStyle = css("--chart-grid", "#e8ebe5"); ctx.lineWidth = 1; ctx.font = "10px ui-monospace, monospace"; ctx.fillStyle = css("--chart-axis", "#83908a"); ctx.textAlign = "left";
+      ctx.strokeStyle = css("--chart-grid", "#e8ebe5"); ctx.lineWidth = 1; ctx.font = "12px ui-monospace, monospace"; ctx.fillStyle = css("--chart-axis", "#83908a"); ctx.textAlign = "left";
       for (let index = 0; index <= 4; index++) {
         const yy = pad.t + index * plotHeight / 4; ctx.beginPath(); ctx.moveTo(pad.l, yy); ctx.lineTo(width - pad.r, yy); ctx.stroke();
-        ctx.fillText(formatPrice(maximum - index * (maximum - minimum) / 4, denomination), width - pad.r + 8, yy + 3);
+        const value = maximum - index * (maximum - minimum) / 4;
+        ctx.fillText(formatPrice(scale === "log" ? Math.exp(value) : value, denomination), width - pad.r + 8, yy + 3);
       }
       const indexByTime = new Map(candles.map((candle, index) => [candle.time, index]));
       for (const ribbon of selected.ribbons) {
         const byTime = new Map(ribbon.points.map(point => [point.time, point]));
         ctx.save(); ctx.globalAlpha = ribbon.fillOpacity;
         candles.forEach((candle, index) => {
-          const point = byTime.get(candle.time); if (!point) return;
+          const point = byTime.get(candle.time); if (!point || (scale === "log" && point.lower <= 0)) return;
           const next = index + 1 < candles.length ? byTime.get(candles[index + 1].time) : undefined;
           const nextUpper = next?.state === point.state ? next.upper : point.upper, nextLower = next?.state === point.state ? next.lower : point.lower;
           const left = pad.l + index * plotWidth / candles.length, right = pad.l + (index + 1) * plotWidth / candles.length;
@@ -119,7 +113,7 @@ export default function RegimeChart({ candles, selected, denomination, timeframe
         });
         ctx.restore();
       }
-      const candleWidth = Math.max(2, Math.min(8, plotWidth / candles.length * 0.58));
+      const candleWidth = Math.max(.5, Math.min(10, plotWidth / candles.length * 0.58));
       const barColorByTime = new Map(selected.barColors.map(point => [point.time, point.color]));
       candles.forEach((candle, index) => {
         const up = candle.close >= candle.open, color = resolveColor(barColorByTime.get(candle.time) ?? (up ? "#0f8a61" : "#c95545"));
@@ -135,14 +129,14 @@ export default function RegimeChart({ candles, selected, denomination, timeframe
         }
         let prior: { index: number; point: { value: number; color?: string } } | null = null;
         candles.forEach((candle, index) => {
-          const point = byTime.get(candle.time); if (!point) { prior = null; return; }
+          const point = byTime.get(candle.time); if (!point || (scale === "log" && point.value <= 0)) { prior = null; return; }
           if (prior) { ctx.strokeStyle = resolveColor(point.color ?? overlay.color); ctx.beginPath(); ctx.moveTo(x(prior.index), y(prior.point.value)); ctx.lineTo(x(index), y(point.value)); ctx.stroke(); }
           prior = { index, point };
         });
         ctx.setLineDash([]);
       }
       const drawTrigger = (value: number | null, rawColor: string, label: string) => {
-        if (value == null) return; const yy = y(value), color = resolveColor(rawColor);
+        if (value == null || (scale === "log" && value <= 0)) return; const yy = y(value), color = resolveColor(rawColor);
         ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(pad.l, yy); ctx.lineTo(width - pad.r, yy); ctx.stroke(); ctx.setLineDash([]);
         ctx.fillStyle = css("--chart-bg", "#fffefa"); ctx.fillRect(Math.max(pad.l, width - pad.r - 178), yy - 10, 178, 18); ctx.fillStyle = color; ctx.font = "700 9px ui-monospace, monospace"; ctx.textAlign = "right"; ctx.fillText(`${label} · ${formatPrice(value, denomination)}`, width - pad.r - 4, yy + 3);
       };
@@ -170,7 +164,7 @@ export default function RegimeChart({ candles, selected, denomination, timeframe
       setRenderVersion(version => version + 1);
     };
     render(); const observer = new ResizeObserver(render); observer.observe(frame); return () => observer.disconnect();
-  }, [candles, selected, denomination, theme]);
+  }, [candles, selected, denomination, theme, scale]);
 
   useEffect(() => {
     const canvas = overlayRef.current, frame = frameRef.current, geometry = geometryRef.current;
@@ -180,18 +174,18 @@ export default function RegimeChart({ candles, selected, denomination, timeframe
     if (!selection || !candles[selection.index]) return;
     const styles = getComputedStyle(frame), css = (name: string, fallback: string) => styles.getPropertyValue(name).trim() || fallback;
     const x = geometry.left + (selection.index + 0.5) * geometry.plotWidth / candles.length;
-    const yForPrice = (value: number) => geometry.top + (geometry.maximum - value) / (geometry.maximum - geometry.minimum) * geometry.plotHeight;
+    const yForPrice = (value: number) => geometry.top + (geometry.maximum - (scale === "log" ? Math.log(value) : value)) / (geometry.maximum - geometry.minimum) * geometry.plotHeight;
     const rawY = selection.pointerY ?? yForPrice(candles[selection.index].close);
     const y = Math.max(geometry.top, Math.min(geometry.top + geometry.plotHeight, rawY));
     ctx.strokeStyle = css("--chart-crosshair", "#52625b"); ctx.lineWidth = 1; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(x, geometry.top); ctx.lineTo(x, geometry.top + geometry.plotHeight); ctx.moveTo(geometry.left, y); ctx.lineTo(geometry.left + geometry.plotWidth, y); ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle = css("--chart-crosshair", "#52625b"); ctx.beginPath(); ctx.arc(x, yForPrice(candles[selection.index].close), 3.2, 0, Math.PI * 2); ctx.fill();
     const price = priceAtY(y, geometry.top, geometry.plotHeight, geometry.minimum, geometry.maximum);
-    const priceText = formatPrice(price, denomination); ctx.font = "700 9px ui-monospace, monospace"; const priceWidth = Math.min(72, Math.max(46, ctx.measureText(priceText).width + 10));
+    const priceText = formatPrice(scale === "log" ? Math.exp(price) : price, denomination); ctx.font = "700 12px ui-monospace, monospace"; const priceWidth = Math.min(104, Math.max(46, ctx.measureText(priceText).width + 10));
     ctx.fillStyle = css("--chart-crosshair-tag", "#34433d"); ctx.fillRect(geometry.width - priceWidth, y - 9, priceWidth, 18); ctx.fillStyle = css("--chart-crosshair-tag-text", "#ffffff"); ctx.textAlign = "center"; ctx.fillText(priceText, geometry.width - priceWidth / 2, y + 3);
     const dateText = new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "2-digit", timeZone: "UTC" }).format(candles[selection.index].time);
     const dateWidth = ctx.measureText(dateText).width + 14, dateX = Math.max(geometry.left, Math.min(geometry.left + geometry.plotWidth - dateWidth, x - dateWidth / 2));
     ctx.fillStyle = css("--chart-crosshair-tag", "#34433d"); ctx.fillRect(dateX, geometry.height - 24, dateWidth, 18); ctx.fillStyle = css("--chart-crosshair-tag-text", "#ffffff"); ctx.fillText(dateText, dateX + dateWidth / 2, geometry.height - 12);
-  }, [candles, denomination, renderVersion, selection, theme]);
+  }, [candles, denomination, renderVersion, selection, theme, scale]);
 
   const inspected = selection ? candles[selection.index] : null;
   const tooltip = useMemo(() => {
@@ -217,11 +211,18 @@ export default function RegimeChart({ candles, selected, denomination, timeframe
     setSelection({ index, pinned, pointerY, alignRight: pointerX > geometry.width * .57 });
   };
   const onPointerMove = (event: PointerEvent<HTMLCanvasElement>) => {
+    if (panMode && dragRef.current != null && geometryRef.current) {
+      const pixelsPerBar = geometryRef.current.plotWidth / candles.length;
+      const bars = Math.trunc((dragRef.current - event.clientX) / pixelsPerBar);
+      if (bars) { onPan?.(bars); dragRef.current = event.clientX; }
+      return;
+    }
     if (event.pointerType === "touch") { if (touchingRef.current) selectFromPointer(event, true); return; }
     if (!selection?.pinned) selectFromPointer(event, false);
   };
   const onPointerDown = (event: PointerEvent<HTMLCanvasElement>) => {
     overlayRef.current?.focus();
+    if (panMode) { dragRef.current = event.clientX; event.currentTarget.setPointerCapture(event.pointerId); setSelection(null); return; }
     if (event.pointerType === "touch") { touchingRef.current = true; event.currentTarget.setPointerCapture(event.pointerId); }
     selectFromPointer(event, true);
   };
@@ -240,8 +241,8 @@ export default function RegimeChart({ candles, selected, denomination, timeframe
   return <div ref={frameRef} className="chart-interactive">
     <canvas ref={baseRef} className="regime-canvas chart-base" role="img" aria-label={`${selected.displayName} candlestick chart with confirmed regime shading, overlays, and signal markers`} />
     <canvas ref={overlayRef} className="regime-canvas chart-overlay" tabIndex={0} role="slider" aria-valuemin={0} aria-valuemax={Math.max(0, candles.length - 1)} aria-valuenow={selection?.index ?? candles.length - 1} aria-valuetext={selection && inspected ? `${periodLabel(inspected.time, timeframe)}, close ${formatPrice(inspected.close, denomination)}, ${stateLabel(selected.states[selection.index])}` : "No candle selected"} aria-label={`Interactive ${selected.displayName} chart. Use left and right arrow keys to inspect candles, Home and End to jump, Enter to pin, and Escape to clear.`}
-      onPointerMove={onPointerMove} onPointerDown={onPointerDown} onPointerUp={() => { touchingRef.current = false; }} onPointerCancel={() => { touchingRef.current = false; }} onPointerLeave={() => { if (!selection?.pinned) setSelection(null); }} onKeyDown={onKeyDown} />
-    {!selection && <span className="chart-interaction-hint">Hover, tap, or focus to inspect</span>}
+      onPointerMove={onPointerMove} onPointerDown={onPointerDown} onPointerUp={() => { touchingRef.current = false; dragRef.current = null; }} onPointerCancel={() => { touchingRef.current = false; dragRef.current = null; }} onPointerLeave={() => { if (!selection?.pinned) setSelection(null); }} onKeyDown={onKeyDown} />
+    {!selection && <span className="chart-interaction-hint">{panMode ? "Drag to pan · slider also available" : "Hover, tap, or use arrow keys to inspect"}</span>}
     {selection && inspected && tooltip && <aside className={`chart-tooltip ${selection.alignRight ? "align-right" : ""}`} aria-hidden="true">
       <div className="chart-tooltip-heading"><strong>{periodLabel(inspected.time, timeframe)}</strong>{selection.pinned && <span>PINNED</span>}</div>
       <div className="chart-tooltip-ohlc"><span>O <b>{formatPrice(inspected.open, denomination)}</b></span><span>H <b>{formatPrice(inspected.high, denomination)}</b></span><span>L <b>{formatPrice(inspected.low, denomination)}</b></span><span>C <b>{formatPrice(inspected.close, denomination)}</b></span></div>

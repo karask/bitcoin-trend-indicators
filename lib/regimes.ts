@@ -29,11 +29,16 @@ export interface IndicatorCalculationOptions {
   kkSupertrendFactor?: number;
   kkSupertrendAtrLength?: number;
   superGuppy?: Partial<SuperGuppyConfig>;
+  indicatorIds?: string[];
 }
 
 export interface AnnualizationOptions {
   market?: MarketContext;
   periodsPerYear?: number;
+  /** Inclusive execution open; earlier candles remain available for warmup. */
+  startIndex?: number;
+  /** Exclusive execution index; the final open is the valuation endpoint. */
+  endIndex?: number;
 }
 
 export const KK_SUPERTREND_ATR_LENGTH = 10;
@@ -154,6 +159,7 @@ export interface SignalSnapshot {
   events: SignalEvent[];
   barColors: BarColorPoint[];
   states: Array<RegimeState | null>;
+  readiness?: { ready: boolean; availableCandles: number; requiredCandles: number; validStates: number };
 }
 
 export interface BacktestSummary {
@@ -172,6 +178,9 @@ export interface BacktestSummary {
   upsideCapture: number | null;
   downsideCapture: number | null;
   timeInState: Record<RegimeState, number>;
+  observations: number;
+  start: number;
+  end: number;
 }
 
 const BASE_INDICATOR_SPECS: Array<Omit<IndicatorSpec, "guidance">> = [
@@ -753,7 +762,7 @@ export function calculateIndicators(candles: Candle[], timeframe: Timeframe, opt
   const explicitKkAtrLength = Number.isInteger(options.kkSupertrendAtrLength) && options.kkSupertrendAtrLength! > 0 ? options.kkSupertrendAtrLength! : null;
   const kkFactor = explicitKkFactor ?? configuredKk.factor;
   const kkAtrLength = explicitKkAtrLength ?? configuredKk.atrLength;
-  return INDICATOR_SPECS.filter(s => s.supportedTimeframes.includes(timeframe)).map(spec => {
+  return INDICATOR_SPECS.filter(s => s.supportedTimeframes.includes(timeframe) && (!options.indicatorIds || options.indicatorIds.includes(s.id))).map(spec => {
     switch (spec.id) {
       case "support_band": return supportBand(candles, spec);
       case "supertrend": return supertrend(candles, spec, 10, 3, { name: "SuperTrend", color: "#8769c3" });
@@ -773,6 +782,11 @@ export function calculateIndicators(candles: Candle[], timeframe: Timeframe, opt
       case "mayer": case "ma_200w": return valuation(candles, spec, timeframe);
       default: return buildSnapshot(spec, candles, candles.map(() => null), [], {}, null, null, "Not available");
     }
+  }).map(snapshot => {
+    const required: Record<string, number> = { support_band: 20, supertrend: 10, kk_supertrend: kkAtrLength, smma_ribbon: 29, super_guppy: options.superGuppy?.ema200Filter ? 200 : 1, long_sma: timeframe === "1d" ? 200 : 30, donchian_20_10: 21, ichimoku: 78, macd: 1, psar: 2, vortex: 15, heikin_ashi: 1, golden_cross: 200, adx: 14, chandelier: 22, mayer: 200, ma_200w: 200 };
+    const validStates = snapshot.states.filter(state => state != null).length;
+    const ready = snapshot.id === "mayer" ? finite(snapshot.values.multiple) : snapshot.states.at(-1) != null;
+    return { ...snapshot, readiness: { ready, availableCandles: candles.length, requiredCandles: required[snapshot.id] ?? 1, validStates } };
   });
 }
 
@@ -781,30 +795,45 @@ function resolvePeriodsPerYear(timeframe: Timeframe, options: AnnualizationOptio
   return timeframe === "1d" ? (options.market === "equity" ? 252 : 365) : 52;
 }
 
-export function backtest(candles: Candle[], snapshots: SignalSnapshot[], timeframe: Timeframe, costBps = 15, options: AnnualizationOptions = {}): BacktestSummary[] {
+export interface ExecutionRecord { signalTime: number; time: number; price: number; state: RegimeState; exposure: number; previousExposure: number; cost: number }
+export interface EquityPoint { time: number; equity: number; drawdown: number }
+
+export function backtestDetail(candles: Candle[], s: SignalSnapshot, timeframe: Timeframe, costBps = 15, options: AnnualizationOptions = {}) {
   const periodsPerYear = resolvePeriodsPerYear(timeframe, options);
-  return snapshots.filter(s => s.role === "regime").map(s => {
+  if (s.role !== "regime") return null;
     let equity = 1, peak = 1, maxDrawdown = 0, turnover = 0, exposureSum = 0, flips = 0;
     const returns: number[] = [], assetReturns: number[] = [];
+    const curve: EquityPoint[] = [], executions: ExecutionRecord[] = [];
+    let firstIndex = -1, lastIndex = -1, priorExposure = 0;
     const stateCounts: Record<RegimeState, number> = { bull: 0, bear: 0, neutral: 0 };
-    for (let i = 1; i < candles.length - 1; i++) {
+    for (let i = Math.max(1, options.startIndex ?? 1); i < Math.min(candles.length - 1, options.endIndex ?? candles.length - 1); i++) {
       const current = s.states[i - 1];
       if (!current) continue;
       const exposure = current === "bull" ? 1 : current === "neutral" ? 0.5 : 0;
-      const previous = i >= 2 && s.states[i - 2] ? (s.states[i - 2] === "bull" ? 1 : s.states[i - 2] === "neutral" ? 0.5 : 0) : 0;
+      const previous = priorExposure;
+      if (firstIndex < 0) { firstIndex = i; curve.push({ time: candles[i].time, equity: 1, drawdown: 0 }); }
+      lastIndex = i;
       const change = Math.abs(exposure - previous); turnover += change; if (change > 0) flips++;
       const assetReturn = candles[i + 1].open / candles[i].open - 1;
       const strategyReturn = exposure * assetReturn - change * costBps / 10000;
       returns.push(strategyReturn); assetReturns.push(assetReturn); stateCounts[current]++; exposureSum += exposure; equity *= 1 + strategyReturn; peak = Math.max(peak, equity); maxDrawdown = Math.min(maxDrawdown, equity / peak - 1);
+      if (change > 0) executions.push({ signalTime: candles[i - 1].time, time: candles[i].time, price: candles[i].open, state: current, exposure, previousExposure: previous, cost: change * costBps / 10_000 });
+      curve.push({ time: candles[i + 1].time, equity, drawdown: equity / peak - 1 });
+      priorExposure = exposure;
     }
+    if (!returns.length) return null;
     const years = returns.length / periodsPerYear, cagr = years > 0 && equity > 0 ? equity ** (1 / years) - 1 : 0;
     const mean = returns.length ? returns.reduce((a, b) => a + b, 0) / returns.length : 0;
     const variance = returns.length > 1 ? returns.reduce((a, b) => a + (b - mean) ** 2, 0) / (returns.length - 1) : 0;
     const volatility = Math.sqrt(variance * periodsPerYear), downside = Math.sqrt(returns.filter(value => value < 0).reduce((sum, value) => sum + value ** 2, 0) / Math.max(1, returns.filter(value => value < 0).length)) * Math.sqrt(periodsPerYear);
     const positiveAsset = assetReturns.reduce((sum, value) => sum + Math.max(0, value), 0), negativeAsset = assetReturns.reduce((sum, value) => sum + Math.min(0, value), 0);
     const positiveStrategy = returns.reduce((sum, value, i) => assetReturns[i] > 0 ? sum + value : sum, 0), negativeStrategy = returns.reduce((sum, value, i) => assetReturns[i] < 0 ? sum + value : sum, 0);
-    return { indicatorId: s.id, displayName: s.shortName, totalReturn: equity - 1, cagr, maxDrawdown, calmar: maxDrawdown < 0 ? cagr / Math.abs(maxDrawdown) : null, sharpe: volatility > 0 ? mean * periodsPerYear / volatility : null, sortino: downside > 0 ? mean * periodsPerYear / downside : null, volatility, exposure: returns.length ? exposureSum / returns.length : 0, turnover, flips, upsideCapture: positiveAsset ? positiveStrategy / positiveAsset : null, downsideCapture: negativeAsset ? negativeStrategy / negativeAsset : null, timeInState: { bull: stateCounts.bull / Math.max(1, returns.length), bear: stateCounts.bear / Math.max(1, returns.length), neutral: stateCounts.neutral / Math.max(1, returns.length) } };
-  }).sort((a, b) => (b.calmar ?? -Infinity) - (a.calmar ?? -Infinity));
+    const summary: BacktestSummary = { indicatorId: s.id, displayName: s.shortName, totalReturn: equity - 1, cagr, maxDrawdown, calmar: maxDrawdown < 0 ? cagr / Math.abs(maxDrawdown) : null, sharpe: volatility > 0 ? mean * periodsPerYear / volatility : null, sortino: downside > 0 ? mean * periodsPerYear / downside : null, volatility, exposure: exposureSum / returns.length, turnover, flips, upsideCapture: positiveAsset ? positiveStrategy / positiveAsset : null, downsideCapture: negativeAsset ? negativeStrategy / negativeAsset : null, timeInState: { bull: stateCounts.bull / returns.length, bear: stateCounts.bear / returns.length, neutral: stateCounts.neutral / returns.length }, observations: returns.length, start: candles[firstIndex].time, end: candles[lastIndex + 1].time };
+    return { summary, curve, executions };
+}
+
+export function backtest(candles: Candle[], snapshots: SignalSnapshot[], timeframe: Timeframe, costBps = 15, options: AnnualizationOptions = {}): BacktestSummary[] {
+  return snapshots.flatMap(s => { const result = backtestDetail(candles, s, timeframe, costBps, options); return result ? [result.summary] : []; }).sort((a, b) => (b.calmar ?? -Infinity) - (a.calmar ?? -Infinity));
 }
 
 export function buyAndHold(candles: Candle[], timeframe: Timeframe, costBps = 15, options: AnnualizationOptions = {}) {
@@ -820,14 +849,16 @@ export function buyAndHold(candles: Candle[], timeframe: Timeframe, costBps = 15
   return { totalReturn: equity - 1, cagr, maxDrawdown, calmar: maxDrawdown < 0 ? cagr / Math.abs(maxDrawdown) : null, sharpe: volatility > 0 ? mean * periodsPerYear / volatility : null, volatility };
 }
 
-export function familyAgreement(snapshots: SignalSnapshot[]): Record<RegimeState, number> {
+export function familyRows(snapshots: Array<Pick<SignalSnapshot, "role" | "family" | "id"> & { state: RegimeState | null; readiness?: SignalSnapshot["readiness"] }>) {
   const families = ["smoothing/order", "ATR/trailing stop", "breakout", "momentum", "cloud/projected support"];
-  const votes: RegimeState[] = families.map(family => {
-    const members = snapshots.filter(s => s.role === "regime" && s.family === family && s.id !== "chandelier");
-    if (!members.length) return "neutral";
-    if (members.every(m => m.state === "bull")) return "bull";
-    if (members.every(m => m.state === "bear")) return "bear";
-    return "neutral";
+  return families.map(family => {
+    const members = snapshots.filter(s => s.role === "regime" && s.family === family && s.state != null && s.readiness?.ready !== false);
+    const state: RegimeState | null = !members.length ? null : members.every(m => m.state === "bull") ? "bull" : members.every(m => m.state === "bear") ? "bear" : "neutral";
+    return { family, state, members: members.length };
   });
-  return { bull: votes.filter(v => v === "bull").length, bear: votes.filter(v => v === "bear").length, neutral: votes.filter(v => v === "neutral").length };
+}
+
+export function familyAgreement(snapshots: SignalSnapshot[]): Record<RegimeState, number> & { unavailable: number } {
+  const votes = familyRows(snapshots);
+  return { bull: votes.filter(v => v.state === "bull").length, bear: votes.filter(v => v.state === "bear").length, neutral: votes.filter(v => v.state === "neutral").length, unavailable: votes.filter(v => v.state == null).length };
 }
