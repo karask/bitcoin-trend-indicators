@@ -5,7 +5,7 @@ import { chartWindow, priceDomain } from "../lib/chart-interaction.ts";
 import { backtest, backtestDetail, calculateIndicators, familyAgreement, familyRows, type Candle, type SignalSnapshot } from "../lib/regimes.ts";
 import { buildResearch, researchWindow } from "../lib/research.ts";
 import { resolveView, viewUrl } from "../lib/view-preferences.ts";
-import { normalizePins, cryptoWatchSummary } from "../lib/watchlist.ts";
+import { summarizeOverview } from "../lib/asset-overview.ts";
 import { historyIsCurrent, loadCryptoHistory, requestJson, syncMarket, syncMessage } from "../lib/history-client.ts";
 import { signalTiming } from "../lib/signal-timing.ts";
 import { KK_REFERENCES, calibrationStatus, evaluateReference } from "../lib/kk-calibration.ts";
@@ -143,14 +143,11 @@ test("saved views validate URL input and preserve exchanges when supported", () 
   assert.equal(resolveView("crypto", "bad storage").asset, "btc");
 });
 
-test("watchlist pins are isolated by market and deduplicated, with truthful readiness", () => {
-  assert.deepEqual(normalizePins("crypto", [{ asset: "sui", source: "coinbase" }, { asset: "sui", source: "coinbase" }, { asset: "tsla", source: "yahoo" }]), [{ asset: "sui", source: "coinbase" }]);
-  assert.deepEqual(normalizePins("stock", [{ asset: "mu", source: "kraken" }, { asset: "doge" }]), [{ asset: "mu", source: "yahoo" }]);
-  assert.deepEqual(normalizePins("crypto", []), []);
-  const summary = cryptoWatchSummary({ daily: dataset(history(6), "1d"), weekly: dataset(history(2), "1w") }, "sui");
-  assert.equal(summary.dailyState, null);
-  assert.equal(summary.weeklyState, null);
-  assert.equal(summary.level, null);
+test("asset overview retains truthful readiness on short histories", () => {
+  const summary = summarizeOverview({ lab: "crypto", history: { daily: dataset(history(6), "1d"), weekly: dataset(history(2), "1w") } }, "kk_supertrend");
+  assert.equal(summary.day.readiness?.ready, false);
+  assert.equal(summary.week.readiness?.ready, false);
+  assert.equal(summary.selected.bearTrigger, null);
 });
 
 test("signal timestamps distinguish session closes from subsequent opens including holidays and DST", () => {

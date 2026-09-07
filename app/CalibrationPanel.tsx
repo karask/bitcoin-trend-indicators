@@ -1,14 +1,15 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { KK_CALIBRATION_VERSION, KK_REFERENCES, calibrationStatus, evaluateReference } from "../lib/kk-calibration";
 import { formatDate, formatPct, formatPrice } from "../lib/display";
 import type { AssetId } from "../lib/markets";
 import type { SignalSnapshot, Timeframe } from "../lib/regimes";
 
 export default function CalibrationPanel({ asset, timeframe, values }: { asset?: AssetId; timeframe: Timeframe; values: SignalSnapshot["values"] }) {
+  const [expanded, setExpanded] = useState(false);
   const evidence = useMemo(() => KK_REFERENCES.filter(reference => reference.asset === asset).map(evaluateReference), [asset]);
-  return <details className="calibration-panel"><summary><span><b>KK Supertrend · ATR {values.atrLength} / multiplier {values.factor}</b><small>{calibrationStatus(asset, timeframe)} · {timeframe === "1w" ? "weekly" : "daily"}</small></span><span>Calibration notebook</span></summary>
+  return <details className="calibration-panel" open={expanded} onToggle={event => setExpanded(event.currentTarget.open)}><summary><span><b>KK Supertrend · ATR {values.atrLength} / multiplier {values.factor}</b><small>{calibrationStatus(asset, timeframe)} · {timeframe === "1w" ? "weekly" : "daily"}</small></span><span>{expanded ? "Close" : "Open"} calibration notebook {expanded ? "−" : "+"}</span></summary>
     <div className="calibration-body"><p>Only KK Supertrend uses these screenshot presets. Standard SuperTrend and every other indicator retain their own settings. Registry revision: {KK_CALIBRATION_VERSION}.</p>
       <div className="calibration-controls-guide"><article><h3>ATR length · volatility memory</h3><p>A longer length smooths volatility over more candles and reacts more slowly to new shocks. A shorter length reacts faster. It does not always move the trail in the same direction; that depends on recent volatility.</p></article><article><h3>Multiplier · distance from price</h3><p>A larger multiplier generally puts the trail farther away, causing later and fewer reversals. A smaller multiplier generally brings it closer, causing earlier and more frequent reversals, including more false flips in sideways markets.</p></article></div>
       <p>The calculation uses HL2 ± multiplier × Wilder ATR and a close-confirmed trailing-band recurrence. These are not fixed price offsets. A matching latest level alone does not prove the private chart formula is identical.</p>

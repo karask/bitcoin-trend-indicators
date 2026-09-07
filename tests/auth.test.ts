@@ -327,7 +327,7 @@ test("Cloudflare middleware protects pages and APIs while leaving auth pages pub
     assert.equal(api.headers.get("X-Auth-Required"), "1", path);
   }
 
-  for (const path of ["/", "/stocks?symbol=TSLA"]) {
+  for (const path of ["/", "/stocks?symbol=TSLA", "/overview", "/overview/?indicator=kk_supertrend"]) {
     const page = await pagesAuthMiddleware({ request: new Request(`${ORIGIN}${path}`), env, next: async () => new Response("should not run"), waitUntil() {} });
     assert.equal(page.status, 302, path);
     const destination = new URL(page.headers.get("location") ?? "");
@@ -350,8 +350,10 @@ test("Cloudflare middleware protects pages and APIs while leaving auth pages pub
   const challengeId = await requestChallenge(setup.runtime);
   const verified = await handleVerifyCode(jsonRequest("/api/v1/auth/verify-code", { challengeId, code: "123456" }), setup.runtime);
   const cookie = (verified.headers.get("set-cookie") ?? "").split(";")[0];
-  const protectedPage = await pagesAuthMiddleware({ request: new Request(`${ORIGIN}/`, { headers: { Cookie: cookie } }), env, next: async () => new Response("dashboard shell", { headers: { "Cache-Control": "public" } }), waitUntil() {} });
+  for (const path of ["/", "/stocks/", "/overview/"]) {
+  const protectedPage = await pagesAuthMiddleware({ request: new Request(`${ORIGIN}${path}`, { headers: { Cookie: cookie } }), env, next: async () => new Response("dashboard shell", { headers: { "Cache-Control": "public" } }), waitUntil() {} });
   assert.equal(protectedPage.status, 200);
   assert.equal(await protectedPage.text(), "dashboard shell");
   assert.equal(protectedPage.headers.get("Cache-Control"), "private, no-store, max-age=0");
+  }
 });

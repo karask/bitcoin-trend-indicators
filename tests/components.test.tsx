@@ -7,7 +7,8 @@ import ResearchPanel from "../app/ResearchPanel";
 import SignalReadiness from "../app/SignalReadiness";
 import SyncStatus from "../app/SyncStatus";
 import MobileMatrix from "../app/MobileMatrix";
-import Watchlist from "../app/Watchlist";
+import AssetOverview from "../app/overview/AssetOverview";
+import { OVERVIEW_ASSETS } from "../lib/asset-overview";
 import { calculateIndicators, type Candle } from "../lib/regimes";
 import { buildResearch } from "../lib/research";
 import RegimeDashboard from "../app/RegimeDashboard";
@@ -38,10 +39,13 @@ test("calibration notebook exposes versioned evidence and uncalibrated equity la
   assert.match(sui, /Reference check passes/);
   assert.match(sui, /1\.0413/);
   assert.match(sui, /market-cap rule/);
+  assert.match(sui, /Open calibration notebook/);
+  assert.doesNotMatch(sui, /<details[^>]*\bopen=/);
   const stock = renderToStaticMarkup(<CalibrationPanel timeframe="1w" values={{ atrLength: 10, factor: 3 }} />);
   assert.match(stock, /Uncalibrated equity preset/);
   assert.match(stock, /identical to standard SuperTrend 10\/3/);
   assert.doesNotMatch(stock, /Reference check passes/);
+  assert.doesNotMatch(stock, /<details[^>]*\bopen=/);
 });
 
 test("research renders matched dates, benchmark, costs, curves, ledger and full windows", () => {
@@ -63,17 +67,32 @@ test("both labs keep distinct controls with accessible timeframes and non-pollin
   assert.match(crypto, /CURRENT BTC QUOTE/);
   assert.doesNotMatch(crypto, /LIVE BTC SPOT/);
   assert.match(crypto, /aria-pressed="true"/);
+  assert.doesNotMatch(crypto, /KK watchlist|Pin current market|Check watchlist/);
+  assert.match(crypto, /href="\/overview\/"/);
   const stock = renderToStaticMarkup(<StockDashboard />);
   assert.match(stock, /Yahoo Finance/);
   assert.match(stock, /Check for updates/);
   assert.match(stock, /Stocks/);
   assert.doesNotMatch(stock, /Market source|Tiingo|Binance|Kraken|CONFIRMATION CLOCK · UTC/);
+  assert.doesNotMatch(stock, /KK watchlist|Pin current market|Check watchlist/);
+  assert.match(stock, /href="\/overview\/"/);
 });
 
-test("watchlists are manual-check surfaces and mobile model rows expand", () => {
-  const watch = renderToStaticMarkup(<Watchlist lab="crypto" active={{ asset: "sui", source: "coinbase" }} now={Date.UTC(2026, 8, 6)} onSelect={() => {}} />);
-  assert.match(watch, /Saved on this browser/);
-  assert.match(watch, /does not start a timer/);
+test("overview shows all assets crypto first, one global indicator selector and no pinning", () => {
+  const html = renderToStaticMarkup(<AssetOverview />);
+  assert.ok(html.indexOf('id="overview-crypto"') < html.indexOf('id="overview-stock"'));
+  for (const asset of OVERVIEW_ASSETS) assert.ok(html.includes(`<strong>${asset.symbol}</strong>`), asset.symbol);
+  assert.equal((html.match(/<select/g) ?? []).length, 1);
+  assert.match(html, /Indicator for all assets/);
+  assert.match(html, /Check all assets/);
+  assert.match(html, /No automatic polling/);
+  assert.match(html, /Changing the indicator does not fetch data/);
+  assert.match(html, /value="mayer"/);
+  assert.match(html, /value="ma_200w"/);
+  assert.doesNotMatch(html, /Pin current market|KK watchlist/);
+});
+
+test("mobile model rows expand and sync failures remain visible", () => {
   const mobile = renderToStaticMarkup(<MobileMatrix rows={[{ ...selected, dailyState: null, weeklyState: "bull", nextCondition: "Below $1.00" }]} selectedId={selected.id} onSelect={() => {}} />);
   assert.match(mobile, /<details/);
   assert.match(mobile, /View KK Supertrend chart/);
