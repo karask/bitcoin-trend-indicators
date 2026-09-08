@@ -42,7 +42,7 @@ export interface AnnualizationOptions {
 }
 
 export const KK_SUPERTREND_ATR_LENGTH = 10;
-export const KK_SUPERTREND_FACTORS = { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3, sui: 3 } as const satisfies Record<AssetId, number>;
+export const KK_SUPERTREND_FACTORS = { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3, sui: 3, jup: 3, op: 3, bonk: 3, ada: 3, atom: 3, hype: 3, dot: 3 } as const satisfies Record<AssetId, number>;
 export const KK_SUPERTREND_EQUITY_FACTOR = 3;
 export const KK_SUPERTREND_PRESETS = {
   btc: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
@@ -52,6 +52,13 @@ export const KK_SUPERTREND_PRESETS = {
   link: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
   xmr: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
   sui: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  jup: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
+  op: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
+  bonk: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
+  ada: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
+  atom: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
+  hype: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
+  dot: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
 } as const satisfies Record<AssetId, Record<Timeframe, { atrLength: number; factor: number }>>;
 
 export const SUPER_GUPPY_R12_DEFAULTS: SuperGuppyConfig = {

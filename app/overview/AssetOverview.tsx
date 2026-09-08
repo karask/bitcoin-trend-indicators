@@ -68,8 +68,8 @@ export default function AssetOverview() {
           if (!abort.signal.aborted) setProgress(value => value + 1);
         }
       };
-      // Bounded concurrency keeps one slow asset from blocking the whole page.
-      await Promise.all([worker(), worker(), worker()]);
+      // One market at a time avoids provider bursts as the asset catalog grows.
+      await worker();
       if (!abort.signal.aborted) setBusy(false);
     };
     void check();

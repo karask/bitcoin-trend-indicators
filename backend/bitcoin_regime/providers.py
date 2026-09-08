@@ -2,8 +2,11 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 import json
+import time
+from email.utils import parsedate_to_datetime
 from math import ceil
-from urllib.parse import urlencode
+from urllib.error import HTTPError
+from urllib.parse import urlencode, urlparse
 from urllib.request import Request, urlopen
 
 from .models import Candle, Dataset
@@ -50,6 +53,13 @@ MARKETS = {
         "kraken": ("SUI/USD", "SUIUSD", datetime(2024, 9, 14, tzinfo=timezone.utc)),
         "coinbase": ("SUI/USD", "SUI-USD", datetime(2023, 5, 18, tzinfo=timezone.utc)),
     },
+    "jup": {"kraken": ("JUP/USD", "JUPUSD", datetime(2024, 1, 31, tzinfo=timezone.utc))},
+    "op": {"coinbase": ("OP/USD", "OP-USD", datetime(2022, 6, 1, tzinfo=timezone.utc))},
+    "bonk": {"coinbase": ("BONK/USD", "BONK-USD", datetime(2023, 12, 14, tzinfo=timezone.utc))},
+    "ada": {"coinbase": ("ADA/USD", "ADA-USD", datetime(2021, 3, 18, tzinfo=timezone.utc))},
+    "atom": {"coinbase": ("ATOM/USD", "ATOM-USD", datetime(2020, 1, 14, tzinfo=timezone.utc))},
+    "hype": {"kraken": ("HYPE/USD", "HYPEUSD", datetime(2026, 1, 28, tzinfo=timezone.utc))},
+    "dot": {"coinbase": ("DOT/USD", "DOT-USD", datetime(2021, 6, 16, tzinfo=timezone.utc))},
 }
 
 
@@ -57,11 +67,37 @@ class DataQualityError(RuntimeError):
     pass
 
 
+_next_request: dict[str, float] = {}
+_cooldown: dict[str, float] = {}
+
+
 def _json(url: str, headers: dict[str, str] | None = None) -> tuple[object, bytes]:
+    host = urlparse(url).netloc
+    if _cooldown.get(host, 0) > time.monotonic():
+        raise DataQualityError("Provider rate limit cooldown; retry later")
+    time.sleep(max(0, _next_request.get(host, 0) - time.monotonic()))
+    _next_request[host] = time.monotonic() + 1.25
     request = Request(url, headers=headers or {"User-Agent": "Crypto-Regime-Lab/1.0"})
-    with urlopen(request, timeout=20) as response:
-        raw = response.read()
-    return json.loads(raw), raw
+    try:
+        with urlopen(request, timeout=20) as response:
+            raw = response.read()
+    except HTTPError as error:
+        if error.code in (418, 429):
+            retry = error.headers.get("Retry-After", "60")
+            try:
+                delay = float(retry)
+            except ValueError:
+                try:
+                    delay = parsedate_to_datetime(retry).timestamp() - time.time()
+                except (TypeError, ValueError, OverflowError):
+                    delay = 60
+            _cooldown[host] = time.monotonic() + max(1, delay)
+        raise
+    body = json.loads(raw)
+    if isinstance(body, dict) and any("rate limit" in str(message).lower() or "throttled" in str(message).lower() for message in body.get("error", [])):
+        _cooldown[host] = time.monotonic() + 60
+        raise DataQualityError("Provider rate limit cooldown; retry later")
+    return body, raw
 
 
 def validate(candles: list[Candle], step_ms: int) -> list[Candle]:

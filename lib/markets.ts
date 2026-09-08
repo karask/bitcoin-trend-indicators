@@ -1,5 +1,5 @@
 export type SourceId = "bitstamp" | "binance" | "kraken" | "coinbase";
-export type AssetId = "btc" | "eth" | "sol" | "doge" | "link" | "xmr" | "sui";
+export type AssetId = "btc" | "eth" | "sol" | "doge" | "link" | "xmr" | "sui" | "jup" | "op" | "bonk" | "ada" | "atom" | "hype" | "dot";
 
 export interface AssetDefinition {
   id: AssetId;
@@ -24,6 +24,11 @@ export const MIN_SOURCE_CANDLES = {
   "1w": 52,
 } as const;
 
+/** Data availability gate, not indicator warmup. HYPE's USD venue is younger. */
+export function minimumSourceCandles(asset: AssetId, timeframe: "1d" | "1w"): number {
+  return asset === "hype" && timeframe === "1w" ? 26 : MIN_SOURCE_CANDLES[timeframe];
+}
+
 export const ASSETS: AssetDefinition[] = [
   { id: "btc", label: "Bitcoin", symbol: "BTC", defaultSource: "bitstamp" },
   { id: "eth", label: "Ethereum", symbol: "ETH", defaultSource: "bitstamp" },
@@ -32,6 +37,13 @@ export const ASSETS: AssetDefinition[] = [
   { id: "link", label: "Chainlink", symbol: "LINK", defaultSource: "coinbase" },
   { id: "xmr", label: "Monero", symbol: "XMR", defaultSource: "kraken" },
   { id: "sui", label: "Sui", symbol: "SUI", defaultSource: "coinbase" },
+  { id: "jup", label: "Jupiter", symbol: "JUP", defaultSource: "kraken" },
+  { id: "op", label: "Optimism", symbol: "OP", defaultSource: "coinbase" },
+  { id: "bonk", label: "Bonk", symbol: "BONK", defaultSource: "coinbase" },
+  { id: "ada", label: "Cardano", symbol: "ADA", defaultSource: "coinbase" },
+  { id: "atom", label: "Cosmos", symbol: "ATOM", defaultSource: "coinbase" },
+  { id: "hype", label: "Hyperliquid", symbol: "HYPE", defaultSource: "kraken" },
+  { id: "dot", label: "Polkadot", symbol: "DOT", defaultSource: "coinbase" },
 ];
 
 export const SOURCES: SourceDefinition[] = [
@@ -60,6 +72,13 @@ export const SOURCES: SourceDefinition[] = [
   { asset: "sui", id: "binance", label: "Binance", market: "SUI/USDT", denomination: "USDT", providerSymbol: "SUIUSDT", historyStart: Date.UTC(2023, 4, 3), historyNote: "Canonical SUI/USDT history from May 2023" },
   { asset: "sui", id: "kraken", label: "Kraken", market: "SUI/USD", denomination: "USD", providerSymbol: "SUIUSD", historyStart: Date.UTC(2024, 8, 14), historyNote: "SUI/USD validation; public REST returns its latest 720 candles" },
   { asset: "sui", id: "coinbase", label: "Coinbase Exchange", market: "SUI/USD", denomination: "USD", providerSymbol: "SUI-USD", historyStart: Date.UTC(2023, 4, 18), historyNote: "SUI/USD validation history from May 2023" },
+  { asset: "jup", id: "kraken", label: "Kraken", market: "JUP/USD", denomination: "USD", providerSymbol: "JUPUSD", historyStart: Date.UTC(2024, 0, 31), historyNote: "Solana Jupiter, not the delisted Coinbase JUP token. Kraken REST supplies its latest 720 daily candles; stored history grows thereafter." },
+  { asset: "op", id: "coinbase", label: "Coinbase Exchange", market: "OP/USD", denomination: "USD", providerSymbol: "OP-USD", historyStart: Date.UTC(2022, 5, 1), historyNote: "OP/USD history from June 1, 2022" },
+  { asset: "bonk", id: "coinbase", label: "Coinbase Exchange", market: "BONK/USD", denomination: "USD", providerSymbol: "BONK-USD", historyStart: Date.UTC(2023, 11, 14), historyNote: "BONK/USD history from December 14, 2023; unscaled BONK units" },
+  { asset: "ada", id: "coinbase", label: "Coinbase Exchange", market: "ADA/USD", denomination: "USD", providerSymbol: "ADA-USD", historyStart: Date.UTC(2021, 2, 18), historyNote: "ADA/USD history from March 18, 2021" },
+  { asset: "atom", id: "coinbase", label: "Coinbase Exchange", market: "ATOM/USD", denomination: "USD", providerSymbol: "ATOM-USD", historyStart: Date.UTC(2020, 0, 14), historyNote: "ATOM/USD history from January 14, 2020" },
+  { asset: "hype", id: "kraken", label: "Kraken", market: "HYPE/USD", denomination: "USD", providerSymbol: "HYPEUSD", historyStart: Date.UTC(2026, 0, 28), historyNote: "HYPE/USD history from January 28, 2026. Short venue history: longer-period indicators and four-year tests may be unavailable." },
+  { asset: "dot", id: "coinbase", label: "Coinbase Exchange", market: "DOT/USD", denomination: "USD", providerSymbol: "DOT-USD", historyStart: Date.UTC(2021, 5, 16), historyNote: "DOT/USD history from June 16, 2021" },
 ];
 
 export function sourcesForAsset(asset: AssetId): SourceDefinition[] {

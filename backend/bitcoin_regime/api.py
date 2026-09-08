@@ -7,6 +7,7 @@ import json
 from fastapi import FastAPI, HTTPException, Query
 
 from .service import ResearchService
+from .providers import MARKETS
 
 service = ResearchService()
 
@@ -24,7 +25,7 @@ app = FastAPI(title="Crypto Regime Lab Research API", version="0.2.0", lifespan=
 
 @app.get("/api/v1/registry")
 def registry():
-    return {"assets": ["btc", "eth", "sol", "doge", "link", "xmr", "sui"], "indicators": service.registry()}
+    return {"assets": list(MARKETS), "indicators": service.registry()}
 
 
 @app.get("/api/v1/candles")

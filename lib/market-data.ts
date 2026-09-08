@@ -1,5 +1,6 @@
 import type { Candle, Timeframe } from "./regimes";
 import { ASSETS, marketDefinition, type AssetId, type SourceDefinition, type SourceId } from "./markets.ts";
+import { providerJson } from "./provider-http.ts";
 
 export { ASSETS, MIN_SOURCE_CANDLES, SOURCES, marketDefinition, resolveSourceForAsset, sourcesForAsset } from "./markets.ts";
 export type { AssetDefinition, AssetId, SourceDefinition, SourceId } from "./markets.ts";
@@ -81,9 +82,7 @@ async function checksum(candles: Candle[]): Promise<string> {
 }
 
 async function fetchJson(url: string, headers?: Record<string, string>): Promise<unknown> {
-  const response = await fetch(url, { headers, signal: AbortSignal.timeout(12_000), cache: "no-store" });
-  if (!response.ok) throw new Error(`Provider returned HTTP ${response.status}`);
-  return response.json();
+  return (await providerJson(url, headers)).body;
 }
 
 export function parseSpotPrice(source: SourceId, body: unknown): number {
@@ -203,7 +202,7 @@ export function aggregateWeekly(daily: Candle[]): Candle[] {
 
 function fallbackDaily(asset: AssetId): Candle[] {
   const candles: Candle[] = [];
-  const seeds: Record<AssetId, { start: number; first: number; target: number }> = {
+  const seeds: Partial<Record<AssetId, { start: number; first: number; target: number }>> = {
     btc: { start: Date.UTC(2011, 7, 18), first: 10.2, target: 100_000 },
     eth: { start: Date.UTC(2015, 7, 8), first: 1.1, target: 4_000 },
     sol: { start: Date.UTC(2020, 7, 11), first: 3.0, target: 180 },
@@ -213,6 +212,8 @@ function fallbackDaily(asset: AssetId): Candle[] {
     sui: { start: Date.UTC(2023, 4, 3), first: 1.4, target: 2.5 },
   };
   const seed = seeds[asset];
+  // Newly added assets fail unavailable rather than inventing demonstration prices.
+  if (!seed) return [];
   const start = seed.start;
   let previous = seed.first;
   const count = Math.floor((Date.now() - start) / DAY) - 1;
@@ -252,7 +253,8 @@ export async function getMarketData(asset: AssetId, source: SourceId, timeframe:
         : source === "kraken"
           ? await cached(cacheKey, () => krakenCandles(sourceDef, "1d"))
           : await cached(cacheKey, () => coinbaseDaily(sourceDef));
-    if (raw.length < (timeframe === "1w" ? 120 : 250)) throw new Error(`Only ${raw.length} completed candles were returned`);
+    const minimum = asset === "hype" ? 200 : timeframe === "1w" ? 120 : 250;
+    if (raw.length < minimum) throw new Error(`Only ${raw.length} completed candles were returned`);
   } catch (error) {
     demo = true;
     raw = fallbackDaily(asset);

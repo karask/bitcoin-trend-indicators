@@ -9,6 +9,8 @@ import SyncStatus from "../app/SyncStatus";
 import MobileMatrix from "../app/MobileMatrix";
 import AssetOverview from "../app/overview/AssetOverview";
 import { OVERVIEW_ASSETS } from "../lib/asset-overview";
+import { ASSETS } from "../lib/markets";
+import { onRequestGet as dashboardHandler } from "../functions/api/v1/dashboard";
 import { calculateIndicators, type Candle } from "../lib/regimes";
 import { buildResearch } from "../lib/research";
 import RegimeDashboard from "../app/RegimeDashboard";
@@ -46,6 +48,9 @@ test("calibration notebook exposes versioned evidence and uncalibrated equity la
   assert.match(stock, /identical to standard SuperTrend 10\/3/);
   assert.doesNotMatch(stock, /Reference check passes/);
   assert.doesNotMatch(stock, /<details[^>]*\bopen=/);
+  const hype = renderToStaticMarkup(<CalibrationPanel asset="hype" timeframe="1w" values={{ atrLength: 10, factor: 3 }} />);
+  assert.match(hype, /Uncalibrated weekly preset/);
+  assert.doesNotMatch(hype, /Screenshot-calibrated weekly preset|Reference check passes/);
 });
 
 test("research renders matched dates, benchmark, costs, curves, ledger and full windows", () => {
@@ -69,6 +74,7 @@ test("both labs keep distinct controls with accessible timeframes and non-pollin
   assert.match(crypto, /aria-pressed="true"/);
   assert.doesNotMatch(crypto, /KK watchlist|Pin current market|Check watchlist/);
   assert.match(crypto, /href="\/overview\/"/);
+  for (const asset of ASSETS) assert.ok(crypto.includes(`value="${asset.id}"`), asset.id);
   const stock = renderToStaticMarkup(<StockDashboard />);
   assert.match(stock, /Yahoo Finance/);
   assert.match(stock, /Check for updates/);
@@ -99,4 +105,24 @@ test("mobile model rows expand and sync failures remain visible", () => {
   const failed = renderToStaticMarkup(<SyncStatus status="failed" isCurrent={true} hasHistory={true} onRefresh={() => {}} />);
   assert.match(failed, /Update failed/);
   assert.doesNotMatch(failed, /Up to date/);
+});
+
+test("HYPE dashboard serves validated short weekly history without lowering other assets' gates", async () => {
+  const source = "kraken", asset = "hype";
+  const db = { prepare(sql: string) { return { bind(...args: unknown[]) { return {
+    async first() { const weekly = args[2] === "1w"; return { market: "HYPE/USD", retrieved_at: "2026-09-08T10:00:00Z", checksum: "fixture", warning: null, first_candle: Date.UTC(2026, 1, 2), last_candle: Date.UTC(2026, 7, 31), candle_count: weekly ? 31 : 223 }; },
+    async all() {
+      if (sql.startsWith("SELECT source")) { assert.deepEqual(args, [asset, 200, 26]); return { results: [{ source }], success: true }; }
+      const weekly = args[2] === "1w";
+      return { results: Array.from({ length: weekly ? 31 : 223 }, (_, i) => ({ time: Date.UTC(2026, 1, 2) + i * 86_400_000 * (weekly ? 7 : 1), open: 20, high: 22, low: 19, close: 21, volume: 10, complete: 1 })), success: true };
+    },
+  }; } }; } };
+  const response = await dashboardHandler({ request: new Request("https://test.invalid/api/v1/dashboard?asset=hype&source=kraken"), env: { REGIME_DB: db as never }, next: async () => new Response(), waitUntil() {} });
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.daily.asset, "hype");
+  assert.equal(body.daily.candles.length, 223);
+  assert.equal(body.weekly.candles.length, 31);
+  assert.equal(body.weekly.demo, false);
+  assert.deepEqual(body.sources.map((item: { id: string }) => item.id), ["kraken"]);
 });

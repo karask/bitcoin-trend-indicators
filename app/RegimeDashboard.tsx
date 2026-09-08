@@ -16,7 +16,7 @@ import { confirmationClock } from "../lib/confirmation-clock";
 import { resolveInitialTheme } from "../lib/chart-interaction";
 import { buildDashboardPayload, type DashboardPayload } from "../lib/dashboard-calculation";
 import type { CryptoHistory } from "../lib/crypto-cache";
-import { marketDefinition, resolveSourceForAsset, sourcesForAsset, type AssetId, type SourceId } from "../lib/markets";
+import { ASSETS, marketDefinition, resolveSourceForAsset, sourcesForAsset, type AssetId, type SourceId } from "../lib/markets";
 import { INDICATOR_SPECS, familyRows as getFamilyRows, SUPER_GUPPY_R12_DEFAULTS, type SuperGuppyConfig, type SuperGuppySource, type IndicatorGuidance as Guidance } from "../lib/regimes";
 import { AccountControls, authenticatedFetch } from "./AuthClient";
 
@@ -29,15 +29,7 @@ type SpotQuote = { asset: AssetId; source: string; quoteSource?: string; sourceL
 const ROLES: Array<{ id: Role; label: string }> = [
   { id: "regime", label: "Regime" }, { id: "confirmation", label: "Confirmation" }, { id: "exit", label: "Exit" }, { id: "valuation", label: "Valuation" },
 ];
-const ASSET_OPTIONS: Payload["assets"] = [
-  { id: "btc", label: "Bitcoin", symbol: "BTC", defaultSource: "bitstamp" },
-  { id: "eth", label: "Ethereum", symbol: "ETH", defaultSource: "bitstamp" },
-  { id: "sol", label: "Solana", symbol: "SOL", defaultSource: "coinbase" },
-  { id: "doge", label: "Dogecoin", symbol: "DOGE", defaultSource: "coinbase" },
-  { id: "link", label: "Chainlink", symbol: "LINK", defaultSource: "coinbase" },
-  { id: "xmr", label: "Monero", symbol: "XMR", defaultSource: "kraken" },
-  { id: "sui", label: "Sui", symbol: "SUI", defaultSource: "coinbase" },
-];
+const ASSET_OPTIONS: Payload["assets"] = ASSETS;
 const freshGuppyDefaults = (): SuperGuppyConfig => ({ ...SUPER_GUPPY_R12_DEFAULTS, fastLengths: [...SUPER_GUPPY_R12_DEFAULTS.fastLengths], slowLengths: [...SUPER_GUPPY_R12_DEFAULTS.slowLengths] });
 const GUPPY_SOURCES: Array<{ value: SuperGuppySource; label: string }> = [
   { value: "close", label: "Close" }, { value: "open", label: "Open" }, { value: "high", label: "High" }, { value: "low", label: "Low" }, { value: "hl2", label: "HL2" }, { value: "hlc3", label: "HLC3" }, { value: "ohlc4", label: "OHLC4" },

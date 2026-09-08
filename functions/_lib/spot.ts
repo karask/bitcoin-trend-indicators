@@ -1,4 +1,5 @@
 import type { SourceDefinition, SourceId } from "../../lib/markets";
+import { providerJson, ProviderCooldownError } from "../../lib/provider-http.ts";
 
 const BINANCE_MARKET_DATA_BASES = ["https://data-api.binance.vision", "https://api-gcp.binance.com", "https://api1.binance.com"];
 
@@ -29,10 +30,10 @@ export async function spotPrice(definition: SourceDefinition): Promise<number> {
   let lastError: unknown;
   for (const url of Array.isArray(urls) ? urls : [urls]) {
     try {
-      const response = await fetch(url, { headers: definition.id === "coinbase" ? { "User-Agent": "Crypto-Regime-Lab/1.0" } : undefined });
-      if (!response.ok) throw new Error(`${definition.label} returned HTTP ${response.status}`);
-      return parseSpotPrice(definition.id, await response.json());
+      const result = await providerJson(url, definition.id === "coinbase" ? { "User-Agent": "Crypto-Regime-Lab/1.0" } : undefined);
+      return parseSpotPrice(definition.id, result.body);
     } catch (error) {
+      if (error instanceof ProviderCooldownError) throw error;
       lastError = error;
     }
   }

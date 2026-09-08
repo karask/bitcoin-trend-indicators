@@ -24,7 +24,7 @@ You do **not** need to repeat the first-deployment commands below. They are reta
 - Pages Functions expose the authenticated JSON APIs, current quotes, and a same-origin on-demand sync that writes only validated completed candles when the selected D1 snapshot is behind.
 - Cloudflare D1 stores normalized, completed daily and weekly candles.
 - The browser keeps full per-market history in IndexedDB, requests only overlapping D1 tails on later visits, and calculates indicators and backtests from that complete local series.
-- One small Worker refreshes completed candles after market close. Its five free-plan triggers refresh BTC at 00:15, ETH at 00:25, SOL at 00:35, DOGE at 00:45, and LINK plus XMR at 01:30 UTC. The 01:30 trigger also refreshes stored Yahoo Finance histories Tuesday through Saturday.
+- One small Worker refreshes completed candles after market close, sequentially within five existing cron slots: BTC/JUP/OP at 00:15, ETH/BONK/ADA at 00:25, SOL/ATOM/HYPE at 00:35, DOGE/DOT at 00:45, and LINK/XMR/SUI at 01:30 UTC. The 01:30 trigger then refreshes stored Yahoo Finance histories Tuesday through Saturday. Crypto requests are paced per provider; rate limits stop requests for that provider until its cooldown ends.
 - Local development continues to use `data/bitcoin-regime.sqlite`; hosted and local databases are intentionally separate.
 - Pages middleware requires a passwordless 30-day email session before serving either dashboard or any market-data API. D1 stores verified emails, HMAC-protected challenges, hashed sessions, and hashed abuse-control counters.
 - Resend delivers six-digit login codes from `login@auth.kkarasavvas.com`; Cloudflare Turnstile protects code requests from automated quota exhaustion.
@@ -52,7 +52,9 @@ npm run cf:deploy:refresh
 openssl rand -hex 32 | npx wrangler secret put REFRESH_TOKEN --config wrangler.refresh.jsonc
 ```
 
-The seed command validates all configured venues for BTC, ETH, SOL, DOGE, LINK, XMR, and SUI. XMR uses Kraken only. A venue with a gap, duplicate, malformed OHLC, or unavailable provider is skipped instead of silently storing bad data. The Pages source selector only lists successfully seeded venues.
+The seed command validates configured venues for every crypto asset. JUP and HYPE initially use Kraken USD; OP, BONK, ADA, ATOM, and DOT initially use Coinbase USD. Each new asset has one venue to bound bootstrap/API costs. JUP refers to Solana Jupiter, not Coinbase's delisted JUP token. A venue with a gap, duplicate, malformed OHLC, or unavailable provider is rejected instead of silently storing bad data. The Pages source selector only lists successfully seeded venues. HYPE has an explicit 200-daily/26-week availability gate because its Kraken history starts January 28, 2026; existing assets retain their 200-daily/52-week gates, and all indicator warmups remain unchanged.
+
+For a narrowly scoped bootstrap, use `node --experimental-strip-types scripts/seed-d1.ts --assets=jup,op,bonk,ada,atom,hype,dot`. This validates and prepares SQL only for those markets, paced at no more than one request per provider per 1.25 seconds within the process. Check the generated files before applying them individually to D1; do not run the all-asset seed to add a handful of coins. Daily and weekly outputs share a daily fetch. HTTP 429/418 and Kraken body rate-limit errors start a cooldown; `Retry-After` is respected rather than capped to retry early, and Binance hosts share one cooldown. Ordinary 5xx retries are limited to two attempts. This in-runtime pacing is not a distributed account-wide quota guarantee.
 
 The stock seed command validates complete XNAS session coverage for TSLA, GOOGL, NVDA, SPCX, MU, and SNDK before replacing each symbol's D1 snapshot. Yahoo Finance access is unofficial and intentionally limited to this personal research deployment.
 

@@ -1,16 +1,17 @@
-import { MIN_SOURCE_CANDLES, sourcesForAsset, type AssetId, type SourceDefinition, type SourceId } from "../lib/markets.ts";
+import { isAssetId, minimumSourceCandles, sourcesForAsset, type AssetId, type SourceDefinition, type SourceId } from "../lib/markets.ts";
+import { providerJson, ProviderCooldownError } from "../lib/provider-http.ts";
 import type { Candle } from "../lib/regimes.ts";
 import { STOCKS, stockDefinition, type StockDefinition, type StockSymbol } from "../lib/stocks.ts";
 import { fetchYahooStockHistory } from "../lib/yahoo.ts";
 import type { CloudflareEnv, D1Database, D1PreparedStatement } from "../functions/_lib/cloudflare.ts";
 
 const DAY = 86_400_000;
-const CRON_ASSET: Record<string, AssetId> = {
-  "15 0 * * *": "btc",
-  "25 0 * * *": "eth",
-  "35 0 * * *": "sol",
-  "45 0 * * *": "doge",
-  "30 1 * * *": "link",
+export const CRON_ASSETS: Record<string, readonly AssetId[]> = {
+  "15 0 * * *": ["btc", "jup", "op"],
+  "25 0 * * *": ["eth", "bonk", "ada"],
+  "35 0 * * *": ["sol", "atom", "hype"],
+  "45 0 * * *": ["doge", "dot"],
+  "30 1 * * *": ["link", "xmr", "sui"],
 };
 const STOCK_REFRESH_CRON = "30 1 * * *";
 const BINANCE_MARKET_DATA_BASES = ["https://data-api.binance.vision", "https://api-gcp.binance.com", "https://api1.binance.com"];
@@ -24,21 +25,7 @@ function candle(time: unknown, open: unknown, high: unknown, low: unknown, close
   return { time: Number(time), open: Number(open), high: Number(high), low: Number(low), close: Number(close), volume: Number(volume) || 0, complete: true };
 }
 
-async function fetchJson(url: string, headers?: Record<string, string>): Promise<{ body: unknown; raw: string }> {
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const response = await fetch(url, { headers });
-    if (response.ok) {
-      const raw = await response.text();
-      return { body: JSON.parse(raw), raw };
-    }
-    const retryable = response.status === 429 || response.status >= 500;
-    if (!retryable || attempt === 2) throw new Error(`Provider returned HTTP ${response.status}`);
-    const retryAfter = Number(response.headers.get("Retry-After"));
-    const delay = Number.isFinite(retryAfter) && retryAfter > 0 ? Math.min(retryAfter * 1000, 5_000) : 500 * 2 ** attempt;
-    await new Promise(resolve => setTimeout(resolve, delay));
-  }
-  throw new Error("Provider retry limit exhausted");
-}
+const fetchJson = providerJson;
 
 async function fetchFirstJson(urls: string[]): Promise<{ body: unknown; raw: string }> {
   let lastError: unknown;
@@ -46,6 +33,7 @@ async function fetchFirstJson(urls: string[]): Promise<{ body: unknown; raw: str
     try {
       return await fetchJson(url);
     } catch (error) {
+      if (error instanceof ProviderCooldownError) throw error;
       lastError = error;
     }
   }
@@ -134,7 +122,7 @@ async function refreshSource(database: D1Database, definition: SourceDefinition)
   try {
     const baseline = await database.prepare("SELECT timeframe,candle_count FROM provider_snapshots WHERE asset=? AND source=? AND timeframe IN ('1d','1w')").bind(definition.asset, definition.id).all<CoverageRow>();
     const coverage = new Map(baseline.results.map(row => [row.timeframe, row.candle_count]));
-    if ((coverage.get("1d") ?? 0) < MIN_SOURCE_CANDLES["1d"] || (coverage.get("1w") ?? 0) < MIN_SOURCE_CANDLES["1w"]) {
+    if ((coverage.get("1d") ?? 0) < minimumSourceCandles(definition.asset, "1d") || (coverage.get("1w") ?? 0) < minimumSourceCandles(definition.asset, "1w")) {
       throw new Error(`Full history seed required before refreshing ${definition.asset.toUpperCase()} ${definition.id}`);
     }
     const recent = await recentCandles(definition);
@@ -227,19 +215,16 @@ export default {
   async fetch(request: Request, env: CloudflareEnv): Promise<Response> {
     const url = new URL(request.url);
     const requested = url.searchParams.get("asset") ?? "btc";
-    if (!(["btc", "eth", "sol", "doge", "link", "xmr", "sui"] as string[]).includes(requested)) return Response.json({ error: "Unsupported asset" }, { status: 400 });
+    if (!isAssetId(requested)) return Response.json({ error: "Unsupported asset" }, { status: 400 });
     if (!env.REFRESH_TOKEN || request.headers.get("Authorization") !== `Bearer ${env.REFRESH_TOKEN}`) return Response.json({ error: "Unauthorized" }, { status: 401 });
     return Response.json(await refreshAsset(env.REGIME_DB, requested as AssetId));
   },
   scheduled(controller: ScheduledController, env: CloudflareEnv, context: ExecutionContext): void {
-    if (controller.cron === STOCK_REFRESH_CRON) {
+    context.waitUntil((async () => {
+      // Reuse the five existing cron slots and avoid a burst of provider calls.
+      for (const asset of CRON_ASSETS[controller.cron] ?? []) await refreshAsset(env.REGIME_DB, asset);
       const utcDay = new Date(controller.scheduledTime).getUTCDay();
-      const tasks: Promise<unknown>[] = [refreshAsset(env.REGIME_DB, "link"), refreshAsset(env.REGIME_DB, "xmr"), refreshAsset(env.REGIME_DB, "sui")];
-      if (utcDay >= 2 && utcDay <= 6) tasks.push(refreshStocks(env.REGIME_DB));
-      context.waitUntil(Promise.all(tasks));
-      return;
-    }
-    const asset = CRON_ASSET[controller.cron] ?? "btc";
-    context.waitUntil(refreshAsset(env.REGIME_DB, asset));
+      if (controller.cron === STOCK_REFRESH_CRON && utcDay >= 2 && utcDay <= 6) await refreshStocks(env.REGIME_DB);
+    })());
   },
 };

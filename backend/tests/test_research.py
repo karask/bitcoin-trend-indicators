@@ -1,10 +1,35 @@
 from pathlib import Path
 import duckdb
+import pytest
 
 from backend.bitcoin_regime.models import Candle, Dataset
 from backend.bitcoin_regime.providers import DAY_MS, DataQualityError, aggregate_weekly, validate
 from backend.bitcoin_regime.repository import Repository
 from backend.bitcoin_regime.service import ResearchService
+
+
+def test_new_usd_markets_and_rate_limit_cooldown(monkeypatch):
+    from urllib.error import HTTPError
+    from backend.bitcoin_regime import providers
+    expected = {"jup": "kraken", "op": "coinbase", "bonk": "coinbase", "ada": "coinbase", "atom": "coinbase", "hype": "kraken", "dot": "coinbase"}
+    for asset, source in expected.items():
+        assert list(providers.MARKETS[asset]) == [source]
+        assert providers.MARKETS[asset][source][0] == f"{asset.upper()}/USD"
+    assert providers.MARKETS["jup"]["kraken"][1] == "JUPUSD"
+    monkeypatch.setattr(providers, "_cooldown", {})
+    monkeypatch.setattr(providers, "_next_request", {})
+    calls = []
+
+    def limited(request, **kwargs):
+        calls.append(request)
+        raise HTTPError(request.full_url, 429, "Too many requests", {"Retry-After": "120"}, None)
+
+    monkeypatch.setattr(providers, "urlopen", limited)
+    with pytest.raises(HTTPError):
+        providers._json("https://api.kraken.com/0/public/OHLC")
+    with pytest.raises(DataQualityError, match="cooldown"):
+        providers._json("https://api.kraken.com/0/public/Ticker")
+    assert len(calls) == 1
 
 
 def candles(count: int = 420) -> list[Candle]:

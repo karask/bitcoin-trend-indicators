@@ -1,13 +1,16 @@
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-import { ASSETS, MIN_SOURCE_CANDLES, SOURCES, type SourceDefinition } from "../lib/markets.ts";
+import { ASSETS, minimumSourceCandles, SOURCES, type SourceDefinition } from "../lib/markets.ts";
 import { getMarketData, type MarketDataset } from "../lib/market-data.ts";
 
 const all = process.argv.includes("--all");
 const remote = process.argv.includes("--remote");
 const apply = process.argv.includes("--apply");
 const requestedAsset = process.argv.find(argument => argument.startsWith("--asset="))?.slice("--asset=".length);
+const requestedAssets = process.argv.find(argument => argument.startsWith("--assets="))?.slice("--assets=".length).split(",");
+if (requestedAsset && requestedAssets) throw new Error("Use --asset or --assets, not both");
+if (requestedAssets?.some(asset => !ASSETS.some(item => item.id === asset))) throw new Error("Unsupported asset in --assets");
 const requestedSource = process.argv.find(argument => argument.startsWith("--source="))?.slice("--source=".length);
 const output = path.join(process.cwd(), "data", "cloudflare-seed");
 const wrangler = path.join(process.cwd(), "node_modules", ".bin", "wrangler");
@@ -44,7 +47,7 @@ async function seed(definition: SourceDefinition): Promise<string | null> {
     console.log("skipped (quality failure)");
     return null;
   }
-  if (daily.candles.length < MIN_SOURCE_CANDLES["1d"] || weekly.candles.length < MIN_SOURCE_CANDLES["1w"]) {
+  if (daily.candles.length < minimumSourceCandles(definition.asset, "1d") || weekly.candles.length < minimumSourceCandles(definition.asset, "1w")) {
     console.log("skipped (insufficient history)");
     return null;
   }
@@ -61,8 +64,8 @@ async function seed(definition: SourceDefinition): Promise<string | null> {
   return file;
 }
 
-const selected = requestedAsset || requestedSource
-  ? SOURCES.filter(definition => (!requestedAsset || definition.asset === requestedAsset) && (!requestedSource || definition.id === requestedSource))
+const selected = requestedAsset || requestedAssets || requestedSource
+  ? SOURCES.filter(definition => (!requestedAsset || definition.asset === requestedAsset) && (!requestedAssets || requestedAssets.includes(definition.asset)) && (!requestedSource || definition.id === requestedSource))
   : all
     ? SOURCES
     : ASSETS.map(asset => SOURCES.find(source => source.asset === asset.id && source.id === asset.defaultSource)!);

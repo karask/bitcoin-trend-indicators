@@ -1,5 +1,5 @@
 import { INDICATOR_SPECS, type Timeframe } from "../../../lib/regimes";
-import { MIN_SOURCE_CANDLES } from "../../../lib/markets";
+import { minimumSourceCandles } from "../../../lib/markets";
 import { errorResponse, json, type CloudflareEnv, type PagesFunction } from "../../_lib/cloudflare";
 import { marketRequest } from "../../_lib/request";
 
@@ -14,7 +14,7 @@ export const onRequestGet: PagesFunction<CloudflareEnv> = async ({ request, env 
       env.REGIME_DB.prepare("SELECT candle_count FROM provider_snapshots WHERE asset=? AND source=? AND timeframe=?").bind(asset, source, timeframe).first<SnapshotRow>(),
       env.REGIME_DB.prepare("SELECT time,open,high,low,close,volume,complete FROM market_candles WHERE asset=? AND source=? AND timeframe=? ORDER BY time").bind(asset, source, timeframe).all<CandleRow>(),
     ]);
-    const minimum = MIN_SOURCE_CANDLES[timeframe];
+    const minimum = minimumSourceCandles(asset, timeframe);
     if (!snapshot || snapshot.candle_count < minimum || result.results.length < minimum) throw new Error(`No complete ${asset.toUpperCase()} ${source} ${timeframe} history is available in D1`);
     return json(request, env, {
       asset,

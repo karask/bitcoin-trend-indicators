@@ -16,7 +16,7 @@ export const KK_REFERENCES: Reference[] = [
 
 export function calibrationStatus(asset: AssetId | undefined, timeframe: Timeframe) {
   if (!asset) return "Uncalibrated equity preset";
-  if (timeframe === "1w") return asset === "btc" ? "Legacy screenshot preset · reference not archived" : "Screenshot-calibrated weekly preset";
+  if (timeframe === "1w") return asset === "btc" ? "Legacy screenshot preset · reference not archived" : KK_REFERENCES.some(reference => reference.asset === asset) ? "Screenshot-calibrated weekly preset" : "Uncalibrated weekly preset";
   return ["btc", "eth", "sol"].includes(asset) ? "Inherited preset · no separate daily reference" : "Uncalibrated daily preset";
 }
 
