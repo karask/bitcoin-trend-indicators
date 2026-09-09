@@ -234,6 +234,7 @@ export async function handleRequestCode(request: Request, runtime: AuthRuntime):
     const ip = clientIp(request);
     if (!turnstileToken || !(await runtime.validateTurnstile(turnstileToken, ip))) throw new AuthError(400, "turnstile_failed", "Complete the human verification and try again");
 
+    await requireAllowedEmail(email, runtime.store);
     const now = runtime.now();
     const emailHash = await hmac(runtime.hmacSecret, `rate:email:${email}`);
     const ipHash = await hmac(runtime.hmacSecret, `rate:ip:${ip}`);
@@ -275,6 +276,7 @@ export async function handleVerifyCode(request: Request, runtime: AuthRuntime): 
     if (!challenge || challenge.consumedAt != null || challenge.expiresAt <= now || challenge.attempts >= MAX_CODE_ATTEMPTS) {
       throw new AuthError(400, "code_invalid", "The code is invalid or expired");
     }
+    const role = await requireAllowedEmail(challenge.email, runtime.store);
     const suppliedHash = await hmac(runtime.hmacSecret, `code:${challenge.id}:${challenge.email}:${code}`);
     if (!constantTimeEqual(suppliedHash, challenge.codeHash)) {
       const failedAttempts = await runtime.store.incrementChallengeAttempts(challenge.id);
@@ -287,8 +289,10 @@ export async function handleVerifyCode(request: Request, runtime: AuthRuntime): 
     const existing = cookieToken(request);
     if (existing) await runtime.store.revokeSession(await sha256(existing), now);
     const token = secureToken();
-    await runtime.store.createSession(user.id, await sha256(token), now, now + AUTH_SESSION_MS);
-    return response({ authenticated: true, user: { id: user.id, email: user.email } }, 200, sessionCookie(token));
+    if (!(await runtime.store.createSession(user.id, await sha256(token), now, now + AUTH_SESSION_MS, challenge.id))) {
+      throw new AuthError(403, "access_changed", "Your access changed during login. Please contact the administrators to confirm you are whitelisted, then request a new code.");
+    }
+    return response({ authenticated: true, user: { id: user.id, email: user.email, role } }, 200, sessionCookie(token));
   } catch (error) {
     return errorResponse(error);
   }
@@ -297,7 +301,7 @@ export async function handleVerifyCode(request: Request, runtime: AuthRuntime): 
 export async function handleSession(request: Request, runtime: Pick<AuthRuntime, "store" | "now">): Promise<Response> {
   try {
     const user = await authenticatedUser(request, runtime.store, runtime.now());
-    return response(user ? { authenticated: true, user: { id: user.id, email: user.email }, expiresAt: user.sessionExpiresAt } : { authenticated: false, user: null });
+    return response(user ? { authenticated: true, user: { id: user.id, email: user.email, role: user.role }, expiresAt: user.sessionExpiresAt } : { authenticated: false, user: null });
   } catch (error) {
     return errorResponse(error);
   }
@@ -321,6 +325,34 @@ export async function handleDeleteAccount(request: Request, runtime: Pick<AuthRu
     if (!user) return authRequiredResponse();
     await runtime.store.deleteUser(user.id);
     return response({ deleted: true }, 200, expiredSessionCookie());
+  } catch (error) {
+    return errorResponse(error);
+  }
+}
+
+async function requireAllowedEmail(email: string, store: AuthStore) {
+  const role = await store.accessRole(email);
+  if (!role) throw new AuthError(403, "email_not_whitelisted", "This email address is not whitelisted. Please contact the administrators to request access.");
+  return role;
+}
+
+export async function handleAllowlist(request: Request, runtime: Pick<AuthRuntime, "store" | "now">): Promise<Response> {
+  try {
+    if (request.method !== "GET") assertSameOrigin(request);
+    const user = await authenticatedUser(request, runtime.store, runtime.now());
+    if (!user) return authRequiredResponse();
+    if (user.role !== "admin") throw new AuthError(403, "admin_required", "Administrator access required");
+
+    if (request.method === "GET") return response({ entries: await runtime.store.listAllowedEmails() });
+    if (request.method !== "POST" && request.method !== "DELETE") return response({ error: "Method not allowed" }, 405);
+    const payload = await body(request);
+    const email = normalizeEmail(payload.email);
+    if (request.method === "POST") await runtime.store.addAllowedEmail(email, runtime.now());
+    else {
+      if (await runtime.store.accessRole(email) === "admin") throw new AuthError(403, "admin_protected", "Administrator access cannot be removed");
+      await runtime.store.removeAllowedEmail(email);
+    }
+    return response({ entries: await runtime.store.listAllowedEmails() });
   } catch (error) {
     return errorResponse(error);
   }

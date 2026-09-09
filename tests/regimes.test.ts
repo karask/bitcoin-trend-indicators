@@ -496,8 +496,8 @@ test("local SQLite storage persists normalized candles between reads", async () 
     assert.equal(signalPayload.ribbons.length, 2);
     assert.ok(Array.isArray(signalPayload.events));
     assert.ok(Array.isArray(signalPayload.barColors));
-    const tables = getDatabase().prepare("SELECT name FROM sqlite_schema WHERE type='table' ORDER BY name").all() as Array<{ name: string }>;
-    assert.deepEqual(tables.map(row => row.name), ["auth_challenges", "auth_rate_events", "auth_sessions", "auth_users", "market_candles", "provider_snapshots", "signal_snapshots"]);
+    const tables = getDatabase().prepare("SELECT name FROM sqlite_schema WHERE type='table' AND name NOT GLOB 'sqlite_*' ORDER BY name").all() as Array<{ name: string }>;
+    assert.deepEqual(tables.map(row => row.name), ["auth_allowlist", "auth_challenges", "auth_rate_events", "auth_sessions", "auth_users", "market_candles", "provider_snapshots", "signal_snapshots"]);
     getDatabase().close();
   } finally {
     if (priorPath == null) delete process.env.REGIME_SQLITE;

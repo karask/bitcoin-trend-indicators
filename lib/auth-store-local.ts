@@ -4,6 +4,9 @@ import { AuthStore, type AuthSqlAdapter } from "./auth-store.ts";
 
 export function localAuthStore(database: DatabaseSync = getDatabase()): AuthStore {
   const adapter: AuthSqlAdapter = {
+    async all<T>(sql: string, values: unknown[] = []) {
+      return database.prepare(sql).all(...values as SQLInputValue[]) as T[];
+    },
     async first<T>(sql: string, values: unknown[] = []) {
       return (database.prepare(sql).get(...values as SQLInputValue[]) as T | undefined) ?? null;
     },

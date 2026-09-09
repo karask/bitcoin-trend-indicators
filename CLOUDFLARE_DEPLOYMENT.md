@@ -127,3 +127,12 @@ Open the URL Wrangler prints. This uses a local D1 emulator under `.wrangler`; i
 ## Free-plan fit
 
 Static Pages assets are free. Pages Functions and the refresh Worker share the Workers Free request allowance. D1's Free plan currently includes 5 million rows read per day, 100,000 rows written per day, and 5 GB total storage. This personal dashboard is designed to stay within those limits: each scheduled refresh reads/writes only a recent window, while indicator calculation remains in the browser.
+
+
+## Email whitelist and administrator access
+
+Apply `npm run cf:d1:remote` before deploying the whitelist-enabled Pages bundle. Migration `0003_email_allowlist.sql` seeds the designated administrator in the server-side database and removes pending codes and sessions for previously unapproved accounts. Existing accounts are not automatically approved. Local Next.js initializes the equivalent schema automatically.
+
+The designated administrator signs in with the usual email code, then opens the account menu → **Manage email whitelist**. Adding an email grants member access only; there is no API for granting additional administrators. Removing a member immediately revokes their sessions and pending codes, including if they are later added again. Administrator access cannot be removed through the whitelist UI or API. Deleting a member account removes their whitelist entry; deleting the administrator account preserves the designated access entry so administration can be recovered through email verification.
+
+Whitelist management is authorized on the server for every request. Login requests, verification, and session checks all require current whitelist membership. Rejected visitors see a request to contact the administrators, with no administrator email address. The administrator identity exists only in database bootstrap/migration code; it must never be added to public environment variables or client components. Production verification should cover the administrator login, adding a member, rejecting a non-whitelisted address, denying member access to whitelist APIs, and revoking an existing member session.

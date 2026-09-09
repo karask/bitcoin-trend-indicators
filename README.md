@@ -4,7 +4,7 @@ Latest KK-only calibration audit: [8 September screenshot batch](research/kk-202
 
 A transparent, installable fourteen-cryptocurrency regime-indicator research platform, with an isolated stock-research page for TSLA, GOOGL, NVDA, SPCX, MU, SNDK, and BMNR. It compares fixed, documented trend models without claiming to reproduce private MoneyLine or Larsson Line formulas and without producing orders or allocation recommendations.
 
-Hosted access uses passwordless email authentication. A visitor enters an email address and a single-use six-digit code; the first successful verification creates the account and later verifications sign it in. Both research labs and all market-data APIs require the resulting secure 30-day session. There are no passwords, social identities, or marketing emails.
+Hosted access uses passwordless email authentication. An approved visitor enters a whitelisted email address and a single-use six-digit code; the first successful verification creates the account and later verifications sign it in. Both research labs and all market-data APIs require the resulting secure 30-day session. The designated administrator is pre-approved and can open **Manage email whitelist** from the account menu to add or remove members. Other addresses are asked to contact the administrators; administrator contact details are never included in public messages or browser assets. Removing an address revokes its sessions and pending codes. Existing accounts are not automatically whitelisted. There are no passwords, social identities, or marketing emails.
 
 ## What is implemented
 
@@ -36,6 +36,7 @@ Open `http://localhost:3000`. The local API routes are:
 - `/api/v1/health`
 - `POST /api/v1/sync` (authenticated, same-origin, refreshes a selected stale market before its incremental read)
 - `/api/v1/stocks/history?symbol=TSLA&startDate=2025-01-01` (`startDate` is optional; returns the authenticated app's stored Yahoo Finance snapshot)
+- `/api/v1/auth/allowlist` (`GET`, `POST`, `DELETE`; administrator session required; mutations must be same-origin)
 - `/api/v1/auth/config`, `/request-code`, `/verify-code`, `/session`, `/logout`, and `/account`
 
 Except for the authentication endpoints, local and hosted APIs require the `__Host-regime_session` cookie. For local email-login development, create an ignored `.dev.vars` containing `RESEND_API_KEY`, `AUTH_HMAC_SECRET`, `TURNSTILE_SECRET_KEY`, `TURNSTILE_SITE_KEY`, and `AUTH_FROM_EMAIL`. `npm run dev` loads that file without placing secrets in the repository.
@@ -64,7 +65,7 @@ The production build uses Cloudflare Pages, Pages Functions, D1, and a small sch
 
 See [CLOUDFLARE_DEPLOYMENT.md](./CLOUDFLARE_DEPLOYMENT.md) for the complete first-deploy commands and the optional `regime.kkarasavvas.com` CNAME setup. It does not use Sites, replace existing GitHub Pages sites, or require moving the domain's nameservers to Cloudflare.
 
-Passwordless login uses the existing D1 binding, Resend's HTTPS API, and Cloudflare Turnstile; it adds no runtime npm dependency or SMTP server. Codes expire after ten minutes, new codes invalidate old ones, plaintext codes and session tokens are never stored, and all protected pages are network-only rather than service-worker fallbacks. Production must have its Resend domain, Turnstile widget, secrets, and `0002_passwordless_auth.sql` migration configured before deploying the auth-enabled Pages bundle.
+Passwordless login uses the existing D1 binding, Resend's HTTPS API, and Cloudflare Turnstile; it adds no runtime npm dependency or SMTP server. Codes expire after ten minutes, new codes invalidate old ones, plaintext codes and session tokens are never stored, and all protected pages are network-only rather than service-worker fallbacks. Production must have its Resend domain, Turnstile widget, secrets, and all D1 migrations through `0003_email_allowlist.sql` applied before deploying the auth-enabled Pages bundle.
 
 If you open the development server through the machine's LAN address, `192.168.100.16` is allowlisted for Next.js development assets. Restart `npm run dev` after changing `next.config.ts`. For Docker, both SQLite and DuckDB live under the mounted `/data` volume.
 

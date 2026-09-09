@@ -3,6 +3,9 @@ import { AuthStore, type AuthSqlAdapter } from "./auth-store.ts";
 
 export function d1AuthStore(database: D1Database): AuthStore {
   const adapter: AuthSqlAdapter = {
+    async all<T>(sql: string, values: unknown[] = []) {
+      return (await database.prepare(sql).bind(...values).all<T>()).results;
+    },
     async first<T>(sql: string, values: unknown[] = []) {
       return database.prepare(sql).bind(...values).first<T>();
     },

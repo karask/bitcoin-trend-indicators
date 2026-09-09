@@ -3,10 +3,11 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import WhitelistManager from "./WhitelistManager.tsx";
 import { clearAllCommodityHistoryCaches } from "../lib/commodity-cache.ts";
 import { clearAllStockHistoryCaches } from "../lib/stock-cache.ts";
 
-type AuthUser = { id: string; email: string };
+type AuthUser = { id: string; email: string; role: "admin" | "user" };
 type AuthContextValue = { user: AuthUser | null; ready: boolean };
 
 const AuthContext = createContext<AuthContextValue>({ user: null, ready: false });
@@ -58,6 +59,7 @@ export function useAuth() {
 export function AccountControls() {
   const { user } = useAuth();
   const [busy, setBusy] = useState(false);
+  const [managingWhitelist, setManagingWhitelist] = useState(false);
   if (!user) return null;
 
   const logout = async () => {
@@ -86,5 +88,5 @@ export function AccountControls() {
     }
   };
 
-  return <details className="account-menu"><summary aria-label={`Account menu for ${user.email}`}><span aria-hidden="true">@</span><b>{user.email}</b></summary><div><p>Signed in as</p><strong>{user.email}</strong><button type="button" onClick={logout} disabled={busy}>Log out</button><button type="button" className="delete-account" onClick={deleteAccount} disabled={busy}>Delete account</button></div></details>;
+  return <><details className="account-menu"><summary aria-label={`Account menu for ${user.email}`}><span aria-hidden="true">@</span><b>{user.email}</b></summary><div><p>Signed in as</p><strong>{user.email}</strong>{user.role === "admin" && <button type="button" onClick={() => setManagingWhitelist(true)}>Manage email whitelist</button>}<button type="button" onClick={logout} disabled={busy}>Log out</button><button type="button" className="delete-account" onClick={deleteAccount} disabled={busy}>Delete account</button></div></details>{user.role === "admin" && managingWhitelist && <WhitelistManager onClose={() => setManagingWhitelist(false)} />}</>;
 }

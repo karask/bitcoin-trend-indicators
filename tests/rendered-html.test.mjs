@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import { createServer } from "node:net";
 import test from "node:test";
 
@@ -65,7 +65,8 @@ test("server-renders the research PWA shell", async t => {
   assert.match(loginHtml, /<title>Register or sign in · Crypto Regime Lab<\/title>/i);
   assert.match(loginHtml, /Continue with email/i);
   assert.match(loginHtml, /Email me a code/i);
-  assert.match(loginHtml, /No password is needed/i);
+  assert.match(loginHtml, /Access is limited to whitelisted email addresses/i);
+  assert.match(loginHtml, /contact the administrators/i);
   assert.match(loginHtml, /privacy notice/i);
   assert.doesNotMatch(loginHtml, /Binance|Kraken|Tiingo API token/i);
 
@@ -74,7 +75,7 @@ test("server-renders the research PWA shell", async t => {
   const privacyHtml = await privacyResponse.text();
   assert.match(privacyHtml, /Authentication privacy/i);
   assert.match(privacyHtml, /plaintext verification codes/i);
-  assert.match(privacyHtml, /Delete Account removes your email/i);
+  assert.match(privacyHtml, /Delete Account removes your member whitelist entry/i);
 
   const pagesRoot = "dist/cloudflare-pages";
   const routes = JSON.parse(await readFile(`${pagesRoot}/_routes.json`, "utf8"));
@@ -89,4 +90,18 @@ test("server-renders the research PWA shell", async t => {
   const headers = await readFile(`${pagesRoot}/_headers`, "utf8");
   assert.match(headers, /Cache-Control: no-cache/);
   assert.match(headers, /https:\/\/challenges\.cloudflare\.com/);
+});
+
+
+test("published static assets never contain the private administrator address", async () => {
+  async function inspect(directory) {
+    for (const entry of await readdir(directory, { withFileTypes: true })) {
+      const file = `${directory}/${entry.name}`;
+      if (entry.isDirectory()) await inspect(file);
+      else if (/\.(?:html|js|json|map|txt|css)$/.test(entry.name)) {
+        assert.doesNotMatch(await readFile(file, "utf8"), /kkarasavvas@gmail\.com/i, file);
+      }
+    }
+  }
+  await inspect("dist/cloudflare-pages");
 });

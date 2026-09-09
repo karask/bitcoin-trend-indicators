@@ -142,7 +142,7 @@ export default function LoginForm() {
 
   return <div className="login-panel">
     <div className="login-heading"><div className="brand-mark">RL</div><div><p className="eyebrow">REGIME LABS · SECURE ACCESS</p><h1>Continue with email.</h1></div></div>
-    <p className="login-intro">No password is needed. We will email a single-use six-digit code. Your first verified code creates the account; future codes sign you back in.</p>
+    <p className="login-intro">Access is limited to whitelisted email addresses. We will email you a single-use six-digit code. To request access, please contact the administrators.</p>
     {message && <p className="auth-message" role="status">{message}</p>}
     {error && <p className="auth-error" role="alert">{error}</p>}
     {!challenge ? <form onSubmit={requestCode} className="auth-form"><label htmlFor="auth-email">Email address</label><input id="auth-email" type="email" autoComplete="email" required maxLength={254} value={email} onChange={event => setEmail(event.target.value)} placeholder="you@example.com" /><div ref={widget} className="turnstile-slot" aria-label="Human verification" /><button type="submit" disabled={busy || !turnstileToken}>{busy ? "Sending…" : "Email me a code"}</button></form>

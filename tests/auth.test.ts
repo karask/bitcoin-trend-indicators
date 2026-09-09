@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
 import test from "node:test";
 import { ensureMarketSchema } from "../db/index.ts";
@@ -8,6 +9,8 @@ import {
   AuthError,
   createAuthRuntime,
   handleDeleteAccount,
+  handleAllowlist,
+  handleAuthConfig,
   handleLogout,
   handleRequestCode,
   handleSession,
@@ -15,6 +18,7 @@ import {
   normalizeEmail,
   type AuthRuntime,
 } from "../lib/auth.ts";
+import { d1AuthStore } from "../lib/auth-store-d1.ts";
 import { localAuthStore } from "../lib/auth-store-local.ts";
 import { onRequest as pagesAuthMiddleware } from "../functions/_middleware.ts";
 import type { D1Database, D1PreparedStatement } from "../functions/_lib/cloudflare.ts";
@@ -24,6 +28,10 @@ const ORIGIN = "https://regime.example";
 function database() {
   const result = new DatabaseSync(":memory:");
   ensureMarketSchema(result);
+  // Existing passwordless-auth tests operate on explicitly approved fixture addresses.
+  for (const name of ["person", "existing", "new", "later", "locked", "limited", "global", "parallel", "devices", "ip-over", ...Array.from({ length: 10 }, (_, index) => `ip-${index}`)]) {
+    result.prepare("INSERT INTO auth_allowlist (email,role,created_at) VALUES (?,'user',0)").run(`${name}@example.com`);
+  }
   return result;
 }
 
@@ -356,4 +364,147 @@ test("Cloudflare middleware protects pages and APIs while leaving auth pages pub
   assert.equal(await protectedPage.text(), "dashboard shell");
   assert.equal(protectedPage.headers.get("Cache-Control"), "private, no-store, max-age=0");
   }
+});
+
+const ADMIN_EMAIL = "kkarasavvas@gmail.com";
+
+function allowlistRequest(method: string, cookie?: string, data?: unknown, origin = ORIGIN) {
+  return new Request(`${ORIGIN}/api/v1/auth/allowlist`, {
+    method,
+    headers: { Origin: origin, "Content-Type": "application/json", ...(cookie ? { Cookie: cookie } : {}) },
+    ...(data === undefined ? {} : { body: JSON.stringify(data) }),
+  });
+}
+
+async function login(auth: AuthRuntime, email: string) {
+  const challengeId = await requestChallenge(auth, email);
+  const result = await handleVerifyCode(jsonRequest("/api/v1/auth/verify-code", { challengeId, code: "123456" }), auth);
+  assert.equal(result.status, 200);
+  return { cookie: result.headers.get("set-cookie")!.split(";")[0], data: await payload(result) };
+}
+
+for (const backend of ["local", "d1"] as const) {
+  test(`${backend}: only the designated admin is initially approved, including after migration`, async t => {
+    const db = new DatabaseSync(":memory:");
+    t.after(() => db.close());
+    if (backend === "local") ensureMarketSchema(db);
+    else {
+      db.exec(readFileSync(new URL("../drizzle/0002_passwordless_auth.sql", import.meta.url), "utf8"));
+      db.exec("INSERT INTO auth_users VALUES ('legacy','legacy@example.com',0,0,0)");
+      db.exec("INSERT INTO auth_sessions VALUES ('legacy-session','legacy','hash',0,9999999999999,NULL)");
+      db.exec(readFileSync(new URL("../drizzle/0003_email_allowlist.sql", import.meta.url), "utf8"));
+      assert.equal(tableCount(db, "auth_sessions"), 0);
+    }
+    const setup = runtime(db);
+    if (backend === "d1") setup.runtime.store = d1AuthStore(d1(db));
+    assert.deepEqual(db.prepare("SELECT email,role FROM auth_allowlist").all().map(row => ({ ...row })), [{ email: ADMIN_EMAIL, role: "admin" }]);
+    assert.throws(() => db.prepare("INSERT INTO auth_allowlist VALUES (?,'admin',0)").run("another@example.com"));
+    const denied = await handleRequestCode(jsonRequest("/api/v1/auth/request-code", { email: "legacy@example.com", turnstileToken: "human" }), setup.runtime);
+    assert.equal(denied.status, 403);
+    const denial = await denied.text();
+    assert.match(denial, /not whitelisted.*contact the administrators/i);
+    assert.doesNotMatch(denial, /kkarasavvas/i);
+    assert.equal(setup.sent.length, 0);
+    assert.equal(db.prepare("SELECT id FROM auth_challenges").get(), undefined);
+    assert.doesNotMatch(await (await handleAuthConfig(setup.runtime)).text(), /kkarasavvas/i);
+    const admin = await login(setup.runtime, `  ${ADMIN_EMAIL.toUpperCase()}  `);
+    assert.equal((admin.data.user as { role: string }).role, "admin");
+    assert.deepEqual(await payload(await handleAllowlist(allowlistRequest("GET", admin.cookie), setup.runtime)), { entries: [] });
+  });
+
+  test(`${backend}: admin manages members, rejects privilege escalation, and revokes credentials`, async t => {
+    const db = database();
+    t.after(() => db.close());
+    const setup = runtime(db);
+    if (backend === "d1") setup.runtime.store = d1AuthStore(d1(db));
+    const auth = setup.runtime;
+    const admin = await login(auth, ADMIN_EMAIL);
+    const member = await login(auth, "person@example.com");
+    assert.equal((member.data.user as { role: string }).role, "user");
+    assert.doesNotMatch(JSON.stringify(member.data), /kkarasavvas/i);
+
+    for (const method of ["GET", "POST", "DELETE"]) {
+      const data = method === "GET" ? undefined : { email: "outsider@example.com", role: "admin" };
+      assert.equal((await handleAllowlist(allowlistRequest(method, undefined, data), auth)).status, 401);
+      const denied = await handleAllowlist(allowlistRequest(method, member.cookie, data), auth);
+      assert.equal(denied.status, 403);
+      assert.doesNotMatch(await denied.text(), /kkarasavvas|person@example/i);
+    }
+    for (const method of ["POST", "DELETE"]) {
+      assert.equal((await handleAllowlist(allowlistRequest(method, admin.cookie, { email: "person@example.com" }, "https://attacker.example"), auth)).status, 403);
+    }
+    assert.equal((await handleAllowlist(allowlistRequest("POST", admin.cookie, { email: "invalid" }), auth)).status, 400);
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const added = await handleAllowlist(allowlistRequest("POST", admin.cookie, { email: " NEW-MEMBER@Example.com ", role: "admin" }), auth);
+      assert.equal(added.status, 200);
+      const entries = (await payload(added)).entries as Array<{ email: string }>;
+      assert.equal(entries.filter(entry => entry.email === "new-member@example.com").length, 1);
+      assert.ok(entries.every(entry => entry.email !== ADMIN_EMAIL));
+    }
+    assert.equal(await auth.store.accessRole("new-member@example.com"), "user");
+    const newMember = await login(auth, "new-member@example.com");
+    assert.equal((await handleAllowlist(allowlistRequest("DELETE", admin.cookie, { email: ADMIN_EMAIL }), auth)).status, 403);
+    await handleAllowlist(allowlistRequest("POST", admin.cookie, { email: ADMIN_EMAIL }), auth);
+    assert.equal(await auth.store.accessRole(ADMIN_EMAIL), "admin");
+
+    setup.advance(60_001);
+    const pending = await requestChallenge(auth, "new-member@example.com");
+    const removed = await handleAllowlist(allowlistRequest("DELETE", admin.cookie, { email: "NEW-MEMBER@example.com" }), auth);
+    assert.equal(removed.status, 200);
+    assert.equal(await auth.store.accessRole("new-member@example.com"), null);
+    const sessionRequest = new Request(`${ORIGIN}/api/v1/auth/session`, { headers: { Cookie: newMember.cookie } });
+    assert.equal((await payload(await handleSession(sessionRequest, auth))).authenticated, false);
+    const protectedApi = await pagesAuthMiddleware({ request: new Request(`${ORIGIN}/api/v1/dashboard`, { headers: { Cookie: newMember.cookie } }), env: { REGIME_DB: d1(db) }, next: async () => new Response("must not run"), waitUntil() {} });
+    assert.equal(protectedApi.status, 401);
+    assert.equal((await handleRequestCode(jsonRequest("/api/v1/auth/request-code", { email: "new-member@example.com", turnstileToken: "human" }), auth)).status, 403);
+    await handleAllowlist(allowlistRequest("POST", admin.cookie, { email: "new-member@example.com" }), auth);
+    assert.equal((await payload(await handleSession(sessionRequest, auth))).authenticated, false, "Re-approval must not restore revoked sessions");
+    assert.equal((await handleVerifyCode(jsonRequest("/api/v1/auth/verify-code", { challengeId: pending, code: "123456" }), auth)).status, 400, "Re-approval must not restore pending codes");
+    assert.match(removed.headers.get("Cache-Control") ?? "", /no-store/);
+  });
+}
+
+test("valid outstanding codes and existing sessions cannot bypass missing whitelist membership", async t => {
+  const db = database();
+  t.after(() => db.close());
+  const setup = runtime(db);
+  const member = await login(setup.runtime, "person@example.com");
+  setup.advance(60_001);
+  const pending = await requestChallenge(setup.runtime);
+  // Simulate credentials retained from an older deployment, without the removal trigger.
+  db.exec("DROP TRIGGER auth_allowlist_revoke");
+  db.prepare("DELETE FROM auth_allowlist WHERE email=?").run("person@example.com");
+  const result = await handleVerifyCode(jsonRequest("/api/v1/auth/verify-code", { challengeId: pending, code: "123456" }), setup.runtime);
+  assert.equal(result.status, 403);
+  assert.match(await result.text(), /contact the administrators/i);
+  const session = await handleSession(new Request(`${ORIGIN}/api/v1/auth/session`, { headers: { Cookie: member.cookie } }), setup.runtime);
+  assert.equal((await payload(session)).authenticated, false);
+});
+
+test("account deletion removes member approval and preserves only the designated administrator access", async t => {
+  const db = database();
+  t.after(() => db.close());
+  const setup = runtime(db);
+  for (const email of ["person@example.com", ADMIN_EMAIL]) {
+    const account = await login(setup.runtime, email);
+    assert.equal((await handleDeleteAccount(new Request(`${ORIGIN}/api/v1/auth/account`, { method: "DELETE", headers: { Origin: ORIGIN, Cookie: account.cookie } }), setup.runtime)).status, 200);
+    assert.equal(await setup.runtime.store.accessRole(email), email === ADMIN_EMAIL ? "admin" : null);
+  }
+});
+
+test("removing and re-adding access during verification cannot mint a session from the old code", async t => {
+  const db = database();
+  t.after(() => db.close());
+  const setup = runtime(db);
+  const challengeId = await requestChallenge(setup.runtime);
+  const original = setup.runtime.store.createSession.bind(setup.runtime.store);
+  setup.runtime.store.createSession = async (...args) => {
+    await setup.runtime.store.removeAllowedEmail("person@example.com");
+    await setup.runtime.store.addAllowedEmail("person@example.com", setup.runtime.now());
+    return original(...args);
+  };
+  const result = await handleVerifyCode(jsonRequest("/api/v1/auth/verify-code", { challengeId, code: "123456" }), setup.runtime);
+  assert.equal(result.status, 403);
+  assert.equal(result.headers.get("set-cookie"), null);
+  assert.equal(tableCount(db, "auth_sessions"), 0);
 });

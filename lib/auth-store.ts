@@ -16,12 +16,18 @@ export interface AuthChallenge {
   consumedAt: number | null;
 }
 
+export type AuthRole = "admin" | "user";
+
+export interface AllowlistEntry { email: string; createdAt: number }
+
 export interface AuthSessionUser extends AuthUser {
+  role: AuthRole;
   sessionId: string;
   sessionExpiresAt: number;
 }
 
 export interface AuthSqlAdapter {
+  all<T>(sql: string, values?: unknown[]): Promise<T[]>;
   first<T>(sql: string, values?: unknown[]): Promise<T | null>;
   run(sql: string, values?: unknown[]): Promise<{ changes: number }>;
 }
@@ -44,7 +50,7 @@ type UserRow = {
   last_login_at: number;
 };
 
-type SessionUserRow = UserRow & { session_id: string; session_expires_at: number };
+type SessionUserRow = UserRow & { session_id: string; session_expires_at: number; role: AuthRole };
 
 const asChallenge = (row: ChallengeRow): AuthChallenge => ({
   id: row.id,
@@ -67,6 +73,25 @@ const asUser = (row: UserRow): AuthUser => ({
 export class AuthStore {
   private readonly sql: AuthSqlAdapter;
   constructor(sql: AuthSqlAdapter) { this.sql = sql; }
+
+  async accessRole(email: string): Promise<AuthRole | null> {
+    const row = await this.sql.first<{ role: AuthRole }>("SELECT role FROM auth_allowlist WHERE email=?", [email]);
+    return row?.role ?? null;
+  }
+
+  async listAllowedEmails(): Promise<AllowlistEntry[]> {
+    const rows = await this.sql.all<{ email: string; created_at: number }>("SELECT email,created_at FROM auth_allowlist WHERE role='user' ORDER BY email");
+    return rows.map(row => ({ email: row.email, createdAt: row.created_at }));
+  }
+
+  async addAllowedEmail(email: string, now: number): Promise<void> {
+    await this.sql.run("INSERT OR IGNORE INTO auth_allowlist (email,role,created_at) VALUES (?,'user',?)", [email, now]);
+  }
+
+  async removeAllowedEmail(email: string): Promise<void> {
+    // The database trigger revokes sessions and pending codes in the same statement.
+    await this.sql.run("DELETE FROM auth_allowlist WHERE email=? AND role='user'", [email]);
+  }
 
   async cleanup(now: number): Promise<void> {
     await this.sql.run("DELETE FROM auth_rate_events WHERE created_at < ?", [now - 2 * 86_400_000]);
@@ -140,16 +165,23 @@ export class AuthStore {
     return asUser(row);
   }
 
-  async createSession(userId: string, tokenHash: string, now: number, expiresAt: number): Promise<string> {
+  async createSession(userId: string, tokenHash: string, now: number, expiresAt: number, challengeId: string | null = null): Promise<string | null> {
     const id = crypto.randomUUID();
-    await this.sql.run("INSERT INTO auth_sessions (id,user_id,token_hash,created_at,expires_at,revoked_at) VALUES (?,?,?,?,?,NULL)", [id, userId, tokenHash, now, expiresAt]);
+    // Recheck access atomically with insertion. A removal during verification must
+    // not create a usable session, even if that email has since been re-approved.
+    const inserted = await this.sql.first<{ id: string }>(`INSERT INTO auth_sessions (id,user_id,token_hash,created_at,expires_at,revoked_at)
+      SELECT ?,u.id,?,?,?,NULL FROM auth_users u JOIN auth_allowlist a ON a.email=u.email
+      WHERE u.id=? AND (? IS NULL OR EXISTS (
+        SELECT 1 FROM auth_challenges c WHERE c.id=? AND c.email=u.email AND c.consumed_at=?
+      )) RETURNING id`, [id, tokenHash, now, expiresAt, userId, challengeId, challengeId, now]);
+    if (!inserted) return null;
     await this.sql.run("UPDATE auth_sessions SET revoked_at=? WHERE user_id=? AND revoked_at IS NULL AND id NOT IN (SELECT id FROM auth_sessions WHERE user_id=? AND revoked_at IS NULL AND expires_at>? ORDER BY created_at DESC LIMIT 10)", [now, userId, userId, now]);
     return id;
   }
 
   async sessionUser(tokenHash: string, now: number): Promise<AuthSessionUser | null> {
-    const row = await this.sql.first<SessionUserRow>("SELECT u.id,u.email,u.created_at,u.verified_at,u.last_login_at,s.id AS session_id,s.expires_at AS session_expires_at FROM auth_sessions s JOIN auth_users u ON u.id=s.user_id WHERE s.token_hash=? AND s.revoked_at IS NULL AND s.expires_at>?", [tokenHash, now]);
-    return row ? { ...asUser(row), sessionId: row.session_id, sessionExpiresAt: row.session_expires_at } : null;
+    const row = await this.sql.first<SessionUserRow>("SELECT u.id,u.email,u.created_at,u.verified_at,u.last_login_at,s.id AS session_id,s.expires_at AS session_expires_at,a.role FROM auth_sessions s JOIN auth_users u ON u.id=s.user_id JOIN auth_allowlist a ON a.email=u.email WHERE s.token_hash=? AND s.revoked_at IS NULL AND s.expires_at>?", [tokenHash, now]);
+    return row ? { ...asUser(row), role: row.role, sessionId: row.session_id, sessionExpiresAt: row.session_expires_at } : null;
   }
 
   async revokeSession(tokenHash: string, now: number): Promise<void> {
@@ -161,6 +193,7 @@ export class AuthStore {
     if (!user) return;
     await this.sql.run("DELETE FROM auth_sessions WHERE user_id=?", [userId]);
     await this.sql.run("DELETE FROM auth_challenges WHERE email=?", [user.email]);
+    await this.removeAllowedEmail(user.email);
     await this.sql.run("DELETE FROM auth_users WHERE id=?", [userId]);
   }
 }
