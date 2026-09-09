@@ -3,6 +3,7 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import { clearAllCommodityHistoryCaches } from "../lib/commodity-cache.ts";
 import { clearAllStockHistoryCaches } from "../lib/stock-cache.ts";
 
 type AuthUser = { id: string; email: string };
@@ -77,7 +78,7 @@ export function AccountControls() {
     try {
       const result = await fetch("/api/v1/auth/account", { method: "DELETE", cache: "no-store" });
       if (!result.ok) throw new Error("Account deletion failed");
-      await clearAllStockHistoryCaches().catch(() => undefined);
+      await Promise.all([clearAllStockHistoryCaches(), clearAllCommodityHistoryCaches()].map(operation => operation.catch(() => undefined)));
       window.location.assign("/login?deleted=1");
     } catch {
       window.alert("The account could not be deleted. Please try again.");

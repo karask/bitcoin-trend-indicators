@@ -5,7 +5,7 @@ export type RegimeState = "bull" | "bear" | "neutral";
 export type ThresholdKind = "fixed" | "provisional" | "conditional";
 export type IndicatorRole = "regime" | "confirmation" | "exit" | "valuation";
 export type Timeframe = "1d" | "1w";
-export type MarketContext = "crypto" | "equity";
+export type MarketContext = "crypto" | "equity" | "commodity";
 export type SuperGuppySource = "close" | "open" | "high" | "low" | "hl2" | "hlc3" | "ohlc4";
 
 export interface SuperGuppyConfig {
@@ -777,7 +777,7 @@ function valuation(candles: Candle[], spec: IndicatorSpec, timeframe: Timeframe)
 }
 
 export function calculateIndicators(candles: Candle[], timeframe: Timeframe, options: IndicatorCalculationOptions = {}): SignalSnapshot[] {
-  const configuredKk = options.market === "equity"
+  const configuredKk = options.market === "commodity" ? { atrLength: 10, factor: 3 } : options.market === "equity"
     ? options.stock ? KK_SUPERTREND_STOCK_PRESETS[options.stock][timeframe] : { atrLength: KK_SUPERTREND_ATR_LENGTH, factor: KK_SUPERTREND_EQUITY_FACTOR }
     : KK_SUPERTREND_PRESETS[options.asset ?? "btc"][timeframe];
   const explicitKkFactor = finite(options.kkSupertrendFactor) && options.kkSupertrendFactor! > 0 ? options.kkSupertrendFactor! : null;
@@ -814,7 +814,7 @@ export function calculateIndicators(candles: Candle[], timeframe: Timeframe, opt
 
 function resolvePeriodsPerYear(timeframe: Timeframe, options: AnnualizationOptions): number {
   if (finite(options.periodsPerYear) && options.periodsPerYear! > 0) return options.periodsPerYear!;
-  return timeframe === "1d" ? (options.market === "equity" ? 252 : 365) : 52;
+  return timeframe === "1d" ? (options.market === "equity" || options.market === "commodity" ? 252 : 365) : 52;
 }
 
 export interface ExecutionRecord { signalTime: number; time: number; price: number; state: RegimeState; exposure: number; previousExposure: number; cost: number }

@@ -321,13 +321,13 @@ test("Cloudflare middleware protects pages and APIs while leaving auth pages pub
   const db = database();
   t.after(() => db.close());
   const env = { REGIME_DB: d1(db) };
-  for (const path of ["/api/v1/dashboard", "/api/v1/health", "/api/v1/registry", "/api/v1/series", "/api/v1/spot", "/api/v1/stocks/history?symbol=TSLA", "/api/v1/stocks/quote?symbol=TSLA"]) {
+  for (const path of ["/api/v1/dashboard", "/api/v1/health", "/api/v1/registry", "/api/v1/series", "/api/v1/spot", "/api/v1/stocks/history?symbol=TSLA", "/api/v1/stocks/quote?symbol=TSLA", "/api/v1/commodities/history?symbol=GC%3DF", "/api/v1/commodities/quote?symbol=SI%3DF"]) {
     const api = await pagesAuthMiddleware({ request: new Request(`${ORIGIN}${path}`), env, next: async () => new Response("should not run"), waitUntil() {} });
     assert.equal(api.status, 401, path);
     assert.equal(api.headers.get("X-Auth-Required"), "1", path);
   }
 
-  for (const path of ["/", "/stocks?symbol=TSLA", "/overview", "/overview/?indicator=kk_supertrend"]) {
+  for (const path of ["/", "/stocks?symbol=TSLA", "/commodities/", "/commodities/?asset=silver", "/overview", "/overview/?indicator=kk_supertrend"]) {
     const page = await pagesAuthMiddleware({ request: new Request(`${ORIGIN}${path}`), env, next: async () => new Response("should not run"), waitUntil() {} });
     assert.equal(page.status, 302, path);
     const destination = new URL(page.headers.get("location") ?? "");
@@ -350,7 +350,7 @@ test("Cloudflare middleware protects pages and APIs while leaving auth pages pub
   const challengeId = await requestChallenge(setup.runtime);
   const verified = await handleVerifyCode(jsonRequest("/api/v1/auth/verify-code", { challengeId, code: "123456" }), setup.runtime);
   const cookie = (verified.headers.get("set-cookie") ?? "").split(";")[0];
-  for (const path of ["/", "/stocks/", "/overview/"]) {
+  for (const path of ["/", "/stocks/", "/commodities/", "/overview/"]) {
   const protectedPage = await pagesAuthMiddleware({ request: new Request(`${ORIGIN}${path}`, { headers: { Cookie: cookie } }), env, next: async () => new Response("dashboard shell", { headers: { "Cache-Control": "public" } }), waitUntil() {} });
   assert.equal(protectedPage.status, 200);
   assert.equal(await protectedPage.text(), "dashboard shell");

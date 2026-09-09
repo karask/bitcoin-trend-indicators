@@ -1,5 +1,7 @@
 import { isAssetId, isSourceId, marketDefinition } from "../../../lib/markets.ts";
 import { isStockSymbol } from "../../../lib/stocks.ts";
+import { commodityDefinition, isCommoditySymbol, latestRequiredCommodityDate } from "../../../lib/commodities.ts";
+import { d1CommodityStore } from "../../_lib/commodity-history.ts";
 import { latestRequiredYahooSession } from "../../../lib/yahoo.ts";
 import { xnasDateEpoch } from "../../../lib/xnas-calendar.ts";
 import { refreshCryptoMarket, refreshStockMarket } from "../../../worker/refresh.ts";
@@ -85,5 +87,15 @@ export const onRequestPost: PagesFunction<CloudflareEnv> = async ({ request, env
     }
   }
 
+  if (body.market === "commodity") {
+    if (typeof body.symbol !== "string" || !isCommoditySymbol(body.symbol)) return json(request, env, { error: "Unsupported commodity" }, 400);
+    try {
+      const store = d1CommodityStore(env.REGIME_DB), snapshot = await store.snapshot(body.symbol);
+      const required = latestRequiredCommodityDate(Date.now());
+      if (required && snapshot?.last_candle && snapshot.last_candle >= xnasDateEpoch(required)!) return json(request, env, { status: "current", lastCandle: snapshot.last_candle });
+      if (!await reserveRefresh(env, commodityDefinition(body.symbol).id, "yahoo")) return json(request, env, { status: "cooldown", lastCandle: snapshot?.last_candle ?? null });
+      return json(request, env, await store.refresh(body.symbol));
+    } catch { return json(request, env, { status: "failed" }); }
+  }
   return json(request, env, { error: "Unsupported market" }, 400);
 };

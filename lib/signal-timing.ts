@@ -8,6 +8,8 @@ export function signalTiming(candleTime: number | null, timeframe: Timeframe, ma
     const boundary = candleTime + (timeframe === "1w" ? 7 : 1) * day;
     return { confirmedAt: boundary, effectiveAt: boundary };
   }
+  // Provider EOD dates do not identify an independently verified COMEX open.
+  if (market === "commodity") return { confirmedAt: candleTime + (timeframe === "1w" ? 5 : 1) * day, effectiveAt: null };
   const lastDate = xnasDateKey(candleTime + (timeframe === "1w" ? 4 : 0) * day);
   const sessions = xnasSessionsBetween(xnasDateKey(candleTime), lastDate);
   const session = sessions.at(-1);

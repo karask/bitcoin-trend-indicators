@@ -1,3 +1,5 @@
+import { commodityDefinition, latestRequiredCommodityDate, type CommodityHistoryResponse, type CommoditySymbol } from "./commodities.ts";
+import { mergeIncrementalCommodityHistory, readCommodityHistoryCache, commodityIncrementalStartDate, writeCommodityHistoryCache } from "./commodity-cache.ts";
 import { cryptoIncrementalStart, mergeCryptoDataset, readCryptoHistoryCache, writeCryptoHistoryCache, type CryptoHistory } from "./crypto-cache.ts";
 import { mergeIncrementalStockHistory, readStockHistoryCache, stockIncrementalStartDate, writeStockHistoryCache } from "./stock-cache.ts";
 import type { AssetId, SourceId } from "./markets.ts";
@@ -81,9 +83,30 @@ export async function loadStockHistory(symbol: StockSymbol, fetcher: Fetcher, si
   return { history, status, cacheSaved, rebased };
 }
 
-export function historyIsCurrent(market: "crypto" | "stock", dailyLast: number | undefined, weeklyLast: number | undefined, now: number): boolean {
+export async function loadCommodityHistory(symbol: CommoditySymbol, fetcher: Fetcher, signal: AbortSignal, onCache?: (history: CommodityHistoryResponse) => void) {
+  const cached = await optionalCache(readCommodityHistoryCache(symbol));
+  signal.throwIfAborted();
+  if (cached) onCache?.(cached);
+  const status = await syncMarket(fetcher, { market: "commodity", symbol }, signal);
+  const startDate = cached ? commodityIncrementalStartDate(symbol, cached.candles) : undefined;
+  const requestHistory = (start?: string) => requestJson<CommodityHistoryResponse>(fetcher, `/api/v1/commodities/history?${new URLSearchParams({ symbol, ...(start ? { startDate: start } : {}) })}`, { signal });
+  let history = await requestHistory(startDate);
+  let rebased = false;
+  if (cached && startDate !== commodityDefinition(symbol).historyStart) {
+    const merged = mergeIncrementalCommodityHistory(cached, history);
+    if (merged.requiresFullRefresh) { history = await requestHistory(); rebased = true; }
+    else history = merged.response!;
+  }
+  if (history.commodity.symbol !== symbol || !history.candles.length) throw new Error("Commodity history did not match the requested symbol.");
+  signal.throwIfAborted();
+  const cacheSaved = await optionalCache(writeCommodityHistoryCache(history).then(() => typeof indexedDB !== "undefined")) === true;
+  return { history, status, cacheSaved, rebased };
+}
+
+export function historyIsCurrent(market: "crypto" | "stock" | "commodity", dailyLast: number | undefined, weeklyLast: number | undefined, now: number): boolean {
   if (!now || dailyLast == null) return false;
   if (market === "crypto") return dailyLast >= completedBoundary("1d", now) && weeklyLast != null && weeklyLast >= completedBoundary("1w", now);
+  if (market === "commodity") { const date = latestRequiredCommodityDate(now); return Boolean(date && dailyLast >= xnasDateEpoch(date)!); }
   const expected = latestRequiredYahooSession(now);
   return Boolean(expected && dailyLast >= xnasDateEpoch(expected.date)!);
 }

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { OVERVIEW_ASSETS, overviewIndicator, overviewLevels, overviewState, overviewTimeframe, overviewUrl, summarizeOverview } from "../lib/asset-overview.ts";
 import { ASSETS } from "../lib/markets.ts";
+import { COMMODITIES } from "../lib/commodities.ts";
 import { STOCKS, aggregateStockWeeks, type StockHistoryResponse } from "../lib/stocks.ts";
 import { calculateIndicators, INDICATOR_SPECS, type Candle } from "../lib/regimes.ts";
 import { xnasSessionsBetween } from "../lib/xnas-calendar.ts";
@@ -12,11 +13,11 @@ const candles: Candle[] = Array.from({ length: 300 }, (_, i) => ({ time: Date.UT
 const dataset = (timeframe: "1d" | "1w", asset = ASSETS[0]): MarketDataset => ({ asset: asset.id, assetLabel: asset.label, source: asset.defaultSource, sourceLabel: "Fixture", market: `${asset.symbol}/USD`, denomination: "USD", timeframe, candles: candles.map((c, i) => ({ ...c, time: candles[0].time + i * DAY * (timeframe === "1w" ? 7 : 1) })), retrievedAt: "2026-09-07T09:00:00Z", checksum: "fixture", stale: false, demo: false, storage: "d1", warning: null, provisional: null, quality: { gaps: 0, duplicates: 0, malformed: 0 } });
 
 test("overview catalog includes every asset once, crypto before stocks, and links to the selected indicator", () => {
-  assert.deepEqual(OVERVIEW_ASSETS.map(item => item.asset), [...ASSETS, ...STOCKS].map(item => item.id));
+  assert.deepEqual(OVERVIEW_ASSETS.map(item => item.asset), [...ASSETS, ...STOCKS, ...COMMODITIES].map(item => item.id));
   assert.equal(new Set(OVERVIEW_ASSETS.map(item => item.asset)).size, OVERVIEW_ASSETS.length);
   for (const asset of OVERVIEW_ASSETS) {
     const url = new URL(overviewUrl(asset, "mayer"), "https://test.invalid");
-    assert.equal(url.pathname, asset.lab === "crypto" ? "/" : "/stocks/");
+    assert.equal(url.pathname, asset.lab === "crypto" ? "/" : asset.lab === "stock" ? "/stocks/" : "/commodities/");
     assert.equal(url.searchParams.get("asset"), asset.asset);
     assert.equal(url.searchParams.get("indicator"), "mayer");
     assert.equal(url.searchParams.get("timeframe"), "1d");

@@ -13,6 +13,16 @@ const fixtures: Fixture[] = JSON.parse(readFileSync(new URL("../research/kk-2026
 const candlesFor = (fixture: Fixture): Candle[] => fixture.rows.map(([time,open,high,low,close,volume])=>({time,open,high,low,close,volume,complete:true}));
 const optionsFor = (asset: string): IndicatorCalculationOptions => isStockId(asset) ? { market:"equity", stock:asset } : { market:"crypto", asset:asset as AssetId };
 
+test("TSLA.jpeg weekly reference confirms the existing KK 15/2 preset without changes", () => {
+  const candles = candlesFor(fixtures.find(row => row.asset === "tsla")!);
+  const kk = calculateIndicators(candles, "1w", { market: "equity", stock: "tsla", indicatorIds: ["kk_supertrend"] })[0];
+  assert.equal(kk.state, "bear");
+  assert.equal(kk.bullTrigger!.toFixed(2), "383.88");
+  assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.tsla["1w"], { atrLength: 15, factor: 2 });
+  assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.tsla["1d"], { atrLength: 10, factor: 3 });
+  assert.ok(candles.at(-1)!.time < Date.UTC(2026, 8, 7));
+});
+
 test("September reference audit reproduces nineteen resolved charts within documented precision", () => {
   assert.equal(fixtures.length,20);
   assert.equal(KK_BATCH_EVIDENCE.filter(r=>!r.ignored).length,19);

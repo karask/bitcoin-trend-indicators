@@ -15,6 +15,7 @@ import { calculateIndicators, type Candle } from "../lib/regimes";
 import { buildResearch } from "../lib/research";
 import RegimeDashboard from "../app/RegimeDashboard";
 import StockDashboard from "../app/stocks/StockDashboard";
+import CommodityDashboard from "../app/commodities/CommodityDashboard";
 
 const candles: Candle[] = Array.from({ length: 300 }, (_, index) => ({ time: Date.UTC(2020, 0, 6) + index * 7 * 86_400_000, open: 100 + index, high: 110 + index, low: 95 + index, close: 102 + index, volume: 10, complete: true }));
 const signals = calculateIndicators(candles, "1w", { asset: "sui" });
@@ -92,9 +93,18 @@ test("both labs keep distinct controls with accessible timeframes and non-pollin
   assert.match(stock, /href="\/overview\/"/);
 });
 
+test("commodity lab is distinct, clearly labelled futures, with accessible controls and shared status UI", () => {
+  const html = renderToStaticMarkup(<CommodityDashboard />);
+  for (const text of ["Gold futures", "Silver futures", "GC=F", "SI=F", "Futures, not spot", "USD per troy ounce", "Uncalibrated futures 10/3", "Check for updates", "CONFIRMATION CLOCK", "DATA SNAPSHOT", "FUTURES QUOTE", "not exchange settlement"]) assert.ok(html.includes(text), text);
+  assert.doesNotMatch(html, /NASDAQ|XNAS|Tiingo|Market source|Binance|Kraken|ADJUSTED CLOSE/);
+  assert.match(html, /aria-pressed="true"/);
+  assert.match(html, /href="\/commodities\/" aria-current="page"/);
+});
+
 test("overview shows all assets crypto first, one global indicator selector and no pinning", () => {
   const html = renderToStaticMarkup(<AssetOverview />);
   assert.ok(html.indexOf('id="overview-crypto"') < html.indexOf('id="overview-stock"'));
+  assert.ok(html.indexOf('id="overview-stock"') < html.indexOf('id="overview-commodity"'));
   for (const asset of OVERVIEW_ASSETS) assert.ok(html.includes(`<strong>${asset.symbol}</strong>`), asset.symbol);
   assert.equal((html.match(/<select/g) ?? []).length, 1);
   assert.match(html, /Indicator for all assets/);

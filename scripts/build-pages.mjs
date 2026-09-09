@@ -18,7 +18,7 @@ const stockShell = [path.join(serverApp, "stocks.html"), path.join(serverApp, "s
 if (!stockShell) throw new Error("Next.js stock shell is missing from the static build.");
 fs.mkdirSync(path.join(output, "stocks"), { recursive: true });
 fs.copyFileSync(stockShell, path.join(output, "stocks", "index.html"));
-for (const route of ["login", "privacy", "overview"]) {
+for (const route of ["login", "privacy", "overview", "commodities"]) {
   const shell = [path.join(serverApp, `${route}.html`), path.join(serverApp, route, "index.html")].find(candidate => fs.existsSync(candidate));
   if (!shell) throw new Error(`Next.js ${route} shell is missing from the static build.`);
   fs.mkdirSync(path.join(output, route), { recursive: true });

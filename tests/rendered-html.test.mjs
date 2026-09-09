@@ -53,6 +53,12 @@ test("server-renders the research PWA shell", async t => {
   assert.match(overviewHtml, /<title>Asset Overview · Crypto Regime Lab<\/title>/i);
   assert.match(overviewHtml, /Checking your secure session/i);
 
+  const commodityResponse = await fetch(`http://127.0.0.1:${port}/commodities`);
+  assert.equal(commodityResponse.status, 200);
+  const commodityHtml = await commodityResponse.text();
+  assert.match(commodityHtml, /<title>Commodity Regime Lab · Crypto Regime Lab<\/title>/i);
+  assert.match(commodityHtml, /Checking your secure session/i);
+
   const loginResponse = await fetch(`http://127.0.0.1:${port}/login`, { headers: { accept: "text/html" } });
   assert.equal(loginResponse.status, 200);
   const loginHtml = await loginResponse.text();
@@ -74,8 +80,9 @@ test("server-renders the research PWA shell", async t => {
   const routes = JSON.parse(await readFile(`${pagesRoot}/_routes.json`, "utf8"));
   assert.deepEqual(routes.include, ["/*"]);
   assert.ok(routes.exclude.includes("/_next/static/*"));
-  assert.ok(!routes.exclude.some(path => path === "/" || path.startsWith("/stocks") || path.startsWith("/overview") || path.startsWith("/api/")));
+  assert.ok(!routes.exclude.some(path => path === "/" || path.startsWith("/stocks") || path.startsWith("/commodities") || path.startsWith("/overview") || path.startsWith("/api/")));
   assert.match(await readFile(`${pagesRoot}/overview/index.html`, "utf8"), /Asset Overview/);
+  assert.match(await readFile(`${pagesRoot}/commodities/index.html`, "utf8"), /Commodity Regime Lab/);
   const serviceWorker = await readFile(`${pagesRoot}/sw.js`, "utf8");
   assert.doesNotMatch(serviceWorker, /addEventListener\(["']fetch/);
   assert.doesNotMatch(serviceWorker, /["']\/(?:stocks\/?)?["']/);

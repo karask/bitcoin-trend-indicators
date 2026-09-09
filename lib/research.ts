@@ -12,7 +12,7 @@ export function researchWindow(candles: Candle[], signals: SignalSnapshot[]) {
 }
 
 export function buildResearch(candles: Candle[], signals: SignalSnapshot[], selectedId: string, timeframe: Timeframe, options: AnnualizationOptions = {}) {
-  const periodsPerYear = options.periodsPerYear ?? (timeframe === "1w" ? 52 : options.market === "equity" ? 252 : 365);
+  const periodsPerYear = options.periodsPerYear ?? (timeframe === "1w" ? 52 : options.market === "equity" || options.market === "commodity" ? 252 : 365);
   const window = researchWindow(candles, signals);
   const settings = { ...options, periodsPerYear, startIndex: window?.startIndex, endIndex: window?.endIndex };
   const selected = window?.comparable.find(signal => signal.id === selectedId);
