@@ -23,7 +23,7 @@ async function seed(stock: StockDefinition): Promise<string> {
   process.stdout.write(`Preparing ${stock.symbol} from Yahoo Finance... `);
   const result = await fetchYahooStockHistory(stock.symbol);
   const checksum = createHash("sha256").update(JSON.stringify(result.candles)).digest("hex");
-  const market = `NASDAQ:${stock.symbol}`;
+  const market = `${stock.exchange}:${stock.symbol}`;
   const rows = result.candles.map(candle => `(${quoted(stock.id)},'yahoo','1d',${candle.time},${quoted(market)},${candle.open},${candle.high},${candle.low},${candle.close},${candle.volume},1,${quoted(result.retrievedAt)},${quoted(checksum)})`);
   const statements = [
     "PRAGMA foreign_keys=ON;",

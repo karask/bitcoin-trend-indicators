@@ -3,7 +3,7 @@ import StockDashboard from "./StockDashboard";
 
 export const metadata: Metadata = {
   title: "Stock Regime Lab",
-  description: "Transparent daily and weekly NASDAQ stock trend-regime research using stored Yahoo Finance history.",
+  description: "Transparent daily and weekly US stock trend-regime research using stored Yahoo Finance history.",
 };
 
 export default function StocksPage() {

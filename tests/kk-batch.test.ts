@@ -53,7 +53,7 @@ test("calibration changes KK only, preserves daily defaults and keeps stock iden
     }
   }
   for(const stock of STOCKS) assert.ok(!ASSETS.some(asset=>String(asset.id)===stock.id));
-  for(const stock of STOCKS.filter(s=>s.id!=="spcx")) assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS[stock.id]["1w"],{atrLength:15,factor:2});
+  for(const stock of STOCKS.filter(s=>["tsla","nvda","googl","mu","sndk"].includes(s.id))) assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS[stock.id]["1w"],{atrLength:15,factor:2});
   assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.spcx,{"1d":{atrLength:10,factor:3},"1w":{atrLength:10,factor:3}});
   assert.match(calibrationStatus(undefined,"1d","spcx"),/Uncalibrated/);
   assert.deepEqual(KK_SUPERTREND_PRESETS.btc["1w"],{atrLength:10,factor:3});

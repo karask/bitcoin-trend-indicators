@@ -6,7 +6,7 @@ import { viewUrl } from "./view-preferences.ts";
 
 export const OVERVIEW_ASSETS = [
   ...ASSETS.map(asset => ({ lab: "crypto" as const, asset: asset.id, source: asset.defaultSource, symbol: asset.symbol, label: asset.label, venue: marketDefinition(asset.id, asset.defaultSource).label })),
-  ...STOCKS.map(stock => ({ lab: "stock" as const, asset: stock.id, source: "yahoo" as const, symbol: stock.symbol, label: stock.label, venue: "Yahoo Finance · NASDAQ" })),
+  ...STOCKS.map(stock => ({ lab: "stock" as const, asset: stock.id, source: "yahoo" as const, symbol: stock.symbol, label: stock.label, venue: `Yahoo Finance · ${stock.exchange}` })),
 ];
 export type OverviewAsset = typeof OVERVIEW_ASSETS[number];
 export type OverviewHistory = { lab: "crypto"; history: CryptoHistory } | { lab: "stock"; history: StockHistoryResponse };

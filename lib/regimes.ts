@@ -73,6 +73,7 @@ export const KK_SUPERTREND_STOCK_PRESETS = {
   // The daily SPCX screenshot has a separate 3/5 confirmation mechanism.
   // ATR/factor alone do not reproduce it, so neither timeframe is calibrated.
   spcx: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
+  bmnr: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
 } as const satisfies Record<StockId, Record<Timeframe, { atrLength: number; factor: number }>>;
 
 export const SUPER_GUPPY_R12_DEFAULTS: SuperGuppyConfig = {

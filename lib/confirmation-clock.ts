@@ -28,7 +28,7 @@ export function confirmationClock(timeframe: Timeframe, now: number) {
 export function stockConfirmationClock(timeframe: Timeframe, now: number) {
   if (!now) return {
     title: timeframe === "1d" ? "Next daily close" : "Next weekly close",
-    boundary: "NASDAQ trading calendar · America/New_York",
+    boundary: "US equity trading calendar · America/New_York",
     remaining: "—",
     target: 0,
   };

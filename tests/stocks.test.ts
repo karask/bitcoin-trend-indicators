@@ -7,7 +7,7 @@ import { storedStockHistory } from "../functions/_lib/stock-history.ts";
 import type { CloudflareEnv, D1PreparedStatement } from "../functions/_lib/cloudflare.ts";
 import { isXnasSessionDate, xnasDateKey, xnasSession, xnasSessionsBetween, xnasSessionsForYear } from "../lib/xnas-calendar.ts";
 import { stockConfirmationClock } from "../lib/confirmation-clock.ts";
-import type { Candle } from "../lib/regimes.ts";
+import { calculateIndicators, KK_SUPERTREND_STOCK_PRESETS, type Candle } from "../lib/regimes.ts";
 
 const DAY = 86_400_000;
 
@@ -35,9 +35,9 @@ function stockResponse(dates: string[], requestedStart: string, requiredThrough:
 }
 
 test("stock definitions remain separate, complete, Yahoo-backed, and type guarded", () => {
-  assert.deepEqual(STOCKS.map(stock => stock.id), ["tsla", "googl", "nvda", "spcx", "mu", "sndk"]);
-  assert.deepEqual(STOCKS.map(stock => stock.symbol), ["TSLA", "GOOGL", "NVDA", "SPCX", "MU", "SNDK"]);
-  assert.ok(STOCKS.every(stock => stock.exchange === "NASDAQ" && stock.currency === "USD" && stock.provider === "yahoo" && stock.calendar === "XNAS"));
+  assert.deepEqual(STOCKS.map(stock => stock.id), ["tsla", "googl", "nvda", "spcx", "mu", "sndk", "bmnr"]);
+  assert.deepEqual(STOCKS.map(stock => stock.symbol), ["TSLA", "GOOGL", "NVDA", "SPCX", "MU", "SNDK", "BMNR"]);
+  assert.ok(STOCKS.every(stock => stock.currency === "USD" && stock.provider === "yahoo" && (stock.id === "bmnr" ? stock.exchange === "NYSE" && stock.calendar === "XNYS" : stock.exchange === "NASDAQ" && stock.calendar === "XNAS")));
   assert.equal(stockDefinition("SPCX").historyStart, "2026-06-12");
   assert.equal(stockDefinition("MU").company, "Micron Technology");
   assert.equal(stockDefinition("SNDK").historyStart, "2025-02-24");
@@ -45,6 +45,32 @@ test("stock definitions remain separate, complete, Yahoo-backed, and type guarde
   assert.equal(isStockId("btc"), false);
   assert.equal(isStockSymbol("SPCX"), true);
   assert.equal(isStockSymbol("spcx"), false);
+});
+
+test("Bitmine has NYSE provenance, bounded available history and no inherited KK calibration", async () => {
+  const stock = stockDefinition("BMNR");
+  assert.equal(stock.historyStart, "2025-06-05");
+  assert.equal(stock.exchange, "NYSE");
+  assert.equal(stock.calendar, "XNYS");
+  const response = await handleYahooStockHistoryRequest(new Request("https://example.test/api/v1/stocks/history?symbol=BMNR"), async input => {
+    assert.equal(new URL(String(input)).pathname, "/v8/finance/chart/BMNR");
+    const body = yahooBody([
+      { date: "2025-06-05", open: 7, high: 9, low: 6, close: 8 },
+      { date: "2025-06-06", open: 8, high: 10, low: 7, close: 9 },
+    ]);
+    body.chart.result[0].meta = { symbol: "BMNR", currency: "USD", exchangeName: "NYQ" };
+    return Response.json(body);
+  }, Date.parse("2025-06-07T01:00:00Z"));
+  assert.equal(response.status, 200);
+  const history = await response.json() as StockHistoryResponse;
+  assert.equal(history.exchange, "NYSE");
+  assert.equal(history.candles.length, 2);
+  assert.equal(history.quality.gaps, 0);
+  for (const timeframe of ["1d", "1w"] as const) {
+    assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.bmnr[timeframe], { atrLength: 10, factor: 3 });
+    const indicators = calculateIndicators(history.candles, timeframe, { market: "equity", stock: "bmnr" });
+    assert.equal(indicators.find(item => item.id === "kk_supertrend")!.readiness?.ready, false);
+  }
 });
 
 test("XNAS calendar covers holidays, closures, early closes, and DST", () => {

@@ -169,7 +169,7 @@ export async function refreshCryptoMarket(database: D1Database, asset: AssetId, 
 
 function upsertStockCandle(database: D1Database, stock: StockDefinition, item: Candle, retrievedAt: string, checksum: string): D1PreparedStatement {
   return database.prepare("INSERT INTO market_candles (asset,source,timeframe,time,market,open,high,low,close,volume,complete,retrieved_at,raw_checksum) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(asset,source,timeframe,time) DO UPDATE SET market=excluded.market,open=excluded.open,high=excluded.high,low=excluded.low,close=excluded.close,volume=excluded.volume,complete=excluded.complete,retrieved_at=excluded.retrieved_at,raw_checksum=excluded.raw_checksum")
-    .bind(stock.id, "yahoo", "1d", item.time, `NASDAQ:${stock.symbol}`, item.open, item.high, item.low, item.close, item.volume, 1, retrievedAt, checksum);
+    .bind(stock.id, "yahoo", "1d", item.time, `${stock.exchange}:${stock.symbol}`, item.open, item.high, item.low, item.close, item.volume, 1, retrievedAt, checksum);
 }
 
 async function refreshStock(database: D1Database, stock: StockDefinition) {
@@ -189,7 +189,7 @@ async function refreshStock(database: D1Database, stock: StockDefinition) {
     const summary = await database.prepare("SELECT min(time) AS first_candle,max(time) AS last_candle,count(*) AS candle_count FROM market_candles WHERE asset=? AND source='yahoo' AND timeframe='1d'").bind(stock.id).first<{ first_candle: number | null; last_candle: number | null; candle_count: number }>();
     const metadata = JSON.stringify({ adjustment: history.adjustment, splitSignature: history.splitSignature, terms: "personal-research" });
     await database.prepare("INSERT INTO provider_snapshots (asset,source,timeframe,market,retrieved_at,checksum,warning,first_candle,last_candle,candle_count) VALUES (?,?,?,?,?,?,?,?,?,?) ON CONFLICT(asset,source,timeframe) DO UPDATE SET market=excluded.market,retrieved_at=excluded.retrieved_at,checksum=excluded.checksum,warning=excluded.warning,first_candle=excluded.first_candle,last_candle=excluded.last_candle,candle_count=excluded.candle_count")
-      .bind(stock.id, "yahoo", "1d", `NASDAQ:${stock.symbol}`, history.retrievedAt, checksum, metadata, summary?.first_candle ?? null, summary?.last_candle ?? null, summary?.candle_count ?? 0).run();
+      .bind(stock.id, "yahoo", "1d", `${stock.exchange}:${stock.symbol}`, history.retrievedAt, checksum, metadata, summary?.first_candle ?? null, summary?.last_candle ?? null, summary?.candle_count ?? 0).run();
     await database.prepare("INSERT INTO source_health (asset,source,checked_at,status,message,daily_last,weekly_last) VALUES (?,?,?,?,?,?,?) ON CONFLICT(asset,source) DO UPDATE SET checked_at=excluded.checked_at,status=excluded.status,message=excluded.message,daily_last=excluded.daily_last")
       .bind(stock.id, "yahoo", checkedAt, "healthy", fullRebase ? "Yahoo Finance split-adjusted history rebased" : "Yahoo Finance completed sessions refreshed", summary?.last_candle ?? null, null).run();
     return { symbol: stock.symbol, status: "healthy", updated: rows.length, fullRebase };
