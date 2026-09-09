@@ -112,7 +112,7 @@ test("metals and Bitmine notebooks disclose approximate fits and keep daily cali
     assert.match(daily, /Uncalibrated futures preset/);
     assert.match(daily, /does not validate this daily preset/);
   }
-  const bmnr = renderToStaticMarkup(<CalibrationPanel stock="bmnr" timeframe="1w" values={{ atrLength: 10, factor: 2.35 }} />);
+  const bmnr = renderToStaticMarkup(<CalibrationPanel stock="bmnr" timeframe="1w" values={{ atrLength: 29, factor: 1 }} />);
   assert.match(bmnr, /bitmine.jpeg/);
   assert.match(bmnr, /four-year tests are unavailable/);
   assert.doesNotMatch(bmnr, /<details[^>]*\bopen=/);

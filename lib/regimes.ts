@@ -76,14 +76,14 @@ export const KK_SUPERTREND_STOCK_PRESETS = {
   // The daily SPCX screenshot has a separate 3/5 confirmation mechanism.
   // ATR/factor alone do not reproduce it, so neither timeframe is calibrated.
   spcx: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
-  bmnr: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 2.35 } },
+  bmnr: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 29, factor: 1 } },
 } as const satisfies Record<StockId, Record<Timeframe, { atrLength: number; factor: number }>>;
 
 // Approximate Yahoo-feed fits to September 9 weekly screenshots, not recovered
 // private formulas. Daily defaults remain uncalibrated; see archived evidence.
 export const KK_SUPERTREND_COMMODITY_PRESETS = {
   gold: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 2 } },
-  silver: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2.4 } },
+  silver: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 45, factor: 3 } },
 } as const satisfies Record<CommodityId, Record<Timeframe, { atrLength: number; factor: number }>>;
 
 export const SUPER_GUPPY_R12_DEFAULTS: SuperGuppyConfig = {

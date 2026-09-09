@@ -1,4 +1,4 @@
-/** Approximate feed-specific weekly reference fits; fixtures stay outside browser bundles. */
+/** Approximate integer-only weekly fits; bounded search and fixed reference histories. */
 export const KK_FOLLOWUP_EVIDENCE = [
   {
     "asset": "gold",
@@ -16,16 +16,16 @@ export const KK_FOLLOWUP_EVIDENCE = [
     },
     "previous": {
       "atrLength": 10,
-      "factor": 3
+      "factor": 2
     },
     "value": 4123.174088757438,
     "state": "bull",
-    "previousValue": 4684.6259804972915,
-    "previousState": "bear",
+    "previousValue": 4123.174088757438,
+    "previousState": "bull",
     "lastFlip": 1786924800000,
     "through": 1788134400000,
     "candles": 400,
-    "note": "GC1! screenshot is back-adjusted; our GC=F contract history differs. The 10/2 baseline closely matches the latest level and August bullish reversal."
+    "note": "Integer-only search retains 10/2. GC1! back-adjusted screenshot and Yahoo GC=F history differ."
   },
   {
     "asset": "silver",
@@ -36,23 +36,23 @@ export const KK_FOLLOWUP_EVIDENCE = [
     "timeframe": "1w",
     "target": 75.73,
     "targetState": "bear",
-    "tolerance": 0.11,
+    "tolerance": 0.01,
     "preset": {
+      "atrLength": 45,
+      "factor": 3
+    },
+    "previous": {
       "atrLength": 15,
       "factor": 2.4
     },
-    "previous": {
-      "atrLength": 10,
-      "factor": 3
-    },
-    "value": 75.82863651451208,
+    "value": 75.7387019732357,
     "state": "bear",
-    "previousValue": 78.30538272503735,
+    "previousValue": 75.82863651451208,
     "previousState": "bear",
     "lastFlip": 1769385600000,
     "through": 1788134400000,
     "candles": 400,
-    "note": "SI1! screenshot is back-adjusted; Yahoo SI=F has different candles/rolls. Approximate feed-specific fit, not proof of the private formula. 7/3 is numerically close but flips bearish in March rather than the January reversal visible in the screenshot."
+    "note": "User-requested integer-only fit: 45/3 is the closest same-regime level in ATR 1–100 / multiplier 1–10. January 26 bearish reversal matches the visible reversal month. Yahoo and back-adjusted SI1! histories differ; this is not proof of the private formula."
   },
   {
     "asset": "bmnr",
@@ -63,22 +63,22 @@ export const KK_FOLLOWUP_EVIDENCE = [
     "timeframe": "1w",
     "target": 17.45,
     "targetState": "bull",
-    "tolerance": 0.03,
+    "tolerance": 0.09,
     "preset": {
-      "atrLength": 10,
-      "factor": 2.35
+      "atrLength": 29,
+      "factor": 1
     },
     "previous": {
       "atrLength": 10,
-      "factor": 3
+      "factor": 2.35
     },
-    "value": 17.426372598957105,
+    "value": 17.53097245241699,
     "state": "bull",
-    "previousValue": 15.312177870313011,
+    "previousValue": 17.426372598957105,
     "previousState": "bull",
-    "lastFlip": 1786924800000,
+    "lastFlip": 1787529600000,
     "through": 1788134400000,
     "candles": 65,
-    "note": "Screenshot begins in 2018; Yahoo BMNR only supplies data from June 2025. Keep ATR 10 and adjust only the multiplier to approximate the latest level. Earlier chart history and exact flip date are not validated; four-year tests are unavailable."
+    "note": "User-requested integer-only fit: 29/1 is the closest same-regime level in ATR 1–100 / multiplier 1–10. Calculated bullish reversal moves to August 24. Yahoo supplies only 65 completed weeks; screenshot history starts in 2018. Exact screenshot reversal date is not validated and four-year tests are unavailable."
   }
 ] as const;

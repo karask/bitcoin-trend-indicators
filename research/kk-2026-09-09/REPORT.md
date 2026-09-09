@@ -1,5 +1,7 @@
 # Gold, Silver and Bitmine — weekly KK calibration, 9 September 2026
 
+Historical record: these fractional fits have been superseded at the user's request by the integer-only presets in `INTEGER-REPORT.md`. The results below describe the previous configuration, not the currently deployed presets.
+
 Only KK Supertrend changes. Daily presets, Standard SuperTrend, other indicators, provider histories and calendar rules are untouched. Fixtures use completed weekly bars through 31 August 2026; the screenshot's unfinished September 7 week is excluded. Image hashes and exact audit results are in `lib/kk-followup-evidence.ts`.
 
 | Screenshot | Regime / reversal | Prior ATR / factor | Selected ATR / factor | Yahoo result | Error |

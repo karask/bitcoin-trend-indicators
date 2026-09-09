@@ -21,14 +21,25 @@ test("three weekly screenshots reproduce approximate levels, states and document
     assert.equal(kk.state,row.targetState);
     assert.equal(kk.lastFlip,row.lastFlip);
     assert.ok(Math.abs(kk.values.supertrend!-row.target) <= row.tolerance);
-    assert.ok(Math.abs(kk.values.supertrend!/row.target-1) < .0014);
+    assert.ok(Math.abs(kk.values.supertrend!/row.target-1) < .005);
     assert.deepEqual({atrLength:kk.values.atrLength,factor:kk.values.factor},row.preset);
-    const before = calculateIndicators(candles,"1w",{...options,indicatorIds:["kk_supertrend"],kkSupertrendAtrLength:10,kkSupertrendFactor:3})[0];
+    const before = calculateIndicators(candles,"1w",{...options,indicatorIds:["kk_supertrend"],kkSupertrendAtrLength:row.previous.atrLength,kkSupertrendFactor:row.previous.factor})[0];
     assert.equal(before.values.supertrend,row.previousValue);
     assert.equal(before.state,row.previousState);
   }
   const silver = calculateIndicators(candlesFor("silver"),"1w",{market:"commodity",commodity:"silver",indicatorIds:["kk_supertrend"],kkSupertrendAtrLength:7,kkSupertrendFactor:3})[0];
   assert.equal(silver.lastFlip,Date.UTC(2026,2,16),"Rejected numerical fit has the wrong reversal month");
+});
+
+test("selected integer-only presets minimize level error in the documented bounded search", () => {
+  for (const row of KK_FOLLOWUP_EVIDENCE) {
+    assert.ok(Number.isInteger(row.preset.atrLength) && Number.isInteger(row.preset.factor));
+    const candles = candlesFor(row.asset), error = Math.abs(row.value - row.target);
+    for (let atrLength = 1; atrLength <= 100; atrLength++) for (let factor = 1; factor <= 10; factor++) {
+      const candidate = calculateIndicators(candles, "1w", { ...optionsFor(row.asset), indicatorIds: ["kk_supertrend"], kkSupertrendAtrLength: atrLength, kkSupertrendFactor: factor })[0];
+      if (candidate.readiness?.ready && candidate.state === row.targetState) assert.ok(Math.abs(candidate.values.supertrend! - row.target) >= error - 1e-10);
+    }
+  }
 });
 
 test("only weekly KK changes; daily, generic futures baseline and all other indicators remain identical", () => {
