@@ -1,0 +1,22 @@
+[
+  {"asset":"tsla","fileTime":"7.17","timeframe":"1w","source":"yahoo","chartSource":"NASDAQ","target":383.88,"state":"bear","note":"Legend is at Aug 31 crosshair; right-edge trail appears flat at same level."},
+  {"asset":"nvda","fileTime":"7.21","timeframe":"1w","source":"yahoo","chartSource":"NASDAQ","target":191.61,"state":"bull","live":[233.11,233.71,225.75,225.92]},
+  {"asset":"googl","fileTime":"7.23","timeframe":"1w","source":"yahoo","chartSource":"NASDAQ","target":384.80,"state":"bear","live":[335.42,338.78,333.22,338.37]},
+  {"asset":"spcx","fileTime":"7.26","timeframe":"1d","source":"yahoo","chartSource":"NASDAQ","target":142.76,"state":"bear","live":[149.04,154.08,145.14,152.72],"ignored":true,"note":"Ignored at the user's request on 9 September. No calibration or confirmation-rule change."},
+  {"asset":"mu","fileTime":"7.29","timeframe":"1w","source":"yahoo","chartSource":"NASDAQ","target":1097.54,"state":"bear","live":[1036.40,1041.07,1009.16,1021.46]},
+  {"asset":"sndk","fileTime":"7.33","timeframe":"1w","source":"yahoo","chartSource":"NASDAQ","target":1808.89,"state":"bear","live":[1769.43,1807.38,1741,1795.41]},
+  {"asset":"btc","fileTime":"7.36","timeframe":"1w","source":"bitstamp","chartSource":"Bitstamp USD","target":60653,"state":"bull","live":[80339,80431,77603,78661]},
+  {"asset":"eth","fileTime":"7.37","timeframe":"1w","source":"coinbase","chartSource":"Coinbase USD","target":1988.79,"state":"bull","live":[2514.32,2536.35,2440.45,2494.88]},
+  {"asset":"op","fileTime":"7.57","timeframe":"1w","source":"binance","chartSource":"Binance USDT","target":0.1552,"state":"bear","live":[0.1102,0.1137,0.1053,0.1073]},
+  {"asset":"jup","fileTime":"7.59","timeframe":"1w","source":"binance","chartSource":"Binance USDT","target":0.1476,"state":"bull","live":[0.2758,0.2758,0.2347,0.2420]},
+  {"asset":"bonk","fileTime":"8.02","timeframe":"1w","source":"binance","chartSource":"Binance USDT","target":0.00000506,"state":"bear","live":[0.00000341,0.00000341,0.00000303,0.00000308]},
+  {"asset":"ada","fileTime":"8.04","timeframe":"1w","source":"binance","chartSource":"Binance USDT","target":0.2573,"state":"bear","live":[0.2235,0.2321,0.2143,0.2269]},
+  {"asset":"dot","fileTime":"8.06","timeframe":"1w","source":"binance","chartSource":"Binance USDT","target":1.204,"state":"bear","live":[0.979,1.201,0.956,1.197]},
+  {"asset":"atom","fileTime":"8.08","timeframe":"1w","source":"binance","chartSource":"Binance USDT","target":1.888,"state":"bear","live":[1.597,1.816,1.577,1.808]},
+  {"asset":"hype","fileTime":"8.09","timeframe":"1w","source":"kucoin","chartSource":"KuCoin USDT","target":64.551,"state":"bull","live":[87.983,88.382,81.585,84.245]},
+  {"asset":"sol","fileTime":"8.19","timeframe":"1w","source":"binance","chartSource":"Binance USDT","target":78.91,"state":"bull","live":[106.55,107.06,101.72,104.05]},
+  {"asset":"doge","fileTime":"8.20","timeframe":"1w","source":"binance","chartSource":"Binance USDT","target":0.097,"state":"bear","note":"User confirmed approximately 0.097 on 9 September. Existing 15/2 gives 0.09763; approximate comparison only, not an exact-decimal fit."},
+  {"asset":"link","fileTime":"8.23","filenameSuffix":" (1)","timeframe":"1w","source":"binance","chartSource":"Binance USDT","target":9.161,"state":"bull","live":[13.234,13.685,12.291,12.703]},
+  {"asset":"xmr","fileTime":"8.24","timeframe":"1w","source":"kraken","chartSource":"Kraken USD","target":399.65,"state":"bull","live":[538.61,544.15,493.05,501.99]},
+  {"asset":"sui","fileTime":"8.26","timeframe":"1w","source":"coinbase","chartSource":"Coinbase USD","target":1.0413,"state":"bear","note":"Current right-edge flip label, not historical crosshair legend 2.4566."}
+]

@@ -1,0 +1,13 @@
+{
+  "source": "CoinGecko /api/v3/coins/markets, one batched public request",
+  "sourceUrl": "https://api.coingecko.com/api/v3/coins/markets",
+  "updatedAt": "2026-09-09T08:20:20.000Z",
+  "note": "Next-day circulating market caps, not screenshot-time caps and not FDV. Research context only; no automatic parameter rule.",
+  "usd": {
+    "btc":1596217633247,"eth":307120887115,"sol":61395914749,
+    "hype":19278497073,"doge":14192568560,"xmr":9385804932,
+    "link":9347846145,"ada":8335118868,"sui":3383496922,
+    "dot":1994483234,"atom":1010622870,"jup":829212660,
+    "bonk":270483809,"op":242854956
+  }
+}

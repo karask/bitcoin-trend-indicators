@@ -170,7 +170,7 @@ test("every archived KK reference passes without changing any preset", () => {
   assert.match(calibrationStatus("sui", "1d"), /Uncalibrated/);
   assert.match(calibrationStatus("sol", "1d"), /Inherited/);
   assert.match(calibrationStatus(undefined, "1w"), /Uncalibrated equity/);
-  assert.match(calibrationStatus("btc", "1w"), /not archived/);
+  assert.match(calibrationStatus("btc", "1w"), /Screenshot-calibrated/);
 });
 
 test("freshness checks expected candles, not the retrieval timestamp", () => {

@@ -17,7 +17,7 @@ export const overviewUrl = (asset: OverviewAsset, indicator: string) => viewUrl(
 export function summarizeOverview(data: OverviewHistory, indicator: string) {
   const daily = data.lab === "crypto" ? data.history.daily.candles : data.history.candles;
   const weekly = data.lab === "crypto" ? data.history.weekly.candles : aggregateStockWeeks(daily, Date.parse(data.history.retrievedAt));
-  const options = { market: data.lab === "crypto" ? "crypto" as const : "equity" as const, asset: data.lab === "crypto" ? data.history.daily.asset : undefined, indicatorIds: [indicator] };
+  const options = { market: data.lab === "crypto" ? "crypto" as const : "equity" as const, asset: data.lab === "crypto" ? data.history.daily.asset : undefined, stock: data.lab === "stock" ? data.history.stock.id : undefined, indicatorIds: [indicator] };
   const signal = (candles: Candle[], timeframe: Timeframe) => calculateIndicators(candles, timeframe, options)[0];
   const day = signal(daily, "1d"), week = signal(weekly, "1w");
   return { day, week, selected: overviewTimeframe(indicator) === "1w" ? week : day, close: daily.at(-1)?.close, dailyLast: daily.at(-1)?.time, weeklyLast: weekly.at(-1)?.time, denomination: data.lab === "crypto" ? data.history.daily.denomination : "USD" };

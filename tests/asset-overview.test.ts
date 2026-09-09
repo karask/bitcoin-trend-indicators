@@ -42,16 +42,16 @@ test("all indicators in the crypto overview use the existing engine and per-asse
   }
 });
 
-test("stock overview uses completed XNAS weeks and uncalibrated equity KK 10/3", () => {
+test("stock overview uses completed XNAS weeks and stock-specific KK presets", () => {
   const sessions = xnasSessionsBetween("2020-01-06", "2025-12-31");
   const daily = sessions.map((session, i) => ({ ...candles[i % candles.length], time: Date.parse(`${session.date}T00:00:00Z`) }));
   for (const stock of STOCKS) {
     const history: StockHistoryResponse = { stock, provider: { id: "yahoo", label: "Yahoo Finance" }, providerUrl: "https://finance.yahoo.com/", exchange: "NASDAQ", timeframe: "1d", requestedStart: "2020-01-06", requiredThrough: "2025-12-31", retrievedAt: "2026-01-01T01:00:00Z", adjustment: "split-adjusted", candles: daily, quality: { gaps: 0, duplicates: 0, malformed: 0, unexpectedSessions: 0 } };
     for (const spec of INDICATOR_SPECS) {
       const summary = summarizeOverview({ lab: "stock", history }, spec.id);
-      assert.deepEqual(summary.week, calculateIndicators(aggregateStockWeeks(daily, Date.parse(history.retrievedAt)), "1w", { market: "equity", indicatorIds: [spec.id] })[0]);
-      assert.deepEqual(summary.day, calculateIndicators(daily, "1d", { market: "equity", indicatorIds: [spec.id] })[0]);
-      if (spec.id === "kk_supertrend") { assert.equal(summary.week.values.atrLength, 10); assert.equal(summary.week.values.factor, 3); }
+      assert.deepEqual(summary.week, calculateIndicators(aggregateStockWeeks(daily, Date.parse(history.retrievedAt)), "1w", { market: "equity", stock: stock.id, indicatorIds: [spec.id] })[0]);
+      assert.deepEqual(summary.day, calculateIndicators(daily, "1d", { market: "equity", stock: stock.id, indicatorIds: [spec.id] })[0]);
+      if (spec.id === "kk_supertrend") { assert.equal(summary.week.values.atrLength, stock.id === "spcx" ? 10 : 15); assert.equal(summary.week.values.factor, stock.id === "spcx" ? 3 : 2); }
     }
   }
 });

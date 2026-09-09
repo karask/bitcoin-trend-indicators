@@ -48,7 +48,7 @@ test("date Retry-After, temporary bans, Kraken body limits, and bounded 5xx retr
   assert.equal(calls, 2);
 });
 
-test("new coins have one verified USD venue and explicit uncalibrated KK presets", () => {
+test("new coins have one verified USD venue, calibrated weekly and unchanged daily KK presets", () => {
   const daily: Candle[] = Array.from({ length: 300 }, (_, i) => ({ time: Date.UTC(2024, 0, 1) + i * 86_400_000, open: 1 + i / 100, high: 1.1 + i / 100, low: .9 + i / 100, close: 1.01 + i / 100, volume: 10, complete: true }));
   for (const asset of ["jup", "op", "bonk", "ada", "atom", "hype", "dot"] as const) {
     const sources = sourcesForAsset(asset);
@@ -57,9 +57,9 @@ test("new coins have one verified USD venue and explicit uncalibrated KK presets
     for (const tf of ["1d", "1w"] as const) {
       const signals = calculateIndicators(daily, tf, { asset });
       const kk = signals.find(signal => signal.id === "kk_supertrend")!, standard = signals.find(signal => signal.id === "supertrend")!;
-      assert.equal(kk.values.atrLength, 10); assert.equal(kk.values.factor, 3);
-      assert.deepEqual(kk.states, standard.states); assert.equal(kk.values.supertrend, standard.values.supertrend);
-      assert.match(calibrationStatus(asset, tf), /Uncalibrated/);
+      assert.equal(kk.values.atrLength, tf === "1w" ? 15 : 10); assert.equal(kk.values.factor, tf === "1w" ? 2 : 3);
+      if (tf === "1d") { assert.deepEqual(kk.states, standard.states); assert.equal(kk.values.supertrend, standard.values.supertrend); }
+      assert.match(calibrationStatus(asset, tf), tf === "1w" ? /Screenshot-calibrated/ : /Uncalibrated/);
     }
   }
   assert.equal(marketDefinition("jup", "kraken").providerSymbol, "JUPUSD");

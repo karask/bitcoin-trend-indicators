@@ -48,9 +48,17 @@ test("calibration notebook exposes versioned evidence and uncalibrated equity la
   assert.match(stock, /identical to standard SuperTrend 10\/3/);
   assert.doesNotMatch(stock, /Reference check passes/);
   assert.doesNotMatch(stock, /<details[^>]*\bopen=/);
-  const hype = renderToStaticMarkup(<CalibrationPanel asset="hype" timeframe="1w" values={{ atrLength: 10, factor: 3 }} />);
-  assert.match(hype, /Uncalibrated weekly preset/);
-  assert.doesNotMatch(hype, /Screenshot-calibrated weekly preset|Reference check passes/);
+  const hype = renderToStaticMarkup(<CalibrationPanel asset="hype" timeframe="1w" values={{ atrLength: 15, factor: 2 }} />);
+  assert.match(hype, /Screenshot-calibrated weekly preset/);
+  assert.match(hype, /KuCoin USDT/);
+  assert.match(hype, /shorter history/);
+  const calibratedStock = renderToStaticMarkup(<CalibrationPanel stock="tsla" timeframe="1w" values={{ atrLength: 15, factor: 2 }} />);
+  assert.match(calibratedStock, /Screenshot-calibrated weekly preset/);
+  assert.match(calibratedStock, /383\.88/);
+  assert.doesNotMatch(calibratedStock, /<details[^>]*\bopen=/);
+  const spcx = renderToStaticMarkup(<CalibrationPanel stock="spcx" timeframe="1d" values={{ atrLength: 10, factor: 3 }} />);
+  assert.match(spcx, /Ignored reference/);
+  assert.doesNotMatch(spcx, /Archived reference check passes/);
 });
 
 test("research renders matched dates, benchmark, costs, curves, ledger and full windows", () => {
