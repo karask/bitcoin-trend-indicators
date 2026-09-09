@@ -52,7 +52,7 @@ test("stock overview uses completed XNAS weeks and stock-specific KK presets", (
       const summary = summarizeOverview({ lab: "stock", history }, spec.id);
       assert.deepEqual(summary.week, calculateIndicators(aggregateStockWeeks(daily, Date.parse(history.retrievedAt)), "1w", { market: "equity", stock: stock.id, indicatorIds: [spec.id] })[0]);
       assert.deepEqual(summary.day, calculateIndicators(daily, "1d", { market: "equity", stock: stock.id, indicatorIds: [spec.id] })[0]);
-      if (spec.id === "kk_supertrend") { assert.equal(summary.week.values.atrLength, stock.id === "bmnr" ? 29 : stock.id === "spcx" ? 10 : 15); assert.equal(summary.week.values.factor, stock.id === "bmnr" ? 1 : stock.id === "spcx" ? 3 : 2); }
+      if (spec.id === "kk_supertrend") { assert.equal(summary.week.values.atrLength, stock.id === "spcx" ? 10 : 15); assert.equal(summary.week.values.factor, stock.id === "spcx" ? 3 : 2); }
     }
   }
 });

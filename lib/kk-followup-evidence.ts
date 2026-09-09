@@ -1,4 +1,4 @@
-/** Approximate integer-only weekly fits; bounded search and fixed reference histories. */
+/** Shared weekly preset family; accepted screenshot deviations on fixed reference histories. */
 export const KK_FOLLOWUP_EVIDENCE = [
   {
     "asset": "gold",
@@ -36,23 +36,23 @@ export const KK_FOLLOWUP_EVIDENCE = [
     "timeframe": "1w",
     "target": 75.73,
     "targetState": "bear",
-    "tolerance": 0.01,
+    "tolerance": 2.84,
     "preset": {
+      "atrLength": 15,
+      "factor": 2
+    },
+    "previous": {
       "atrLength": 45,
       "factor": 3
     },
-    "previous": {
-      "atrLength": 15,
-      "factor": 2.4
-    },
-    "value": 75.7387019732357,
+    "value": 72.89678030160348,
     "state": "bear",
-    "previousValue": 75.82863651451208,
+    "previousValue": 75.7387019732357,
     "previousState": "bear",
     "lastFlip": 1769385600000,
     "through": 1788134400000,
     "candles": 400,
-    "note": "User-requested integer-only fit: 45/3 is the closest same-regime level in ATR 1–100 / multiplier 1–10. January 26 bearish reversal matches the visible reversal month. Yahoo and back-adjusted SI1! histories differ; this is not proof of the private formula."
+    "note": "User-selected shared 15/2 preset: flip is 3.74% below the screenshot, retaining the January 26 bearish reversal. 10/3 is slightly closer in level but reverses in March. Yahoo and back-adjusted SI1! histories differ; this is not proof of the private formula."
   },
   {
     "asset": "bmnr",
@@ -63,22 +63,22 @@ export const KK_FOLLOWUP_EVIDENCE = [
     "timeframe": "1w",
     "target": 17.45,
     "targetState": "bull",
-    "tolerance": 0.09,
+    "tolerance": 0.70,
     "preset": {
+      "atrLength": 15,
+      "factor": 2
+    },
+    "previous": {
       "atrLength": 29,
       "factor": 1
     },
-    "previous": {
-      "atrLength": 10,
-      "factor": 2.35
-    },
-    "value": 17.53097245241699,
+    "value": 16.75780801626687,
     "state": "bull",
-    "previousValue": 17.426372598957105,
+    "previousValue": 17.53097245241699,
     "previousState": "bull",
-    "lastFlip": 1787529600000,
+    "lastFlip": 1788134400000,
     "through": 1788134400000,
     "candles": 65,
-    "note": "User-requested integer-only fit: 29/1 is the closest same-regime level in ATR 1–100 / multiplier 1–10. Calculated bullish reversal moves to August 24. Yahoo supplies only 65 completed weeks; screenshot history starts in 2018. Exact screenshot reversal date is not validated and four-year tests are unavailable."
+    "note": "User-selected shared 15/2 preset: flip is 3.97% below the screenshot; calculated bullish reversal is August 31. Yahoo supplies only 65 completed weeks; screenshot history starts in 2018. Exact screenshot reversal date is not validated and four-year tests are unavailable."
   }
 ] as const;

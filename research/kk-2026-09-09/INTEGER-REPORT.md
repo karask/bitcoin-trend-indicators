@@ -1,5 +1,7 @@
 # Integer-only KK calibration
 
+Historical report, superseded by [shared preset selection](SHARED-PRESETS.md). The broad-search settings below are no longer deployed.
+
 User explicitly requested whole-number parameters closest to the supplied images. Scope: weekly Gold, Silver and Bitmine KK only. Daily presets, other assets, Standard SuperTrend and all other indicators remain unchanged. No data refresh, feed changes or database writes are needed.
 
 | Asset | Previous ATR / multiplier | Integer-only choice | Screenshot flip | Calculated flip | Signed error | Regime |
