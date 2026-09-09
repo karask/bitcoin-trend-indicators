@@ -1,6 +1,8 @@
 import { calculateIndicators, KK_SUPERTREND_PRESETS, type Candle, type Timeframe } from "./regimes.ts";
 import type { AssetId } from "./markets.ts";
 import type { StockId } from "./stocks.ts";
+import type { CommodityId } from "./commodities.ts";
+import { KK_FOLLOWUP_EVIDENCE } from "./kk-followup-evidence.ts";
 import { KK_BATCH_EVIDENCE } from "./kk-batch-evidence.ts";
 import { ETH_KK_CALIBRATION, SOL_KK_CALIBRATION, XMR_KK_CALIBRATION, DOGE_KK_CALIBRATION, LINK_KK_CALIBRATION, SUI_KK_CALIBRATION, type OhlcRow } from "./kk-reference-data.ts";
 
@@ -16,7 +18,9 @@ export const KK_REFERENCES: Reference[] = [
   { id: "sui-weekly", asset: "sui", label: "sui-weekly-supertrend.png", venue: "Coinbase", denomination: "USD", start: Date.UTC(2024, 4, 13), rows: SUI_KK_CALIBRATION, target: 1.0413, state: "bear", flipCandle: Date.UTC(2025, 9, 27), tolerance: .0002, previous: { atrLength: 10, factor: 3 }, reason: "ATR 10 → 15 and multiplier 3 → 2: fits the bearish regime, reversal threshold, and historical flip timing." },
 ];
 
-export function calibrationStatus(asset: AssetId | undefined, timeframe: Timeframe, stock?: StockId) {
+export function calibrationStatus(asset: AssetId | undefined, timeframe: Timeframe, stock?: StockId, commodity?: CommodityId) {
+  if (KK_FOLLOWUP_EVIDENCE.some(row => row.asset === (commodity ?? stock ?? asset) && row.timeframe === timeframe)) return "Approximate weekly screenshot fit";
+  if (commodity) return "Uncalibrated futures preset";
   if (KK_BATCH_EVIDENCE.some(row => row.asset === (stock ?? asset) && row.timeframe === timeframe && !row.ignored)) return `Screenshot-calibrated ${timeframe === "1w" ? "weekly" : "daily"} preset`;
   if (!asset) return "Uncalibrated equity preset";
   if (timeframe === "1w") return asset === "btc" ? "Legacy screenshot preset · reference not archived" : KK_REFERENCES.some(reference => reference.asset === asset) ? "Screenshot-calibrated weekly preset" : "Uncalibrated weekly preset";

@@ -47,7 +47,7 @@ test("stock definitions remain separate, complete, Yahoo-backed, and type guarde
   assert.equal(isStockSymbol("spcx"), false);
 });
 
-test("Bitmine has NYSE provenance, bounded available history and no inherited KK calibration", async () => {
+test("Bitmine has NYSE provenance, bounded history and its own weekly-only KK calibration", async () => {
   const stock = stockDefinition("BMNR");
   assert.equal(stock.historyStart, "2025-06-05");
   assert.equal(stock.exchange, "NYSE");
@@ -67,7 +67,7 @@ test("Bitmine has NYSE provenance, bounded available history and no inherited KK
   assert.equal(history.candles.length, 2);
   assert.equal(history.quality.gaps, 0);
   for (const timeframe of ["1d", "1w"] as const) {
-    assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.bmnr[timeframe], { atrLength: 10, factor: 3 });
+    assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.bmnr[timeframe], { atrLength: 10, factor: timeframe === "1w" ? 2.35 : 3 });
     const indicators = calculateIndicators(history.candles, timeframe, { market: "equity", stock: "bmnr" });
     assert.equal(indicators.find(item => item.id === "kk_supertrend")!.readiness?.ready, false);
   }

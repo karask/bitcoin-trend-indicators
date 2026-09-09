@@ -1,5 +1,6 @@
 import type { AssetId } from "./markets";
 import type { StockId } from "./stocks";
+import type { CommodityId } from "./commodities";
 
 export type RegimeState = "bull" | "bear" | "neutral";
 export type ThresholdKind = "fixed" | "provisional" | "conditional";
@@ -29,6 +30,8 @@ export interface IndicatorCalculationOptions {
   market?: MarketContext;
   /** Equity identity stays separate from the crypto asset/provider registry. */
   stock?: StockId;
+  /** Futures identity must never fall through to crypto/equity presets. */
+  commodity?: CommodityId;
   kkSupertrendFactor?: number;
   kkSupertrendAtrLength?: number;
   superGuppy?: Partial<SuperGuppyConfig>;
@@ -73,8 +76,15 @@ export const KK_SUPERTREND_STOCK_PRESETS = {
   // The daily SPCX screenshot has a separate 3/5 confirmation mechanism.
   // ATR/factor alone do not reproduce it, so neither timeframe is calibrated.
   spcx: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
-  bmnr: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
+  bmnr: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 2.35 } },
 } as const satisfies Record<StockId, Record<Timeframe, { atrLength: number; factor: number }>>;
+
+// Approximate Yahoo-feed fits to September 9 weekly screenshots, not recovered
+// private formulas. Daily defaults remain uncalibrated; see archived evidence.
+export const KK_SUPERTREND_COMMODITY_PRESETS = {
+  gold: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 2 } },
+  silver: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2.4 } },
+} as const satisfies Record<CommodityId, Record<Timeframe, { atrLength: number; factor: number }>>;
 
 export const SUPER_GUPPY_R12_DEFAULTS: SuperGuppyConfig = {
   fastLengths: Array.from({ length: 11 }, (_, index) => 3 + index * 2),
@@ -777,7 +787,7 @@ function valuation(candles: Candle[], spec: IndicatorSpec, timeframe: Timeframe)
 }
 
 export function calculateIndicators(candles: Candle[], timeframe: Timeframe, options: IndicatorCalculationOptions = {}): SignalSnapshot[] {
-  const configuredKk = options.market === "commodity" ? { atrLength: 10, factor: 3 } : options.market === "equity"
+  const configuredKk = options.market === "commodity" ? options.commodity ? KK_SUPERTREND_COMMODITY_PRESETS[options.commodity][timeframe] : { atrLength: 10, factor: 3 } : options.market === "equity"
     ? options.stock ? KK_SUPERTREND_STOCK_PRESETS[options.stock][timeframe] : { atrLength: KK_SUPERTREND_ATR_LENGTH, factor: KK_SUPERTREND_EQUITY_FACTOR }
     : KK_SUPERTREND_PRESETS[options.asset ?? "btc"][timeframe];
   const explicitKkFactor = finite(options.kkSupertrendFactor) && options.kkSupertrendFactor! > 0 ? options.kkSupertrendFactor! : null;

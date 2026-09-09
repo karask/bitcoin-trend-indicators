@@ -95,10 +95,27 @@ test("both labs keep distinct controls with accessible timeframes and non-pollin
 
 test("commodity lab is distinct, clearly labelled futures, with accessible controls and shared status UI", () => {
   const html = renderToStaticMarkup(<CommodityDashboard />);
-  for (const text of ["Gold futures", "Silver futures", "GC=F", "SI=F", "Futures, not spot", "USD per troy ounce", "Uncalibrated futures 10/3", "Check for updates", "CONFIRMATION CLOCK", "DATA SNAPSHOT", "FUTURES QUOTE", "not exchange settlement"]) assert.ok(html.includes(text), text);
+  for (const text of ["Gold futures", "Silver futures", "GC=F", "SI=F", "Futures, not spot", "USD per troy ounce", "Approximate weekly screenshot fit", "Check for updates", "CONFIRMATION CLOCK", "DATA SNAPSHOT", "FUTURES QUOTE", "not exchange settlement"]) assert.ok(html.includes(text), text);
   assert.doesNotMatch(html, /NASDAQ|XNAS|Tiingo|Market source|Binance|Kraken|ADJUSTED CLOSE/);
   assert.match(html, /aria-pressed="true"/);
   assert.match(html, /href="\/commodities\/" aria-current="page"/);
+});
+
+test("metals and Bitmine notebooks disclose approximate fits and keep daily calibration separate", () => {
+  for (const commodity of ["gold", "silver"] as const) {
+    const weekly = renderToStaticMarkup(<CalibrationPanel commodity={commodity} timeframe="1w" values={{ atrLength: 10, factor: 2 }} />);
+    assert.match(weekly, /Approximate feed-specific fit/);
+    assert.ok(weekly.includes(`${commodity}.jpeg`));
+    assert.match(weekly, /back-adjusted/);
+    assert.doesNotMatch(weekly, /<details[^>]*\bopen=/);
+    const daily = renderToStaticMarkup(<CalibrationPanel commodity={commodity} timeframe="1d" values={{ atrLength: 10, factor: 3 }} />);
+    assert.match(daily, /Uncalibrated futures preset/);
+    assert.match(daily, /does not validate this daily preset/);
+  }
+  const bmnr = renderToStaticMarkup(<CalibrationPanel stock="bmnr" timeframe="1w" values={{ atrLength: 10, factor: 2.35 }} />);
+  assert.match(bmnr, /bitmine.jpeg/);
+  assert.match(bmnr, /four-year tests are unavailable/);
+  assert.doesNotMatch(bmnr, /<details[^>]*\bopen=/);
 });
 
 test("overview shows all assets crypto first, one global indicator selector and no pinning", () => {

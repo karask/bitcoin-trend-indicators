@@ -127,7 +127,7 @@ test("all futures indicators, KK baseline, next-open research and costs retain h
       }
       assert.ok(research.rolling.length);
       const overview = summarizeOverview({ lab: "commodity", history: response }, "kk_supertrend");
-      assert.deepEqual(tf === "1d" ? overview.day : overview.week, kk);
+      assert.deepEqual(tf === "1d" ? overview.day : overview.week, calculateIndicators(candles, tf, { market: "commodity", commodity: metal.id, indicatorIds: ["kk_supertrend"] })[0]);
     }
   }
 });
