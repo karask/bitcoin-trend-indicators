@@ -7,12 +7,18 @@ import { overviewTimeframe } from "../lib/asset-overview.ts";
 const candles = (closes: number[]): Candle[] => closes.map((close, i) => ({ time: i * 86_400_000, open: close, high: close + 1, low: close - 1, close, volume: 1, complete: true }));
 const calculate = (rows: Candle[]) => calculateIndicators(rows, "1d", { indicatorIds: ["kk_ema_ribbon"] })[0];
 
-test("KK EMA Ribbon is a separate daily indicator with conditional triggers", () => {
+test("KK EMA Ribbon supports daily and weekly presets with conditional triggers", () => {
   const spec = INDICATOR_SPECS.find(s => s.id === "kk_ema_ribbon")!;
   assert.equal(spec.displayName, "KK EMA Ribbon");
-  assert.deepEqual(spec.supportedTimeframes, ["1d"]);
-  assert.equal(overviewTimeframe(spec.id), "1d");
-  assert.deepEqual(calculateIndicators(candles([100]), "1w", { indicatorIds: [spec.id] }), []);
+  assert.deepEqual(spec.supportedTimeframes, ["1d", "1w"]);
+  assert.equal(overviewTimeframe(spec.id), "1w");
+  const rows = candles(Array.from({ length: 100 }, (_, i) => 100 + i));
+  const weekly = calculateIndicators(rows.map(c => ({ ...c, time: c.time * 7 })), "1w", { indicatorIds: [spec.id] })[0];
+  assert.deepEqual(weekly.values, calculate(rows).values);
+  assert.deepEqual(weekly.states, calculate(rows).states);
+  assert.equal(weekly.ribbons[0].points[0].time, 57 * 7 * 86_400_000);
+  assert.equal(weekly.readiness?.requiredCandles, 58);
+  assert.match(weekly.explanation, /Weekly · uncalibrated/);
   assert.equal(calculate(candles([100])).bullTrigger, null);
   assert.match(spec.disclaimer!, /34\/48 colour rule is provisional/);
 });
