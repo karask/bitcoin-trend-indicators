@@ -72,10 +72,10 @@ function weeklyFixture(start: number, rows: readonly OhlcRow[]): Candle[] {
 }
 
 
-test("KK Supertrend is registered immediately after SuperTrend with fixed crypto presets", () => {
-  const supertrendIndex = INDICATOR_SPECS.findIndex(spec => spec.id === "supertrend");
+test("KK presets lead the indicator menu with fixed crypto parameters", () => {
   const kkIndex = INDICATOR_SPECS.findIndex(spec => spec.id === "kk_supertrend");
-  assert.equal(kkIndex, supertrendIndex + 1);
+  assert.equal(kkIndex, 0);
+  for (const timeframe of ["1d", "1w"] as const) assert.deepEqual(INDICATOR_SPECS.filter(spec => spec.supportedTimeframes.includes(timeframe)).slice(0, 5).map(spec => spec.id), ["kk_supertrend", "kk_ema_ribbon", "support_band", "supertrend", "smma_ribbon"]);
   assert.equal(KK_SUPERTREND_ATR_LENGTH, 10);
   assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3, sui: 3, jup: 3, op: 3, bonk: 3, ada: 3, atom: 3, hype: 3, dot: 3 });
   assert.equal(KK_SUPERTREND_EQUITY_FACTOR, 3);
@@ -295,7 +295,7 @@ test("Super Guppy implements the published R1.2 groups, colors, and events", () 
   assert.deepEqual(configured.overlays.slice(-3).map(line => line.name), ["Trader average", "Investor average", "EMA 200"]);
   assert.equal(configured.overlays[0].name, "EMA 4");
   assert.equal(configured.barColors.length, history().length);
-  assert.equal(INDICATOR_SPECS.findIndex(item => item.id === "super_guppy"), INDICATOR_SPECS.findIndex(item => item.id === "kk_ema_ribbon") + 1);
+  assert.equal(INDICATOR_SPECS.findIndex(item => item.id === "super_guppy"), INDICATOR_SPECS.findIndex(item => item.id === "smma_ribbon") + 1);
 });
 
 test("every indicator exposes role-aware interpretation guidance", () => {
