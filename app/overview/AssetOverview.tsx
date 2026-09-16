@@ -3,6 +3,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AccountControls, authenticatedFetch } from "../AuthClient";
+import TimeframeHint from "../TimeframeHint";
 import LabNavigation from "../LabNavigation";
 import { INDICATOR_SPECS } from "../../lib/regimes";
 import { commodityDefinition } from "../../lib/commodities";
@@ -95,6 +96,7 @@ export default function AssetOverview() {
     <p className="overview-note">Crypto uses each asset’s default venue, shown below. Stock prices use Yahoo Finance; history is split-adjusted. Commodities use continuous gold/silver futures in USD per troy ounce, not spot metal. Contract rolls can affect levels. Provisional levels may move before the next close. Conditional models have no guaranteed single-price reversal.</p>
     {(["crypto", "stock", "commodity"] as const).map(lab => <section className="overview-section" aria-labelledby={`overview-${lab}`} key={lab}>
       <div className="section-heading"><h2 id={`overview-${lab}`}>{lab === "crypto" ? "Crypto" : lab === "stock" ? "Stocks" : "Commodities"}</h2><span>{OVERVIEW_ASSETS.filter(asset => asset.lab === lab).length} assets · {spec.shortName}</span></div>
+      {lab !== "commodity" && <TimeframeHint indicator={indicator} market={lab} overview />}
       <table className="overview-table"><thead><tr><th scope="col">Asset / source</th><th scope="col">Daily</th><th scope="col">Weekly</th><th scope="col">{timeframe === "1w" ? "Weekly" : "Daily"} level / condition</th><th scope="col">Price</th><th scope="col">Snapshot / last flip</th></tr></thead><tbody>{OVERVIEW_ASSETS.filter(asset => asset.lab === lab).map(asset => {
         const row = rows[asset.asset], summary = summaries[asset.asset], signal = summary?.selected, quote = row?.quote;
         const levels = overviewLevels(signal), price = quote?.price ?? summary?.close;

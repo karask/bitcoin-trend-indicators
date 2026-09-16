@@ -141,3 +141,16 @@ button:disabled { opacity:.5; cursor:not-allowed; }
 @media(max-width:920px) {
   .matrix-table { display:none; }.mobile-matrix { display:block; margin-top:14px; }.mobile-matrix>details { margin-top:8px; border:1px solid var(--line); border-radius:8px; background:var(--card); }.mobile-matrix>details.selected { border-color:var(--green); }.mobile-matrix summary { display:flex; justify-content:space-between; align-items:center; padding:14px 12px; gap:16px; cursor:pointer; font-size:.875rem; }.mobile-matrix summary>span { color:var(--muted); line-height:1.65; font-size:.75rem; }.mobile-matrix details>div { border-top:1px solid var(--line); padding:0 12px 12px; }.mobile-matrix p { font-size:.875rem; line-height:1.6; }.mobile-matrix button { min-height:42px; padding:8px 12px; background:var(--green-soft); border:1px solid var(--green); color:var(--ink); border-radius:6px; font-size:.875rem; }
 }
+
+/* One quiet disclosure per selected model; native title also supplies hover help. */
+.timeframe-hint { position:relative; width:fit-content; max-width:100%; margin:8px 0 12px; color:var(--muted); font-size:.75rem; }
+.timeframe-hint>summary { cursor:pointer; list-style:none; padding:5px 0; line-height:1.5; }
+.timeframe-hint>summary::-webkit-details-marker { display:none; }
+.timeframe-hint>summary b { color:var(--ink); font-weight:500; }
+.timeframe-hint>summary:hover,.timeframe-hint[open]>summary { color:var(--ink); }
+.timeframe-hint>summary:focus-visible { outline:2px solid var(--green); outline-offset:4px; border-radius:3px; }
+.timeframe-hint-body { position:absolute; top:100%; left:0; z-index:20; width:min(380px,calc(100vw - 64px)); padding:14px 16px; border:1px solid var(--line); border-radius:8px; background:var(--card); box-shadow:0 8px 24px #0002; color:var(--ink); }
+.timeframe-hint:not([open])>.timeframe-hint-body { display:none; }
+.timeframe-hint-body p { font-size:.875rem; line-height:1.6; margin:0 0 10px; }
+.timeframe-hint-body small { display:block; color:var(--muted); font-size:.75rem; line-height:1.5; }
+@media(max-width:620px) { .timeframe-hint>summary { min-height:32px; display:flex; align-items:center; gap:4px; }.timeframe-hint[open] { width:100%; }.timeframe-hint-body { position:static; width:100%; box-shadow:none; } }

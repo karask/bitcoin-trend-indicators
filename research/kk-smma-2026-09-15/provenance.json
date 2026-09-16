@@ -1,0 +1,44 @@
+{
+  "btc": {
+    "screenshotPath": "/home/kos/Downloads/image.png",
+    "sha256": "d6075121889237cf49341bb78778a5f89245991215aaaedfe1964cab1055a60b",
+    "colorSampleRange": [
+      "2023-08-12",
+      "2026-09-09"
+    ],
+    "colorSamples": 988,
+    "downloadUrl": "https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=1000",
+    "historySource": "Merged read-only local Binance daily history and downloaded 1000-bar Binance tail; truncated before 2026-09-14",
+    "snapshotDay": "2026-09-14",
+    "downloadedAt": "2026-09-15",
+    "ethCaveat": false
+  },
+  "eth": {
+    "screenshotPath": "/home/kos/Downloads/image(1).png",
+    "sha256": "174725445aa301cdd260b3758ff1ad388d201a77c8ef565bdcb37f518e0fb32d",
+    "colorSampleRange": [
+      "2021-06-08",
+      "2026-08-23"
+    ],
+    "colorSamples": 1640,
+    "downloadUrl": "https://data-api.binance.vision/api/v3/klines?symbol=ETHUSDT&interval=1d&limit=1000",
+    "historySource": "Merged read-only local Binance daily history and downloaded 1000-bar Binance tail; truncated before 2026-09-14",
+    "snapshotDay": "2026-09-14",
+    "downloadedAt": "2026-09-15",
+    "ethCaveat": true
+  },
+  "sol": {
+    "screenshotPath": "/home/kos/Downloads/image(2).png",
+    "sha256": "dad06b2cb4060e74f9bda5b2d121bfcd2d7fc9ce33b616527b9d2f15a6722c82",
+    "colorSampleRange": [
+      "2022-08-27",
+      "2026-09-11"
+    ],
+    "colorSamples": 1273,
+    "downloadUrl": "https://data-api.binance.vision/api/v3/klines?symbol=SOLUSDT&interval=1d&limit=1000",
+    "historySource": "Merged read-only local Binance daily history and downloaded 1000-bar Binance tail; truncated before 2026-09-14",
+    "snapshotDay": "2026-09-14",
+    "downloadedAt": "2026-09-15",
+    "ethCaveat": false
+  }
+}

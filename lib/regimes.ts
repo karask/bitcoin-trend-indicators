@@ -102,6 +102,9 @@ export const SUPER_GUPPY_R12_DEFAULTS: SuperGuppyConfig = {
   colorBars: false,
 };
 
+// September 14 daily references: 32/58 boundaries; 34/48 colour alignment is provisional.
+export const KK_EMA_RIBBON_LENGTHS = [32, 34, 48, 58] as const;
+
 export interface GuidanceItem {
   label: string;
   rule: string;
@@ -220,6 +223,7 @@ const BASE_INDICATOR_SPECS: Array<Omit<IndicatorSpec, "guidance">> = [
   { id: "supertrend", displayName: "SuperTrend 10/3", shortName: "SuperTrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { atr: 10, factor: 3 }, thresholdKind: "provisional", description: "A transparent ATR trailing regime line with close-based reversals.", disclaimer: "A transparent alternative commonly compared with private one-line systems; not a MoneyLine clone.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
   { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { atr: KK_SUPERTREND_ATR_LENGTH, btcFactor: KK_SUPERTREND_FACTORS.btc, ethFactor: KK_SUPERTREND_FACTORS.eth, solFactor: KK_SUPERTREND_FACTORS.sol, dogeDailyAtr: 10, dogeDailyFactor: 3, dogeWeeklyAtr: 15, dogeWeeklyFactor: 2, linkDailyAtr: 10, linkDailyFactor: 3, linkWeeklyAtr: 15, linkWeeklyFactor: 2, xmrDailyAtr: 10, xmrDailyFactor: 3, xmrWeeklyAtr: 15, xmrWeeklyFactor: 2, suiDailyAtr: 10, suiDailyFactor: 3, suiWeeklyAtr: 15, suiWeeklyFactor: 2 }, thresholdKind: "provisional", description: "A SuperTrend variation with fixed screenshot-calibrated weekly presets: BTC ATR 10/factor 3, ETH and SOL ATR 10/factor 2, and the other eleven cryptos plus weekly TSLA/NVDA/GOOGL/MU/SNDK ATR 15/factor 2. Daily presets are unchanged; SpaceX is uncalibrated.", disclaimer: "KK Supertrend is a transparent preset built on the standard SuperTrend recurrence. Weekly crypto and five weekly stock presets are screenshot-calibrated, with archived reference checks. Daily stock and non-BTC/ETH/SOL crypto presets remain uncalibrated 10/3. SpaceX confirmation behavior is unresolved. It does not claim to reproduce a private or proprietary implementation.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
   { id: "smma_ribbon", displayName: "SMMA Ribbon 15/19/25/29", shortName: "SMMA Ribbon", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { lengths: "15/19/25/29", source: "HL2" }, thresholdKind: "conditional", description: "Fully ordered averages are bullish or bearish; tangled averages are neutral.", disclaimer: "Community Larsson-style proxy only. The official Larsson Line formula is private." },
+  { id: "kk_ema_ribbon", displayName: "KK EMA Ribbon", shortName: "KK EMA Ribbon", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d"], parameters: { lengths: "32/34/48/58", boundaries: "32/58", source: "Close", calibrationDate: "2026-09-14", colourRule: "provisional alignment" }, thresholdKind: "conditional", description: "Daily closing-price EMA 32/58 ribbon with hidden 34/48 averages: gold for full bullish alignment, purple for bearish alignment, grey otherwise.", disclaimer: "September 14, 2026 daily screenshot calibration: BTC/SOL boundaries match displayed rounding; ETH is a cross-feed approximation. The 34/48 colour rule is provisional. Other assets are uncalibrated; this does not claim to reproduce a private formula." },
   { id: "super_guppy", displayName: "Super Guppy R1.2 by JustUncleL", shortName: "Super Guppy R1.2", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { revision: "R1.2", fast: "3–23 step 2", slow: "25–70 step 3", source: "Close", averages: 27, plottedByDefault: 14, showSwing: 1, showBreak: 1, lookback: 6, confluence: 0, ema200Filter: 0, anchorMinutes: 0 }, thresholdKind: "conditional", description: "The published R1.2 Trader and Investor EMA groups, dynamic colors, pullback signals, and aggressive trend-break signals.", disclaimer: "Independent implementation of JustUncleL's open-source Super Guppy R1.2 rules. The intraday anchor input is exposed for parity but cannot change a daily or weekly chart because its published maximum is one day.", sourceUrl: "https://www.tradingview.com/script/Lj6d7UxQ-Super-Guppy-R1-0-by-JustUncleL/" },
   { id: "long_sma", displayName: "Long SMA Filter", shortName: "Long SMA", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { daily: 200, weekly: 30 }, thresholdKind: "fixed", description: "Price above the long average is bullish; below is bearish." },
   { id: "donchian_20_10", displayName: "Donchian Close 20/10", shortName: "Donchian 20/10", role: "regime", family: "breakout", supportedTimeframes: ["1d", "1w"], parameters: { entry: 20, exit: 10 }, thresholdKind: "fixed", description: "Close above the prior 20-period high turns bullish; below the prior 10-period low turns bearish." },
@@ -236,6 +240,14 @@ const BASE_INDICATOR_SPECS: Array<Omit<IndicatorSpec, "guidance">> = [
 ];
 
 const INDICATOR_GUIDANCE: Record<string, IndicatorGuidance> = {
+  kk_ema_ribbon: {
+    summary: "Read the daily 32/58 EMA band with the provisional 34/48 alignment filter on completed closes.",
+    positive: { label: "Gold / bullish", rule: "Closing-price EMA 32 > 34 > 48 > 58 establishes full bullish alignment." },
+    neutral: { label: "Grey / wait", rule: "Any equality or mixed ordering is neutral; a 32/58 crossover alone does not confirm alignment." },
+    negative: { label: "Purple / bearish", rule: "Closing-price EMA 32 < 34 < 48 < 58 establishes full bearish alignment." },
+    rationale: "The visible 32/58 boundaries match the September 14 daily BTC and SOL references; hidden 34/48 averages approximate the grey transitions.",
+    caveats: ["The colour rule is a provisional screenshot fit, not the private indicator formula. ETH was compared using a different feed; other assets are uncalibrated.", "Signals use completed daily candles and take effect next open. At least 58 candles are required; longer history reduces EMA initialization effects."],
+  },
   support_band: {
     summary: "Treat the two averages as a support zone and act only on completed closes outside it.",
     positive: { label: "Positive / entry", rule: "A completed close strictly above both the 20 SMA and 21 EMA supports a bullish trend regime." },
@@ -527,6 +539,29 @@ function ribbon(candles: Candle[], spec: IndicatorSpec): SignalSnapshot {
   });
 }
 
+function kkEmaRibbon(candles: Candle[], spec: IndicatorSpec): SignalSnapshot {
+  const lines = KK_EMA_RIBBON_LENGTHS.map(length => ema(candles.map(c => c.close), length));
+  const states = candles.map((_, i): RegimeState | null => {
+    if (i < 57) return null;
+    const [fast, innerFast, innerSlow, slow] = lines.map(line => line[i]!);
+    if (fast > innerFast && innerFast > innerSlow && innerSlow > slow) return "bull";
+    if (fast < innerFast && innerFast < innerSlow && innerSlow < slow) return "bear";
+    return "neutral";
+  });
+  const palette = { bull: "#d7a928", neutral: "#919896", bear: "#8769c3" };
+  const overlays: OverlaySeries[] = [0, 3].map(index => ({
+    name: `EMA ${KK_EMA_RIBBON_LENGTHS[index]}`, color: palette[states.at(-1) ?? "neutral"], width: 1.4,
+    points: candles.flatMap((c, i) => states[i] == null ? [] : [{ time: c.time, value: lines[index][i]!, color: palette[states[i]!] }]),
+  }));
+  const rangePoints: RibbonPoint[] = candles.flatMap((c, i) => states[i] == null ? [] : [{
+    time: c.time, upper: Math.max(lines[0][i]!, lines[3][i]!), lower: Math.min(lines[0][i]!, lines[3][i]!), state: states[i]!,
+  }]);
+  return buildSnapshot(spec, candles, states, overlays,
+    Object.fromEntries(KK_EMA_RIBBON_LENGTHS.map((length, i) => [`ema${length}`, lines[i].at(-1) ?? null])),
+    null, null, "Gold = bullish alignment · grey = neutral · purple = bearish alignment", undefined,
+    { ribbons: [{ id: "kk-ema-range", name: "KK EMA Ribbon", palette, fillOpacity: 0.5, points: rangePoints }] });
+}
+
 function superGuppy(candles: Candle[], spec: IndicatorSpec, timeframe: Timeframe, input: Partial<SuperGuppyConfig> = {}): SignalSnapshot {
   const config = normalizeSuperGuppyConfig(input);
   const baseMinutes = timeframe === "1d" ? 1_440 : 7_200;
@@ -800,6 +835,7 @@ export function calculateIndicators(candles: Candle[], timeframe: Timeframe, opt
       case "supertrend": return supertrend(candles, spec, 10, 3, { name: "SuperTrend", color: "#8769c3" });
       case "kk_supertrend": return supertrend(candles, spec, kkAtrLength, kkFactor, { name: "KK Supertrend", color: "#d7a928" });
       case "smma_ribbon": return ribbon(candles, spec);
+      case "kk_ema_ribbon": return kkEmaRibbon(candles, spec);
       case "super_guppy": return superGuppy(candles, spec, timeframe, options.superGuppy);
       case "long_sma": return longSma(candles, spec, timeframe);
       case "donchian_20_10": return donchian(candles, spec, 20, 10);
@@ -815,7 +851,7 @@ export function calculateIndicators(candles: Candle[], timeframe: Timeframe, opt
       default: return buildSnapshot(spec, candles, candles.map(() => null), [], {}, null, null, "Not available");
     }
   }).map(snapshot => {
-    const required: Record<string, number> = { support_band: 20, supertrend: 10, kk_supertrend: kkAtrLength, smma_ribbon: 29, super_guppy: options.superGuppy?.ema200Filter ? 200 : 1, long_sma: timeframe === "1d" ? 200 : 30, donchian_20_10: 21, ichimoku: 78, macd: 1, psar: 2, vortex: 15, heikin_ashi: 1, golden_cross: 200, adx: 14, chandelier: 22, mayer: 200, ma_200w: 200 };
+    const required: Record<string, number> = { support_band: 20, supertrend: 10, kk_supertrend: kkAtrLength, smma_ribbon: 29, kk_ema_ribbon: 58, super_guppy: options.superGuppy?.ema200Filter ? 200 : 1, long_sma: timeframe === "1d" ? 200 : 30, donchian_20_10: 21, ichimoku: 78, macd: 1, psar: 2, vortex: 15, heikin_ashi: 1, golden_cross: 200, adx: 14, chandelier: 22, mayer: 200, ma_200w: 200 };
     const validStates = snapshot.states.filter(state => state != null).length;
     const ready = snapshot.id === "mayer" ? finite(snapshot.values.multiple) : snapshot.states.at(-1) != null;
     return { ...snapshot, readiness: { ready, availableCandles: candles.length, requiredCandles: required[snapshot.id] ?? 1, validStates } };

@@ -54,7 +54,7 @@ test("indicator golden states and trigger classifications remain stable", () => 
   const results = calculateIndicators(history(), "1d");
   const vector = Object.fromEntries(results.map(result => [result.id, [result.state, result.thresholdKind]]));
   assert.deepEqual(vector, {
-    support_band: ["bear", "fixed"], supertrend: ["bear", "provisional"], kk_supertrend: ["bear", "provisional"], smma_ribbon: ["neutral", "conditional"], super_guppy: ["neutral", "conditional"], long_sma: ["bull", "fixed"],
+    support_band: ["bear", "fixed"], supertrend: ["bear", "provisional"], kk_supertrend: ["bear", "provisional"], smma_ribbon: ["neutral", "conditional"], kk_ema_ribbon: ["neutral", "conditional"], super_guppy: ["neutral", "conditional"], long_sma: ["bull", "fixed"],
     donchian_20_10: ["neutral", "fixed"], ichimoku: ["bear", "conditional"], macd: ["bear", "conditional"],
     psar: ["bear", "provisional"], vortex: ["bear", "provisional"], heikin_ashi: ["bear", "provisional"],
     golden_cross: ["bull", "conditional"], adx: ["bear", "conditional"], chandelier: ["bull", "provisional"], mayer: ["neutral", "conditional"],
@@ -295,7 +295,7 @@ test("Super Guppy implements the published R1.2 groups, colors, and events", () 
   assert.deepEqual(configured.overlays.slice(-3).map(line => line.name), ["Trader average", "Investor average", "EMA 200"]);
   assert.equal(configured.overlays[0].name, "EMA 4");
   assert.equal(configured.barColors.length, history().length);
-  assert.equal(INDICATOR_SPECS.findIndex(item => item.id === "super_guppy"), INDICATOR_SPECS.findIndex(item => item.id === "smma_ribbon") + 1);
+  assert.equal(INDICATOR_SPECS.findIndex(item => item.id === "super_guppy"), INDICATOR_SPECS.findIndex(item => item.id === "kk_ema_ribbon") + 1);
 });
 
 test("every indicator exposes role-aware interpretation guidance", () => {

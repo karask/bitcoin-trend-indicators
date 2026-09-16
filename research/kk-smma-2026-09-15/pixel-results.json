@@ -1,0 +1,683 @@
+{
+  "btc": {
+    "samples": 1209,
+    "xcoef": [
+      1.5359786511498938,
+      -29753.963130066484
+    ],
+    "ycoef": [
+      -360.21683798212086,
+      4345.673387010475
+    ],
+    "best": {
+      "fast": [
+        {
+          "source": "close",
+          "length": 16,
+          "edge": "fast",
+          "medianPx": 0.44857299638510995,
+          "meanPx": 0.8025790337117286,
+          "biasPx": 0.25002287488698016
+        },
+        {
+          "source": "hlcc4",
+          "length": 16,
+          "edge": "fast",
+          "medianPx": 0.6442760906006129,
+          "meanPx": 1.0345654924032464,
+          "biasPx": 0.43237292653876125
+        },
+        {
+          "source": "hlc3",
+          "length": 16,
+          "edge": "fast",
+          "medianPx": 0.7172460062871551,
+          "meanPx": 1.1292800707915198,
+          "biasPx": 0.49829384362374185
+        },
+        {
+          "source": "hlc3",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 0.7945764653496497,
+          "meanPx": 1.1848682315675327,
+          "biasPx": 0.12685520742945755
+        },
+        {
+          "source": "hlcc4",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 0.8218125617739247,
+          "meanPx": 1.1937493558346124,
+          "biasPx": 0.058983579679789955
+        },
+        {
+          "source": "ohlc4",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 0.8053910376217743,
+          "meanPx": 1.2000601641135624,
+          "biasPx": 0.17374991875718138
+        },
+        {
+          "source": "hl2",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 0.8172374136335065,
+          "meanPx": 1.2070764349301142,
+          "biasPx": 0.2447934147230626
+        },
+        {
+          "source": "close",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 0.9265761288315275,
+          "meanPx": 1.3052450965319666,
+          "biasPx": -0.12690333253974018
+        },
+        {
+          "source": "ohlc4",
+          "length": 16,
+          "edge": "fast",
+          "medianPx": 0.8656539682481821,
+          "meanPx": 1.328964569786813,
+          "biasPx": 0.5098151205630188
+        },
+        {
+          "source": "hl2",
+          "length": 16,
+          "edge": "fast",
+          "medianPx": 0.8905685142376569,
+          "meanPx": 1.3291358252170817,
+          "biasPx": 0.6528068687119912
+        },
+        {
+          "source": "open",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 1.027240185839787,
+          "meanPx": 1.560585150069021,
+          "biasPx": 0.2175884782226376
+        },
+        {
+          "source": "close",
+          "length": 17,
+          "edge": "fast",
+          "medianPx": 1.2355236065421877,
+          "meanPx": 1.5797759534395956,
+          "biasPx": 0.6498723378584543
+        }
+      ],
+      "slow": [
+        {
+          "source": "close",
+          "length": 29,
+          "edge": "slow",
+          "medianPx": 0.37503513066729965,
+          "meanPx": 0.5326032552071241,
+          "biasPx": 0.12350934856968365
+        },
+        {
+          "source": "hlcc4",
+          "length": 29,
+          "edge": "slow",
+          "medianPx": 0.392655719708614,
+          "meanPx": 0.5435257759500517,
+          "biasPx": 0.3468362100264244
+        },
+        {
+          "source": "hlc3",
+          "length": 29,
+          "edge": "slow",
+          "medianPx": 0.4401213776274062,
+          "meanPx": 0.5987653511410418,
+          "biasPx": 0.4165310084674161
+        },
+        {
+          "source": "ohlc4",
+          "length": 29,
+          "edge": "slow",
+          "medianPx": 0.5131561382726204,
+          "meanPx": 0.6809078669781703,
+          "biasPx": 0.4661716212128795
+        },
+        {
+          "source": "hl2",
+          "length": 29,
+          "edge": "slow",
+          "medianPx": 0.5787205581347052,
+          "meanPx": 0.7475339675028225,
+          "biasPx": 0.5598324388186597
+        },
+        {
+          "source": "close",
+          "length": 30,
+          "edge": "slow",
+          "medianPx": 0.5735207086471519,
+          "meanPx": 0.7525052995698011,
+          "biasPx": 0.4996676646057381
+        },
+        {
+          "source": "ohlc4",
+          "length": 28,
+          "edge": "slow",
+          "medianPx": 0.6436820604842524,
+          "meanPx": 0.835358471350961,
+          "biasPx": 0.0790351119238153
+        },
+        {
+          "source": "hl2",
+          "length": 28,
+          "edge": "slow",
+          "medianPx": 0.6434010212532257,
+          "meanPx": 0.8539789522979272,
+          "biasPx": 0.17689929584221886
+        },
+        {
+          "source": "open",
+          "length": 28,
+          "edge": "slow",
+          "medianPx": 0.7269229542130802,
+          "meanPx": 0.9142259181443635,
+          "biasPx": 0.20262432443314538
+        },
+        {
+          "source": "hlc3",
+          "length": 28,
+          "edge": "slow",
+          "medianPx": 0.7549937605474781,
+          "meanPx": 0.9357933662909264,
+          "biasPx": 0.004263890205095322
+        },
+        {
+          "source": "hlcc4",
+          "length": 28,
+          "edge": "slow",
+          "medianPx": 0.825604168724908,
+          "meanPx": 0.9968665098346615,
+          "biasPx": -0.07587845067246235
+        },
+        {
+          "source": "hlcc4",
+          "length": 30,
+          "edge": "slow",
+          "medianPx": 0.8306876358484487,
+          "meanPx": 1.0335357282083935,
+          "biasPx": 0.7431951807826636
+        }
+      ]
+    },
+    "defaults": [
+      {
+        "source": "hl2",
+        "length": 15,
+        "edge": "fast",
+        "medianPx": 0.8172374136335065,
+        "meanPx": 1.2070764349301142,
+        "biasPx": 0.2447934147230626
+      },
+      {
+        "source": "hl2",
+        "length": 29,
+        "edge": "slow",
+        "medianPx": 0.5787205581347052,
+        "meanPx": 0.7475339675028225,
+        "biasPx": 0.5598324388186597
+      }
+    ]
+  },
+  "eth": {
+    "samples": 1100,
+    "xcoef": [
+      0.9066191635229599,
+      -16707.38921089156
+    ],
+    "ycoef": [
+      -230.71210510719905,
+      2077.851034344921
+    ],
+    "best": {
+      "fast": [
+        {
+          "source": "close",
+          "length": 16,
+          "edge": "fast",
+          "medianPx": 0.7442282035915753,
+          "meanPx": 1.0808809526605438,
+          "biasPx": 0.40935349183345693
+        },
+        {
+          "source": "close",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 0.9278552824460604,
+          "meanPx": 1.3016721615196463,
+          "biasPx": 0.49882804145539694
+        },
+        {
+          "source": "hlcc4",
+          "length": 16,
+          "edge": "fast",
+          "medianPx": 0.9257788489870649,
+          "meanPx": 1.3071676129111036,
+          "biasPx": 0.45029241000204934
+        },
+        {
+          "source": "hlcc4",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 0.9677500841041109,
+          "meanPx": 1.3519201402999954,
+          "biasPx": 0.6262157657631064
+        },
+        {
+          "source": "hlc3",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 1.0202889777949053,
+          "meanPx": 1.385311971367953,
+          "biasPx": 0.6754575622837251
+        },
+        {
+          "source": "hlc3",
+          "length": 16,
+          "edge": "fast",
+          "medianPx": 0.9888660555822639,
+          "meanPx": 1.3884069397869176,
+          "biasPx": 0.4535281149128707
+        },
+        {
+          "source": "ohlc4",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 1.0249801797430962,
+          "meanPx": 1.4094633463062367,
+          "biasPx": 0.618411102055461
+        },
+        {
+          "source": "hl2",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 1.1002158746614867,
+          "meanPx": 1.471412592645589,
+          "biasPx": 0.7460212311682142
+        },
+        {
+          "source": "hl2",
+          "length": 16,
+          "edge": "fast",
+          "medianPx": 1.1249087650615195,
+          "meanPx": 1.557335408707447,
+          "biasPx": 0.487803108060902
+        },
+        {
+          "source": "ohlc4",
+          "length": 16,
+          "edge": "fast",
+          "medianPx": 1.1559568075221875,
+          "meanPx": 1.5705027751471714,
+          "biasPx": 0.3448235888550073
+        },
+        {
+          "source": "open",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 1.2435159904747337,
+          "meanPx": 1.7559099842606867,
+          "biasPx": 0.4100342563351518
+        },
+        {
+          "source": "close",
+          "length": 17,
+          "edge": "fast",
+          "medianPx": 1.5936269085410402,
+          "meanPx": 1.8339078118049694,
+          "biasPx": 0.10575173697584717
+        }
+      ],
+      "slow": [
+        {
+          "source": "close",
+          "length": 30,
+          "edge": "slow",
+          "medianPx": 0.5073578307330848,
+          "meanPx": 0.7210958229516562,
+          "biasPx": 0.4346057332949158
+        },
+        {
+          "source": "close",
+          "length": 29,
+          "edge": "slow",
+          "medianPx": 0.5397180250348725,
+          "meanPx": 0.7922045212443024,
+          "biasPx": 0.44891693894460616
+        },
+        {
+          "source": "ohlc4",
+          "length": 29,
+          "edge": "slow",
+          "medianPx": 0.5919333717152995,
+          "meanPx": 0.795534821194004,
+          "biasPx": 0.5865811042038729
+        },
+        {
+          "source": "hlcc4",
+          "length": 29,
+          "edge": "slow",
+          "medianPx": 0.5882948727728774,
+          "meanPx": 0.8065475195996503,
+          "biasPx": 0.5773626462172103
+        },
+        {
+          "source": "hlc3",
+          "length": 29,
+          "edge": "slow",
+          "medianPx": 0.6421663714785666,
+          "meanPx": 0.8390159184199348,
+          "biasPx": 0.6391460097956383
+        },
+        {
+          "source": "hlcc4",
+          "length": 30,
+          "edge": "slow",
+          "medianPx": 0.6950209635622429,
+          "meanPx": 0.9229009042589507,
+          "biasPx": 0.5936188604739101
+        },
+        {
+          "source": "hl2",
+          "length": 29,
+          "edge": "slow",
+          "medianPx": 0.7316192020943788,
+          "meanPx": 0.9290824092069134,
+          "biasPx": 0.7292644525167589
+        },
+        {
+          "source": "open",
+          "length": 28,
+          "edge": "slow",
+          "medianPx": 0.6930486500450428,
+          "meanPx": 0.9515404653234116,
+          "biasPx": 0.49900278847881907
+        },
+        {
+          "source": "hlc3",
+          "length": 30,
+          "edge": "slow",
+          "medianPx": 0.7595522537122292,
+          "meanPx": 0.9980387901848417,
+          "biasPx": 0.6566859606274562
+        },
+        {
+          "source": "open",
+          "length": 29,
+          "edge": "slow",
+          "medianPx": 0.7938161060844777,
+          "meanPx": 1.0321350165080596,
+          "biasPx": 0.4403601947351632
+        },
+        {
+          "source": "ohlc4",
+          "length": 28,
+          "edge": "slow",
+          "medianPx": 0.7404976757658517,
+          "meanPx": 1.098087557468969,
+          "biasPx": 0.5575612067118243
+        },
+        {
+          "source": "ohlc4",
+          "length": 30,
+          "edge": "slow",
+          "medianPx": 0.8986469385097848,
+          "meanPx": 1.1026716924940538,
+          "biasPx": 0.6148529964889349
+        }
+      ]
+    },
+    "defaults": [
+      {
+        "source": "hl2",
+        "length": 15,
+        "edge": "fast",
+        "medianPx": 1.1002158746614867,
+        "meanPx": 1.471412592645589,
+        "biasPx": 0.7460212311682142
+      },
+      {
+        "source": "hl2",
+        "length": 29,
+        "edge": "slow",
+        "medianPx": 0.7316192020943788,
+        "meanPx": 0.9290824092069134,
+        "biasPx": 0.7292644525167589
+      }
+    ]
+  },
+  "sol": {
+    "samples": 1095,
+    "xcoef": [
+      1.17118228962261,
+      -22202.979657227672
+    ],
+    "ycoef": [
+      -186.1356570186894,
+      1173.7494291548976
+    ],
+    "best": {
+      "fast": [
+        {
+          "source": "close",
+          "length": 16,
+          "edge": "fast",
+          "medianPx": 0.6125619661696078,
+          "meanPx": 0.9939013177219636,
+          "biasPx": 0.3329419395240336
+        },
+        {
+          "source": "hlcc4",
+          "length": 16,
+          "edge": "fast",
+          "medianPx": 0.7603329756713038,
+          "meanPx": 1.1940443419041937,
+          "biasPx": 0.29907057451976016
+        },
+        {
+          "source": "hlc3",
+          "length": 16,
+          "edge": "fast",
+          "medianPx": 0.8154530079602011,
+          "meanPx": 1.272973433528789,
+          "biasPx": 0.2993921475715524
+        },
+        {
+          "source": "close",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 0.8710313914159542,
+          "meanPx": 1.2865472015548993,
+          "biasPx": 0.23217766891082192
+        },
+        {
+          "source": "hlcc4",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 0.8915014303134967,
+          "meanPx": 1.2868821046409775,
+          "biasPx": 0.3133365269496551
+        },
+        {
+          "source": "hlc3",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 0.9235995351945121,
+          "meanPx": 1.3046109975596398,
+          "biasPx": 0.3109999778761221
+        },
+        {
+          "source": "hl2",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 0.9774344038045797,
+          "meanPx": 1.3633660860209875,
+          "biasPx": 0.31820442228456614
+        },
+        {
+          "source": "ohlc4",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 0.9727384096166816,
+          "meanPx": 1.3671386472120395,
+          "biasPx": 0.3285632155415783
+        },
+        {
+          "source": "hl2",
+          "length": 16,
+          "edge": "fast",
+          "medianPx": 0.9548349042908058,
+          "meanPx": 1.44523742191106,
+          "biasPx": 0.2653449023978851
+        },
+        {
+          "source": "ohlc4",
+          "length": 16,
+          "edge": "fast",
+          "medianPx": 0.9798122952498716,
+          "meanPx": 1.50418928113969,
+          "biasPx": 0.2590743313700159
+        },
+        {
+          "source": "close",
+          "length": 17,
+          "edge": "fast",
+          "medianPx": 1.443117786458231,
+          "meanPx": 1.7922520641860815,
+          "biasPx": 0.35699229375040886
+        },
+        {
+          "source": "open",
+          "length": 15,
+          "edge": "fast",
+          "medianPx": 1.2346696781545745,
+          "meanPx": 1.8171295352903538,
+          "biasPx": 0.3732780557764386
+        }
+      ],
+      "slow": [
+        {
+          "source": "hlcc4",
+          "length": 29,
+          "edge": "slow",
+          "medianPx": 0.43322921346998555,
+          "meanPx": 0.5483240500750614,
+          "biasPx": 0.3790210609429323
+        },
+        {
+          "source": "hlc3",
+          "length": 29,
+          "edge": "slow",
+          "medianPx": 0.4447509695365852,
+          "meanPx": 0.5665186312649144,
+          "biasPx": 0.40148855797292526
+        },
+        {
+          "source": "close",
+          "length": 29,
+          "edge": "slow",
+          "medianPx": 0.4469617561075552,
+          "meanPx": 0.5847500818019733,
+          "biasPx": 0.32351606807503686
+        },
+        {
+          "source": "hl2",
+          "length": 29,
+          "edge": "slow",
+          "medianPx": 0.5045986290243718,
+          "meanPx": 0.6406836895723177,
+          "biasPx": 0.41243072920764234
+        },
+        {
+          "source": "ohlc4",
+          "length": 29,
+          "edge": "slow",
+          "medianPx": 0.5160311230760044,
+          "meanPx": 0.6556508996838543,
+          "biasPx": 0.4393310709303364
+        },
+        {
+          "source": "close",
+          "length": 30,
+          "edge": "slow",
+          "medianPx": 0.591768308493414,
+          "meanPx": 0.692478479590559,
+          "biasPx": 0.4276423153767155
+        },
+        {
+          "source": "hlcc4",
+          "length": 30,
+          "edge": "slow",
+          "medianPx": 0.7898277774777682,
+          "meanPx": 0.9172676043870058,
+          "biasPx": 0.5089977257318594
+        },
+        {
+          "source": "ohlc4",
+          "length": 28,
+          "edge": "slow",
+          "medianPx": 0.7392814436764752,
+          "meanPx": 0.9434663328468896,
+          "biasPx": 0.35479693808952106
+        },
+        {
+          "source": "hl2",
+          "length": 28,
+          "edge": "slow",
+          "medianPx": 0.7606133083835118,
+          "meanPx": 0.9641117564477178,
+          "biasPx": 0.37995703189113783
+        },
+        {
+          "source": "hlc3",
+          "length": 30,
+          "edge": "slow",
+          "medianPx": 0.8606990187861925,
+          "meanPx": 0.9977100133117844,
+          "biasPx": 0.5568057891404692
+        },
+        {
+          "source": "open",
+          "length": 28,
+          "edge": "slow",
+          "medianPx": 0.7988246822720839,
+          "meanPx": 1.0090474720746123,
+          "biasPx": 0.5001767387637699
+        },
+        {
+          "source": "hlc3",
+          "length": 28,
+          "edge": "slow",
+          "medianPx": 0.8267921348203231,
+          "meanPx": 1.0346676055586639,
+          "biasPx": 0.3376651938181965
+        }
+      ]
+    },
+    "defaults": [
+      {
+        "source": "hl2",
+        "length": 15,
+        "edge": "fast",
+        "medianPx": 0.9774344038045797,
+        "meanPx": 1.3633660860209875,
+        "biasPx": 0.31820442228456614
+      },
+      {
+        "source": "hl2",
+        "length": 29,
+        "edge": "slow",
+        "medianPx": 0.5045986290243718,
+        "meanPx": 0.6406836895723177,
+        "biasPx": 0.41243072920764234
+      }
+    ]
+  }
+}
