@@ -50,7 +50,7 @@ test("calibration notebook exposes versioned evidence and uncalibrated equity la
   assert.doesNotMatch(stock, /Reference check passes/);
   assert.doesNotMatch(stock, /<details[^>]*\bopen=/);
   const hype = renderToStaticMarkup(<CalibrationPanel asset="hype" timeframe="1w" values={{ atrLength: 15, factor: 2 }} />);
-  assert.match(hype, /Screenshot-calibrated weekly preset/);
+  assert.match(hype, /Weekly screenshot checked · September 17/);
   assert.match(hype, /KuCoin USDT/);
   assert.match(hype, /shorter history/);
   const calibratedStock = renderToStaticMarkup(<CalibrationPanel stock="tsla" timeframe="1w" values={{ atrLength: 15, factor: 2 }} />);

@@ -1,5 +1,5 @@
 export type SourceId = "bitstamp" | "binance" | "kraken" | "coinbase";
-export type AssetId = "btc" | "eth" | "sol" | "doge" | "link" | "xmr" | "sui" | "jup" | "op" | "bonk" | "ada" | "atom" | "hype" | "dot";
+export type AssetId = "btc" | "eth" | "sol" | "doge" | "link" | "xmr" | "sui" | "jup" | "op" | "bonk" | "ada" | "atom" | "hype" | "dot" | "bnb" | "zec";
 
 export interface AssetDefinition {
   id: AssetId;
@@ -44,9 +44,13 @@ export const ASSETS: AssetDefinition[] = [
   { id: "atom", label: "Cosmos", symbol: "ATOM", defaultSource: "coinbase" },
   { id: "hype", label: "Hyperliquid", symbol: "HYPE", defaultSource: "kraken" },
   { id: "dot", label: "Polkadot", symbol: "DOT", defaultSource: "coinbase" },
+  { id: "bnb", label: "BNB", symbol: "BNB", defaultSource: "binance" },
+  { id: "zec", label: "Zcash", symbol: "ZEC", defaultSource: "binance" },
 ];
 
 export const SOURCES: SourceDefinition[] = [
+  { asset: "bnb", id: "binance", label: "Binance", market: "BNB/USDT", denomination: "USDT", providerSymbol: "BNBUSDT", historyStart: Date.UTC(2017, 0, 1), historyNote: "Long-history BNB/USDT series; USDT quote differs from the screenshot's USD feed." },
+  { asset: "zec", id: "binance", label: "Binance", market: "ZEC/USDT", denomination: "USDT", providerSymbol: "ZECUSDT", historyStart: Date.UTC(2017, 0, 1), historyNote: "Long-history ZEC/USDT series matching the screenshot venue and quote currency." },
   { asset: "btc", id: "bitstamp", label: "Bitstamp", market: "BTC/USD", denomination: "USD", providerSymbol: "btcusd", historyStart: Date.UTC(2011, 7, 18), historyNote: "Canonical long-history BTC/USD daily series" },
   { asset: "btc", id: "binance", label: "Binance", market: "BTC/USDT", denomination: "USDT", providerSymbol: "BTCUSDT", historyStart: Date.UTC(2017, 7, 17), historyNote: "UTC cross-venue validation from August 2017" },
   { asset: "btc", id: "kraken", label: "Kraken", market: "BTC/USD", denomination: "USD", providerSymbol: "XBTUSD", historyStart: Date.UTC(2013, 9, 6), historyNote: "REST validation window; unfinished candle excluded" },

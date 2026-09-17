@@ -10,8 +10,8 @@ export const CRON_ASSETS: Record<string, readonly AssetId[]> = {
   "15 0 * * *": ["btc", "jup", "op"],
   "25 0 * * *": ["eth", "bonk", "ada"],
   "35 0 * * *": ["sol", "atom", "hype"],
-  "45 0 * * *": ["doge", "dot"],
-  "30 1 * * *": ["link", "xmr", "sui"],
+  "45 0 * * *": ["doge", "dot", "bnb"],
+  "30 1 * * *": ["link", "xmr", "sui", "zec"],
 };
 const STOCK_REFRESH_CRON = "30 1 * * *";
 const BINANCE_MARKET_DATA_BASES = ["https://data-api.binance.vision", "https://api-gcp.binance.com", "https://api1.binance.com"];

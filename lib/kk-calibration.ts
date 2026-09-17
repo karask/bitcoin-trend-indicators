@@ -3,10 +3,11 @@ import type { AssetId } from "./markets.ts";
 import type { StockId } from "./stocks.ts";
 import type { CommodityId } from "./commodities.ts";
 import { KK_FOLLOWUP_EVIDENCE } from "./kk-followup-evidence.ts";
+import { KK_SEPTEMBER17_EVIDENCE } from "./kk-september17-evidence.ts";
 import { KK_BATCH_EVIDENCE } from "./kk-batch-evidence.ts";
 import { ETH_KK_CALIBRATION, SOL_KK_CALIBRATION, XMR_KK_CALIBRATION, DOGE_KK_CALIBRATION, LINK_KK_CALIBRATION, SUI_KK_CALIBRATION, type OhlcRow } from "./kk-reference-data.ts";
 
-export const KK_CALIBRATION_VERSION = "2026-09-09";
+export const KK_CALIBRATION_VERSION = "2026-09-17";
 type Reference = { id: string; asset: AssetId; label: string; venue: string; denomination: string; start: number; rows: readonly OhlcRow[]; target: number; state: "bull" | "bear"; flipCandle: number; tolerance: number; previous: { atrLength: number; factor: number }; reason: string };
 export const KK_REFERENCES: Reference[] = [
   { id: "eth-original", asset: "eth", label: "Original ETH weekly reference", venue: "Bitfinex", denomination: "USD", start: Date.UTC(2025, 0, 20), rows: ETH_KK_CALIBRATION, target: 1709.38, state: "bull", flipCandle: Date.UTC(2026, 7, 17), tolerance: .01, previous: { atrLength: 10, factor: 3 }, reason: "Multiplier 3 → 2, ATR unchanged: a closer trail reproduces the bullish state and bearish reversal level." },
@@ -19,6 +20,7 @@ export const KK_REFERENCES: Reference[] = [
 ];
 
 export function calibrationStatus(asset: AssetId | undefined, timeframe: Timeframe, stock?: StockId, commodity?: CommodityId) {
+  if (timeframe === "1w" && KK_SEPTEMBER17_EVIDENCE.some(row => row.asset === asset)) return "Weekly screenshot checked · September 17";
   if (KK_FOLLOWUP_EVIDENCE.some(row => row.asset === (commodity ?? stock ?? asset) && row.timeframe === timeframe)) return "Approximate weekly screenshot fit";
   if (commodity) return "Uncalibrated futures preset";
   if (KK_BATCH_EVIDENCE.some(row => row.asset === (stock ?? asset) && row.timeframe === timeframe && !row.ignored)) return `Screenshot-calibrated ${timeframe === "1w" ? "weekly" : "daily"} preset`;

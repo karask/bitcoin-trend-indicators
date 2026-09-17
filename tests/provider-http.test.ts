@@ -59,7 +59,7 @@ test("new coins have one verified USD venue, calibrated weekly and unchanged dai
       const kk = signals.find(signal => signal.id === "kk_supertrend")!, standard = signals.find(signal => signal.id === "supertrend")!;
       assert.equal(kk.values.atrLength, tf === "1w" ? 15 : 10); assert.equal(kk.values.factor, tf === "1w" ? 2 : 3);
       if (tf === "1d") { assert.deepEqual(kk.states, standard.states); assert.equal(kk.values.supertrend, standard.values.supertrend); }
-      assert.match(calibrationStatus(asset, tf), tf === "1w" ? /Screenshot-calibrated/ : /Uncalibrated/);
+      assert.match(calibrationStatus(asset, tf), tf === "1w" ? /Screenshot-calibrated|Weekly screenshot checked/ : /Uncalibrated/);
     }
   }
   assert.equal(marketDefinition("jup", "kraken").providerSymbol, "JUPUSD");
@@ -77,5 +77,5 @@ test("all assets are refreshed once across the five existing cron slots", () => 
   const config = JSON.parse(readFileSync("wrangler.refresh.jsonc", "utf8"));
   assert.deepEqual(Object.keys(CRON_ASSETS), config.triggers.crons);
   assert.deepEqual(Object.values(CRON_ASSETS).flat().sort(), ASSETS.map(asset => asset.id).sort());
-  assert.ok(Object.values(CRON_ASSETS).every(group => group.length <= 3));
+  assert.ok(Object.values(CRON_ASSETS).every(group => group.length <= 4));
 });

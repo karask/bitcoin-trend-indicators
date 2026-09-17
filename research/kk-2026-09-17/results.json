@@ -1,0 +1,284 @@
+[
+  {
+    "asset": "btc",
+    "file": "btc4.png",
+    "target": 60739.59,
+    "state": "bull",
+    "source": "Binance USDT proxy for TradingView CRYPTO USD",
+    "previous": [
+      10,
+      3
+    ],
+    "imageSha256": "f4fc034f6ff5e0ee98c82657331486c52a6ff0793a09638e8a7ebd6c94d0f099",
+    "candles": 474,
+    "through": "2026-09-07",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 60600.44230181615,
+        "state": "bull",
+        "errorPct": -0.22908896517715993,
+        "lastFlip": "2026-08-31"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 66827.62820121077,
+        "state": "bull",
+        "errorPct": 10.02317961186563,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 66250.31753440635,
+        "state": "bull",
+        "errorPct": 9.072711117092425,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 81827.86109404806,
+        "state": "bear",
+        "errorPct": 34.719152852444445,
+        "lastFlip": "2025-11-10"
+      }
+    ]
+  },
+  {
+    "asset": "bnb",
+    "file": "bnb4.png",
+    "target": 605.67,
+    "state": "bull",
+    "source": "Binance USDT proxy for Binance USD",
+    "previous": null,
+    "imageSha256": "5e319201821be661043bee017212669aee9de91ced63bfcb50d78760e6486460",
+    "candles": 462,
+    "through": "2026-09-07",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 549.178538651483,
+        "state": "bull",
+        "errorPct": -9.3271024400279,
+        "lastFlip": "2026-08-31"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 610.2873591009887,
+        "state": "bull",
+        "errorPct": 0.7623555898407908,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 602.8130634057533,
+        "state": "bull",
+        "errorPct": -0.47169854776474285,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 767.5172900382756,
+        "state": "bear",
+        "errorPct": 26.722025201557887,
+        "lastFlip": "2026-01-26"
+      }
+    ]
+  },
+  {
+    "asset": "zec",
+    "file": "zcash.png",
+    "target": 863.79,
+    "state": "bull",
+    "source": "Binance USDT",
+    "previous": null,
+    "imageSha256": "b3955ae3c4d0c5f77403ccd054d27166ec418842b938823a6b403b90533aaefb",
+    "candles": 391,
+    "through": "2026-09-07",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 650.51886976171,
+        "state": "bull",
+        "errorPct": -24.690159672870713,
+        "lastFlip": "2026-05-04"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 825.4292465078067,
+        "state": "bull",
+        "errorPct": -4.440981429768021,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 863.7881103633129,
+        "state": "bull",
+        "errorPct": -0.00021876112100693845,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 708.0571655449693,
+        "state": "bull",
+        "errorPct": -18.029015669900172,
+        "lastFlip": "2026-05-04"
+      }
+    ]
+  },
+  {
+    "asset": "dot",
+    "file": "dot4.png",
+    "target": 1.1893,
+    "state": "bear",
+    "source": "Kraken USD",
+    "previous": [
+      15,
+      2
+    ],
+    "imageSha256": "ce29a08125a7f4fb26e9068b14c6ea86418c31d552283d69387905d42241be4c",
+    "candles": 102,
+    "through": "2026-09-07",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 1.2202425919096402,
+        "state": "bear",
+        "errorPct": 2.6017482476784926,
+        "lastFlip": null
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 1.0753617279397603,
+        "state": "bear",
+        "errorPct": -9.580280169867972,
+        "lastFlip": null
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 1.1906059643867946,
+        "state": "bear",
+        "errorPct": 0.10980950027701386,
+        "lastFlip": null
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 1.3931089465801918,
+        "state": "bear",
+        "errorPct": 17.13688275289598,
+        "lastFlip": null
+      }
+    ]
+  },
+  {
+    "asset": "link",
+    "file": "link4.png",
+    "target": 9.346,
+    "state": "bull",
+    "source": "Coinbase USD",
+    "previous": [
+      15,
+      2
+    ],
+    "imageSha256": "b0a1a1d6712110289fa6288d7c6e3b6acef7d145985abf1129d69c99571cde3f",
+    "candles": 376,
+    "through": "2026-09-07",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 7.944166207773899,
+        "state": "bull",
+        "errorPct": -14.999291592404251,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 9.39619972466434,
+        "state": "bull",
+        "errorPct": 0.5371252371532131,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 9.346162776080403,
+        "state": "bull",
+        "errorPct": 0.0017416657436708505,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 7.811244164120605,
+        "state": "bull",
+        "errorPct": -16.421526170333777,
+        "lastFlip": "2026-08-31"
+      }
+    ]
+  },
+  {
+    "asset": "hype",
+    "file": "hype4.png",
+    "target": 64.551,
+    "state": "bull",
+    "source": "KuCoin USDT, Monday weeks",
+    "previous": [
+      15,
+      2
+    ],
+    "imageSha256": "06bd987a649eb430f755922c19980488e2a640cae5c1b170b6b3596c5ddb9217",
+    "candles": 92,
+    "through": "2026-09-07",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 52.853634954004534,
+        "state": "bull",
+        "errorPct": -18.121121355200486,
+        "lastFlip": "2026-05-04"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 63.453089969336354,
+        "state": "bull",
+        "errorPct": -1.7008412428369035,
+        "lastFlip": "2026-03-09"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 64.55032907533104,
+        "state": "bull",
+        "errorPct": -0.0010393714566236945,
+        "lastFlip": "2026-03-16"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 54.499493612996545,
+        "state": "bull",
+        "errorPct": -15.57141854813009,
+        "lastFlip": "2026-05-11"
+      }
+    ]
+  }
+]

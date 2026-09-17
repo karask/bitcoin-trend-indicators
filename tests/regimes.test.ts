@@ -77,7 +77,7 @@ test("KK presets lead the indicator menu with fixed crypto parameters", () => {
   assert.equal(kkIndex, 0);
   for (const timeframe of ["1d", "1w"] as const) assert.deepEqual(INDICATOR_SPECS.filter(spec => spec.supportedTimeframes.includes(timeframe)).slice(0, 5).map(spec => spec.id), ["kk_supertrend", "kk_ema_ribbon", "support_band", "supertrend", "smma_ribbon"]);
   assert.equal(KK_SUPERTREND_ATR_LENGTH, 10);
-  assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3, sui: 3, jup: 3, op: 3, bonk: 3, ada: 3, atom: 3, hype: 3, dot: 3 });
+  assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3, sui: 3, jup: 3, op: 3, bonk: 3, ada: 3, atom: 3, hype: 3, dot: 3, bnb: 3, zec: 3 });
   assert.equal(KK_SUPERTREND_EQUITY_FACTOR, 3);
   assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { atr: 10, btcFactor: 3, ethFactor: 2, solFactor: 2, dogeDailyAtr: 10, dogeDailyFactor: 3, dogeWeeklyAtr: 15, dogeWeeklyFactor: 2, linkDailyAtr: 10, linkDailyFactor: 3, linkWeeklyAtr: 15, linkWeeklyFactor: 2, xmrDailyAtr: 10, xmrDailyFactor: 3, xmrWeeklyAtr: 15, xmrWeeklyFactor: 2, suiDailyAtr: 10, suiDailyFactor: 3, suiWeeklyAtr: 15, suiWeeklyFactor: 2 });
   assert.deepEqual(KK_SUPERTREND_PRESETS.doge, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
@@ -399,11 +399,11 @@ test("spot ticker payloads are parsed for every supported venue", () => {
 });
 
 test("all crypto assets expose isolated venue definitions and useful history", () => {
-  assert.deepEqual(ASSETS.map(asset => asset.id), ["btc", "eth", "sol", "doge", "link", "xmr", "sui", "jup", "op", "bonk", "ada", "atom", "hype", "dot"]);
+  assert.deepEqual(ASSETS.map(asset => asset.id), ["btc", "eth", "sol", "doge", "link", "xmr", "sui", "jup", "op", "bonk", "ada", "atom", "hype", "dot", "bnb", "zec"]);
   for (const asset of ASSETS.filter(asset => ["btc", "eth", "sol", "doge", "link", "sui"].includes(asset.id))) assert.equal(sourcesForAsset(asset.id).length, 4);
   assert.deepEqual(sourcesForAsset("xmr").map(source => source.id), ["kraken"]);
   assert.equal(ASSETS.find(asset => asset.id === "sol")!.defaultSource, "coinbase");
-  assert.equal(SOURCES.length, 32);
+  assert.equal(SOURCES.length, 34);
   assert.equal(marketDefinition("eth", "bitstamp").providerSymbol, "ethusd");
   assert.equal(marketDefinition("eth", "coinbase").historyStart, Date.UTC(2016, 4, 23));
   assert.equal(marketDefinition("sol", "binance").providerSymbol, "SOLUSDT");
