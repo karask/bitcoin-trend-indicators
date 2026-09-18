@@ -1,0 +1,326 @@
+[
+  {
+    "asset": "btc",
+    "target": 60600.44,
+    "state": "bull",
+    "file": "btc5.png",
+    "source": "Binance USDT",
+    "current": [
+      10,
+      3
+    ],
+    "imageSha256": "a68e5de0977a2aac72d7c8c7fc5a708635cda5ee037a94eda700bcd0dec95789",
+    "candles": 474,
+    "through": "2026-09-07",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 60600.44230181615,
+        "state": "bull",
+        "errorPct": 0.000003798348902073201,
+        "lastFlip": "2026-08-31"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 66827.62820121077,
+        "state": "bull",
+        "errorPct": 10.275813510942777,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 66250.31753440635,
+        "state": "bull",
+        "errorPct": 9.32316256186645,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 81827.86109404806,
+        "state": "bear",
+        "errorPct": 35.02849334765234,
+        "lastFlip": "2025-11-10"
+      }
+    ]
+  },
+  {
+    "asset": "sol",
+    "target": 79.59,
+    "state": "bull",
+    "file": "sol5.png",
+    "source": "Coinbase USD",
+    "current": [
+      10,
+      2
+    ],
+    "imageSha256": "22d617dc0b6adef2ef5b958fcedd2370f6b5f53d06d6a900da8827d36a138b6f",
+    "candles": 273,
+    "through": "2026-09-07",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 68.11028673608584,
+        "state": "bull",
+        "errorPct": -14.423562336869155,
+        "lastFlip": "2026-08-31"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 79.58519115739057,
+        "state": "bull",
+        "errorPct": -0.006042018607155253,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 77.18818976796877,
+        "state": "bull",
+        "errorPct": -3.0177286493670574,
+        "lastFlip": "2026-08-24"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 110.8309879215658,
+        "state": "bear",
+        "errorPct": 39.25240346973966,
+        "lastFlip": "2025-11-10"
+      }
+    ]
+  },
+  {
+    "asset": "ltc",
+    "target": 56.246,
+    "state": "bear",
+    "file": "ltc5.png",
+    "source": "Coinbase USD",
+    "current": null,
+    "imageSha256": "84580aa064695bd2a1ddc48ec1988547779e7dac2460e67993fd23f2b598051f",
+    "candles": 245,
+    "through": "2026-09-07",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 58.592441704509426,
+        "state": "bear",
+        "errorPct": 4.171748576804446,
+        "lastFlip": "2025-03-31"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 43.65435259844757,
+        "state": "bull",
+        "errorPct": -22.386742882253717,
+        "lastFlip": "2026-08-31"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 56.24588664948462,
+        "state": "bear",
+        "errorPct": -0.000201526358112325,
+        "lastFlip": "2025-11-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 62.09882997422693,
+        "state": "bear",
+        "errorPct": 10.405771031232325,
+        "lastFlip": "2025-03-24"
+      }
+    ]
+  },
+  {
+    "asset": "near",
+    "target": 1.7031,
+    "state": "bull",
+    "file": "near5.png",
+    "source": "Coinbase USD",
+    "current": null,
+    "imageSha256": "9a8cca2ff4958e8978ba7fa00518fa08fb0bfb8666faacab24f96ab8f221f4c4",
+    "candles": 210,
+    "through": "2026-09-07",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 1.4663887877982615,
+        "state": "bull",
+        "errorPct": -13.89884400221587,
+        "lastFlip": "2026-05-18"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 1.6947957749702511,
+        "state": "bull",
+        "errorPct": -0.4875946820356414,
+        "lastFlip": "2026-08-31"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 1.7030007116318284,
+        "state": "bull",
+        "errorPct": -0.005829861321804408,
+        "lastFlip": "2026-08-31"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 1.4475466352729227,
+        "state": "bull",
+        "errorPct": -15.00518846380584,
+        "lastFlip": "2026-05-18"
+      }
+    ]
+  },
+  {
+    "asset": "mstr",
+    "target": 90.66,
+    "state": "bull",
+    "file": "mstr5.png",
+    "source": "Yahoo split-adjusted NASDAQ",
+    "current": null,
+    "imageSha256": "cd1ded901b33e72dbfba56fde150262a1362aaf2cf40e895b4f539c65c9c03a9",
+    "candles": 610,
+    "through": "2026-09-07",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 154.43673342685463,
+        "state": "bear",
+        "errorPct": 70.34715798241191,
+        "lastFlip": "2025-02-24"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 93.81507004106766,
+        "state": "bull",
+        "errorPct": 3.480112553571213,
+        "lastFlip": "2026-08-31"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 90.66043697750825,
+        "state": "bull",
+        "errorPct": 0.00048199592792563806,
+        "lastFlip": "2026-08-31"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 161.58093002407648,
+        "state": "bear",
+        "errorPct": 78.22736600934977,
+        "lastFlip": "2025-10-13"
+      }
+    ]
+  },
+  {
+    "asset": "meta",
+    "target": 670.63,
+    "state": "bear",
+    "file": "meta5.png",
+    "source": "Yahoo split-adjusted NASDAQ; screenshot has pending Bullish 1/1",
+    "current": null,
+    "imageSha256": "c2eb0b4869187d1b1c6157ffc7c902e954c5ab9db6d9d284f097f7dd9443f3fe",
+    "candles": 610,
+    "through": "2026-09-07",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 696.6907862988442,
+        "state": "bear",
+        "errorPct": 3.886015582190505,
+        "lastFlip": "2025-10-27"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 545.8347898216524,
+        "state": "bull",
+        "errorPct": -18.60865308416677,
+        "lastFlip": "2026-07-06"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 671.012103216424,
+        "state": "bear",
+        "errorPct": 0.05697675565123905,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 699.1678345650072,
+        "state": "bear",
+        "errorPct": 4.255376968672331,
+        "lastFlip": "2025-11-03"
+      }
+    ]
+  },
+  {
+    "asset": "gold",
+    "target": 4076.188,
+    "state": "bull",
+    "file": "gold5.png",
+    "source": "Yahoo GC=F futures proxy; screenshot is OANDA spot XAUUSD",
+    "current": [
+      10,
+      2
+    ],
+    "imageSha256": "7bcc056e0c4687ce9cecbfa5c47a19cc58c09dbb267b8e579be3cd006b578d0a",
+    "candles": 401,
+    "through": "2026-09-07",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 4790.127458148176,
+        "state": "bear",
+        "errorPct": 17.51488052435697,
+        "lastFlip": "2026-06-08"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 4129.652725188554,
+        "state": "bull",
+        "errorPct": 1.3116354100584537,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 4119.566798470954,
+        "state": "bull",
+        "errorPct": 1.0642001416753644,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 4811.567718765926,
+        "state": "bear",
+        "errorPct": 18.04086854595337,
+        "lastFlip": "2026-06-01"
+      }
+    ]
+  }
+]
