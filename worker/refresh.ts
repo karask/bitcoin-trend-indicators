@@ -9,7 +9,7 @@ const DAY = 86_400_000;
 export const CRON_ASSETS: Record<string, readonly AssetId[]> = {
   "15 0 * * *": ["btc", "jup", "op"],
   "25 0 * * *": ["eth", "bonk", "ada"],
-  "35 0 * * *": ["sol", "atom", "hype"],
+  "35 0 * * *": ["sol", "atom", "hype", "avax"],
   "45 0 * * *": ["doge", "dot", "bnb"],
   "30 1 * * *": ["link", "xmr", "sui", "zec"],
 };

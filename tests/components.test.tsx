@@ -37,7 +37,7 @@ test("readiness has honest copy, not a neutral badge or invented test returns", 
 
 test("calibration notebook exposes versioned evidence and uncalibrated equity labeling", () => {
   const sui = renderToStaticMarkup(<CalibrationPanel asset="sui" timeframe="1w" values={selected.values} />);
-  assert.match(sui, /Screenshot-calibrated weekly preset/);
+  assert.match(sui, /Weekly screenshot checked · September 21/);
   assert.match(sui, /sui-weekly-supertrend\.png/);
   assert.match(sui, /Reference check passes/);
   assert.match(sui, /1\.0413/);

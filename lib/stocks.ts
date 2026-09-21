@@ -1,8 +1,8 @@
 import type { Candle } from "./regimes.ts";
 import { isXnasSessionComplete, isXnasSessionDate, xnasDateEpoch, xnasDateKey, xnasSessionsBetween } from "./xnas-calendar.ts";
 
-export type StockId = "tsla" | "googl" | "nvda" | "spcx" | "mu" | "sndk" | "bmnr";
-export type StockSymbol = "TSLA" | "GOOGL" | "NVDA" | "SPCX" | "MU" | "SNDK" | "BMNR";
+export type StockId = "tsla" | "googl" | "nvda" | "spcx" | "mu" | "sndk" | "bmnr" | "mstr";
+export type StockSymbol = "TSLA" | "GOOGL" | "NVDA" | "SPCX" | "MU" | "SNDK" | "BMNR" | "MSTR";
 
 export interface StockDefinition {
   id: StockId;
@@ -27,6 +27,7 @@ export const STOCKS: readonly StockDefinition[] = [
   // NYSE and NASDAQ share the regular-session dates/hours used by this history.
   // Yahoo's available BMNR series starts here; do not invent earlier OTC candles.
   { id: "bmnr", company: "Bitmine Immersion Technologies", ticker: "BMNR", label: "Bitmine", symbol: "BMNR", exchange: "NYSE", currency: "USD", provider: "yahoo", calendar: "XNYS", historyStart: "2025-06-05" },
+  { id: "mstr", company: "Strategy", ticker: "MSTR", label: "Strategy (MicroStrategy)", symbol: "MSTR", exchange: "NASDAQ", currency: "USD", provider: "yahoo", calendar: "XNAS", historyStart: "1999-01-04" },
 ];
 
 export const STOCK_DATA_ADJUSTMENT = "split-adjusted" as const;

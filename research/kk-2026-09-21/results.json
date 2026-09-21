@@ -1,0 +1,428 @@
+[
+  {
+    "asset": "btc",
+    "file": "btc6.png",
+    "target": 60739.59,
+    "state": "bull",
+    "source": "Binance USDT proxy for TradingView CRYPTO USD",
+    "previous": [
+      10,
+      3
+    ],
+    "imageSha256": "0ac4b8c8a008d1c407bb30e8c9aca8087b657d5f09548dadbbc22b1477bff45b",
+    "candles": 475,
+    "through": "2026-09-14",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 60600.44230181615,
+        "state": "bull",
+        "errorPct": -0.22908896517715993,
+        "lastFlip": "2026-08-31"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 66827.62820121077,
+        "state": "bull",
+        "errorPct": 10.02317961186563,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 66250.31753440635,
+        "state": "bull",
+        "errorPct": 9.072711117092425,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 81827.86109404806,
+        "state": "bear",
+        "errorPct": 34.719152852444445,
+        "lastFlip": "2025-11-10"
+      }
+    ]
+  },
+  {
+    "asset": "eth",
+    "file": "eth6.png",
+    "target": 2074.75,
+    "state": "bull",
+    "source": "Bitfinex USD",
+    "previous": [
+      10,
+      2
+    ],
+    "imageSha256": "9dcdc3afcdcbc3087f88e0e95912836c66e3e810235b0ed08b6bd10faec80a4c",
+    "candles": 507,
+    "through": "2026-09-14",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 1836.9733736460648,
+        "state": "bull",
+        "errorPct": -11.460495305648156,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 2074.7489157640434,
+        "state": "bull",
+        "errorPct": -0.00005225863147773069,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 2028.6769216647854,
+        "state": "bull",
+        "errorPct": -2.2206568663797888,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 1767.8653824971777,
+        "state": "bull",
+        "errorPct": -14.791402217270623,
+        "lastFlip": "2026-09-14"
+      }
+    ]
+  },
+  {
+    "asset": "sol",
+    "file": "sol6.png",
+    "target": 80.72,
+    "state": "bull",
+    "source": "Coinbase USD",
+    "previous": [
+      10,
+      2
+    ],
+    "imageSha256": "09d12e14b7248ce3fe244a96afee7789abcc5ea5cd5cbe6b45432466c864b8f4",
+    "candles": 274,
+    "through": "2026-09-14",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 68.50375806247726,
+        "state": "bull",
+        "errorPct": -15.134095561846806,
+        "lastFlip": "2026-08-31"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 80.71917204165152,
+        "state": "bull",
+        "errorPct": -0.0010257164872129465,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 78.97564378343752,
+        "state": "bull",
+        "errorPct": -2.1609963039673885,
+        "lastFlip": "2026-08-24"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 65.88846567515628,
+        "state": "bull",
+        "errorPct": -18.374051443067042,
+        "lastFlip": "2026-09-14"
+      }
+    ]
+  },
+  {
+    "asset": "bnb",
+    "file": "bnb6.png",
+    "target": 612.4,
+    "state": "bull",
+    "source": "Binance USDT proxy for screenshot Binance USD",
+    "previous": [
+      15,
+      2
+    ],
+    "imageSha256": "73731064ded15413b5ded0d99aae8f5999280e157a12f5591018afcac69444d4",
+    "candles": 463,
+    "through": "2026-09-14",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 554.0341847863347,
+        "state": "bull",
+        "errorPct": -9.530668715490743,
+        "lastFlip": "2026-08-31"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 616.4011231908898,
+        "state": "bull",
+        "errorPct": 0.6533512721897283,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 610.2638591787031,
+        "state": "bull",
+        "errorPct": -0.3488146344377663,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 544.8282887680546,
+        "state": "bull",
+        "errorPct": -11.033917575431973,
+        "lastFlip": "2026-09-14"
+      }
+    ]
+  },
+  {
+    "asset": "zec",
+    "file": "zec6.png",
+    "target": 954.01,
+    "state": "bull",
+    "source": "Binance USDT",
+    "previous": [
+      15,
+      2
+    ],
+    "imageSha256": "c7022584674144b216619b6403c3c586fee8d14b6b356f239c96f380ca27a857",
+    "candles": 392,
+    "through": "2026-09-14",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 680.1719827855391,
+        "state": "bull",
+        "errorPct": -28.703893797178324,
+        "lastFlip": "2026-05-04"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 892.9563218570261,
+        "state": "bull",
+        "errorPct": -6.399689536060826,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 954.0072363390922,
+        "state": "bull",
+        "errorPct": -0.0002896888824821531,
+        "lastFlip": "2026-08-17"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 771.7483545086382,
+        "state": "bull",
+        "errorPct": -19.104794026410822,
+        "lastFlip": "2026-05-04"
+      }
+    ]
+  },
+  {
+    "asset": "avax",
+    "file": "avax6.png",
+    "target": 6.339,
+    "state": "bull",
+    "source": "Coinbase USD",
+    "previous": null,
+    "imageSha256": "e1540e88f586960d930bb8b0fc7538261b656092ae053449580bf5ba166ff1ac",
+    "candles": 259,
+    "through": "2026-09-14",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 5.186352287021663,
+        "state": "bull",
+        "errorPct": -18.183431345296384,
+        "lastFlip": "2026-09-14"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 6.565901524681108,
+        "state": "bull",
+        "errorPct": 3.5794529843998557,
+        "lastFlip": "2026-09-14"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 6.338533950777854,
+        "state": "bull",
+        "errorPct": -0.007352093739498855,
+        "lastFlip": "2026-09-14"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 4.8453009261667805,
+        "state": "bull",
+        "errorPct": -23.56363896250544,
+        "lastFlip": "2026-09-14"
+      }
+    ]
+  },
+  {
+    "asset": "sui",
+    "file": "sui6.png",
+    "target": 1.0413,
+    "state": "bear",
+    "source": "Coinbase USD",
+    "previous": [
+      15,
+      2
+    ],
+    "imageSha256": "4233e5a0f0d668f0ec12d63e66e6b059061258e1841e386edeb4fafcfe9a33d8",
+    "candles": 174,
+    "through": "2026-09-14",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 1.0709098791326004,
+        "state": "bear",
+        "errorPct": 2.8435493260924316,
+        "lastFlip": "2025-03-31"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 0.9415065860884002,
+        "state": "bear",
+        "errorPct": -9.583541141995555,
+        "lastFlip": "2025-10-27"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 1.041269462195747,
+        "state": "bear",
+        "errorPct": -0.0029326615051283866,
+        "lastFlip": "2025-10-27"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 1.2205541932936206,
+        "state": "bear",
+        "errorPct": 17.21446204682806,
+        "lastFlip": "2025-03-03"
+      }
+    ]
+  },
+  {
+    "asset": "ada",
+    "file": "ada6.png",
+    "target": 0.254943,
+    "state": "bear",
+    "source": "Kraken USD",
+    "previous": [
+      15,
+      2
+    ],
+    "imageSha256": "5a2bc3af566e822e92f4a7e789a5d55a0a2c0627a3cdf88af82fe6797caaf5e1",
+    "candles": 102,
+    "through": "2026-09-14",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 0.2742826478559986,
+        "state": "bear",
+        "errorPct": 7.585871295151714,
+        "lastFlip": null
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 0.23303009857066576,
+        "state": "bear",
+        "errorPct": -8.595215961738202,
+        "lastFlip": "2025-10-27"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 0.25545169160333664,
+        "state": "bear",
+        "errorPct": 0.19953150442908463,
+        "lastFlip": "2025-11-03"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 0.3079150374050049,
+        "state": "bear",
+        "errorPct": 20.777992494402643,
+        "lastFlip": null
+      }
+    ]
+  },
+  {
+    "asset": "mstr",
+    "file": "mstr6.png",
+    "target": 90.66,
+    "state": "bull",
+    "source": "Yahoo split-adjusted NASDAQ",
+    "previous": null,
+    "imageSha256": "b40b5e8e73ea5228f8a16c6f5c64a3e5b841ac414416300f6b6e733eff1d64af",
+    "candles": 611,
+    "through": "2026-09-14",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 154.43673342685463,
+        "state": "bear",
+        "errorPct": 70.34715798241191,
+        "lastFlip": "2025-02-24"
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 95.97006587509566,
+        "state": "bull",
+        "errorPct": 5.857120974074181,
+        "lastFlip": "2026-08-31"
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 93.71741085674208,
+        "state": "bull",
+        "errorPct": 3.372392297310922,
+        "lastFlip": "2026-08-31"
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 161.58093002407648,
+        "state": "bear",
+        "errorPct": 78.22736600934977,
+        "lastFlip": "2025-10-13"
+      }
+    ]
+  }
+]

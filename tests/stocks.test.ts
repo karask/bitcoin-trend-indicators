@@ -35,8 +35,8 @@ function stockResponse(dates: string[], requestedStart: string, requiredThrough:
 }
 
 test("stock definitions remain separate, complete, Yahoo-backed, and type guarded", () => {
-  assert.deepEqual(STOCKS.map(stock => stock.id), ["tsla", "googl", "nvda", "spcx", "mu", "sndk", "bmnr"]);
-  assert.deepEqual(STOCKS.map(stock => stock.symbol), ["TSLA", "GOOGL", "NVDA", "SPCX", "MU", "SNDK", "BMNR"]);
+  assert.deepEqual(STOCKS.map(stock => stock.id), ["tsla", "googl", "nvda", "spcx", "mu", "sndk", "bmnr", "mstr"]);
+  assert.deepEqual(STOCKS.map(stock => stock.symbol), ["TSLA", "GOOGL", "NVDA", "SPCX", "MU", "SNDK", "BMNR", "MSTR"]);
   assert.ok(STOCKS.every(stock => stock.currency === "USD" && stock.provider === "yahoo" && (stock.id === "bmnr" ? stock.exchange === "NYSE" && stock.calendar === "XNYS" : stock.exchange === "NASDAQ" && stock.calendar === "XNAS")));
   assert.equal(stockDefinition("SPCX").historyStart, "2026-06-12");
   assert.equal(stockDefinition("MU").company, "Micron Technology");
