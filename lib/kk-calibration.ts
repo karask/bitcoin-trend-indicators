@@ -8,6 +8,7 @@ import { KK_SEPTEMBER21_EVIDENCE } from "./kk-september21-evidence.ts";
 import { KK_BATCH_EVIDENCE } from "./kk-batch-evidence.ts";
 import { KK_ARCHIVE_EVIDENCE } from "./kk-archive-evidence.ts";
 import { KK_DAILY_EVIDENCE } from "./kk-daily-evidence.ts";
+import { KK_RAY_EVIDENCE } from "./kk-ray-evidence.ts";
 import { ETH_KK_CALIBRATION, SOL_KK_CALIBRATION, XMR_KK_CALIBRATION, DOGE_KK_CALIBRATION, LINK_KK_CALIBRATION, SUI_KK_CALIBRATION, type OhlcRow } from "./kk-reference-data.ts";
 
 export const KK_CALIBRATION_VERSION = "2026-09-22";
@@ -29,6 +30,7 @@ export function calibrationStatus(asset: AssetId | undefined, timeframe: Timefra
   if (archive?.status === "weekly-retained") return "Weekly screenshot checked · September 21";
   if (timeframe === "1w" && KK_SEPTEMBER21_EVIDENCE.some(row => row.asset === (stock ?? asset))) return "Weekly screenshot checked · September 21";
   if (timeframe === "1w" && KK_SEPTEMBER17_EVIDENCE.some(row => row.asset === asset)) return "Weekly screenshot checked · September 17";
+  if (timeframe === "1w" && KK_RAY_EVIDENCE.some(row => row.asset === asset)) return "Weekly screenshot checked · September 22";
   if (KK_FOLLOWUP_EVIDENCE.some(row => row.asset === (commodity ?? stock ?? asset) && row.timeframe === timeframe)) return "Approximate weekly screenshot fit";
   if (commodity) return "Uncalibrated futures preset";
   if (KK_BATCH_EVIDENCE.some(row => row.asset === (stock ?? asset) && row.timeframe === timeframe && !row.ignored)) return `Screenshot-calibrated ${timeframe === "1w" ? "weekly" : "daily"} preset`;

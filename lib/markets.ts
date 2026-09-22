@@ -1,5 +1,5 @@
 export type SourceId = "bitstamp" | "binance" | "kraken" | "coinbase";
-export type AssetId = "btc" | "eth" | "sol" | "doge" | "link" | "xmr" | "sui" | "jup" | "op" | "bonk" | "ada" | "atom" | "hype" | "dot" | "bnb" | "zec" | "avax";
+export type AssetId = "btc" | "eth" | "sol" | "doge" | "link" | "xmr" | "sui" | "jup" | "op" | "bonk" | "ada" | "atom" | "hype" | "dot" | "bnb" | "zec" | "avax" | "ray";
 
 export interface AssetDefinition {
   id: AssetId;
@@ -47,10 +47,12 @@ export const ASSETS: AssetDefinition[] = [
   { id: "bnb", label: "BNB", symbol: "BNB", defaultSource: "binance" },
   { id: "zec", label: "Zcash", symbol: "ZEC", defaultSource: "binance" },
   { id: "avax", label: "Avalanche", symbol: "AVAX", defaultSource: "coinbase" },
+  { id: "ray", label: "Raydium", symbol: "RAY", defaultSource: "kraken" },
 ];
 
 export const SOURCES: SourceDefinition[] = [
   { asset: "avax", id: "coinbase", label: "Coinbase Exchange", market: "AVAX/USD", denomination: "USD", providerSymbol: "AVAX-USD", historyStart: Date.UTC(2021, 8, 30), historyNote: "AVAX/USD history from September 30, 2021; matches the weekly screenshot venue." },
+  { asset: "ray", id: "kraken", label: "Kraken", market: "RAY/USD", denomination: "USD", providerSymbol: "RAYUSD", historyStart: Date.UTC(2024, 9, 2), historyNote: "RAY/USD validation history from Kraken's latest public REST window; the calibration screenshot uses TradingView's composite CRYPTO:RAYUSD feed." },
   { asset: "bnb", id: "binance", label: "Binance", market: "BNB/USDT", denomination: "USDT", providerSymbol: "BNBUSDT", historyStart: Date.UTC(2017, 0, 1), historyNote: "Long-history BNB/USDT series; USDT quote differs from the screenshot's USD feed." },
   { asset: "zec", id: "binance", label: "Binance", market: "ZEC/USDT", denomination: "USDT", providerSymbol: "ZECUSDT", historyStart: Date.UTC(2017, 0, 1), historyNote: "Long-history ZEC/USDT series matching the screenshot venue and quote currency." },
   { asset: "btc", id: "bitstamp", label: "Bitstamp", market: "BTC/USD", denomination: "USD", providerSymbol: "btcusd", historyStart: Date.UTC(2011, 7, 18), historyNote: "Canonical long-history BTC/USD daily series" },

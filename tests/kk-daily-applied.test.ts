@@ -6,7 +6,7 @@ import { calculateIndicators, KK_SUPERTREND_PRESETS, KK_SUPERTREND_STOCK_PRESETS
 import { buildResearch } from "../lib/research.ts";
 
 test("approved daily assignments use compact independent families and leave every weekly preset unchanged", () => {
-  const crypto = { btc: [15,2], eth: [15,4], sol: [15,2], doge: [15,5], link: [15,4], xmr: [15,3], jup: [15,3], bonk: [15,3], ada: [15,5], atom: [15,5], hype: [15,4], dot: [15,5], bnb: [15,4], zec: [15,3], sui: [10,3], op: [10,3], avax: [10,3] };
+  const crypto = { btc: [15,2], eth: [15,4], sol: [15,2], doge: [15,5], link: [15,4], xmr: [15,3], jup: [15,3], bonk: [15,3], ada: [15,5], atom: [15,5], hype: [15,4], dot: [15,5], bnb: [15,4], zec: [15,3], sui: [10,3], op: [10,3], avax: [10,3], ray: [10,3] };
   const stocks = { tsla: [30,4], googl: [15,3], nvda: [30,2], mu: [15,3], sndk: [30,4], spcx: [15,4], bmnr: [15,3], mstr: [10,3] };
   for (const [id, preset] of Object.entries(KK_SUPERTREND_PRESETS)) {
     assert.deepEqual([preset["1d"].atrLength,preset["1d"].factor],crypto[id as keyof typeof crypto]);

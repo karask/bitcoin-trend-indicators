@@ -50,17 +50,17 @@ test("date Retry-After, temporary bans, Kraken body limits, and bounded 5xx retr
 
 test("new coins have one verified USD venue, separate weekly and daily KK presets", () => {
   const daily: Candle[] = Array.from({ length: 300 }, (_, i) => ({ time: Date.UTC(2024, 0, 1) + i * 86_400_000, open: 1 + i / 100, high: 1.1 + i / 100, low: .9 + i / 100, close: 1.01 + i / 100, volume: 10, complete: true }));
-  for (const asset of ["jup", "op", "bonk", "ada", "atom", "hype", "dot"] as const) {
+  for (const asset of ["jup", "op", "bonk", "ada", "atom", "hype", "dot", "ray"] as const) {
     const sources = sourcesForAsset(asset);
     assert.equal(sources.length, 1);
     assert.equal(sources[0].denomination, "USD");
     for (const tf of ["1d", "1w"] as const) {
       const signals = calculateIndicators(daily, tf, { asset });
       const kk = signals.find(signal => signal.id === "kk_supertrend")!, standard = signals.find(signal => signal.id === "supertrend")!;
-      assert.equal(kk.values.atrLength, tf === "1w" || asset !== "op" ? 15 : 10); assert.equal(kk.values.factor, tf === "1w" ? 2 : ["ada","atom","dot"].includes(asset) ? 5 : asset==="hype" ? 4 : 3);
+      assert.equal(kk.values.atrLength, tf === "1w" || !["op", "ray"].includes(asset) ? 15 : 10); assert.equal(kk.values.factor, tf === "1w" ? 2 : ["ada","atom","dot"].includes(asset) ? 5 : asset==="hype" ? 4 : 3);
       if (tf === "1d") assert.equal(kk.confirmation!.required,5);
       if (tf === "1d" && asset === "op") assert.equal(kk.values.supertrend, standard.values.supertrend);
-      assert.match(calibrationStatus(asset, tf), tf === "1w" ? /Screenshot-calibrated|Weekly screenshot checked/ : asset === "op" ? /calibration unresolved/ : /Approximate daily/);
+      assert.match(calibrationStatus(asset, tf), tf === "1w" ? /Screenshot-calibrated|Weekly screenshot checked/ : asset === "op" ? /calibration unresolved/ : asset === "ray" ? /Uncalibrated daily/ : /Approximate daily/);
     }
   }
   assert.equal(marketDefinition("jup", "kraken").providerSymbol, "JUPUSD");
