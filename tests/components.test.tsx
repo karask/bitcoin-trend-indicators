@@ -50,11 +50,11 @@ test("calibration notebook exposes versioned evidence and uncalibrated equity la
   assert.doesNotMatch(stock, /Reference check passes/);
   assert.doesNotMatch(stock, /<details[^>]*\bopen=/);
   const hype = renderToStaticMarkup(<CalibrationPanel asset="hype" timeframe="1w" values={{ atrLength: 15, factor: 2 }} />);
-  assert.match(hype, /Weekly screenshot checked · September 17/);
+  assert.match(hype, /Weekly screenshot checked · September 21/);
   assert.match(hype, /KuCoin USDT/);
   assert.match(hype, /shorter history/);
   const calibratedStock = renderToStaticMarkup(<CalibrationPanel stock="tsla" timeframe="1w" values={{ atrLength: 15, factor: 2 }} />);
-  assert.match(calibratedStock, /Screenshot-calibrated weekly preset/);
+  assert.match(calibratedStock, /Weekly screenshot checked · September 21/);
   assert.match(calibratedStock, /383\.88/);
   assert.doesNotMatch(calibratedStock, /<details[^>]*\bopen=/);
   const spcx = renderToStaticMarkup(<CalibrationPanel stock="spcx" timeframe="1d" values={{ atrLength: 10, factor: 3 }} />);
@@ -95,7 +95,7 @@ test("both labs keep distinct controls with accessible timeframes and non-pollin
 
 test("commodity lab is distinct, clearly labelled futures, with accessible controls and shared status UI", () => {
   const html = renderToStaticMarkup(<CommodityDashboard />);
-  for (const text of ["Gold futures", "Silver futures", "GC=F", "SI=F", "Futures, not spot", "USD per troy ounce", "Approximate weekly screenshot fit", "Check for updates", "CONFIRMATION CLOCK", "DATA SNAPSHOT", "FUTURES QUOTE", "not exchange settlement"]) assert.ok(html.includes(text), text);
+  for (const text of ["Gold futures", "Silver futures", "GC=F", "SI=F", "Futures, not spot", "USD per troy ounce", "Weekly screenshot checked · September 21", "Check for updates", "CONFIRMATION CLOCK", "DATA SNAPSHOT", "FUTURES QUOTE", "not exchange settlement"]) assert.ok(html.includes(text), text);
   assert.doesNotMatch(html, /NASDAQ|XNAS|Tiingo|Market source|Binance|Kraken|ADJUSTED CLOSE/);
   assert.match(html, /aria-pressed="true"/);
   assert.match(html, /href="\/commodities\/" aria-current="page"/);
@@ -109,7 +109,7 @@ test("metals and Bitmine notebooks disclose approximate fits and keep daily cali
     assert.match(weekly, /back-adjusted/);
     assert.doesNotMatch(weekly, /<details[^>]*\bopen=/);
     const daily = renderToStaticMarkup(<CalibrationPanel commodity={commodity} timeframe="1d" values={{ atrLength: 10, factor: 3 }} />);
-    assert.match(daily, /Uncalibrated futures preset/);
+    assert.match(daily, /Approximate daily family fit · September 22/);
     assert.match(daily, /does not validate this daily preset/);
   }
   const bmnr = renderToStaticMarkup(<CalibrationPanel stock="bmnr" timeframe="1w" values={{ atrLength: 15, factor: 2 }} />);

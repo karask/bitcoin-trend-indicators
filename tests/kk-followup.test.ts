@@ -41,24 +41,24 @@ test("shared presets accept documented deviations and preserve reference regimes
   assert.equal(KK_FOLLOWUP_EVIDENCE[2].lastFlip, Date.UTC(2026, 7, 31));
 });
 
-test("only weekly KK changes; daily, generic futures baseline and all other indicators remain identical", () => {
+test("weekly references remain valid alongside daily presets; generic futures baseline and other indicators stay identical", () => {
   for (const row of KK_FOLLOWUP_EVIDENCE) {
     const candles=candlesFor(row.asset), options=optionsFor(row.asset);
     for (const timeframe of ["1d","1w"] as const) {
       const current=calculateIndicators(candles,timeframe,options);
       const previous=calculateIndicators(candles,timeframe,{...options,kkSupertrendAtrLength:10,kkSupertrendFactor:3});
       assert.deepEqual(current.filter(s=>s.id!=="kk_supertrend"),previous.filter(s=>s.id!=="kk_supertrend"));
-      if (timeframe==="1d") assert.deepEqual(current,previous);
+      if (timeframe==="1d") assert.equal(current.find(s=>s.id==="kk_supertrend")!.values.atrLength,15);
     }
   }
   assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.tsla["1w"],{atrLength:15,factor:2});
   assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.spcx["1w"],{atrLength:10,factor:3});
   for(const asset of ["gold","silver"] as const) {
-    assert.deepEqual(KK_SUPERTREND_COMMODITY_PRESETS[asset]["1d"],{atrLength:10,factor:3});
-    assert.equal(calibrationStatus(undefined,"1w",undefined,asset),"Approximate weekly screenshot fit");
-    assert.equal(calibrationStatus(undefined,"1d",undefined,asset),"Uncalibrated futures preset");
+    assert.deepEqual(KK_SUPERTREND_COMMODITY_PRESETS[asset]["1d"],{atrLength:15,factor:asset==="gold"?4:3});
+    assert.equal(calibrationStatus(undefined,"1w",undefined,asset),"Weekly screenshot checked · September 21");
+    assert.equal(calibrationStatus(undefined,"1d",undefined,asset),"Approximate daily family fit · September 22");
   }
-  assert.equal(calibrationStatus(undefined,"1d","bmnr"),"Uncalibrated equity preset");
+  assert.equal(calibrationStatus(undefined,"1d","bmnr"),"Approximate daily family fit · September 22");
   const defaultKk=calculateIndicators(candlesFor("gold"),"1w",{market:"commodity",indicatorIds:["kk_supertrend"]})[0];
   assert.deepEqual([defaultKk.values.atrLength,defaultKk.values.factor],[10,3]);
 });

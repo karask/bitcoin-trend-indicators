@@ -79,13 +79,13 @@ test("KK presets lead the indicator menu with fixed crypto parameters", () => {
   assert.equal(KK_SUPERTREND_ATR_LENGTH, 10);
   assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3, sui: 3, jup: 3, op: 3, bonk: 3, ada: 3, atom: 3, hype: 3, dot: 3, bnb: 3, zec: 3, avax: 3 });
   assert.equal(KK_SUPERTREND_EQUITY_FACTOR, 3);
-  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { atr: 10, btcFactor: 3, ethFactor: 2, solFactor: 2, dogeDailyAtr: 10, dogeDailyFactor: 3, dogeWeeklyAtr: 15, dogeWeeklyFactor: 2, linkDailyAtr: 10, linkDailyFactor: 3, linkWeeklyAtr: 15, linkWeeklyFactor: 2, xmrDailyAtr: 10, xmrDailyFactor: 3, xmrWeeklyAtr: 15, xmrWeeklyFactor: 2, suiDailyAtr: 10, suiDailyFactor: 3, suiWeeklyAtr: 15, suiWeeklyFactor: 2 });
-  assert.deepEqual(KK_SUPERTREND_PRESETS.doge, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
-  assert.deepEqual(KK_SUPERTREND_PRESETS.link, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
-  assert.deepEqual(KK_SUPERTREND_PRESETS.xmr, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
+  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { dailyCryptoFamily: "15/2,15/3,15/4,15/5", dailyStockFamily: "15/3,15/4,30/2,30/4", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-09-22" });
+  assert.deepEqual(KK_SUPERTREND_PRESETS.doge, { "1d": { atrLength: 15, factor: 5 }, "1w": { atrLength: 15, factor: 2 } });
+  assert.deepEqual(KK_SUPERTREND_PRESETS.link, { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } });
+  assert.deepEqual(KK_SUPERTREND_PRESETS.xmr, { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.sui, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
-  assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /screenshot-calibrated/i);
-  assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /does not claim to reproduce/i);
+  assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /approximate screenshot fits/i);
+  assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /not recovered private formulas/i);
 });
 
 test("KK Supertrend reproduces the ETH and SOL factor-two calibration levels", () => {
@@ -203,8 +203,8 @@ test("existing SOL 10/2 calibration advances to the supplied 78.07 level without
   assert.equal(candles.at(-1)!.open, 95.44);
 });
 
-test("BTC KK Supertrend is point-for-point identical to SuperTrend 10/3", () => {
-  const results = calculateIndicators(history(), "1d", { asset: "btc" });
+test("Weekly BTC KK Supertrend remains point-for-point identical to SuperTrend 10/3", () => {
+  const results = calculateIndicators(history(), "1w", { asset: "btc" });
   const standard = results.find(item => item.id === "supertrend")!;
   const kk = results.find(item => item.id === "kk_supertrend")!;
   assert.deepEqual(kk.states, standard.states);
@@ -216,8 +216,8 @@ test("BTC KK Supertrend is point-for-point identical to SuperTrend 10/3", () => 
   assert.deepEqual(kk.values, standard.values);
 });
 
-test("daily DOGE, LINK, XMR, and SUI KK Supertrend use the explicit uncalibrated SuperTrend 10/3 preset", () => {
-  for (const asset of ["doge", "link", "xmr", "sui"] as const) {
+test("unresolved daily SUI and OP retain the uncalibrated SuperTrend 10/3 preset", () => {
+  for (const asset of ["sui", "op"] as const) {
     const results = calculateIndicators(history(), "1d", { asset });
     const standard = results.find(item => item.id === "supertrend")!;
     const kk = results.find(item => item.id === "kk_supertrend")!;
@@ -258,7 +258,7 @@ test("KK Supertrend is included in every asset backtest and cost-sensitivity pat
     assert.ok(costs[0].totalReturn >= costs[1].totalReturn && costs[1].totalReturn >= costs[2].totalReturn, asset);
     assert.equal(costs[0].turnover, costs[1].turnover, asset);
     assert.equal(costs[1].turnover, costs[2].turnover, asset);
-    if (asset === "btc") {
+    if (asset === "sui" || asset === "op") {
       const standard = backtest(candles, snapshots, "1d", 15).find(item => item.indicatorId === "supertrend")!;
       assert.deepEqual({ ...costs[1], indicatorId: standard.indicatorId, displayName: standard.displayName }, standard);
     }

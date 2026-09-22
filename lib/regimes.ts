@@ -52,42 +52,42 @@ export const KK_SUPERTREND_FACTORS = { btc: 3, eth: 2, sol: 2, doge: 3, link: 3,
 export const KK_SUPERTREND_EQUITY_FACTOR = 3;
 export const KK_SUPERTREND_PRESETS = {
   avax: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  bnb: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  zec: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  btc: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
-  eth: { "1d": { atrLength: 10, factor: 2 }, "1w": { atrLength: 10, factor: 2 } },
-  sol: { "1d": { atrLength: 10, factor: 2 }, "1w": { atrLength: 10, factor: 2 } },
-  doge: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  link: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  xmr: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  bnb: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
+  zec: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  btc: { "1d": { atrLength: 15, factor: 2 }, "1w": { atrLength: 10, factor: 3 } },
+  eth: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 10, factor: 2 } },
+  sol: { "1d": { atrLength: 15, factor: 2 }, "1w": { atrLength: 10, factor: 2 } },
+  doge: { "1d": { atrLength: 15, factor: 5 }, "1w": { atrLength: 15, factor: 2 } },
+  link: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
+  xmr: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
   sui: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  jup: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  jup: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
   op: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  bonk: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  ada: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  atom: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  hype: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  dot: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  bonk: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  ada: { "1d": { atrLength: 15, factor: 5 }, "1w": { atrLength: 15, factor: 2 } },
+  atom: { "1d": { atrLength: 15, factor: 5 }, "1w": { atrLength: 15, factor: 2 } },
+  hype: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
+  dot: { "1d": { atrLength: 15, factor: 5 }, "1w": { atrLength: 15, factor: 2 } },
 } as const satisfies Record<AssetId, Record<Timeframe, { atrLength: number; factor: number }>>;
 
 export const KK_SUPERTREND_STOCK_PRESETS = {
   mstr: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  tsla: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  googl: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  nvda: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  mu: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  sndk: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  // The daily SPCX screenshot has a separate 3/5 confirmation mechanism.
-  // ATR/factor alone do not reproduce it, so neither timeframe is calibrated.
-  spcx: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
-  bmnr: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  tsla: { "1d": { atrLength: 30, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
+  googl: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  nvda: { "1d": { atrLength: 30, factor: 2 }, "1w": { atrLength: 15, factor: 2 } },
+  mu: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  sndk: { "1d": { atrLength: 30, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
+  // Daily is an approximate grouped fit; confirmation behavior is unresolved.
+  // Weekly remains uncalibrated.
+  spcx: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 10, factor: 3 } },
+  bmnr: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
 } as const satisfies Record<StockId, Record<Timeframe, { atrLength: number; factor: number }>>;
 
 // Approximate Yahoo-feed fits to September 9 weekly screenshots, not recovered
-// private formulas. Daily defaults remain uncalibrated; see archived evidence.
+// private formulas. Daily uses its own compact asset-class family.
 export const KK_SUPERTREND_COMMODITY_PRESETS = {
-  gold: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 2 } },
-  silver: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  gold: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 10, factor: 2 } },
+  silver: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
 } as const satisfies Record<CommodityId, Record<Timeframe, { atrLength: number; factor: number }>>;
 
 export const SUPER_GUPPY_R12_DEFAULTS: SuperGuppyConfig = {
@@ -223,7 +223,7 @@ export interface BacktestSummary {
 }
 
 const BASE_INDICATOR_SPECS: Array<Omit<IndicatorSpec, "guidance">> = [
-  { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { atr: KK_SUPERTREND_ATR_LENGTH, btcFactor: KK_SUPERTREND_FACTORS.btc, ethFactor: KK_SUPERTREND_FACTORS.eth, solFactor: KK_SUPERTREND_FACTORS.sol, dogeDailyAtr: 10, dogeDailyFactor: 3, dogeWeeklyAtr: 15, dogeWeeklyFactor: 2, linkDailyAtr: 10, linkDailyFactor: 3, linkWeeklyAtr: 15, linkWeeklyFactor: 2, xmrDailyAtr: 10, xmrDailyFactor: 3, xmrWeeklyAtr: 15, xmrWeeklyFactor: 2, suiDailyAtr: 10, suiDailyFactor: 3, suiWeeklyAtr: 15, suiWeeklyFactor: 2 }, thresholdKind: "provisional", description: "A SuperTrend variation with fixed screenshot-calibrated weekly presets: BTC ATR 10/factor 3, ETH and SOL ATR 10/factor 2, and the other eleven cryptos plus weekly TSLA/NVDA/GOOGL/MU/SNDK ATR 15/factor 2. Daily presets are unchanged; SpaceX is uncalibrated.", disclaimer: "KK Supertrend is a transparent preset built on the standard SuperTrend recurrence. Weekly crypto and five weekly stock presets are screenshot-calibrated, with archived reference checks. Daily stock and non-BTC/ETH/SOL crypto presets remain uncalibrated 10/3. SpaceX confirmation behavior is unresolved. It does not claim to reproduce a private or proprietary implementation.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
+  { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { dailyCryptoFamily: "15/2,15/3,15/4,15/5", dailyStockFamily: "15/3,15/4,30/2,30/4", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-09-22" }, thresholdKind: "provisional", description: "Asset- and timeframe-specific SuperTrend presets. Daily crypto, stock and commodity families are independently grouped; weekly presets are unchanged.", disclaimer: "Daily presets are approximate screenshot fits constrained to small asset-class families, not recovered private formulas. SUI/OP remain unresolved; AVAX/MSTR lack daily references. Confirmation counters are not reproduced. Weekly reference checks remain separate. Venue and history differences can change the trail.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
   { id: "kk_ema_ribbon", displayName: "KK EMA Ribbon", shortName: "KK EMA Ribbon", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { lengths: "32/34/48/58", boundaries: "32/58", source: "Close", calibrationDate: "2026-09-14", colourRule: "provisional alignment" }, thresholdKind: "conditional", description: "Closing-price EMA 32/58 ribbon with hidden 34/48 averages: gold for full bullish alignment, purple for bearish alignment, grey otherwise.", disclaimer: "September 14, 2026 daily screenshot calibration: BTC/SOL boundaries match displayed rounding; ETH is a cross-feed approximation. The 34/48 colour rule is provisional. Weekly uses the same lengths in weeks and is uncalibrated. Other assets are uncalibrated; this does not claim to reproduce a private formula." },
   { id: "support_band", displayName: "20 SMA / 21 EMA Support Band", shortName: "Support Band", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { sma: 20, ema: 21 }, thresholdKind: "fixed", description: "Above both averages is bullish, below both is bearish, and between is neutral." },
   { id: "supertrend", displayName: "SuperTrend 10/3", shortName: "SuperTrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { atr: 10, factor: 3 }, thresholdKind: "provisional", description: "A transparent ATR trailing regime line with close-based reversals.", disclaimer: "A transparent alternative commonly compared with private one-line systems; not a MoneyLine clone.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
@@ -274,7 +274,7 @@ const INDICATOR_GUIDANCE: Record<string, IndicatorGuidance> = {
     neutral: { label: "No neutral state", rule: "Retain the prior regime until a completed close confirms a reversal; an unfinished daily or weekly candle remains provisional." },
     negative: { label: "Bearish reversal / exit", rule: "A completed close below the active lower band reverses the preset bearish; the long/cash backtest moves risk-off at the next open." },
     rationale: "Wilder ATR adapts the trail to current volatility. Supplied weekly references fit 10/3 for BTC, 10/2 for ETH and SOL, and the slower-smoothed 15/2 preset for the other eleven cryptos and five weekly stock references. This is not an automatic market-cap rule.",
-    caveats: ["The calibration is fixed by asset and, for DOGE/LINK/XMR/SUI, timeframe rather than optimized for backtest performance; venue candles can still produce small line and flip differences.", "Shorter ATR lengths react faster to new volatility; smaller factors pull the trail closer and can cause earlier but more frequent reversals."],
+    caveats: ["Presets are fixed by asset class, asset and timeframe, not optimized for backtest returns. Daily families accept approximate screenshot fits; confirmation counters remain unresolved. Venue candles can produce different lines and flips.", "Shorter ATR lengths react faster to new volatility; smaller factors pull the trail closer and can cause earlier but more frequent reversals."],
   },
   smma_ribbon: {
     summary: "Use full SMMA stacking as the signal; crossings and tangles are deliberately neutral.",

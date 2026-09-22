@@ -1,0 +1,1257 @@
+[
+  {
+    "asset": "btc",
+    "source": "bitstamp",
+    "time": "9.48",
+    "target": 76922,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 9.48 PM.jpeg",
+    "imageSha256": "b35332316d7bf058684707217a73a79b44541b7d0610af5df4f6beaeb9960b5b",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 5513,
+    "through": "2026-09-20",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 76824.67572899535,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -0.1265233236325769
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 74552.80859349303,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -3.079991948346339
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 76868.64369923831,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -0.06936416208846996
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 74618.76054885745,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -2.9942532060302063
+      }
+    ]
+  },
+  {
+    "asset": "eth",
+    "source": "bitstamp",
+    "time": "9.50",
+    "target": 2275.9,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 9.50 PM.jpeg",
+    "imageSha256": "ad161f33d943aadd1e59c4a498bd1937d11a363a5f1606c09af6d54d418c095a",
+    "previous": {
+      "atrLength": 10,
+      "factor": 2
+    },
+    "candles": 3323,
+    "through": "2026-09-20",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 2425.9704495135734,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 6.593894701593794
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 2321.38567427036,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 1.9985796507034692
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 2432.7467899082503,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 6.89163802927415
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 2331.5501848623753,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 2.445194642223969
+      }
+    ]
+  },
+  {
+    "asset": "sol",
+    "source": "coinbase",
+    "time": "9.53",
+    "target": 101.04,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 9.53 PM.jpeg",
+    "imageSha256": "9d79abf4f0aa19eb406266858e534b64b3b9d905e47daf6067e920c1388eea7b",
+    "previous": {
+      "atrLength": 10,
+      "factor": 2
+    },
+    "candles": 1922,
+    "through": "2026-09-20",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 101.44671856262352,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 0.40253222745794126
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 96.04007784393526,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -4.94845819087959
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 101.93435523697795,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 0.8851496803027992
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 96.77153285546693,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -4.224532011612303
+      }
+    ]
+  },
+  {
+    "asset": "doge",
+    "source": "coinbase",
+    "time": "9.56",
+    "target": 0.06573,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 9.56 PM.jpeg",
+    "imageSha256": "b3de5fcdfabd860f0f4b26d1c4eded777b06bd561c542b12c51782895e2895a8",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 1936,
+    "through": "2026-09-20",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 0.08054128646421345,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 22.533525732866956
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 0.07517118222993997,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 14.363581667336046
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 0.08243409853287582,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 25.41320330575967
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 0.07683973794602615,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 16.902081159327786
+      }
+    ]
+  },
+  {
+    "asset": "link",
+    "source": "coinbase",
+    "time": "9.57",
+    "target": 10.751,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 9.57 PM.jpeg",
+    "imageSha256": "4dc643d6d1db90296bfc56d5b67d58b02f99c9c64e15833b53ba76605049ac59",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 2643,
+    "through": "2026-09-20",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 12.180479617711903,
+        "state": "bear",
+        "count": 3,
+        "errorPct": 13.296247955649743
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 10.936805511415905,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 1.7282625933950913
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 12.145542902495933,
+        "state": "bear",
+        "count": 3,
+        "errorPct": 12.971285485033324
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 11.130608975816962,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 3.5309178291969445
+      }
+    ]
+  },
+  {
+    "asset": "xmr",
+    "source": "kraken",
+    "time": "9.59",
+    "target": 450.51,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 9.59 PM.jpeg",
+    "imageSha256": "eb57d7c9bbb0972715cb21f5119e79af59c1c714d300674cc4259c990d409bf4",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 720,
+    "through": "2026-09-20",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 486.1250251138242,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 7.905490469428922
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 448.9575376707363,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -0.3446010808336508
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 490.82759611107383,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 8.949323236126583
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 456.0113941666108,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 1.2211480692128518
+      }
+    ]
+  },
+  {
+    "asset": "sui",
+    "source": "coinbase",
+    "time": "10.01",
+    "target": 0.7885,
+    "state": "bear",
+    "pending": 4,
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.01 PM.jpeg",
+    "imageSha256": "c2a27253c280cf49b616007fb939b98e1366e95239d2fdd349635aefccb957ec",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 1222,
+    "through": "2026-09-20",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 0.7445630405804534,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -5.572220598547439
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 0.6879550676340889,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -12.751418182106677
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 0.752278325366565,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -4.5937444050012655
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 0.6967924880498475,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -11.630629289810079
+      }
+    ]
+  },
+  {
+    "asset": "jup",
+    "source": "bitstamp",
+    "time": "10.06",
+    "target": 0.23513,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.06 PM.jpeg",
+    "imageSha256": "4d804ca228071a7a2d24c8a762b8fcc1933eda4fc4b624753a71efb3a965f2c7",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 860,
+    "through": "2026-09-20",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 0.24640900040999958,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 4.796921026665912
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 0.22812225061499933,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -2.9803722983033576
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 0.24960049766814502,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 6.15425410119721
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 0.23290949650221748,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -0.9443726865064117
+      }
+    ]
+  },
+  {
+    "asset": "op",
+    "source": "bitstamp",
+    "time": "10.08",
+    "target": 0.104231,
+    "state": "bear",
+    "pending": 4,
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.08 PM.jpeg",
+    "imageSha256": "4981c1ee149a0a7a387e3a9ecda7f53bafa374a4b2783ce46456e06519f11c81",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 657,
+    "through": "2026-09-20",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 0.10658747337457987,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 2.2608181583021025
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 0.0968667100618698,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -7.065354777494415
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 0.1082515498382226,
+        "state": "bear",
+        "count": 3,
+        "errorPct": 3.857345548083191
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 0.09924302469377305,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -4.7855007687031215
+      }
+    ]
+  },
+  {
+    "asset": "bonk",
+    "source": "coinbase",
+    "time": "10.12",
+    "target": 0.00000322,
+    "state": "bear",
+    "pending": 1,
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.12 PM.jpeg",
+    "imageSha256": "a8f402d0cd6e0232f1434582a9eb90044ba3f76fbd154991247b8e3f67bae722",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 1012,
+    "through": "2026-09-20",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 0.000003033461933317089,
+        "state": "bear",
+        "count": 0,
+        "errorPct": -5.793107660959973
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 0.000002576014674131457,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -19.999544281631778
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 0.0000030497251839823712,
+        "state": "bear",
+        "count": 0,
+        "errorPct": -5.288037764522635
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 0.000002615877453462442,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -18.761569768247142
+      }
+    ]
+  },
+  {
+    "asset": "ada",
+    "source": "coinbase",
+    "time": "10.14",
+    "target": 0.16664,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.14 PM.jpeg",
+    "imageSha256": "d719978bd6d8fe09dba52673c1bf1aff39d47b059f6447a66a18d4f120077db9",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 2013,
+    "through": "2026-09-20",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 0.200703464724342,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 20.441349450517276
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 0.18705519708651303,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 12.25107842445572
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 0.21910092829430705,
+        "state": "bear",
+        "count": 3,
+        "errorPct": 31.48159403162929
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 0.18984664148793584,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 13.926213086855398
+      }
+    ]
+  },
+  {
+    "asset": "atom",
+    "source": "kraken",
+    "time": "10.15",
+    "target": 1.4559,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.15 PM.jpeg",
+    "imageSha256": "ca0a8a025e2a44a0928bf69e7a010259dba887c47ca953cd5f4d196daa70829d",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 720,
+    "through": "2026-09-20",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 1.6988672737037531,
+        "state": "bear",
+        "count": 3,
+        "errorPct": 16.6884589397454
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 1.8399183195000668,
+        "state": "bear",
+        "count": 0,
+        "errorPct": 26.376696167323765
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 1.68967934169717,
+        "state": "bear",
+        "count": 3,
+        "errorPct": 16.057376309991756
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 1.7869440125457552,
+        "state": "bear",
+        "count": 0,
+        "errorPct": 22.738101005958878
+      }
+    ]
+  },
+  {
+    "asset": "hype",
+    "source": "coinbase",
+    "time": "10.17",
+    "target": 71.48,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.17 PM.jpeg",
+    "imageSha256": "3d004725061767b33c4736c9d7689d77f524ea4268bf57c5da0df01dff12cb6c",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 228,
+    "through": "2026-09-20",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 82.631444219452,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 15.600789338908783
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 77.58966632917802,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 8.547378748150546
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 82.96513197400965,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 16.067616080035883
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 78.09019796101447,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 9.247618859841156
+      }
+    ]
+  },
+  {
+    "asset": "dot",
+    "source": "coinbase",
+    "time": "10.19",
+    "target": 0.7976,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.19 PM.jpeg",
+    "imageSha256": "1d15faf2bf5591a021488b965a2012eebf60398c491c53347bdcb7de6a01834c",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 1923,
+    "through": "2026-09-20",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 1.0054267494108222,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 26.056513216000777
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 0.9256651241162333,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 16.056309442857742
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 1.1254870876737302,
+        "state": "bear",
+        "count": 1,
+        "errorPct": 41.10921360001634
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 0.9597129782203211,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 20.325097570250893
+      }
+    ]
+  },
+  {
+    "asset": "bnb",
+    "source": "binance",
+    "time": "10.21",
+    "target": 677.44,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.21 PM.jpeg",
+    "imageSha256": "22ec437822504f581bd5ec9fedab417669b27f72a2408a76ac6286b621543049",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 1000,
+    "through": "2026-09-20",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 718.1615111720627,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 6.01108750178061
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 694.537266758094,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 2.5238053197469856
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 718.8727212558281,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 6.116072457461619
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 695.6040818837421,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 2.681282753268488
+      }
+    ]
+  },
+  {
+    "asset": "zec",
+    "source": "coinbase",
+    "time": "10.23",
+    "target": 1206.85,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.23 PM.jpeg",
+    "imageSha256": "d200c895489a58b8e151ebcf571654d819f01c12fef3d45e0a78b30bfe93e4cb",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 2113,
+    "through": "2026-09-20",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 1253.7951881004124,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 3.8898941956674316
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 1116.2502821506187,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -7.507123325134135
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 1284.9599806616711,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 6.472219469003715
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 1162.9974709925066,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -3.6336354151297434
+      }
+    ]
+  },
+  {
+    "asset": "tsla",
+    "source": "yahoo",
+    "time": "10.25",
+    "target": 290.35,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.25 PM.jpeg",
+    "imageSha256": "c64d9cc5777bc96ceef29465125ccbd282afa7c006a29b99d8496e38128d0a43",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 2945,
+    "through": "2026-09-18",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 345.48438678630214,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 18.988939826520436
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 329.16853969420873,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 13.369567657726433
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 345.89724660081265,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 19.13113366654473
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 328.15771251296474,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 13.021426730829933
+      }
+    ]
+  },
+  {
+    "asset": "googl",
+    "source": "yahoo",
+    "time": "10.27",
+    "target": 370.44,
+    "state": "bear",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.27 PM.jpeg",
+    "imageSha256": "0faab05716aeea52a1175cdb3da41031d6c71d2c4e4ac2b093cdf0a9955e9fd8",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 2945,
+    "through": "2026-09-18",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 337.3852064157955,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -8.923116721791525
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 353.0335037302347,
+        "state": "bear",
+        "count": 0,
+        "errorPct": -4.698870605162853
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 337.04237958568984,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -9.015662567301085
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 328.59106571642536,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -11.29708840394521
+      }
+    ]
+  },
+  {
+    "asset": "nvda",
+    "source": "yahoo",
+    "time": "10.28",
+    "target": 225.58,
+    "state": "bear",
+    "pending": 1,
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.28 PM.jpeg",
+    "imageSha256": "e5e1301acd3f896298dbacab45963dfce83ba746c3ff19fa829ef6faaea00b70",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 2945,
+    "through": "2026-09-18",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 217.25050464715338,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -3.6924795428879498
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 209.77825712331793,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -7.004939656300246
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 217.46150835022004,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -3.5989412402606447
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 210.09476267791794,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -6.864632202359278
+      }
+    ]
+  },
+  {
+    "asset": "spcx",
+    "source": "yahoo",
+    "time": "10.30",
+    "target": 115.88,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.30 PM.jpeg",
+    "imageSha256": "dfeab0c85cdffa76a6b1c7d9f51843a560365bedd0b640505a58bb6bbabd1d0c",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 68,
+    "through": "2026-09-18",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 140.3164265221149,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 21.087699794714275
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 133.09963978317234,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 14.859889353790411
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 139.33053224647173,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 20.23691080986516
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 131.6207983697076,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 13.583705876516738
+      }
+    ]
+  },
+  {
+    "asset": "mu",
+    "source": "yahoo",
+    "time": "10.31",
+    "target": 987.92,
+    "state": "bear",
+    "pending": 2,
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.31 PM.jpeg",
+    "imageSha256": "8c736906d31e6521e7cb19014047eee189107c36f016a9de342543ccb2aa6ec6",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 2945,
+    "through": "2026-09-18",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 905.1915162073833,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -8.374006376287213
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 1065.380177641492,
+        "state": "bear",
+        "count": 0,
+        "errorPct": 7.8407338288011275
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 896.9808074099315,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -9.205117073251735
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 1068.67361382263,
+        "state": "bear",
+        "count": 0,
+        "errorPct": 8.174104565413188
+      }
+    ]
+  },
+  {
+    "asset": "sndk",
+    "source": "yahoo",
+    "time": "10.33",
+    "target": 1205.8,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.33 PM.jpeg",
+    "imageSha256": "78829d457b1f98b072deb832ca35acc1660b9e1d29c6f902dcadf86653d86462",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 401,
+    "through": "2026-09-18",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 1542.6096885880827,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 27.93246712457147
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 1633.4232070610105,
+        "state": "bear",
+        "count": 1,
+        "errorPct": 35.46385860515928
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 1518.1727342247145,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 25.90584957909392
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 1634.1723098970551,
+        "state": "bear",
+        "count": 1,
+        "errorPct": 35.52598357082892
+      }
+    ]
+  },
+  {
+    "asset": "bmnr",
+    "source": "yahoo",
+    "time": "10.34",
+    "target": 21.51,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.34 PM.jpeg",
+    "imageSha256": "86b893f4b0024fbeff51a8dfdf7bda5f448c9e96dfea7461fbfa627dc131aee9",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 324,
+    "through": "2026-09-18",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 23.10664763632697,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 7.422815603565636
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 21.656221607078344,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 0.6797843192856368
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 23.277372356759706,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 8.216514908227346
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 21.912308687727446,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 1.8703332762782132
+      }
+    ]
+  },
+  {
+    "asset": "gold",
+    "source": "yahoo",
+    "time": "10.35",
+    "target": 4316.7,
+    "state": "bull",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.35 PM.jpeg",
+    "imageSha256": "f9e513c82907bdf9a4430165ae3d79def5e4f4fcf89d9fdaf3d93f840d9a2b1b",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 1942,
+    "through": "2026-09-18",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 4546.694967478902,
+        "state": "bear",
+        "count": 0,
+        "errorPct": 5.328027601614704
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 4395.53283765083,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 1.8262292411061587
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 4546.306980836418,
+        "state": "bear",
+        "count": 0,
+        "errorPct": 5.319039563472527
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 4397.68469278875,
+        "state": "bull",
+        "count": 0,
+        "errorPct": 1.8760787821426206
+      }
+    ]
+  },
+  {
+    "asset": "silver",
+    "source": "yahoo",
+    "time": "10.37",
+    "target": 71.286,
+    "state": "bear",
+    "timeframe": "1d",
+    "filename": "Image 21-9-26 at 10.37 PM.jpeg",
+    "imageSha256": "5ad3b661393a3c53204a6e8cd0f274831214a5a54d8ea00566ad2f2044ac75e5",
+    "previous": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "candles": 1941,
+    "through": "2026-09-18",
+    "candidates": [
+      {
+        "n": 10,
+        "f": 2,
+        "value": 67.63719261726806,
+        "state": "bear",
+        "count": 0,
+        "errorPct": -5.118546955547998
+      },
+      {
+        "n": 10,
+        "f": 3,
+        "value": 64.43965977518567,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -9.60404599053717
+      },
+      {
+        "n": 15,
+        "f": 2,
+        "value": 67.70908113976428,
+        "state": "bear",
+        "count": 0,
+        "errorPct": -5.01770173699706
+      },
+      {
+        "n": 15,
+        "f": 3,
+        "value": 64.33111093088736,
+        "state": "bull",
+        "count": 0,
+        "errorPct": -9.756318308100663
+      }
+    ]
+  }
+]

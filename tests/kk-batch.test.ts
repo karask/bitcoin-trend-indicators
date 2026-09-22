@@ -19,7 +19,7 @@ test("TSLA.jpeg weekly reference confirms the existing KK 15/2 preset without ch
   assert.equal(kk.state, "bear");
   assert.equal(kk.bullTrigger!.toFixed(2), "383.88");
   assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.tsla["1w"], { atrLength: 15, factor: 2 });
-  assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.tsla["1d"], { atrLength: 10, factor: 3 });
+  assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.tsla["1d"], { atrLength: 30, factor: 4 });
   assert.ok(candles.at(-1)!.time < Date.UTC(2026, 8, 7));
 });
 
@@ -35,7 +35,7 @@ test("September reference audit reproduces nineteen resolved charts within docum
       if(i)assert.equal(candles[i].time-candles[i-1].time,7*86_400_000);
       assert.ok(candles[i].time<Date.UTC(2026,8,7),"No partial screenshot candle in confirmed fixtures");
     }
-    const result=calculateIndicators(candles,row.timeframe,{...optionsFor(row.asset),indicatorIds:["kk_supertrend"]})[0];
+    const result=calculateIndicators(candles,row.timeframe,{...optionsFor(row.asset),indicatorIds:["kk_supertrend"],...(row.timeframe==="1d"?{kkSupertrendAtrLength:row.preset.atrLength,kkSupertrendFactor:row.preset.factor}:{})})[0];
     assert.equal(result.values.supertrend,row.value,row.asset);
     assert.equal(result.lastFlip,row.lastFlip,row.asset);
     assert.equal(result.state,row.state,row.asset);
@@ -48,15 +48,15 @@ test("September reference audit reproduces nineteen resolved charts within docum
   }
 });
 
-test("calibration changes KK only, preserves daily defaults and keeps stock identity outside crypto",()=>{
+test("calibration changes KK only and keeps stock identity outside crypto",()=>{
   for(const fixture of fixtures) {
     const candles=candlesFor(fixture), options=optionsFor(fixture.asset);
     const previous=KK_BATCH_EVIDENCE.find(r=>r.asset===fixture.asset)!.previous;
     const before=calculateIndicators(candles,fixture.timeframe,{...options,kkSupertrendAtrLength:previous.atrLength,kkSupertrendFactor:previous.factor});
     const after=calculateIndicators(candles,fixture.timeframe,options);
     assert.deepEqual(after.filter(r=>r.id!=="kk_supertrend"),before.filter(r=>r.id!=="kk_supertrend"),fixture.asset);
-    const day=calculateIndicators(candles,"1d",options);
-    if(!["eth","sol"].includes(fixture.asset)) {
+    const day=calculateIndicators(candles,"1d",{...options,kkSupertrendAtrLength:10,kkSupertrendFactor:3});
+    {
       const kk=day.find(r=>r.id==="kk_supertrend")!, st=day.find(r=>r.id==="supertrend")!;
       assert.deepEqual(kk.states,st.states,fixture.asset);
       assert.equal(kk.values.supertrend,st.values.supertrend,fixture.asset);
@@ -64,8 +64,8 @@ test("calibration changes KK only, preserves daily defaults and keeps stock iden
   }
   for(const stock of STOCKS) assert.ok(!ASSETS.some(asset=>String(asset.id)===stock.id));
   for(const stock of STOCKS.filter(s=>["tsla","nvda","googl","mu","sndk"].includes(s.id))) assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS[stock.id]["1w"],{atrLength:15,factor:2});
-  assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.spcx,{"1d":{atrLength:10,factor:3},"1w":{atrLength:10,factor:3}});
-  assert.match(calibrationStatus(undefined,"1d","spcx"),/Uncalibrated/);
+  assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.spcx,{"1d":{atrLength:15,factor:4},"1w":{atrLength:10,factor:3}});
+  assert.match(calibrationStatus(undefined,"1d","spcx"),/Approximate daily/);
   assert.deepEqual(KK_SUPERTREND_PRESETS.btc["1w"],{atrLength:10,factor:3});
   for(const asset of ["eth","sol"] as const) assert.deepEqual(KK_SUPERTREND_PRESETS[asset]["1w"],{atrLength:10,factor:2});
 });

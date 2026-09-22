@@ -167,8 +167,8 @@ test("signal timestamps distinguish session closes from subsequent opens includi
 
 test("every archived KK reference passes without changing any preset", () => {
   for (const reference of KK_REFERENCES) assert.equal(evaluateReference(reference).matched, true, reference.id);
-  assert.match(calibrationStatus("sui", "1d"), /Uncalibrated/);
-  assert.match(calibrationStatus("sol", "1d"), /Inherited/);
+  assert.match(calibrationStatus("sui", "1d"), /calibration unresolved/);
+  assert.match(calibrationStatus("sol", "1d"), /Approximate daily/);
   assert.match(calibrationStatus(undefined, "1w"), /Uncalibrated equity/);
   assert.match(calibrationStatus("btc", "1w"), /Weekly screenshot checked/);
 });
