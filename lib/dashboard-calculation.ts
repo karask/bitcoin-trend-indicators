@@ -19,6 +19,7 @@ function flips(candles: Candle[], states: SignalSnapshot["states"]) {
 function nextCondition(signal: SignalSnapshot, denomination: string): string {
   const format = (value: number) => formatPrice(value, denomination);
   if (signal.readiness?.ready === false) return "Insufficient history";
+  if (signal.confirmation) return signal.confirmation.pending ? `${signal.confirmation.pending === "bull" ? "Bullish" : "Bearish"} ${signal.confirmation.count}/5 pending` : "5 consecutive daily confirmations";
   if (signal.thresholdKind === "conditional") return "Conditional";
   if (signal.state === "bull" && signal.bearTrigger != null) return `Below ${format(signal.bearTrigger)}`;
   if (signal.state === "bear" && signal.bullTrigger != null) return `Above ${format(signal.bullTrigger)}`;
@@ -36,6 +37,7 @@ function slimMatrix(signal: SignalSnapshot, candles: Candle[], denomination: str
     family: signal.family,
     state: signal.readiness?.ready === false ? null : signal.state,
     readiness: signal.readiness,
+    confirmation: signal.confirmation,
     previousState: signal.previousState,
     lastFlip: signal.lastFlip,
     thresholdKind: signal.thresholdKind,

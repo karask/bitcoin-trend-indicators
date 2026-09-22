@@ -1,0 +1,1441 @@
+[
+  {
+    "asset": "btc",
+    "source": "bitstamp",
+    "target": 76922,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 2
+    },
+    "value": 76868.64369923831,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": -0.06936416208846996,
+    "previousFlips": 203,
+    "confirmedFlips": 183,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 76868.64369923831,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -0.06936416208846996
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 74618.76054885745,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -2.9942532060302063
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 72368.8773984766,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -5.91914224997192
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 70118.99424809575,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -8.844031293913634
+      }
+    ]
+  },
+  {
+    "asset": "eth",
+    "source": "bitstamp",
+    "target": 2275.9,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 4
+    },
+    "value": 2230.3535798165003,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": -2.0012487448262117,
+    "previousFlips": 43,
+    "confirmedFlips": 43,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 2432.7467899082503,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 6.89163802927415
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 2331.5501848623753,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 2.445194642223969
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 2230.3535798165003,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -2.0012487448262117
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 2129.1569747706258,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -6.44769213187637
+      }
+    ]
+  },
+  {
+    "asset": "sol",
+    "source": "coinbase",
+    "target": 101.04,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 2
+    },
+    "value": 101.93435523697795,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": 0.8851496803027992,
+    "previousFlips": 77,
+    "confirmedFlips": 71,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 101.93435523697795,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 0.8851496803027992
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 96.77153285546693,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -4.224532011612303
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 91.60871047395591,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -9.334213703527416
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 86.44588809244489,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -14.443895395442519
+      }
+    ]
+  },
+  {
+    "asset": "doge",
+    "source": "coinbase",
+    "target": 0.06573,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 5
+    },
+    "value": 0.06996640522827885,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": 6.445162373769753,
+    "previousFlips": 21,
+    "confirmedFlips": 21,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 0.0886356291905889,
+        "state": "bear",
+        "count": 0,
+        "pending": null,
+        "errorPct": 34.84805901504473
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 0.07815158692783614,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 18.897895828139568
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 0.07364878257044818,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 12.047440393196695
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 0.06996640522827885,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 6.445162373769753
+      }
+    ]
+  },
+  {
+    "asset": "link",
+    "source": "coinbase",
+    "target": 10.751,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 4
+    },
+    "value": 10.458645301089284,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": -2.7193256339941962,
+    "previousFlips": 43,
+    "confirmedFlips": 41,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 11.139890155718861,
+        "state": "bear",
+        "count": 3,
+        "pending": "bull",
+        "errorPct": 3.6172463558632906
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 12.7980643537439,
+        "state": "bear",
+        "count": 0,
+        "pending": null,
+        "errorPct": 19.0406878778151
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 10.458645301089284,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -2.7193256339941962
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 9.786681626361604,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -8.969569097185337
+      }
+    ]
+  },
+  {
+    "asset": "xmr",
+    "source": "kraken",
+    "target": 450.51,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 3
+    },
+    "value": 456.0113941666108,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": 1.2211480692128518,
+    "previousFlips": 11,
+    "confirmedFlips": 11,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 490.82759611107383,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 8.949323236126583
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 456.0113941666108,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 1.2211480692128518
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 421.1951922221477,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -6.5070270977009015
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 386.3789902776846,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -14.235202264614644
+      }
+    ]
+  },
+  {
+    "asset": "sui",
+    "source": "coinbase",
+    "target": 0.7885,
+    "targetState": "bear",
+    "targetCount": 4,
+    "preset": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "value": 0.6879550676340889,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": -12.751418182106677,
+    "previousFlips": 27,
+    "confirmedFlips": 25,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 0.752278325366565,
+        "state": "bear",
+        "count": 3,
+        "pending": "bull",
+        "errorPct": -4.5937444050012655
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 0.6967924880498475,
+        "state": "bear",
+        "count": 2,
+        "pending": "bull",
+        "errorPct": -11.630629289810079
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 0.6785031449232974,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -13.950140149233048
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 0.6325539311541218,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -19.777561045767676
+      }
+    ]
+  },
+  {
+    "asset": "jup",
+    "source": "bitstamp",
+    "target": 0.23513,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 3
+    },
+    "value": 0.23290949650221748,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": -0.9443726865064117,
+    "previousFlips": 29,
+    "confirmedFlips": 25,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 0.24960049766814502,
+        "state": "bear",
+        "count": 3,
+        "pending": "bull",
+        "errorPct": 6.15425410119721
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 0.23290949650221748,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -0.9443726865064117
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 0.21621849533629,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -8.04299947421001
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 0.19952749417036247,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -15.141626261913633
+      }
+    ]
+  },
+  {
+    "asset": "op",
+    "source": "bitstamp",
+    "target": 0.104231,
+    "targetState": "bear",
+    "targetCount": 4,
+    "preset": {
+      "atrLength": 10,
+      "factor": 3
+    },
+    "value": 0.0968667100618698,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": -7.065354777494415,
+    "previousFlips": 21,
+    "confirmedFlips": 17,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 0.10817168312918203,
+        "state": "bear",
+        "count": 3,
+        "pending": "bull",
+        "errorPct": 3.7807208308296314
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 0.09924302469377305,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -4.7855007687031215
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 0.09031436625836406,
+        "state": "bear",
+        "count": 3,
+        "pending": "bull",
+        "errorPct": -13.351722368235885
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 0.08138570782295508,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -21.91794396776863
+      }
+    ]
+  },
+  {
+    "asset": "bonk",
+    "source": "coinbase",
+    "target": 0.00000322,
+    "targetState": "bear",
+    "targetCount": 1,
+    "preset": {
+      "atrLength": 15,
+      "factor": 3
+    },
+    "value": 0.0000032920877759735572,
+    "state": "bear",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": 2.238750806632206,
+    "previousFlips": 22,
+    "confirmedFlips": 22,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 0.000002566746398563666,
+        "state": "bear",
+        "count": 3,
+        "pending": "bull",
+        "errorPct": -20.287378926594222
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 0.0000032920877759735572,
+        "state": "bear",
+        "count": 0,
+        "pending": null,
+        "errorPct": 2.238750806632206
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 0.0000023395032712832553,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -27.34461890424673
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 0.0000022283863262389496,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -30.795455706864928
+      }
+    ]
+  },
+  {
+    "asset": "ada",
+    "source": "coinbase",
+    "target": 0.16664,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 5
+    },
+    "value": 0.16123773581322642,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": -3.2418772124181428,
+    "previousFlips": 19,
+    "confirmedFlips": 19,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 0.2009516363734582,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 20.59027626827783
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 0.18984664148793584,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 13.926213086855398
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 0.17554218865058113,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 5.342167937218623
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 0.16123773581322642,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -3.2418772124181428
+      }
+    ]
+  },
+  {
+    "asset": "atom",
+    "source": "kraken",
+    "target": 1.4559,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 5
+    },
+    "value": 1.4373026783707918,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": -1.2773763053237297,
+    "previousFlips": 11,
+    "confirmedFlips": 11,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 1.524024810780138,
+        "state": "bear",
+        "count": 3,
+        "pending": "bull",
+        "errorPct": 4.679223214515971
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 1.7869440125457552,
+        "state": "bear",
+        "count": 0,
+        "pending": null,
+        "errorPct": 22.738101005958878
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 1.8842086833943403,
+        "state": "bear",
+        "count": 0,
+        "pending": null,
+        "errorPct": 29.418825701925975
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 1.4373026783707918,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -1.2773763053237297
+      }
+    ]
+  },
+  {
+    "asset": "hype",
+    "source": "coinbase",
+    "target": 71.48,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 4
+    },
+    "value": 73.21526394801928,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": 2.427621639646449,
+    "previousFlips": 3,
+    "confirmedFlips": 3,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 82.96513197400965,
+        "state": "bear",
+        "count": 3,
+        "pending": "bull",
+        "errorPct": 16.067616080035883
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 78.09019796101447,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 9.247618859841156
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 73.21526394801928,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 2.427621639646449
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 68.3403299350241,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -4.3923755805482685
+      }
+    ]
+  },
+  {
+    "asset": "dot",
+    "source": "coinbase",
+    "target": 0.7976,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 5
+    },
+    "value": 0.8228882970338682,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": 3.1705487755602224,
+    "previousFlips": 19,
+    "confirmedFlips": 17,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 0.9793100093106026,
+        "state": "bear",
+        "count": 3,
+        "pending": "bull",
+        "errorPct": 22.782097456193906
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 1.1815578194756378,
+        "state": "bear",
+        "count": 0,
+        "pending": null,
+        "errorPct": 48.1391448690619
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 0.8913006376270947,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 11.747823172905548
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 0.8228882970338682,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 3.1705487755602224
+      }
+    ]
+  },
+  {
+    "asset": "bnb",
+    "source": "binance",
+    "target": 677.44,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 4
+    },
+    "value": 672.3354425116561,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": -0.7535069509246539,
+    "previousFlips": 13,
+    "confirmedFlips": 13,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 718.8727212558281,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 6.116072457461619
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 695.6040818837421,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 2.681282753268488
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 672.3354425116561,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -0.7535069509246539
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 649.0668031395702,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -4.188296655117774
+      }
+    ]
+  },
+  {
+    "asset": "zec",
+    "source": "coinbase",
+    "target": 1206.85,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 3
+    },
+    "value": 1162.9974709925066,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": -3.6336354151297434,
+    "previousFlips": 49,
+    "confirmedFlips": 47,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 1284.9599806616711,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 6.472219469003715
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 1162.9974709925066,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -3.6336354151297434
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 1041.034961323342,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -13.739490299263203
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 919.0724516541776,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -23.84534518339664
+      }
+    ]
+  },
+  {
+    "asset": "tsla",
+    "source": "yahoo",
+    "target": 290.35,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 30,
+      "factor": 4
+    },
+    "value": 315.0537995056741,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": 8.508282936343736,
+    "previousFlips": 67,
+    "confirmedFlips": 67,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 331.3808659339338,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 14.131519178210361
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 316.864485267055,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 9.131904689875991
+      },
+      {
+        "atrLength": 30,
+        "factor": 2,
+        "value": 344.9919037201222,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 18.819322789778603
+      },
+      {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 315.0537995056741,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 8.508282936343736
+      }
+    ]
+  },
+  {
+    "asset": "googl",
+    "source": "yahoo",
+    "target": 370.44,
+    "targetState": "bear",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 3
+    },
+    "value": 354.7173320775427,
+    "state": "bear",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": -4.244322406451051,
+    "previousFlips": 88,
+    "confirmedFlips": 82,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 354.7173320775427,
+        "state": "bear",
+        "count": 0,
+        "pending": null,
+        "errorPct": -4.244322406451051
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 322.91007470347,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -12.830667664542162
+      },
+      {
+        "atrLength": 30,
+        "factor": 2,
+        "value": 335.64605332091105,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -9.392599794592638
+      },
+      {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 326.87749937510955,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -11.759664351822273
+      }
+    ]
+  },
+  {
+    "asset": "nvda",
+    "source": "yahoo",
+    "target": 225.58,
+    "targetState": "bear",
+    "targetCount": 1,
+    "preset": {
+      "atrLength": 30,
+      "factor": 2
+    },
+    "value": 225.0750303144508,
+    "state": "bear",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": -0.22385392568011753,
+    "previousFlips": 174,
+    "confirmedFlips": 128,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 210.09476267791794,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -6.864632202359278
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 202.72801700561587,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -10.130323164457911
+      },
+      {
+        "atrLength": 30,
+        "factor": 2,
+        "value": 225.0750303144508,
+        "state": "bear",
+        "count": 0,
+        "pending": null,
+        "errorPct": -0.22385392568011753
+      },
+      {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 203.12121246970594,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -9.95601894241248
+      }
+    ]
+  },
+  {
+    "asset": "spcx",
+    "source": "yahoo",
+    "target": 115.88,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 4
+    },
+    "value": 123.91106449294345,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": 6.930500943168316,
+    "previousFlips": 1,
+    "confirmedFlips": 1,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 131.6207983697076,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 13.583705876516738
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 123.91106449294345,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 6.930500943168316
+      },
+      {
+        "atrLength": 30,
+        "factor": 2,
+        "value": 136.09341670468535,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 17.44340412900014
+      },
+      {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 159.83984667628317,
+        "state": "bear",
+        "count": 0,
+        "pending": null,
+        "errorPct": 37.93566333818017
+      }
+    ]
+  },
+  {
+    "asset": "mu",
+    "source": "yahoo",
+    "target": 987.92,
+    "targetState": "bear",
+    "targetCount": 2,
+    "preset": {
+      "atrLength": 15,
+      "factor": 3
+    },
+    "value": 1043.1344860718873,
+    "state": "bear",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": 5.588963283655279,
+    "previousFlips": 102,
+    "confirmedFlips": 98,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 1043.1344860718873,
+        "state": "bear",
+        "count": 0,
+        "pending": null,
+        "errorPct": 5.588963283655279
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 1127.5659826498863,
+        "state": "bear",
+        "count": 0,
+        "pending": null,
+        "errorPct": 14.135353333254352
+      },
+      {
+        "atrLength": 30,
+        "factor": 2,
+        "value": 894.2537736352493,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -9.481154988739027
+      },
+      {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 1099.4638694612222,
+        "state": "bear",
+        "count": 0,
+        "pending": null,
+        "errorPct": 11.290779563246245
+      }
+    ]
+  },
+  {
+    "asset": "sndk",
+    "source": "yahoo",
+    "target": 1205.8,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 30,
+      "factor": 4
+    },
+    "value": 1205.552734240801,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": -0.020506365831718387,
+    "previousFlips": 7,
+    "confirmedFlips": 7,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 1393.4491037784778,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 15.56220797632093
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 1825.064737984485,
+        "state": "bear",
+        "count": 0,
+        "pending": null,
+        "errorPct": 51.35716851753897
+      },
+      {
+        "atrLength": 30,
+        "factor": 2,
+        "value": 1486.5863646789944,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 23.286313209404085
+      },
+      {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 1205.552734240801,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -0.020506365831718387
+      }
+    ]
+  },
+  {
+    "asset": "bmnr",
+    "source": "yahoo",
+    "target": 21.51,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 3
+    },
+    "value": 21.912308687727446,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": 1.8703332762782132,
+    "previousFlips": 9,
+    "confirmedFlips": 9,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 21.912308687727446,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 1.8703332762782132
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 20.54724501869519,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -4.475848355670909
+      },
+      {
+        "atrLength": 30,
+        "factor": 2,
+        "value": 22.69971134262759,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": 5.530968584972529
+      },
+      {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 20.817223676396807,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -3.2207174505029967
+      }
+    ]
+  },
+  {
+    "asset": "gold",
+    "source": "yahoo",
+    "target": 4316.7,
+    "targetState": "bull",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 4
+    },
+    "value": 4294.496257051667,
+    "state": "bull",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": -0.5143684515563351,
+    "previousFlips": 35,
+    "confirmedFlips": 33,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 4654.51039801244,
+        "state": "bear",
+        "count": 0,
+        "pending": null,
+        "errorPct": 7.82566307624899
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 4294.496257051667,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -0.5143684515563351
+      }
+    ]
+  },
+  {
+    "asset": "silver",
+    "source": "yahoo",
+    "target": 71.286,
+    "targetState": "bear",
+    "targetCount": null,
+    "preset": {
+      "atrLength": 15,
+      "factor": 3
+    },
+    "value": 68.82882158873511,
+    "state": "bear",
+    "confirmation": {
+      "required": 5,
+      "count": 0,
+      "pending": null
+    },
+    "errorPct": -3.446929847746949,
+    "previousFlips": 88,
+    "confirmedFlips": 74,
+    "candidates": [
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 68.82882158873511,
+        "state": "bear",
+        "count": 0,
+        "pending": null,
+        "errorPct": -3.446929847746949
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 62.63181428968575,
+        "state": "bull",
+        "count": 0,
+        "pending": null,
+        "errorPct": -12.140091617308101
+      }
+    ]
+  }
+]

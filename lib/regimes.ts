@@ -1,6 +1,7 @@
 import type { AssetId } from "./markets";
 import type { StockId } from "./stocks";
 import type { CommodityId } from "./commodities";
+import { confirmDailyRegimes, KK_DAILY_CONFIRMATIONS } from "./kk-confirmation.ts";
 
 export type RegimeState = "bull" | "bear" | "neutral";
 export type ThresholdKind = "fixed" | "provisional" | "conditional";
@@ -36,6 +37,8 @@ export interface IndicatorCalculationOptions {
   kkSupertrendAtrLength?: number;
   superGuppy?: Partial<SuperGuppyConfig>;
   indicatorIds?: string[];
+  /** Historical research reproduction only; production daily KK always uses five. */
+  kkSupertrendLegacySingleClose?: boolean;
 }
 
 export interface AnnualizationOptions {
@@ -77,7 +80,7 @@ export const KK_SUPERTREND_STOCK_PRESETS = {
   nvda: { "1d": { atrLength: 30, factor: 2 }, "1w": { atrLength: 15, factor: 2 } },
   mu: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
   sndk: { "1d": { atrLength: 30, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
-  // Daily is an approximate grouped fit; confirmation behavior is unresolved.
+  // Daily is an approximate grouped fit with five-close confirmation.
   // Weekly remains uncalibrated.
   spcx: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 10, factor: 3 } },
   bmnr: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
@@ -198,6 +201,7 @@ export interface SignalSnapshot {
   events: SignalEvent[];
   barColors: BarColorPoint[];
   states: Array<RegimeState | null>;
+  confirmation?: { required: number; count: number; pending: RegimeState | null };
   readiness?: { ready: boolean; availableCandles: number; requiredCandles: number; validStates: number };
 }
 
@@ -223,7 +227,7 @@ export interface BacktestSummary {
 }
 
 const BASE_INDICATOR_SPECS: Array<Omit<IndicatorSpec, "guidance">> = [
-  { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { dailyCryptoFamily: "15/2,15/3,15/4,15/5", dailyStockFamily: "15/3,15/4,30/2,30/4", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-09-22" }, thresholdKind: "provisional", description: "Asset- and timeframe-specific SuperTrend presets. Daily crypto, stock and commodity families are independently grouped; weekly presets are unchanged.", disclaimer: "Daily presets are approximate screenshot fits constrained to small asset-class families, not recovered private formulas. SUI/OP remain unresolved; AVAX/MSTR lack daily references. Confirmation counters are not reproduced. Weekly reference checks remain separate. Venue and history differences can change the trail.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
+  { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { dailyCryptoFamily: "15/2,15/3,15/4,15/5", dailyStockFamily: "15/3,15/4,30/2,30/4", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-09-22", dailyConfirmations: 5 }, thresholdKind: "provisional", description: "Asset- and timeframe-specific SuperTrend presets. Daily crypto, stock and commodity families are independently grouped; weekly presets are unchanged.", disclaimer: "Daily presets are approximate screenshot fits constrained to small asset-class families, not recovered private formulas. Both directions require five consecutive completed daily confirmations and reset on failure. The ATR trail continues during confirmation. SUI/OP and screenshot counter alignment remain unresolved; AVAX/MSTR lack daily references. Weekly reference checks remain separate. Venue and history differences can change the trail.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
   { id: "kk_ema_ribbon", displayName: "KK EMA Ribbon", shortName: "KK EMA Ribbon", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { lengths: "32/34/48/58", boundaries: "32/58", source: "Close", calibrationDate: "2026-09-14", colourRule: "provisional alignment" }, thresholdKind: "conditional", description: "Closing-price EMA 32/58 ribbon with hidden 34/48 averages: gold for full bullish alignment, purple for bearish alignment, grey otherwise.", disclaimer: "September 14, 2026 daily screenshot calibration: BTC/SOL boundaries match displayed rounding; ETH is a cross-feed approximation. The 34/48 colour rule is provisional. Weekly uses the same lengths in weeks and is uncalibrated. Other assets are uncalibrated; this does not claim to reproduce a private formula." },
   { id: "support_band", displayName: "20 SMA / 21 EMA Support Band", shortName: "Support Band", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { sma: 20, ema: 21 }, thresholdKind: "fixed", description: "Above both averages is bullish, below both is bearish, and between is neutral." },
   { id: "supertrend", displayName: "SuperTrend 10/3", shortName: "SuperTrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { atr: 10, factor: 3 }, thresholdKind: "provisional", description: "A transparent ATR trailing regime line with close-based reversals.", disclaimer: "A transparent alternative commonly compared with private one-line systems; not a MoneyLine clone.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
@@ -270,11 +274,11 @@ const INDICATOR_GUIDANCE: Record<string, IndicatorGuidance> = {
   },
   kk_supertrend: {
     summary: "Use the asset-calibrated ATR trail as a close-confirmed trend switch and trailing risk level.",
-    positive: { label: "Bullish reversal", rule: "A completed close above the active upper band reverses the preset bullish; its KK Supertrend line then trails below price." },
+    positive: { label: "Bullish reversal", rule: "Weekly reverses on a qualifying completed close. Daily requires five consecutive bullish confirmations; a failed confirmation resets the count." },
     neutral: { label: "No neutral state", rule: "Retain the prior regime until a completed close confirms a reversal; an unfinished daily or weekly candle remains provisional." },
-    negative: { label: "Bearish reversal / exit", rule: "A completed close below the active lower band reverses the preset bearish; the long/cash backtest moves risk-off at the next open." },
+    negative: { label: "Bearish reversal / exit", rule: "Weekly reverses on a qualifying completed close. Daily requires five consecutive bearish confirmations; the backtest moves risk-off at the next open after confirmation." },
     rationale: "Wilder ATR adapts the trail to current volatility. Supplied weekly references fit 10/3 for BTC, 10/2 for ETH and SOL, and the slower-smoothed 15/2 preset for the other eleven cryptos and five weekly stock references. This is not an automatic market-cap rule.",
-    caveats: ["Presets are fixed by asset class, asset and timeframe, not optimized for backtest returns. Daily families accept approximate screenshot fits; confirmation counters remain unresolved. Venue candles can produce different lines and flips.", "Shorter ATR lengths react faster to new volatility; smaller factors pull the trail closer and can cause earlier but more frequent reversals."],
+    caveats: ["Presets are fixed by asset class, asset and timeframe, not optimized for backtest returns. Daily families accept approximate screenshot fits; both directions require five consecutive confirmations with reset on failure. Venue candles can produce different lines and flips.", "Shorter ATR lengths react faster to new volatility; smaller factors pull the trail closer and can cause earlier but more frequent reversals."],
   },
   smma_ribbon: {
     summary: "Use full SMMA stacking as the signal; crossings and tangles are deliberately neutral.",
@@ -523,6 +527,31 @@ function supertrend(candles: Candle[], spec: IndicatorSpec, length: number, fact
   }
   const meta = lastState(states), level = st.at(-1) ?? null;
   return buildSnapshot(spec, candles, states, [points(candles, st, overlay.name, overlay.color)], { atr: atr.at(-1) ?? null, atrLength: length, supertrend: level, factor }, meta.state === "bear" ? level : null, meta.state === "bull" ? level : null, "Provisional until the open candle completes");
+}
+
+function dailyKkSupertrend(candles: Candle[], spec: IndicatorSpec, length: number, factor: number): SignalSnapshot {
+  // Intraday candles must not alter the ATR recurrence or the confirmation count.
+  const completed = candles.filter(c => c.complete);
+  const raw = supertrend(completed, spec, length, factor, { name: "KK Supertrend", color: "#d7a928" });
+  const levels = new Map(raw.overlays[0].points.map(point => [point.time, point.value]));
+  const confirmation = confirmDailyRegimes(raw.states, completed.map((c, i) => {
+    const line = levels.get(c.time);
+    return line != null && (raw.states[i] === "bull" ? c.close > line : c.close < line);
+  }));
+  const state = lastState(confirmation.states).state;
+  const level = raw.values.supertrend;
+  const direction = confirmation.pending === "bull" ? "Bullish" : "Bearish";
+  const trigger = confirmation.pending
+    ? `${direction} confirmation ${confirmation.count}/5 · ${5 - confirmation.count} more consecutive daily closes required; a failed confirmation resets to 0/5`
+    : "Reversals require 5 consecutive daily confirmations; a failed confirmation resets to 0/5";
+  const result = buildSnapshot(spec, completed, confirmation.states, raw.overlays,
+    { ...raw.values, confirmationsRequired: KK_DAILY_CONFIRMATIONS, confirmationCount: confirmation.count },
+    state === "bear" ? level : null, state === "bull" ? level : null, trigger,
+    "Daily KK Supertrend confirms both bullish and bearish reversals after five consecutive completed daily candles in the opposite underlying Supertrend regime. Failed confirmation resets the count. The ATR trail continues to update while the official regime waits; execution follows at the next session open.");
+  result.confirmation = { required: KK_DAILY_CONFIRMATIONS, count: confirmation.count, pending: confirmation.pending };
+  let index = 0;
+  result.states = candles.map(c => c.complete ? confirmation.states[index++] : null);
+  return result;
 }
 
 function ribbon(candles: Candle[], spec: IndicatorSpec): SignalSnapshot {
@@ -838,7 +867,9 @@ export function calculateIndicators(candles: Candle[], timeframe: Timeframe, opt
     switch (spec.id) {
       case "support_band": return supportBand(candles, spec);
       case "supertrend": return supertrend(candles, spec, 10, 3, { name: "SuperTrend", color: "#8769c3" });
-      case "kk_supertrend": return supertrend(candles, spec, kkAtrLength, kkFactor, { name: "KK Supertrend", color: "#d7a928" });
+      case "kk_supertrend": return timeframe === "1d" && !options.kkSupertrendLegacySingleClose
+        ? dailyKkSupertrend(candles, spec, kkAtrLength, kkFactor)
+        : supertrend(candles, spec, kkAtrLength, kkFactor, { name: "KK Supertrend", color: "#d7a928" });
       case "smma_ribbon": return ribbon(candles, spec);
       case "kk_ema_ribbon": return kkEmaRibbon(candles, spec, timeframe);
       case "super_guppy": return superGuppy(candles, spec, timeframe, options.superGuppy);
@@ -858,8 +889,8 @@ export function calculateIndicators(candles: Candle[], timeframe: Timeframe, opt
   }).map(snapshot => {
     const required: Record<string, number> = { support_band: 20, supertrend: 10, kk_supertrend: kkAtrLength, smma_ribbon: 29, kk_ema_ribbon: 58, super_guppy: options.superGuppy?.ema200Filter ? 200 : 1, long_sma: timeframe === "1d" ? 200 : 30, donchian_20_10: 21, ichimoku: 78, macd: 1, psar: 2, vortex: 15, heikin_ashi: 1, golden_cross: 200, adx: 14, chandelier: 22, mayer: 200, ma_200w: 200 };
     const validStates = snapshot.states.filter(state => state != null).length;
-    const ready = snapshot.id === "mayer" ? finite(snapshot.values.multiple) : snapshot.states.at(-1) != null;
-    return { ...snapshot, readiness: { ready, availableCandles: candles.length, requiredCandles: required[snapshot.id] ?? 1, validStates } };
+    const ready = snapshot.id === "mayer" ? finite(snapshot.values.multiple) : snapshot.confirmation ? validStates > 0 : snapshot.states.at(-1) != null;
+    return { ...snapshot, readiness: { ready, availableCandles: snapshot.confirmation ? candles.filter(c => c.complete).length : candles.length, requiredCandles: required[snapshot.id] ?? 1, validStates } };
   });
 }
 

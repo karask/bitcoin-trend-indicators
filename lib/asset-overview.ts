@@ -30,6 +30,7 @@ export function overviewState(signal: SignalSnapshot | undefined, supported: boo
   if (!signal) return "Not loaded";
   if (!signal.readiness?.ready) return "Insufficient history";
   const state = signal.state;
+  if (signal.confirmation?.pending) return `${state === "bull" ? "Bullish" : "Bearish"} · ${signal.confirmation.pending === "bull" ? "Bullish" : "Bearish"} ${signal.confirmation.count}/5 pending`;
   if (signal.id === "mayer") return `${signal.values.multiple!.toFixed(2)}× 200D price ratio`;
   if (signal.role === "valuation") return state === "bull" ? "Above baseline" : "Below baseline";
   if (signal.role === "confirmation") return state === "bull" ? "Positive" : state === "bear" ? "Negative" : "No confirmation";
@@ -42,6 +43,10 @@ export function overviewLevels(signal: SignalSnapshot | undefined): Array<{ labe
   if (!signal?.readiness?.ready || signal.thresholdKind === "conditional") return [];
   if (signal.id === "ma_200w") return signal.values.sma200 != null ? [{ label: "Baseline", price: signal.values.sma200 }] : [];
   const levels = [];
+  if (signal.confirmation) {
+    const price = signal.bullTrigger ?? signal.bearTrigger;
+    return price == null ? [] : [{ label: `${signal.state === "bull" ? "Bear" : "Bull"} confirmation ${signal.confirmation.count}/5`, price }];
+  }
   if (signal.state !== "bull" && signal.bullTrigger != null) levels.push({ label: signal.role === "exit" ? "Stop above" : "Bull above", price: signal.bullTrigger });
   if (signal.state !== "bear" && signal.bearTrigger != null) levels.push({ label: signal.role === "exit" ? "Exit below" : "Bear below", price: signal.bearTrigger });
   return levels;

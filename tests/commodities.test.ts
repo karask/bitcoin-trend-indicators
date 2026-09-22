@@ -109,7 +109,8 @@ test("all futures indicators, KK baseline, next-open research and costs retain h
       const signals = calculateIndicators(candles, tf, { market: "commodity" });
       assert.deepEqual(signals.map(row => row.id), INDICATOR_SPECS.filter(row => row.supportedTimeframes.includes(tf)).map(row => row.id));
       const kk = signals.find(row => row.id === "kk_supertrend")!, standard = signals.find(row => row.id === "supertrend")!;
-      assert.deepEqual(kk.states, standard.states);
+      if (tf === "1w") assert.deepEqual(kk.states, standard.states);
+      else assert.equal(kk.confirmation!.required,5);
       assert.equal(kk.values.supertrend, standard.values.supertrend);
       assert.deepEqual([kk.values.atrLength, kk.values.factor], [10,3]);
       const prefix = calculateIndicators(candles.slice(0,-5), tf, { market: "commodity", indicatorIds: ["kk_supertrend"] })[0];

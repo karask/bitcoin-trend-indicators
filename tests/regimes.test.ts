@@ -79,7 +79,7 @@ test("KK presets lead the indicator menu with fixed crypto parameters", () => {
   assert.equal(KK_SUPERTREND_ATR_LENGTH, 10);
   assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3, sui: 3, jup: 3, op: 3, bonk: 3, ada: 3, atom: 3, hype: 3, dot: 3, bnb: 3, zec: 3, avax: 3 });
   assert.equal(KK_SUPERTREND_EQUITY_FACTOR, 3);
-  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { dailyCryptoFamily: "15/2,15/3,15/4,15/5", dailyStockFamily: "15/3,15/4,30/2,30/4", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-09-22" });
+  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { dailyCryptoFamily: "15/2,15/3,15/4,15/5", dailyStockFamily: "15/3,15/4,30/2,30/4", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-09-22", dailyConfirmations: 5 });
   assert.deepEqual(KK_SUPERTREND_PRESETS.doge, { "1d": { atrLength: 15, factor: 5 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.link, { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.xmr, { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
@@ -222,7 +222,7 @@ test("unresolved daily SUI and OP retain the uncalibrated SuperTrend 10/3 preset
     const standard = results.find(item => item.id === "supertrend")!;
     const kk = results.find(item => item.id === "kk_supertrend")!;
     assert.equal(kk.values.factor, 3, asset);
-    assert.deepEqual(kk.states, standard.states, asset);
+    assert.equal(kk.confirmation!.required, 5, asset);
     assert.deepEqual(kk.overlays[0].points, standard.overlays[0].points, asset);
   }
 });
@@ -237,9 +237,10 @@ test("equity market context runs every applicable indicator and uses the uncalib
     const standard = results.find(item => item.id === "supertrend")!;
     const kk = results.find(item => item.id === "kk_supertrend")!;
     assert.equal(kk.values.factor, 3, timeframe);
-    assert.deepEqual(kk.states, standard.states, timeframe);
+    if (timeframe === "1w") assert.deepEqual(kk.states, standard.states, timeframe);
+    else assert.equal(kk.confirmation!.required,5);
     assert.deepEqual(kk.overlays[0].points, standard.overlays[0].points, timeframe);
-    assert.deepEqual({ state: kk.state, flip: kk.lastFlip, bull: kk.bullTrigger, bear: kk.bearTrigger }, { state: standard.state, flip: standard.lastFlip, bull: standard.bullTrigger, bear: standard.bearTrigger }, timeframe);
+    if (timeframe === "1w") assert.deepEqual({ state: kk.state, flip: kk.lastFlip, bull: kk.bullTrigger, bear: kk.bearTrigger }, { state: standard.state, flip: standard.lastFlip, bull: standard.bullTrigger, bear: standard.bearTrigger }, timeframe);
   }
   const mayer = calculateIndicators(candles, "1d", { market: "equity" }).find(item => item.id === "mayer")!;
   assert.ok(Number.isFinite(mayer.values.multiple));
@@ -260,7 +261,7 @@ test("KK Supertrend is included in every asset backtest and cost-sensitivity pat
     assert.equal(costs[1].turnover, costs[2].turnover, asset);
     if (asset === "sui" || asset === "op") {
       const standard = backtest(candles, snapshots, "1d", 15).find(item => item.indicatorId === "supertrend")!;
-      assert.deepEqual({ ...costs[1], indicatorId: standard.indicatorId, displayName: standard.displayName }, standard);
+      assert.ok(costs[1].flips <= standard.flips);
     }
   }
 });

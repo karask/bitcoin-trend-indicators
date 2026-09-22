@@ -122,7 +122,7 @@ for(const ref of refs){
  const previous=presetMap[ref.asset][ref.timeframe];
  const candidates=[];
  for(const [atrLength,factor] of [[10,3],[10,2],[15,2],[15,3]]){
-  const s=calculateIndicators(candles,ref.timeframe,{indicatorIds:["kk_supertrend"],kkSupertrendAtrLength:atrLength,kkSupertrendFactor:factor})[0];
+  const s=calculateIndicators(candles,ref.timeframe,{kkSupertrendLegacySingleClose: true, indicatorIds:["kk_supertrend"],kkSupertrendAtrLength:atrLength,kkSupertrendFactor:factor})[0];
   candidates.push({atrLength,factor,value:s.values.supertrend??null,state:s.state,errorPct:ref.target&&s.values.supertrend!=null?100*(s.values.supertrend/ref.target-1):null,lastFlip:s.lastFlip==null?null:new Date(s.lastFlip).toISOString().slice(0,10)});
  }
  const folder=ref.timeframe==="1w"?"2026-09-21 Weekly ":"2026-09-21 Daily";

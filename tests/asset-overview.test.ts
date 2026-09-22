@@ -60,7 +60,7 @@ test("stock overview uses completed XNAS weeks and stock-specific KK presets", (
 test("overview conditions and supporting model labels do not invent reversal prices or neutral readiness", () => {
   const signals = calculateIndicators(candles, "1d", { asset: "sui" });
   const kk = signals.find(item => item.id === "kk_supertrend")!;
-  assert.deepEqual(overviewLevels(kk), [{ label: "Bear below", price: kk.bearTrigger }]);
+  assert.deepEqual(overviewLevels(kk), [{ label: "Bear confirmation 0/5", price: kk.bearTrigger }]);
   const macd = signals.find(item => item.id === "macd")!;
   assert.deepEqual(overviewLevels(macd), []);
   const mayer = signals.find(item => item.id === "mayer")!;

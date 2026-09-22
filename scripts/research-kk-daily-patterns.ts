@@ -14,7 +14,7 @@ const results = references.map(ref => {
   const candidates = [];
   for (const atrLength of lengths) for (const factor of factors) {
     if (candles.length < atrLength + 50) continue;
-    const signal = calculateIndicators(candles, "1d", { indicatorIds: ["kk_supertrend"], kkSupertrendAtrLength: atrLength, kkSupertrendFactor: factor })[0];
+    const signal = calculateIndicators(candles, "1d", { kkSupertrendLegacySingleClose: true, indicatorIds: ["kk_supertrend"], kkSupertrendAtrLength: atrLength, kkSupertrendFactor: factor })[0];
     const value = signal.values.supertrend;
     if (value == null) continue;
     candidates.push({ atrLength, factor, value, state: signal.state, errorPct: 100 * (value / ref.target - 1), lastFlip: signal.lastFlip });

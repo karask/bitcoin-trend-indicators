@@ -16,7 +16,7 @@ test("independent daily grid winners reproduce archived levels and require match
     for (const candidate of [row.best, row.shared].filter(c => c != null)) {
       assert.equal(candidate.state, row.state);
       assert.ok(Number.isInteger(candidate.atrLength) && Number.isInteger(candidate.factor));
-      const signal = calculateIndicators(candles, "1d", { indicatorIds: ["kk_supertrend"], kkSupertrendAtrLength: candidate.atrLength, kkSupertrendFactor: candidate.factor })[0];
+      const signal = calculateIndicators(candles, "1d", { kkSupertrendLegacySingleClose: true, indicatorIds: ["kk_supertrend"], kkSupertrendAtrLength: candidate.atrLength, kkSupertrendFactor: candidate.factor })[0];
       assert.equal(signal.values.supertrend, candidate.value);
       assert.equal(signal.state, candidate.state);
       assert.equal(candidate.errorPct, 100 * (candidate.value / row.target - 1));

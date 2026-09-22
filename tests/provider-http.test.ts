@@ -58,7 +58,8 @@ test("new coins have one verified USD venue, separate weekly and daily KK preset
       const signals = calculateIndicators(daily, tf, { asset });
       const kk = signals.find(signal => signal.id === "kk_supertrend")!, standard = signals.find(signal => signal.id === "supertrend")!;
       assert.equal(kk.values.atrLength, tf === "1w" || asset !== "op" ? 15 : 10); assert.equal(kk.values.factor, tf === "1w" ? 2 : ["ada","atom","dot"].includes(asset) ? 5 : asset==="hype" ? 4 : 3);
-      if (tf === "1d" && asset === "op") { assert.deepEqual(kk.states, standard.states); assert.equal(kk.values.supertrend, standard.values.supertrend); }
+      if (tf === "1d") assert.equal(kk.confirmation!.required,5);
+      if (tf === "1d" && asset === "op") assert.equal(kk.values.supertrend, standard.values.supertrend);
       assert.match(calibrationStatus(asset, tf), tf === "1w" ? /Screenshot-calibrated|Weekly screenshot checked/ : asset === "op" ? /calibration unresolved/ : /Approximate daily/);
     }
   }

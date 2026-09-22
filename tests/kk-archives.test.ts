@@ -25,7 +25,7 @@ test("fifty archive records distinguish weekly checks, unreadable targets and un
   const cs=candles(row);
   assert.ok(cs.every(c=>c.complete&&c.time<cutoff));
   if(row.status==="skipped"){assert.equal(row.value,null);assert.equal(row.errorPct,null);continue;}
-  const options={indicatorIds:["kk_supertrend"],kkSupertrendAtrLength:row.atrLength,kkSupertrendFactor:row.factor};
+  const options={kkSupertrendLegacySingleClose:true,indicatorIds:["kk_supertrend"],kkSupertrendAtrLength:row.atrLength,kkSupertrendFactor:row.factor};
   const signal=calculateIndicators(cs,row.timeframe,options)[0];
   assert.equal(signal.values.supertrend,row.value,row.asset);
   assert.equal(signal.state,row.state);

@@ -9,7 +9,7 @@ const rows = refs.map(r => {
   const preset = presets[r.asset as keyof typeof presets]["1d"];
   const metal = r.asset === "gold" || r.asset === "silver";
   const candles: Candle[] = JSON.parse(fs.readFileSync(`${root}/${r.asset}-${r.source}${metal ? "-futures" : ""}.json`, "utf8")).candles;
-  const signal = calculateIndicators(candles, "1d", { indicatorIds: ["kk_supertrend"], kkSupertrendAtrLength: preset.atrLength, kkSupertrendFactor: preset.factor })[0];
+  const signal = calculateIndicators(candles, "1d", { kkSupertrendLegacySingleClose: true, indicatorIds: ["kk_supertrend"], kkSupertrendAtrLength: preset.atrLength, kkSupertrendFactor: preset.factor })[0];
   return { asset: r.asset, source: r.source, previous: r.previous, preset, target: r.target, targetState: r.state, value: signal.values.supertrend!, state: signal.state, errorPct: 100 * (signal.values.supertrend! / r.target - 1), pending: r.pending ?? null };
 });
 fs.writeFileSync("lib/kk-daily-evidence.ts", "/** Approved daily-only compact families, September 22, 2026. Approximate fits, not private-formula replication. */\nexport const KK_DAILY_EVIDENCE = " + JSON.stringify(rows, null, 2) + " as const;\n");

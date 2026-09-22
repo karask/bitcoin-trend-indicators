@@ -5,6 +5,7 @@ import ChartExplorer from "../app/ChartExplorer";
 import CalibrationPanel from "../app/CalibrationPanel";
 import ResearchPanel from "../app/ResearchPanel";
 import SignalReadiness from "../app/SignalReadiness";
+import DailyConfirmation from "../app/DailyConfirmation";
 import SyncStatus from "../app/SyncStatus";
 import MobileMatrix from "../app/MobileMatrix";
 import AssetOverview from "../app/overview/AssetOverview";
@@ -13,6 +14,16 @@ import { ASSETS } from "../lib/markets";
 import { onRequestGet as dashboardHandler } from "../functions/api/v1/dashboard";
 import { calculateIndicators, type Candle } from "../lib/regimes";
 import { buildResearch } from "../lib/research";
+
+test("daily confirmation UI shows a pending direction without replacing the official state", () => {
+  const signal = calculateIndicators(Array.from({length:24},(_,i)=>({time:Date.UTC(2026,0,1)+i*86400000,open:i<20?100:140,high:i<20?101:141,low:i<20?99:139,close:i<20?100:140,volume:1,complete:true})),"1d",{indicatorIds:["kk_supertrend"],kkSupertrendAtrLength:3,kkSupertrendFactor:1})[0];
+  assert.equal(signal.state,"bear");
+  const html = renderToStaticMarkup(<DailyConfirmation signal={signal} />);
+  assert.match(html,/Bullish 4\/5/);
+  assert.match(html,/stays bearish/);
+  assert.match(html,/failed confirmation resets/);
+  assert.equal(renderToStaticMarkup(<DailyConfirmation signal={{...signal,confirmation:undefined}} />),"");
+});
 import RegimeDashboard from "../app/RegimeDashboard";
 import StockDashboard from "../app/stocks/StockDashboard";
 import CommodityDashboard from "../app/commodities/CommodityDashboard";
