@@ -1,11 +1,11 @@
-export type GuidanceMarket = "crypto" | "stock";
+export type GuidanceMarket = "crypto" | "stock" | "commodity";
 type CandleGuidance = { label: string; explanation: string };
 
 // Workflow defaults for intermediate trends and longer cycle context, not fitted returns.
 const GUIDANCE: Record<string, CandleGuidance> = {
   support_band: { label: "1W", explanation: "Weekly candles preserve the 20-week SMA / 21-week EMA support band for the broader trend. Daily candles turn it into a shorter 20/21-day filter." },
   supertrend: { label: "1W", explanation: "Use weekly closes for the major trend and the confirmed reversal level. Daily signals react sooner but can reverse more frequently. Supertrend works on either timeframe; weekly is a cycle-tracking preference." },
-  kk_supertrend: { label: "1W", explanation: "Weekly is the primary view for the app’s crypto reference calibrations. Daily is a separate trend signal, with several asset presets explicitly uncalibrated. Matching a screenshot does not establish trading performance." },
+  kk_supertrend: { label: "1W", explanation: "Weekly is the primary view for the app’s crypto reference calibrations. Daily is a separate calibrated signal with its own presets and five-close confirmation. Matching a screenshot does not establish trading performance." },
   smma_ribbon: { label: "1D", explanation: "Daily candles make the 15/19/25/29 ribbon useful for intermediate trend changes. Watch full bullish or bearish stacking; tangled averages are neutral. Weekly is a slower 15–29-week context view. This is a community proxy, not the official Larsson Line." },
   kk_ema_ribbon: { label: "1D", explanation: "Calibrated to the September 14, 2026 daily BTC, ETH and SOL screenshots. EMA 32/58 on Close forms the visible ribbon; hidden EMA 34/48 alignment approximates the grey transitions. Weekly is also available using the same lengths in weeks, giving a slower, uncalibrated view. Colour logic is provisional; other assets are uncalibrated." },
   super_guppy: { label: "1D", explanation: "Use daily candles to read agreement, separation and compression between the Trader and Investor EMA groups. Weekly stretches the slow group to 25–70 weeks for cycle context. Gray can mean a pullback or an unestablished trend, not an automatic exit. The author does not prescribe one optimal timeframe." },
@@ -26,7 +26,8 @@ const GUIDANCE: Record<string, CandleGuidance> = {
 export function timeframeGuidance(id: string, market: GuidanceMarket): CandleGuidance | undefined {
   const guidance = GUIDANCE[id];
   if (!guidance) return undefined;
-  if (market === "stock" && id === "kk_supertrend") return { label: "1W", explanation: "Weekly TSLA, NVDA, GOOGL, MU and SNDK KK presets match the supplied stock screenshots at ATR 15/factor 2. Daily stock presets and both SpaceX and Bitmine timeframes remain uncalibrated. Screenshot matching does not establish trading performance." };
+  if (market === "stock" && id === "kk_supertrend") return { label: "1W", explanation: "Weekly remains the primary stock view for KK Supertrend. Daily stocks use their own approximate preset family and five-close confirmation. Screenshot matching does not establish trading performance." };
+  if (market === "commodity" && id === "kk_supertrend") return { label: "1W", explanation: "Weekly remains the primary Gold and Silver KK Supertrend view. Daily futures use a separate approximate preset family and five-close confirmation. Contract rolls can affect both levels." };
   if (market === "stock" && id === "support_band") return { label: "1W", explanation: "Weekly 20 SMA / 21 EMA provides a broad stock-trend filter. This is an application of the band to equities, not a stock-validated optimum. Daily uses 20/21 trading sessions for a shorter view." };
   return guidance;
 }

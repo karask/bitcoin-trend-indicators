@@ -136,6 +136,10 @@ test("overview shows all assets crypto first, one global indicator selector and 
   for (const asset of OVERVIEW_ASSETS) assert.ok(html.includes(`<strong>${asset.symbol}</strong>`), asset.symbol);
   assert.equal((html.match(/<select/g) ?? []).length, 1);
   assert.match(html, /Indicator for all assets/);
+  assert.match(html, /Suggested candles/);
+  assert.match(html, /Weekly · 1W/);
+  assert.match(html, /For KK Supertrend; details by asset class below/);
+  assert.equal((html.match(/Suggested candles ·/g) ?? []).length, 3);
   assert.match(html, /Check all assets/);
   assert.match(html, /No automatic polling/);
   assert.match(html, /Changing the indicator does not fetch data/);

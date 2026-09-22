@@ -127,6 +127,8 @@ button:disabled { opacity:.5; cursor:not-allowed; }
 .overview-controls label { display:flex; flex-direction:column; gap:8px; flex:1 1 300px; max-width:460px; font-size:1rem; font-weight:600; }
 .overview-controls select,.overview-controls button { min-height:44px; padding:10px 12px; border:1px solid var(--line); border-radius:7px; color:var(--ink); background:var(--card); font-size:1rem; }
 .overview-controls select { width:100%; }.overview-controls button { cursor:pointer; }.overview-controls button:disabled { opacity:.55; cursor:wait; }.overview-controls p { flex-basis:100%; margin:0; font-size:.875rem; color:var(--muted); }
+.overview-candle-suggestion { min-height:44px; display:flex; flex-direction:column; justify-content:center; gap:2px; padding:7px 12px; border:1px solid var(--line); border-radius:7px; background:var(--soft); }
+.overview-candle-suggestion span,.overview-candle-suggestion small { color:var(--muted); font-size:.7rem; line-height:1.25; }.overview-candle-suggestion b { color:var(--ink); font-size:.95rem; }
 .overview-note { color:var(--muted); font-size:.875rem; line-height:1.65; margin:8px 0; }
 .overview-section { border:1px solid var(--line); border-radius:12px; background:var(--card); padding:20px; margin-top:22px; }
 .overview-section .section-heading { flex-wrap:wrap; gap:8px; }.overview-section .section-heading>span { color:var(--muted); font-size:.875rem; }

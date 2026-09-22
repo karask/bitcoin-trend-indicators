@@ -12,6 +12,7 @@ import { historyIsCurrent, loadCryptoHistory, loadStockHistory, loadCommodityHis
 import { OVERVIEW_ASSETS, overviewIndicator, overviewLevels, overviewState, overviewTimeframe, overviewUrl, summarizeOverview, type OverviewHistory } from "../../lib/asset-overview";
 import { formatDate, formatPct, formatPrice, quoteAge } from "../../lib/display";
 import { signalTiming } from "../../lib/signal-timing";
+import { timeframeGuidance, type GuidanceMarket } from "../../lib/timeframe-guidance";
 
 type Quote = { price: number; denomination?: string; retrievedAt: string };
 type Row = { quote?: Quote; status?: SyncStatus; historyError?: boolean; quoteError?: boolean };
@@ -28,6 +29,8 @@ export default function AssetOverview() {
   const [dark, setDark] = useState(false);
   const controller = useRef<AbortController | null>(null);
   const spec = overviewIndicator(indicator), timeframe = overviewTimeframe(indicator);
+  const suggestions = (["crypto", "stock", "commodity"] as GuidanceMarket[]).map(market => ({ market, guidance: timeframeGuidance(indicator, market) })).filter(item => item.guidance);
+  const sharedSuggestion = suggestions.length && suggestions.every(item => item.guidance?.label === suggestions[0].guidance?.label) ? suggestions[0].guidance?.label : null;
   const summaries = useMemo(() => Object.fromEntries(Object.entries(histories).map(([key, history]) => [key, summarizeOverview(history, indicator)])), [histories, indicator]);
 
   useEffect(() => {
@@ -91,12 +94,12 @@ export default function AssetOverview() {
   };
   return <main className="app-shell overview-shell">
     <header className="topbar"><div className="brand-lockup"><div className="brand-mark">RL</div><div><p className="eyebrow">REGIME LAB</p><h1>Asset overview</h1></div></div><div className="header-actions"><LabNavigation current="overview" /><AccountControls /><button className="theme-toggle" type="button" onClick={toggleTheme} aria-label={`Switch to ${dark ? "light" : "dark"} theme`}><span aria-hidden="true">{dark ? "☀" : "☾"}</span><b>{dark ? "Light" : "Dark"}</b></button></div></header>
-    <section className="overview-controls" aria-label="Overview controls"><label htmlFor="overview-indicator">Indicator for all assets<select id="overview-indicator" value={indicator} onChange={event => chooseIndicator(event.target.value)}>{INDICATOR_SPECS.map(item => <option key={item.id} value={item.id}>{item.displayName}</option>)}</select></label><button type="button" disabled={busy} onClick={() => { setBusy(true); setRefreshKey(value => value + 1); }}>Check all assets</button>{busy && <button type="button" onClick={() => { controller.current?.abort(); setBusy(false); setStopped(true); setRows(current => Object.fromEntries(Object.entries(current).map(([key, row]) => [key, row.status === "checking" ? { ...row, status: undefined } : row]))); }}>Stop</button>}<p role="status">{busy ? `Checking ${progress} / ${OVERVIEW_ASSETS.length} assets…` : stopped ? "Check stopped. Available snapshots retained." : `Checked ${progress} assets. See rows for any failures.`}</p></section>
+    <section className="overview-controls" aria-label="Overview controls"><label htmlFor="overview-indicator">Indicator for all assets<select id="overview-indicator" value={indicator} onChange={event => chooseIndicator(event.target.value)}>{INDICATOR_SPECS.map(item => <option key={item.id} value={item.id}>{item.displayName}</option>)}</select></label><div className="overview-candle-suggestion" aria-live="polite"><span>Suggested candles</span>{sharedSuggestion ? <b>{sharedSuggestion === "1W" ? "Weekly · 1W" : sharedSuggestion === "1D" ? "Daily · 1D" : sharedSuggestion}</b> : <b>{suggestions.map(item => `${item.market === "crypto" ? "Crypto" : item.market === "stock" ? "Stocks" : "Commodities"}: ${item.guidance!.label}`).join(" · ")}</b>}<small>For {spec.shortName}; details by asset class below.</small></div><button type="button" disabled={busy} onClick={() => { setBusy(true); setRefreshKey(value => value + 1); }}>Check all assets</button>{busy && <button type="button" onClick={() => { controller.current?.abort(); setBusy(false); setStopped(true); setRows(current => Object.fromEntries(Object.entries(current).map(([key, row]) => [key, row.status === "checking" ? { ...row, status: undefined } : row]))); }}>Stop</button>}<p role="status">{busy ? `Checking ${progress} / ${OVERVIEW_ASSETS.length} assets…` : stopped ? "Check stopped. Available snapshots retained." : `Checked ${progress} assets. See rows for any failures.`}</p></section>
     <p className="overview-note">Daily and weekly signals use completed candles. Levels and flip dates use {timeframe === "1w" ? "weekly" : "daily"} bars. Cached history appears first; opening this page checks for updates once. Changing the indicator does not fetch data. No automatic polling.</p>
     <p className="overview-note">Crypto uses each asset’s default venue, shown below. Stock prices use Yahoo Finance; history is split-adjusted. Commodities use continuous gold/silver futures in USD per troy ounce, not spot metal. Contract rolls can affect levels. Provisional levels may move before the next close. Conditional models have no guaranteed single-price reversal.</p>
     {(["crypto", "stock", "commodity"] as const).map(lab => <section className="overview-section" aria-labelledby={`overview-${lab}`} key={lab}>
       <div className="section-heading"><h2 id={`overview-${lab}`}>{lab === "crypto" ? "Crypto" : lab === "stock" ? "Stocks" : "Commodities"}</h2><span>{OVERVIEW_ASSETS.filter(asset => asset.lab === lab).length} assets · {spec.shortName}</span></div>
-      {lab !== "commodity" && <TimeframeHint indicator={indicator} market={lab} overview />}
+      <TimeframeHint indicator={indicator} market={lab} overview />
       <table className="overview-table"><thead><tr><th scope="col">Asset / source</th><th scope="col">Daily</th><th scope="col">Weekly</th><th scope="col">{timeframe === "1w" ? "Weekly" : "Daily"} level / condition</th><th scope="col">Price</th><th scope="col">Snapshot / last flip</th></tr></thead><tbody>{OVERVIEW_ASSETS.filter(asset => asset.lab === lab).map(asset => {
         const row = rows[asset.asset], summary = summaries[asset.asset], signal = summary?.selected, quote = row?.quote;
         const levels = overviewLevels(signal), price = quote?.price ?? summary?.close;

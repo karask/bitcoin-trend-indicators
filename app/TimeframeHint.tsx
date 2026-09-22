@@ -7,7 +7,8 @@ export default function TimeframeHint({ indicator, market, overview = false }: {
   if (!guidance) return null;
   const timing = market === "crypto"
     ? "Confirm completed candles: daily at 00:00 UTC; weekly at Monday 00:00 UTC."
-    : "Daily candles are completed trading sessions; weekly candles confirm after the final session of the trading week.";
+    : market === "stock" ? "Daily candles are completed trading sessions; weekly candles confirm after the final session of the trading week."
+    : "Daily candles are completed futures sessions; weekly candles confirm after the final session represented by the continuous contract.";
   const caveat = "Workflow guidance, not a proven performance optimum.";
   return <details className="timeframe-hint" key={`${indicator}-${market}`}>
     <summary title={`${guidance.explanation} ${timing} ${caveat}`}>Suggested candles · <b>{guidance.label}</b> <span aria-hidden="true">ⓘ</span></summary>
