@@ -1,0 +1,30 @@
+{
+  "btc": {
+    "input": "/home/kos/Downloads/btc8.png",
+    "archivedImage": "data/kk-research-2026-09-22/references/btc8.png",
+    "sha256": "51f8b0678ae7775ce422c1c150b0118ef2b6887aae11286d2f90d9b269c79cc1",
+    "snapshotDay": "2026-09-21",
+    "download": "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=86400&start=2026-08-20T00:00:00Z&end=2026-09-23T00:00:00Z"
+  },
+  "eth": {
+    "input": "/home/kos/Downloads/eth8.png",
+    "archivedImage": "data/kk-research-2026-09-22/references/eth8.png",
+    "sha256": "3e93c8491534a87e3b0db59aa899932e92d7c08cceecfac4569201f50bf6ed5e",
+    "snapshotDay": "2026-09-21",
+    "download": "https://api.kraken.com/0/public/OHLC?pair=ETHUSD&interval=1440"
+  },
+  "sol": {
+    "input": "/home/kos/Downloads/sol8.png",
+    "archivedImage": "data/kk-research-2026-09-22/references/sol8.png",
+    "sha256": "2741e18bccb6013057d8825827f683c6c046c44a946991f765e06cfb11640fa1",
+    "snapshotDay": "2026-09-21",
+    "download": "https://data-api.binance.vision/api/v3/klines?symbol=SOLUSDT&interval=1d&limit=1000"
+  },
+  "zec": {
+    "input": "/home/kos/Downloads/zec8.png",
+    "archivedImage": "data/kk-research-2026-09-22/references/zec8.png",
+    "sha256": "069b1a53f32a168b1a8881b64c70136c2d049c0c71a2aaf2e12651dd5ba2a2ab",
+    "snapshotDay": "2026-09-21",
+    "download": "https://data-api.binance.vision/api/v3/klines?symbol=ZECUSDT&interval=1d&limit=1000"
+  }
+}

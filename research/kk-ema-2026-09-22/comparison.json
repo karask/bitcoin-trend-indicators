@@ -1,0 +1,514 @@
+{
+  "current": {
+    "byAsset": {
+      "new_btc": {
+        "accuracy": 0.9911894273127754,
+        "balanced": 0.9793583392309507
+      },
+      "new_eth": {
+        "accuracy": 0.9924528301886792,
+        "balanced": 0.9903182913654117
+      },
+      "new_sol": {
+        "accuracy": 0.9813333333333333,
+        "balanced": 0.9599616858237549
+      },
+      "new_zec": {
+        "accuracy": 1.0,
+        "balanced": 1.0
+      },
+      "old_btc": {
+        "accuracy": 0.9888663967611336,
+        "balanced": 0.9886889544905922
+      },
+      "old_eth": {
+        "accuracy": 0.9701219512195122,
+        "balanced": 0.9565758438251425
+      },
+      "old_sol": {
+        "accuracy": 0.9732914375490966,
+        "balanced": 0.9705793425314714
+      }
+    },
+    "newBalanced": 0.9824095791050294,
+    "oldBalanced": 0.9719480469490688
+  },
+  "bestNew": [
+    {
+      "lengths": [
+        32,
+        35,
+        50,
+        58
+      ],
+      "byAsset": {
+        "new_btc": {
+          "accuracy": 0.9955947136563876,
+          "balanced": 0.9814814814814815
+        },
+        "new_eth": {
+          "accuracy": 0.9962264150943396,
+          "balanced": 0.9982547993019196
+        },
+        "new_sol": {
+          "accuracy": 0.992,
+          "balanced": 0.9655172413793104
+        },
+        "new_zec": {
+          "accuracy": 1.0,
+          "balanced": 1.0
+        },
+        "old_btc": {
+          "accuracy": 0.9817813765182186,
+          "balanced": 0.9834080962121522
+        },
+        "old_eth": {
+          "accuracy": 0.9689024390243902,
+          "balanced": 0.961436583927914
+        },
+        "old_sol": {
+          "accuracy": 0.9709347996857817,
+          "balanced": 0.9631032933565841
+        }
+      },
+      "newBalanced": 0.9863133805406779,
+      "oldBalanced": 0.9693159911655501
+    },
+    {
+      "lengths": [
+        32,
+        33,
+        50,
+        58
+      ],
+      "byAsset": {
+        "new_btc": {
+          "accuracy": 0.9911894273127754,
+          "balanced": 0.9793583392309507
+        },
+        "new_eth": {
+          "accuracy": 0.9924528301886792,
+          "balanced": 0.9965095986038395
+        },
+        "new_sol": {
+          "accuracy": 0.9706666666666667,
+          "balanced": 0.9645114942528735
+        },
+        "new_zec": {
+          "accuracy": 1.0,
+          "balanced": 1.0
+        },
+        "old_btc": {
+          "accuracy": 0.978744939271255,
+          "balanced": 0.9812332164211629
+        },
+        "old_eth": {
+          "accuracy": 0.9670731707317073,
+          "balanced": 0.9622992673829852
+        },
+        "old_sol": {
+          "accuracy": 0.9662215239591516,
+          "balanced": 0.9672531424680427
+        }
+      },
+      "newBalanced": 0.985094858021916,
+      "oldBalanced": 0.9702618754240636
+    },
+    {
+      "lengths": [
+        32,
+        34,
+        50,
+        58
+      ],
+      "byAsset": {
+        "new_btc": {
+          "accuracy": 0.9911894273127754,
+          "balanced": 0.9793583392309507
+        },
+        "new_eth": {
+          "accuracy": 0.9962264150943396,
+          "balanced": 0.9982547993019196
+        },
+        "new_sol": {
+          "accuracy": 0.9813333333333333,
+          "balanced": 0.9599616858237549
+        },
+        "new_zec": {
+          "accuracy": 1.0,
+          "balanced": 1.0
+        },
+        "old_btc": {
+          "accuracy": 0.9817813765182186,
+          "balanced": 0.9834080962121522
+        },
+        "old_eth": {
+          "accuracy": 0.9676829268292683,
+          "balanced": 0.9616221046131684
+        },
+        "old_sol": {
+          "accuracy": 0.9701492537313433,
+          "balanced": 0.9682378025012102
+        }
+      },
+      "newBalanced": 0.9843937060891563,
+      "oldBalanced": 0.9710893344421768
+    },
+    {
+      "lengths": [
+        32,
+        35,
+        48,
+        58
+      ],
+      "byAsset": {
+        "new_btc": {
+          "accuracy": 0.9955947136563876,
+          "balanced": 0.9814814814814815
+        },
+        "new_eth": {
+          "accuracy": 0.9924528301886792,
+          "balanced": 0.9903182913654117
+        },
+        "new_sol": {
+          "accuracy": 0.992,
+          "balanced": 0.9655172413793104
+        },
+        "new_zec": {
+          "accuracy": 1.0,
+          "balanced": 1.0
+        },
+        "old_btc": {
+          "accuracy": 0.9888663967611336,
+          "balanced": 0.9886889544905922
+        },
+        "old_eth": {
+          "accuracy": 0.9701219512195122,
+          "balanced": 0.9554571799515729
+        },
+        "old_sol": {
+          "accuracy": 0.974076983503535,
+          "balanced": 0.9654448333868452
+        }
+      },
+      "newBalanced": 0.9843292535565509,
+      "oldBalanced": 0.9698636559430035
+    },
+    {
+      "lengths": [
+        32,
+        35,
+        49,
+        58
+      ],
+      "byAsset": {
+        "new_btc": {
+          "accuracy": 0.9955947136563876,
+          "balanced": 0.9814814814814815
+        },
+        "new_eth": {
+          "accuracy": 0.9924528301886792,
+          "balanced": 0.9903182913654117
+        },
+        "new_sol": {
+          "accuracy": 0.992,
+          "balanced": 0.9655172413793104
+        },
+        "new_zec": {
+          "accuracy": 1.0,
+          "balanced": 1.0
+        },
+        "old_btc": {
+          "accuracy": 0.9848178137651822,
+          "balanced": 0.9855829760031414
+        },
+        "old_eth": {
+          "accuracy": 0.9701219512195122,
+          "balanced": 0.9588633125530914
+        },
+        "old_sol": {
+          "accuracy": 0.9725058915946583,
+          "balanced": 0.9642740633717146
+        }
+      },
+      "newBalanced": 0.9843292535565509,
+      "oldBalanced": 0.9695734506426491
+    },
+    {
+      "lengths": [
+        32,
+        33,
+        48,
+        58
+      ],
+      "byAsset": {
+        "new_btc": {
+          "accuracy": 0.9911894273127754,
+          "balanced": 0.9793583392309507
+        },
+        "new_eth": {
+          "accuracy": 0.9886792452830189,
+          "balanced": 0.9885730906673315
+        },
+        "new_sol": {
+          "accuracy": 0.9706666666666667,
+          "balanced": 0.9645114942528735
+        },
+        "new_zec": {
+          "accuracy": 1.0,
+          "balanced": 1.0
+        },
+        "old_btc": {
+          "accuracy": 0.9858299595141701,
+          "balanced": 0.9865140746996032
+        },
+        "old_eth": {
+          "accuracy": 0.9695121951219512,
+          "balanced": 0.9572530065949594
+        },
+        "old_sol": {
+          "accuracy": 0.969363707776905,
+          "balanced": 0.9695946824983038
+        }
+      },
+      "newBalanced": 0.9831107310377889,
+      "oldBalanced": 0.9711205879309555
+    },
+    {
+      "lengths": [
+        32,
+        33,
+        49,
+        58
+      ],
+      "byAsset": {
+        "new_btc": {
+          "accuracy": 0.9911894273127754,
+          "balanced": 0.9793583392309507
+        },
+        "new_eth": {
+          "accuracy": 0.9886792452830189,
+          "balanced": 0.9885730906673315
+        },
+        "new_sol": {
+          "accuracy": 0.9706666666666667,
+          "balanced": 0.9645114942528735
+        },
+        "new_zec": {
+          "accuracy": 1.0,
+          "balanced": 1.0
+        },
+        "old_btc": {
+          "accuracy": 0.9817813765182186,
+          "balanced": 0.9834080962121522
+        },
+        "old_eth": {
+          "accuracy": 0.9682926829268292,
+          "balanced": 0.9597259960081627
+        },
+        "old_sol": {
+          "accuracy": 0.9677926158680282,
+          "balanced": 0.9684239124831732
+        }
+      },
+      "newBalanced": 0.9831107310377889,
+      "oldBalanced": 0.9705193349011627
+    },
+    {
+      "lengths": [
+        32,
+        34,
+        48,
+        58
+      ],
+      "byAsset": {
+        "new_btc": {
+          "accuracy": 0.9911894273127754,
+          "balanced": 0.9793583392309507
+        },
+        "new_eth": {
+          "accuracy": 0.9924528301886792,
+          "balanced": 0.9903182913654117
+        },
+        "new_sol": {
+          "accuracy": 0.9813333333333333,
+          "balanced": 0.9599616858237549
+        },
+        "new_zec": {
+          "accuracy": 1.0,
+          "balanced": 1.0
+        },
+        "old_btc": {
+          "accuracy": 0.9888663967611336,
+          "balanced": 0.9886889544905922
+        },
+        "old_eth": {
+          "accuracy": 0.9701219512195122,
+          "balanced": 0.9565758438251425
+        },
+        "old_sol": {
+          "accuracy": 0.9732914375490966,
+          "balanced": 0.9705793425314714
+        }
+      },
+      "newBalanced": 0.9824095791050294,
+      "oldBalanced": 0.9719480469490688
+    }
+  ],
+  "details": {
+    "btc": {
+      "range": [
+        "2026-01-03",
+        "2026-09-20"
+      ],
+      "samples": 227,
+      "mismatches": [
+        {
+          "date": "2026-01-16",
+          "observed": -1,
+          "model": 0
+        },
+        {
+          "date": "2026-07-20",
+          "observed": 0,
+          "model": -1
+        }
+      ],
+      "latestState": 1,
+      "calculatedPartial": [
+        77008.7211285327,
+        74202.80570361503
+      ],
+      "imageEndpoints": [
+        {
+          "calculated": 77008.7211285327,
+          "approxImageValue": 76881.6213919038
+        },
+        {
+          "calculated": 74202.80570361503,
+          "approxImageValue": 74102.42429096143
+        }
+      ],
+      "xLast": 1397
+    },
+    "eth": {
+      "range": [
+        "2025-11-13",
+        "2026-09-20"
+      ],
+      "samples": 265,
+      "mismatches": [
+        {
+          "date": "2026-01-21",
+          "observed": -1,
+          "model": 0
+        },
+        {
+          "date": "2026-05-15",
+          "observed": 0,
+          "model": 1
+        }
+      ],
+      "latestState": 1,
+      "calculatedPartial": [
+        2434.54662538295,
+        2302.2160846319393
+      ],
+      "imageEndpoints": [
+        {
+          "calculated": 2434.54662538295,
+          "approxImageValue": 2425.7961161804
+        },
+        {
+          "calculated": 2302.2160846319393,
+          "approxImageValue": 2295.98304182555
+        }
+      ],
+      "xLast": 1435
+    },
+    "sol": {
+      "range": [
+        "2025-07-21",
+        "2026-09-20"
+      ],
+      "samples": 375,
+      "mismatches": [
+        {
+          "date": "2026-01-18",
+          "observed": -1,
+          "model": 0
+        },
+        {
+          "date": "2026-04-23",
+          "observed": 0,
+          "model": -1
+        },
+        {
+          "date": "2026-05-05",
+          "observed": 0,
+          "model": -1
+        },
+        {
+          "date": "2026-07-12",
+          "observed": -1,
+          "model": 0
+        },
+        {
+          "date": "2026-07-13",
+          "observed": 0,
+          "model": -1
+        },
+        {
+          "date": "2026-07-14",
+          "observed": -1,
+          "model": 0
+        },
+        {
+          "date": "2026-07-24",
+          "observed": -1,
+          "model": 0
+        }
+      ],
+      "latestState": 1,
+      "calculatedPartial": [
+        100.51879147946651,
+        94.54333272220138
+      ],
+      "imageEndpoints": [
+        {
+          "calculated": 100.51879147946651,
+          "approxImageValue": 99.84635720238421
+        },
+        {
+          "calculated": 94.54333272220138,
+          "approxImageValue": 94.11834846734571
+        }
+      ],
+      "xLast": 1486
+    },
+    "zec": {
+      "range": [
+        "2025-09-13",
+        "2026-09-20"
+      ],
+      "samples": 298,
+      "mismatches": [],
+      "latestState": 1,
+      "calculatedPartial": [
+        1101.5968935130907,
+        923.8345986925202
+      ],
+      "imageEndpoints": [
+        {
+          "calculated": 1101.5968935130907,
+          "approxImageValue": 1088.4563309651305
+        },
+        {
+          "calculated": 923.8345986925202,
+          "approxImageValue": 917.1268455441394
+        }
+      ],
+      "xLast": 1293
+    }
+  }
+}
