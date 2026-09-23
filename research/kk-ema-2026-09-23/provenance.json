@@ -1,0 +1,136 @@
+{
+  "btc": {
+    "image": "data/kk-research-2026-09-23/references/btc.png",
+    "imageSha256": "620964631870b88835916268909f366c63565d5cff4ca430893c357a34d9fa93",
+    "source": "binance",
+    "symbol": "BTCUSDT",
+    "crosshair": "2025-02-03",
+    "displayed": [
+      100575.94,
+      98007.66
+    ],
+    "urls": [
+      "https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=1d&startTime=1787443200000&endTime=1790121599999&limit=1000"
+    ],
+    "candles": 3324,
+    "first": "2017-08-17",
+    "last": "2026-09-22",
+    "chartLatestCandleDate": "2026-09-22",
+    "screenshotFileDate": "2026-09-23"
+  },
+  "eth": {
+    "image": "data/kk-research-2026-09-23/references/eth.png",
+    "imageSha256": "2ec5b279b37ca845e5b4622b1d1d14c00c4629ffc4b03066fd6e70cc5b90ee21",
+    "source": "binance",
+    "symbol": "ETHUSDT",
+    "crosshair": "2020-08-01",
+    "displayed": [
+      277.79,
+      257.39
+    ],
+    "urls": [
+      "https://data-api.binance.vision/api/v3/klines?symbol=ETHUSDT&interval=1d&startTime=1787443200000&endTime=1790121599999&limit=1000"
+    ],
+    "candles": 3324,
+    "first": "2017-08-17",
+    "last": "2026-09-22",
+    "chartLatestCandleDate": "2026-09-22",
+    "screenshotFileDate": "2026-09-23"
+  },
+  "sol": {
+    "image": "data/kk-research-2026-09-23/references/sol.png",
+    "imageSha256": "81b217fa637c9530982dc1346bee5a83fe1ac70b44f22355fc73656f9da8210b",
+    "source": "coinbase",
+    "symbol": "SOL-USD",
+    "crosshair": "2023-11-15",
+    "displayed": [
+      41.24,
+      34.89
+    ],
+    "urls": [
+      "https://api.exchange.coinbase.com/products/SOL-USD/candles?granularity=86400&start=2026-08-23T00:00:00Z&end=2026-09-23T00:00:00Z"
+    ],
+    "candles": 1924,
+    "first": "2021-06-17",
+    "last": "2026-09-22",
+    "chartLatestCandleDate": "2026-09-22",
+    "screenshotFileDate": "2026-09-23"
+  },
+  "ray": {
+    "image": "data/kk-research-2026-09-23/references/ray.png",
+    "imageSha256": "dc4161ef74317f80d193a40e42c4a7b5ae6fbf1a6d27301dca60ecdef7fdc7dc",
+    "source": "binance-proxy",
+    "symbol": "RAYUSDT",
+    "crosshair": "2023-06-07",
+    "displayed": [
+      0.2098,
+      0.2178
+    ],
+    "urls": [
+      "https://data-api.binance.vision/api/v3/klines?symbol=RAYUSDT&interval=1d&startTime=1609459200000&endTime=1790121599999&limit=1000",
+      "https://data-api.binance.vision/api/v3/klines?symbol=RAYUSDT&interval=1d&startTime=1714953600000&endTime=1790121599999&limit=1000"
+    ],
+    "candles": 1870,
+    "first": "2021-08-10",
+    "last": "2026-09-22",
+    "chartLatestCandleDate": "2026-09-22",
+    "screenshotFileDate": "2026-09-23"
+  },
+  "doge": {
+    "image": "data/kk-research-2026-09-23/references/doge.png",
+    "imageSha256": "e4b3b71cb98bc5409ab08ee1a90cb2265779784eeef3f325128f604f0fad363e",
+    "source": "coinbase",
+    "symbol": "DOGE-USD",
+    "crosshair": "2023-05-03",
+    "displayed": [
+      0.08155,
+      0.08139
+    ],
+    "urls": [
+      "https://api.exchange.coinbase.com/products/DOGE-USD/candles?granularity=86400&start=2026-08-31T00:00:00Z&end=2026-09-23T00:00:00Z"
+    ],
+    "candles": 1938,
+    "first": "2021-06-03",
+    "last": "2026-09-22",
+    "chartLatestCandleDate": "2026-09-22",
+    "screenshotFileDate": "2026-09-23"
+  },
+  "sui": {
+    "image": "data/kk-research-2026-09-23/references/sui.png",
+    "imageSha256": "e5798a4208a1630d34c19cf161dec282e94bdfb74015b06ded9cc8fa587733e7",
+    "source": "binance",
+    "symbol": "SUIUSDC",
+    "crosshair": "2025-01-05",
+    "displayed": [
+      4.3143,
+      3.9011
+    ],
+    "urls": [
+      "https://data-api.binance.vision/api/v3/klines?symbol=SUIUSDC&interval=1d&startTime=1682899200000&endTime=1790121599999&limit=1000"
+    ],
+    "candles": 978,
+    "first": "2024-01-19",
+    "last": "2026-09-22",
+    "chartLatestCandleDate": "2026-09-22",
+    "screenshotFileDate": "2026-09-23"
+  },
+  "jup": {
+    "image": "data/kk-research-2026-09-23/references/jup.png",
+    "imageSha256": "ef5bb4597ad3fde2e0dd032a49981846810270f4e888e36b8fba682bde7558e7",
+    "source": "bitstamp",
+    "symbol": "jupusd",
+    "crosshair": "2025-05-27",
+    "displayed": [
+      0.515302,
+      0.512712
+    ],
+    "urls": [
+      "https://www.bitstamp.net/api/v2/ohlc/jupusd/?step=86400&limit=1000&start=1704067200"
+    ],
+    "candles": 862,
+    "first": "2024-05-14",
+    "last": "2026-09-22",
+    "chartLatestCandleDate": "2026-09-22",
+    "screenshotFileDate": "2026-09-23"
+  }
+}
