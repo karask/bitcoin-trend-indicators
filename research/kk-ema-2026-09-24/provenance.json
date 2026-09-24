@@ -1,0 +1,217 @@
+{
+  "eth": {
+    "image": "data/kk-research-2026-09-24/references/eth.png",
+    "sha256": "905141dfbd25ec3f955c7afdbb6be7ccad86d5f1df8fd5378134c3a9e80c7e6f",
+    "fileDate": "2026-09-24",
+    "screenClockUTC": "10:39:44",
+    "chartLatestCandleDate": "2026-09-24",
+    "feed": "binance-spot",
+    "symbol": "ETHUSDT",
+    "mode": "partial",
+    "displayed": [
+      2481.69,
+      2342.95
+    ],
+    "screenshotOHLC": [
+      2684.7,
+      2704.08,
+      2600.15,
+      2640.75
+    ],
+    "urls": [
+      "https://data-api.binance.vision/api/v3/klines?symbol=ETHUSDT&interval=1d&startTime=1790121600000&endTime=1790207999999&limit=1000"
+    ],
+    "candles": 3325,
+    "first": "2017-08-17",
+    "last": "2026-09-23"
+  },
+  "sol": {
+    "image": "data/kk-research-2026-09-24/references/sol.png",
+    "sha256": "5eab0ca876d0ef8581bf1805e502dc7ff3fecc4d3cae53ccb952151aef187d9d",
+    "fileDate": "2026-09-24",
+    "screenClockUTC": "10:40:07",
+    "chartLatestCandleDate": "2026-09-24",
+    "feed": "coinbase-proxy",
+    "symbol": "SOL-USD",
+    "mode": "partial",
+    "displayed": [
+      103.15,
+      96.63
+    ],
+    "screenshotOHLC": [
+      114.99,
+      116.08,
+      112.55,
+      113.12
+    ],
+    "urls": [
+      "https://api.exchange.coinbase.com/products/SOL-USD/candles?granularity=86400&start=2026-09-23T00:00:00Z&end=2026-09-24T00:00:00Z"
+    ],
+    "candles": 1925,
+    "first": "2021-06-17",
+    "last": "2026-09-23"
+  },
+  "ray": {
+    "image": "data/kk-research-2026-09-24/references/ray.png",
+    "sha256": "7e9e64adb855bb2450cc79b25d73d386dc0335e32256bb4def25421c3d2df1d8",
+    "fileDate": "2026-09-24",
+    "screenClockUTC": "10:40:42",
+    "chartLatestCandleDate": "2026-09-24",
+    "feed": "binance-proxy",
+    "symbol": "RAYUSDT",
+    "mode": "partial",
+    "displayed": [
+      1.343,
+      1.263
+    ],
+    "screenshotOHLC": [
+      1.977,
+      2.163,
+      1.972,
+      1.992
+    ],
+    "urls": [
+      "https://data-api.binance.vision/api/v3/klines?symbol=RAYUSDT&interval=1d&startTime=1790121600000&endTime=1790207999999&limit=1000"
+    ],
+    "candles": 1871,
+    "first": "2021-08-10",
+    "last": "2026-09-23",
+    "alternateFeed": {
+      "provider": "kraken",
+      "symbol": "RAY/USD",
+      "url": "https://api.kraken.com/0/public/OHLC?pair=RAYUSD&interval=1440",
+      "candles": 720,
+      "first": "2024-10-04",
+      "last": "2026-09-23"
+    }
+  },
+  "doge": {
+    "image": "data/kk-research-2026-09-24/references/doge.png",
+    "sha256": "289410f6979081d9338bcff03ef8a18004844109fbf72fd017606d91950be8c1",
+    "fileDate": "2026-09-24",
+    "screenClockUTC": "10:40:58",
+    "chartLatestCandleDate": "2026-09-24",
+    "feed": "coinbase",
+    "symbol": "DOGE-USD",
+    "mode": "partial",
+    "displayed": [
+      0.08629,
+      0.08374
+    ],
+    "screenshotOHLC": [
+      0.09271,
+      0.09516,
+      0.09138,
+      0.09235
+    ],
+    "urls": [
+      "https://api.exchange.coinbase.com/products/DOGE-USD/candles?granularity=86400&start=2026-09-23T00:00:00Z&end=2026-09-24T00:00:00Z"
+    ],
+    "candles": 1939,
+    "first": "2021-06-03",
+    "last": "2026-09-23"
+  },
+  "hype": {
+    "image": "data/kk-research-2026-09-24/references/hype.png",
+    "sha256": "dd126d15ad564c52faed06efb57ce0e4c5d174ec618bce52910d6a3d34ba9883",
+    "fileDate": "2026-09-24",
+    "screenClockUTC": "10:41:42",
+    "chartLatestCandleDate": "2026-09-24",
+    "feed": "hyperliquid",
+    "symbol": "HYPE",
+    "mode": "historical",
+    "displayed": [
+      36.42,
+      38.591
+    ],
+    "screenshotOHLC": [
+      34.69,
+      36.179,
+      33.098,
+      33.548
+    ],
+    "urls": [
+      {
+        "url": "https://api.hyperliquid.xyz/info",
+        "request": {
+          "type": "candleSnapshot",
+          "req": {
+            "coin": "HYPE",
+            "interval": "1d",
+            "startTime": 1732838400000,
+            "endTime": 1790207999999
+          }
+        }
+      }
+    ],
+    "candles": 658,
+    "first": "2024-12-05",
+    "last": "2026-09-23",
+    "crosshairDate": "2025-12-04",
+    "feedCrosshairOHLC": [
+      34.668,
+      36.219,
+      33.069,
+      33.537
+    ]
+  },
+  "zec": {
+    "image": "data/kk-research-2026-09-24/references/zec.png",
+    "sha256": "6e8c1efd12db4247a438d2bc575a8b325b3fbb760490bb9a54ab7174e7b9fddc",
+    "fileDate": "2026-09-24",
+    "screenClockUTC": "10:42:19",
+    "chartLatestCandleDate": "2026-09-24",
+    "feed": "binance-proxy",
+    "symbol": "ZECUSDT",
+    "mode": "historical",
+    "displayed": [
+      46.21,
+      44.26
+    ],
+    "screenshotOHLC": [
+      48.97,
+      51.19,
+      48.53,
+      50.66
+    ],
+    "urls": [
+      "https://data-api.binance.vision/api/v3/klines?symbol=ZECUSDT&interval=1d&startTime=1789603200000&endTime=1790207999999&limit=1000"
+    ],
+    "candles": 2744,
+    "first": "2019-03-21",
+    "last": "2026-09-23",
+    "crosshairDate": "2025-09-20",
+    "feedCrosshairOHLC": [
+      48.97,
+      51.29,
+      48.5,
+      50.62
+    ]
+  },
+  "link": {
+    "image": "data/kk-research-2026-09-24/references/link.png",
+    "sha256": "e8697e7e8e534ef8d8520f09bbd8401d54efa6d73348ecc3d555e37499572e96",
+    "fileDate": "2026-09-24",
+    "screenClockUTC": "10:43:00",
+    "chartLatestCandleDate": "2026-09-24",
+    "feed": "binance-spot",
+    "symbol": "LINKUSDT",
+    "mode": "partial",
+    "displayed": [
+      11.63,
+      10.928
+    ],
+    "screenshotOHLC": [
+      12.356,
+      12.498,
+      12.094,
+      12.179
+    ],
+    "urls": [
+      "https://data-api.binance.vision/api/v3/klines?symbol=LINKUSDT&interval=1d&startTime=1788134400000&endTime=1790207999999&limit=1000"
+    ],
+    "candles": 2808,
+    "first": "2019-01-16",
+    "last": "2026-09-23"
+  }
+}
