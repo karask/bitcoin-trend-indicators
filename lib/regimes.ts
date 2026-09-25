@@ -231,6 +231,7 @@ export interface BacktestSummary {
 const BASE_INDICATOR_SPECS: Array<Omit<IndicatorSpec, "guidance">> = [
   { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { dailyCryptoFamily: "15/2,15/3,15/4,15/5", dailyStockFamily: "15/3,15/4,30/2,30/4", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-09-22", dailyConfirmations: 5 }, thresholdKind: "provisional", description: "Asset- and timeframe-specific SuperTrend presets. Daily crypto, stock and commodity families are independently grouped; weekly presets are unchanged.", disclaimer: "Daily presets are approximate screenshot fits constrained to small asset-class families, not recovered private formulas. Both directions require five consecutive completed daily confirmations and reset on failure. The ATR trail continues during confirmation. SUI/OP and screenshot counter alignment remain unresolved; AVAX/MSTR lack daily references. Weekly reference checks remain separate. Venue and history differences can change the trail.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
   { id: "kk_ema_ribbon", displayName: "KK EMA Ribbon", shortName: "KK EMA Ribbon", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { lengths: "32/34/48/58", boundaries: "32/58", source: "Close", calibrationDate: "2026-09-24", colourRule: "provisional alignment" }, thresholdKind: "conditional", description: "Closing-price EMA 32/58 ribbon with hidden 34/48 averages: gold for full bullish alignment, purple for bearish alignment, grey otherwise.", disclaimer: "September 14–24, 2026 daily checks support Close EMA32/58: BTC, ETH, DOGE, SUI and LINK match displayed rounding on the screenshot venue; JUP differs by one last decimal place on Bitstamp. SOL, HYPE and ZEC are close on proxy feeds. RAY remains unresolved: its September 24 composite slow value is near EMA40 on Binance and Kraken proxies, while its earlier screenshot was near EMA58. The 34/48 colour rule is provisional. Weekly uses the same lengths in weeks and is uncalibrated. Remaining assets are uncalibrated; this does not claim to reproduce a private formula." },
+  { id: "kk_200_ma", displayName: "KK 200 Moving Averages", shortName: "KK 200 MA", role: "confirmation", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { daily: 200, weekly: 200, method: "SMA of completed closes" }, thresholdKind: "fixed", description: "Price versus the 200-day SMA on 1D or 200-week SMA on 1W. The filled range is blue above the active average and orange below it.", disclaimer: "A transparent chart interpretation inspired by the supplied screenshot. Its original color formula is not visible, so the blue/orange rule here is explicitly defined rather than claimed as a replica." },
   { id: "support_band", displayName: "20 SMA / 21 EMA Support Band", shortName: "Support Band", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { sma: 20, ema: 21 }, thresholdKind: "fixed", description: "Above both averages is bullish, below both is bearish, and between is neutral." },
   { id: "supertrend", displayName: "SuperTrend 10/3", shortName: "SuperTrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { atr: 10, factor: 3 }, thresholdKind: "provisional", description: "A transparent ATR trailing regime line with close-based reversals.", disclaimer: "A transparent alternative commonly compared with private one-line systems; not a MoneyLine clone.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
   { id: "smma_ribbon", displayName: "SMMA Ribbon 15/19/25/29", shortName: "SMMA Ribbon", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { lengths: "15/19/25/29", source: "HL2" }, thresholdKind: "conditional", description: "Fully ordered averages are bullish or bearish; tangled averages are neutral.", disclaimer: "Community Larsson-style proxy only. The official Larsson Line formula is private." },
@@ -246,10 +247,17 @@ const BASE_INDICATOR_SPECS: Array<Omit<IndicatorSpec, "guidance">> = [
   { id: "adx", displayName: "ADX / DMI 14", shortName: "ADX / DMI", role: "confirmation", family: "trend strength", supportedTimeframes: ["1d", "1w"], parameters: { length: 14, weak: 20, strong: 25 }, thresholdKind: "conditional", description: "Direction comes from DMI ordering; ADX labels trend strength rather than a price regime." },
   { id: "chandelier", displayName: "Chandelier Exit 22/3", shortName: "Chandelier", role: "exit", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { length: 22, factor: 3 }, thresholdKind: "provisional", description: "A volatility-adjusted trailing exit overlay, excluded from family agreement." },
   { id: "mayer", displayName: "Mayer Multiple", shortName: "Mayer Multiple", role: "valuation", family: "valuation", supportedTimeframes: ["1d"], parameters: { average: 200 }, thresholdKind: "conditional", description: "Price divided by the 200-day average; shown as valuation context, not a regime vote." },
-  { id: "ma_200w", displayName: "200-Week Moving Average", shortName: "200W MA", role: "valuation", family: "valuation", supportedTimeframes: ["1w"], parameters: { average: 200 }, thresholdKind: "fixed", description: "A slow cycle reference, not an ordinary allocation switch." },
 ];
 
 const INDICATOR_GUIDANCE: Record<string, IndicatorGuidance> = {
+  kk_200_ma: {
+    summary: "Read the blue or orange price-to-average range on the selected timeframe; optionally show both 200-period lines.",
+    positive: { label: "Blue · above average", rule: "The completed close is above the active average: 200-day SMA on 1D, 200-week SMA on 1W. Blue describes the selected trend horizon, not a guaranteed rise." },
+    neutral: { label: "At the average", rule: "A close exactly on the active average is neutral; wait for a completed close on one side. The second line, when shown, is context only." },
+    negative: { label: "Orange · below average", rule: "The completed close is below the active average. Orange indicates weakness relative to that horizon, not a guaranteed decline." },
+    rationale: "The filled distance from price to the active SMA makes crossings visible. The 200-day line uses the last 200 daily candles, while the 200-week line spans roughly four years.",
+    caveats: ["The 'Show both averages' control changes the chart display only; the selected timeframe still determines the signal and backtest.", "The original screenshot's color formula is hidden, so this is a documented interpretation, not an exact reproduction."],
+  },
   kk_ema_ribbon: {
     summary: "Read the 32/58 EMA band with the provisional 34/48 alignment filter on completed closes.",
     positive: { label: "Gold / bullish", rule: "Closing-price EMA 32 > 34 > 48 > 58 establishes full bullish alignment." },
@@ -385,14 +393,6 @@ const INDICATOR_GUIDANCE: Record<string, IndicatorGuidance> = {
     negative: { label: "Higher extension", rule: "A higher multiple means greater extension, but this implementation defines no sell threshold." },
     rationale: "Price divided by its long average creates a scale-free measure of trend-relative valuation.",
     caveats: ["Excluded from regime agreement and backtest allocation decisions."],
-  },
-  ma_200w: {
-    summary: "Use the 200-week average as very slow cycle context, not as a precise trade switch.",
-    positive: { label: "Above cycle baseline", rule: "Price above the average is above its slow cycle baseline; that is not independently a buy instruction." },
-    neutral: { label: "Reference context", rule: "Near the line, treat it as context rather than a precise allocation decision." },
-    negative: { label: "Below cycle baseline", rule: "Price below the line indicates cycle compression, not automatically a sell and potentially the opposite from a valuation perspective." },
-    rationale: "The roughly four-year average supplies a stable but necessarily late cycle reference.",
-    caveats: ["Excluded from family agreement."],
   },
 };
 
@@ -745,6 +745,25 @@ function longSma(candles: Candle[], spec: IndicatorSpec, timeframe: Timeframe): 
   return buildSnapshot(spec, candles, states, [points(candles, avg, `${n} SMA`, "#d7a928")], { sma: avg.at(-1) ?? null, slope: finite(avg.at(-1)) && finite(avg.at(-2)) ? avg.at(-1)! - avg.at(-2)! : null }, trigger, trigger, `Exact next-close threshold from the prior ${n - 1} closes`);
 }
 
+function kk200MovingAverages(candles: Candle[], spec: IndicatorSpec, timeframe: Timeframe): SignalSnapshot {
+  const closes = candles.map(candle => candle.close);
+  const average = sma(closes, 200);
+  const states = closes.map((close, index): RegimeState | null => !finite(average[index]) ? null : close > average[index]! ? "bull" : close < average[index]! ? "bear" : "neutral");
+  const trigger = closes.length >= 199 ? closes.slice(-199).reduce((sum, close) => sum + close, 0) / 199 : null;
+  const label = timeframe === "1d" ? "200-day SMA" : "200-week SMA";
+  const line = points(candles, average, label, timeframe === "1d" ? "#d26059" : "#298fb1");
+  const ribbon: RibbonBand = {
+    id: "kk-200-price-range", name: `Price to ${label}`,
+    palette: { bull: "#2687d2", bear: "#ef9128", neutral: "#919896" },
+    fillOpacity: .58,
+    points: candles.flatMap((candle, index) => !finite(average[index]) ? [] : [{
+      time: candle.time, upper: Math.max(candle.close, average[index]!), lower: Math.min(candle.close, average[index]!), state: states[index] as RegimeState,
+    }]),
+  };
+  return buildSnapshot(spec, candles, states, [line], { sma: average.at(-1) ?? null }, trigger, trigger,
+    `Completed close versus ${label}; blue above, orange below`, undefined, { ribbons: [ribbon] });
+}
+
 function donchian(candles: Candle[], spec: IndicatorSpec, entry: number, exit: number): SignalSnapshot {
   const upper: Array<number | null> = Array(candles.length).fill(null), lower = [...upper], states: Array<RegimeState | null> = Array(candles.length).fill(null);
   let state: RegimeState = "neutral";
@@ -847,14 +866,10 @@ function chandelier(candles: Candle[], spec: IndicatorSpec): SignalSnapshot {
   return buildSnapshot(spec, candles, states, [points(candles, longExit, "Long exit", "#c95545", true)], { longExit: longExit.at(-1) ?? null, shortExit: shortExit.at(-1) ?? null }, shortExit.at(-1) ?? null, longExit.at(-1) ?? null, "Trailing exit level is provisional until close");
 }
 
-function valuation(candles: Candle[], spec: IndicatorSpec, timeframe: Timeframe): SignalSnapshot {
+function valuation(candles: Candle[], spec: IndicatorSpec): SignalSnapshot {
   const closes = candles.map(c => c.close), avg = sma(closes, 200);
-  if (spec.id === "mayer") {
-    const multiple = finite(avg.at(-1)) ? closes.at(-1)! / avg.at(-1)! : null;
-    return buildSnapshot(spec, candles, candles.map(() => null), [], { multiple, sma200: avg.at(-1) ?? null }, null, null, "Valuation context only; excluded from regime agreement");
-  }
-  const states = closes.map((c, i): RegimeState | null => !finite(avg[i]) ? null : c >= avg[i]! ? "bull" : "bear");
-  return buildSnapshot(spec, candles, states, [points(candles, avg, "200W MA", "#d7a928")], { sma200: avg.at(-1) ?? null }, avg.at(-1) ?? null, avg.at(-1) ?? null, timeframe === "1w" ? "Cycle reference only; excluded from regime agreement" : "Weekly only");
+  const multiple = finite(avg.at(-1)) ? closes.at(-1)! / avg.at(-1)! : null;
+  return buildSnapshot(spec, candles, candles.map(() => null), [], { multiple, sma200: avg.at(-1) ?? null }, null, null, "Valuation context only; excluded from regime agreement");
 }
 
 export function calculateIndicators(candles: Candle[], timeframe: Timeframe, options: IndicatorCalculationOptions = {}): SignalSnapshot[] {
@@ -872,6 +887,7 @@ export function calculateIndicators(candles: Candle[], timeframe: Timeframe, opt
       case "kk_supertrend": return timeframe === "1d" && !options.kkSupertrendLegacySingleClose
         ? dailyKkSupertrend(candles, spec, kkAtrLength, kkFactor)
         : supertrend(candles, spec, kkAtrLength, kkFactor, { name: "KK Supertrend", color: "#d7a928" });
+      case "kk_200_ma": return kk200MovingAverages(candles, spec, timeframe);
       case "smma_ribbon": return ribbon(candles, spec);
       case "kk_ema_ribbon": return kkEmaRibbon(candles, spec, timeframe);
       case "super_guppy": return superGuppy(candles, spec, timeframe, options.superGuppy);
@@ -885,11 +901,11 @@ export function calculateIndicators(candles: Candle[], timeframe: Timeframe, opt
       case "golden_cross": return goldenCross(candles, spec);
       case "adx": return adx(candles, spec);
       case "chandelier": return chandelier(candles, spec);
-      case "mayer": case "ma_200w": return valuation(candles, spec, timeframe);
+      case "mayer": return valuation(candles, spec);
       default: return buildSnapshot(spec, candles, candles.map(() => null), [], {}, null, null, "Not available");
     }
   }).map(snapshot => {
-    const required: Record<string, number> = { support_band: 20, supertrend: 10, kk_supertrend: kkAtrLength, smma_ribbon: 29, kk_ema_ribbon: 58, super_guppy: options.superGuppy?.ema200Filter ? 200 : 1, long_sma: timeframe === "1d" ? 200 : 30, donchian_20_10: 21, ichimoku: 78, macd: 1, psar: 2, vortex: 15, heikin_ashi: 1, golden_cross: 200, adx: 14, chandelier: 22, mayer: 200, ma_200w: 200 };
+    const required: Record<string, number> = { support_band: 20, supertrend: 10, kk_supertrend: kkAtrLength, kk_200_ma: 200, smma_ribbon: 29, kk_ema_ribbon: 58, super_guppy: options.superGuppy?.ema200Filter ? 200 : 1, long_sma: timeframe === "1d" ? 200 : 30, donchian_20_10: 21, ichimoku: 78, macd: 1, psar: 2, vortex: 15, heikin_ashi: 1, golden_cross: 200, adx: 14, chandelier: 22, mayer: 200 };
     const validStates = snapshot.states.filter(state => state != null).length;
     const ready = snapshot.id === "mayer" ? finite(snapshot.values.multiple) : snapshot.confirmation ? validStates > 0 : snapshot.states.at(-1) != null;
     return { ...snapshot, readiness: { ready, availableCandles: snapshot.confirmation ? candles.filter(c => c.complete).length : candles.length, requiredCandles: required[snapshot.id] ?? 1, validStates } };

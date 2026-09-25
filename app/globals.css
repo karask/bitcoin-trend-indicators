@@ -156,3 +156,9 @@ button:disabled { opacity:.5; cursor:not-allowed; }
 .timeframe-hint-body p { font-size:.875rem; line-height:1.6; margin:0 0 10px; }
 .timeframe-hint-body small { display:block; color:var(--muted); font-size:.75rem; line-height:1.5; }
 @media(max-width:620px) { .timeframe-hint>summary { min-height:32px; display:flex; align-items:center; gap:4px; }.timeframe-hint[open] { width:100%; }.timeframe-hint-body { position:static; width:100%; box-shadow:none; } }
+
+.kk-200-meaning { margin:8px 0 0; font-size:.875rem; }
+.kk-200-blue { color:#1972b4; font-weight:700; }
+.kk-200-orange { color:#bd6310; font-weight:700; }
+[data-theme="dark"] .kk-200-blue { color:#78bdff; }
+[data-theme="dark"] .kk-200-orange { color:#ffb568; }

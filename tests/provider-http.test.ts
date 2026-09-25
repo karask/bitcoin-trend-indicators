@@ -71,7 +71,7 @@ test("new coins have one verified USD venue, separate weekly and daily KK preset
   assert.equal(minimumSourceCandles("btc", "1w"), 52);
   const short = calculateIndicators(daily.slice(0, 31), "1w", { asset: "hype" });
   assert.equal(short.find(item => item.id === "kk_supertrend")!.readiness?.ready, true);
-  assert.equal(short.find(item => item.id === "ma_200w")!.readiness?.ready, false);
+  assert.equal(short.find(item => item.id === "kk_200_ma")!.readiness?.ready, false);
 });
 
 test("all assets are refreshed once across the five existing cron slots", () => {

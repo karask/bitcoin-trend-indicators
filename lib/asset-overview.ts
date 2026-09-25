@@ -41,7 +41,7 @@ export function overviewState(signal: SignalSnapshot | undefined, supported: boo
 /** Conditional models do not have a guaranteed one-price reversal. */
 export function overviewLevels(signal: SignalSnapshot | undefined): Array<{ label: string; price: number }> {
   if (!signal?.readiness?.ready || signal.thresholdKind === "conditional") return [];
-  if (signal.id === "ma_200w") return signal.values.sma200 != null ? [{ label: "Baseline", price: signal.values.sma200 }] : [];
+  if (signal.id === "kk_200_ma") return signal.values.sma != null ? [{ label: signal.overlays[0]?.name ?? "200 SMA", price: signal.values.sma }] : [];
   const levels = [];
   if (signal.confirmation) {
     const price = signal.bullTrigger ?? signal.bearTrigger;

@@ -144,7 +144,7 @@ test("overview shows all assets crypto first, one global indicator selector and 
   assert.match(html, /No automatic polling/);
   assert.match(html, /Changing the indicator does not fetch data/);
   assert.match(html, /value="mayer"/);
-  assert.match(html, /value="ma_200w"/);
+  assert.match(html, /value="kk_200_ma"/);
   assert.doesNotMatch(html, /Pin current market|KK watchlist/);
 });
 

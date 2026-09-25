@@ -7,6 +7,7 @@ const GUIDANCE: Record<string, CandleGuidance> = {
   supertrend: { label: "1W", explanation: "Use weekly closes for the major trend and the confirmed reversal level. Daily signals react sooner but can reverse more frequently. Supertrend works on either timeframe; weekly is a cycle-tracking preference." },
   kk_supertrend: { label: "1W", explanation: "Weekly is the primary view for the app’s crypto reference calibrations. Daily is a separate calibrated signal with its own presets and five-close confirmation. Matching a screenshot does not establish trading performance." },
   smma_ribbon: { label: "1D", explanation: "Daily candles make the 15/19/25/29 ribbon useful for intermediate trend changes. Watch full bullish or bearish stacking; tangled averages are neutral. Weekly is a slower 15–29-week context view. This is a community proxy, not the official Larsson Line." },
+  kk_200_ma: { label: "1D / 1W", explanation: "On 1D, the blue/orange range compares price with the 200-day SMA. On 1W, it compares price with the 200-week SMA. Show both averages adds the other line for context without changing the selected signal." },
   kk_ema_ribbon: { label: "1D", explanation: "Calibrated to the September 14, 2026 daily BTC, ETH and SOL screenshots. EMA 32/58 on Close forms the visible ribbon; hidden EMA 34/48 alignment approximates the grey transitions. Weekly is also available using the same lengths in weeks, giving a slower, uncalibrated view. Colour logic is provisional; other assets are uncalibrated." },
   super_guppy: { label: "1D", explanation: "Use daily candles to read agreement, separation and compression between the Trader and Investor EMA groups. Weekly stretches the slow group to 25–70 weeks for cycle context. Gray can mean a pullback or an unestablished trend, not an automatic exit. The author does not prescribe one optimal timeframe." },
   long_sma: { label: "1D", explanation: "Use the 200-day SMA as the primary long-trend baseline. The weekly view uses a 30-week SMA: a useful companion, but a different calculation." },
@@ -20,7 +21,6 @@ const GUIDANCE: Record<string, CandleGuidance> = {
   adx: { label: "Match trend", explanation: "Use weekly ADX/DMI to confirm a weekly trend, or daily to assess a daily setup. ADX measures strength; +DI and −DI supply direction. A daily reading does not confirm the strength of a weekly signal." },
   chandelier: { label: "Match position", explanation: "Use daily 22/3 for daily swing management, or weekly for a deliberately slower trailing exit. Keep the exit timeframe consistent with the position’s planned horizon." },
   mayer: { label: "1D", explanation: "Price divided by the 200-day SMA: daily is part of the definition. Use this as valuation context, not a standalone trend or entry signal." },
-  ma_200w: { label: "1W", explanation: "The 200-week average is a slow long-term reference. Weekly is part of its definition. It is context rather than an ordinary entry or exit switch." },
 };
 
 export function timeframeGuidance(id: string, market: GuidanceMarket): CandleGuidance | undefined {

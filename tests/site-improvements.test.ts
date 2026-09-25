@@ -50,13 +50,13 @@ test("price padding is proportional for DOGE, flat prices, and logarithmic axes"
 
 test("not-ready indicators are explicitly unavailable and have no zero-return backtest", () => {
   const candles = history(25, 7 * DAY), signals = calculateIndicators(candles, "1w", { asset: "sui" });
-  for (const id of ["long_sma", "ichimoku", "ma_200w"]) {
+  for (const id of ["long_sma", "ichimoku", "kk_200_ma"]) {
     const signal = signals.find(item => item.id === id)!;
     assert.equal(signal.readiness?.ready, false, id);
     assert.equal(signal.readiness?.availableCandles, 25);
     assert.deepEqual(backtest(candles, [signal], "1w"), []);
   }
-  assert.equal(signals.find(item => item.id === "ma_200w")!.readiness?.requiredCandles, 200);
+  assert.equal(signals.find(item => item.id === "kk_200_ma")!.readiness?.requiredCandles, 200);
   const noCloud = familyRows(signals).find(row => row.family === "cloud/projected support")!;
   assert.equal(noCloud.state, null);
   assert.equal(noCloud.members, 0);
@@ -68,7 +68,7 @@ test("not-ready indicators are explicitly unavailable and have no zero-return ba
 
 test("dashboard sends complete chart history and preserves null counterpart readiness", () => {
   const daily = dataset(history(900), "1d"), weekly = dataset(history(171, 7 * DAY), "1w");
-  const payload = buildDashboardPayload("sui", "coinbase", "1w", "ma_200w", daily, weekly);
+  const payload = buildDashboardPayload("sui", "coinbase", "1w", "kk_200_ma", daily, weekly);
   assert.equal(payload.candles.length, 171);
   assert.equal(payload.selected.states.length, 171);
   assert.equal(payload.selected.state, null);

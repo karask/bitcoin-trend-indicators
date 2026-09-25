@@ -24,7 +24,7 @@ test("overview catalog includes every asset once, crypto before stocks, and link
     assert.equal(url.searchParams.get("source"), asset.lab === "crypto" ? asset.source : null);
   }
   assert.equal(overviewIndicator("bad").id, "kk_supertrend");
-  assert.equal(overviewTimeframe("ma_200w"), "1w");
+  assert.equal(overviewTimeframe("kk_200_ma"), "1w");
   assert.equal(overviewTimeframe("golden_cross"), "1d");
 });
 
@@ -66,8 +66,8 @@ test("overview conditions and supporting model labels do not invent reversal pri
   const mayer = signals.find(item => item.id === "mayer")!;
   assert.match(overviewState(mayer, true), /200D price ratio/);
   assert.deepEqual(overviewLevels(mayer), []);
-  const baseline = calculateIndicators(candles, "1w", { indicatorIds: ["ma_200w"] })[0];
-  assert.deepEqual(overviewLevels(baseline), [{ label: "Baseline", price: baseline.values.sma200 }]);
+  const baseline = calculateIndicators(candles, "1w", { indicatorIds: ["kk_200_ma"] })[0];
+  assert.deepEqual(overviewLevels(baseline), [{ label: "200-week SMA", price: baseline.values.sma }]);
   const short = calculateIndicators(candles.slice(0, 2), "1w", { indicatorIds: ["kk_supertrend"] })[0];
   assert.equal(overviewState(short, true), "Insufficient history");
   assert.deepEqual(overviewLevels(short), []);
