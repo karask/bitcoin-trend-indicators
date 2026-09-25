@@ -118,6 +118,7 @@ function titleState(state: RegimeState | null | undefined) {
 
 function roleStateLabel(role: IndicatorRole, id: string, state: RegimeState | null | undefined) {
   if (!state) return undefined;
+  if (id === "kk_200_ma") return state === "bull" ? "Above SMA" : state === "bear" ? "Below SMA" : "At SMA";
   if (role === "confirmation") return state === "bull" ? "Positive" : state === "bear" ? "Negative" : "No confirmation";
   if (role === "exit") return state === "bull" ? "Stop intact" : state === "bear" ? "Exit condition" : "N/A";
   if (role === "valuation") return id === "mayer" ? "Context" : state === "bull" ? "Above baseline" : state === "bear" ? "Below baseline" : "Context";

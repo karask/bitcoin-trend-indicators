@@ -44,6 +44,7 @@ const formatPct = (value: number | null | undefined, signed = false) => value ==
 const titleState = (state: string) => state === "bull" ? "Bullish" : state === "bear" ? "Bearish" : state === "neutral" ? "Neutral" : "Unavailable";
 const roleStateLabel = (role: Role, id: string, state: State | null | undefined) => {
   if (!state) return undefined;
+  if (id === "kk_200_ma") return state === "bull" ? "Above SMA" : state === "bear" ? "Below SMA" : "At SMA";
   if (role === "confirmation") return state === "bull" ? "Positive" : state === "bear" ? "Negative" : "No confirmation";
   if (role === "exit") return state === "bull" ? "Stop intact" : state === "bear" ? "Exit condition" : "N/A";
   if (role === "valuation") return id === "mayer" ? "Context" : state === "bull" ? "Above baseline" : state === "bear" ? "Below baseline" : "Context";

@@ -39,6 +39,16 @@ test("chart exploration exposes range, log scale, pan, fullscreen and keyboard a
   assert.match(html, /Use left and right arrow keys/);
 });
 
+test("KK weekly chart opens in the combined view and identifies the 200-day-driven range", () => {
+  const daily = Array.from({ length: candles.length * 7 }, (_, index) => ({ ...candles[Math.floor(index / 7)], time: candles[0].time + index * 86_400_000 }));
+  const weeklySignal = calculateIndicators(candles, "1w", { indicatorIds: ["kk_200_ma"] })[0];
+  const html = renderToStaticMarkup(<ChartExplorer candles={candles} dailyCandles={daily} weeklyCandles={candles} selected={{ ...weeklySignal, flips: [] }} denomination="USD" timeframe="1w" theme="light" />);
+  assert.match(html, /aria-pressed="true"[^>]*>Show both averages<\/button>/);
+  assert.match(html, /completed weekly close above the 200-day SMA/);
+  assert.match(html, /200-day line drives the colored range/);
+  assert.match(html, /200-week line and status card/);
+});
+
 test("readiness has honest copy, not a neutral badge or invented test returns", () => {
   const html = renderToStaticMarkup(<SignalReadiness readiness={{ ready: false, availableCandles: 171, requiredCandles: 200, validStates: 0 }} lastFlip={null} timeframe="1w" market="crypto" />);
   assert.match(html, /Insufficient history/);

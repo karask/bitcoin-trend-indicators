@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { calculateIndicators, INDICATOR_SPECS, type Candle } from "../lib/regimes.ts";
-import { kk200CompanionOverlay } from "../lib/kk-200-overlay.ts";
+import { kk200CompanionOverlay, kk200WeeklyCombinedRange } from "../lib/kk-200-overlay.ts";
 
 const DAY = 86_400_000;
 const MONDAY = Date.UTC(2020, 0, 6);
@@ -46,4 +46,23 @@ test("weekly companion uses the last daily close in the completed week", () => {
   const final = projected.points.at(-1)!;
   assert.equal(final.time, weekly.at(-1)!.time);
   assert.equal(final.value, 135.5);
+});
+
+test("combined weekly range follows the 200-day line even when the 200-week signal stays bullish", () => {
+  const sampleDaily = daily.map((candle, index) => ({ ...candle, close: index >= daily.length - 210 ? 180 : 100 }));
+  sampleDaily[sampleDaily.length - 8].close = 150;
+  sampleDaily[sampleDaily.length - 1].close = 190;
+  const sampleWeekly = weekly.map((candle, index) => ({ ...candle, close: index === 208 ? 150 : index === 209 ? 190 : 100 }));
+  const signal = calculateIndicators(sampleWeekly, "1w", { indicatorIds: ["kk_200_ma"] })[0];
+  const combined = kk200WeeklyCombinedRange(sampleWeekly, sampleDaily);
+  assert.equal(signal.states[208], "bull");
+  assert.equal(signal.states[209], "bull");
+  assert.equal(combined.states[208], "bear");
+  assert.equal(combined.states[209], "bull");
+  assert.equal(combined.flips.at(-1)?.time, sampleWeekly[209].time);
+  assert.equal(combined.ribbon.points.at(-1)?.state, "bull");
+  assert.equal(combined.ribbon.points.at(-2)?.state, "bear");
+  assert.equal(combined.ribbon.points.at(-1)?.lower, combined.dailyLine.points.at(-1)?.value);
+  const futureMonday: Candle = { ...sampleDaily.at(-1)!, time: sampleWeekly.at(-1)!.time + 7 * DAY, close: 1000 };
+  assert.equal(kk200WeeklyCombinedRange(sampleWeekly, [...sampleDaily, futureMonday]).dailyLine.points.at(-1)?.value, combined.dailyLine.points.at(-1)?.value);
 });
