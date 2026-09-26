@@ -49,6 +49,19 @@ test("KK weekly chart opens in the combined view and identifies the 200-day-driv
   assert.match(html, /200-week line and status card/);
 });
 
+test("50/200 EMA chart explains the active daily or weekly close rule", () => {
+  for (const timeframe of ["1d", "1w"] as const) {
+    const signal = calculateIndicators(candles, timeframe, { indicatorIds: ["kk_50_200_ema"] })[0];
+    const html = renderToStaticMarkup(<ChartExplorer candles={candles} selected={{ ...signal, flips: [] }} denomination="USD" timeframe={timeframe} theme="light" />);
+    const unit = timeframe === "1w" ? "week" : "day";
+    assert.ok(html.includes(`50-${unit} EMA`));
+    assert.ok(html.includes(`200-${unit} EMA`));
+    assert.ok(html.includes(`completed ${timeframe === "1w" ? "weekly" : "daily"} close is strictly above both`));
+    assert.match(html, /if and only if/);
+    assert.doesNotMatch(html, /Show both averages/);
+  }
+});
+
 test("readiness has honest copy, not a neutral badge or invented test returns", () => {
   const html = renderToStaticMarkup(<SignalReadiness readiness={{ ready: false, availableCandles: 171, requiredCandles: 200, validStates: 0 }} lastFlip={null} timeframe="1w" market="crypto" />);
   assert.match(html, /Insufficient history/);
@@ -155,6 +168,7 @@ test("overview shows all assets crypto first, one global indicator selector and 
   assert.match(html, /Changing the indicator does not fetch data/);
   assert.match(html, /value="mayer"/);
   assert.match(html, /value="kk_200_ma"/);
+  assert.match(html, /value="kk_50_200_ema"/);
   assert.doesNotMatch(html, /Pin current market|KK watchlist/);
 });
 

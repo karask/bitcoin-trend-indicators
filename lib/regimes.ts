@@ -232,6 +232,7 @@ const BASE_INDICATOR_SPECS: Array<Omit<IndicatorSpec, "guidance">> = [
   { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { dailyCryptoFamily: "15/2,15/3,15/4,15/5", dailyStockFamily: "15/3,15/4,30/2,30/4", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-09-22", dailyConfirmations: 5 }, thresholdKind: "provisional", description: "Asset- and timeframe-specific SuperTrend presets. Daily crypto, stock and commodity families are independently grouped; weekly presets are unchanged.", disclaimer: "Daily presets are approximate screenshot fits constrained to small asset-class families, not recovered private formulas. Both directions require five consecutive completed daily confirmations and reset on failure. The ATR trail continues during confirmation. SUI/OP and screenshot counter alignment remain unresolved; AVAX/MSTR lack daily references. Weekly reference checks remain separate. Venue and history differences can change the trail.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
   { id: "kk_ema_ribbon", displayName: "KK EMA Ribbon", shortName: "KK EMA Ribbon", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { lengths: "32/34/48/58", boundaries: "32/58", source: "Close", calibrationDate: "2026-09-24", colourRule: "provisional alignment" }, thresholdKind: "conditional", description: "Closing-price EMA 32/58 ribbon with hidden 34/48 averages: gold for full bullish alignment, purple for bearish alignment, grey otherwise.", disclaimer: "September 14–24, 2026 daily checks support Close EMA32/58: BTC, ETH, DOGE, SUI and LINK match displayed rounding on the screenshot venue; JUP differs by one last decimal place on Bitstamp. SOL, HYPE and ZEC are close on proxy feeds. RAY remains unresolved: its September 24 composite slow value is near EMA40 on Binance and Kraken proxies, while its earlier screenshot was near EMA58. The 34/48 colour rule is provisional. Weekly uses the same lengths in weeks and is uncalibrated. Remaining assets are uncalibrated; this does not claim to reproduce a private formula." },
   { id: "kk_200_ma", displayName: "KK 200 Moving Averages", shortName: "KK 200 MA", role: "confirmation", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { daily: 200, weekly: 200, method: "SMA of completed closes" }, thresholdKind: "fixed", description: "Price versus the 200-day SMA on 1D or 200-week SMA on 1W. The filled range compares price with the active average; on the combined weekly chart it compares price with the 200-day SMA while retaining the 200-week SMA as context.", disclaimer: "A transparent chart interpretation inspired by the supplied screenshot. Its original color formula is not visible, so the blue/orange rule here is explicitly defined rather than claimed as a replica." },
+  { id: "kk_50_200_ema", displayName: "KK 50/200 week EMA", shortName: "KK 50/200 EMA", role: "confirmation", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { fast: 50, slow: 200, method: "EMA of completed closes", primaryTimeframe: "1W", dailyEquivalent: "50/200-day EMA" }, thresholdKind: "fixed", description: "Bullish if and only if the completed close is strictly above both the 50-period and 200-period EMAs. Below both is bearish; between or touching either line is neutral.", sourceUrl: "https://www.tradingview.com/support/solutions/43000592270-exponential-moving-average/" },
   { id: "support_band", displayName: "20 SMA / 21 EMA Support Band", shortName: "Support Band", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { sma: 20, ema: 21 }, thresholdKind: "fixed", description: "Above both averages is bullish, below both is bearish, and between is neutral." },
   { id: "supertrend", displayName: "SuperTrend 10/3", shortName: "SuperTrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { atr: 10, factor: 3 }, thresholdKind: "provisional", description: "A transparent ATR trailing regime line with close-based reversals.", disclaimer: "A transparent alternative commonly compared with private one-line systems; not a MoneyLine clone.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
   { id: "smma_ribbon", displayName: "SMMA Ribbon 15/19/25/29", shortName: "SMMA Ribbon", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { lengths: "15/19/25/29", source: "HL2" }, thresholdKind: "conditional", description: "Fully ordered averages are bullish or bearish; tangled averages are neutral.", disclaimer: "Community Larsson-style proxy only. The official Larsson Line formula is private." },
@@ -250,6 +251,14 @@ const BASE_INDICATOR_SPECS: Array<Omit<IndicatorSpec, "guidance">> = [
 ];
 
 const INDICATOR_GUIDANCE: Record<string, IndicatorGuidance> = {
+  kk_50_200_ema: {
+    summary: "Compare the completed close with the blue 50 EMA and orange 200 EMA. Weekly is the reference view; daily applies the same rule to 50/200-day EMAs.",
+    positive: { label: "Bullish · above both", rule: "Bullish if and only if the completed candle closes strictly above both EMAs. The 50 EMA does not need to be above the 200 EMA." },
+    neutral: { label: "Neutral · between or touching", rule: "A completed close between the two EMAs, or exactly on either line, is not bullish. It is neutral until price closes above both or below both." },
+    negative: { label: "Bearish · below both", rule: "A completed close strictly below both EMAs is bearish." },
+    rationale: "The 50 EMA tracks the faster trend and the 200 EMA the slower baseline. Reclaiming both means price has recovered above both reference levels. EMA gives recent closes more weight than SMA.",
+    caveats: ["A live candle can cross these lines before the weekly or daily close; only completed candles confirm the state here.", "1D uses 50/200 daily closes, a shorter trend horizon than 50/200 weekly closes. For stocks, days mean trading sessions.", "Signals require at least 200 completed candles. EMA values depend on the price feed and available history; the reference screenshot uses an INDEX feed."]
+  },
   kk_200_ma: {
     summary: "Read price against the 200-day or 200-week SMA separately. The combined weekly chart shows both lines and colors the range against the 200-day SMA.",
     positive: { label: "Blue · above average", rule: "In a single-average view, the completed close is above the active SMA. In the combined weekly chart, blue compares the weekly close with the 200-day SMA; the 200-week signal remains a separate slow baseline." },
@@ -397,6 +406,10 @@ const INDICATOR_GUIDANCE: Record<string, IndicatorGuidance> = {
 };
 
 export const INDICATOR_SPECS: IndicatorSpec[] = BASE_INDICATOR_SPECS.map(spec => ({ ...spec, guidance: INDICATOR_GUIDANCE[spec.id] }));
+
+export function indicatorDisplayName(spec: Pick<IndicatorSpec, "id" | "displayName">, timeframe: Timeframe): string {
+  return spec.id === "kk_50_200_ema" ? `KK 50/200 ${timeframe === "1w" ? "week" : "day"} EMA` : spec.displayName;
+}
 
 const finite = (v: number | null | undefined): v is number => typeof v === "number" && Number.isFinite(v);
 
@@ -738,6 +751,29 @@ function superGuppy(candles: Candle[], spec: IndicatorSpec, timeframe: Timeframe
   }, null, null, `R1.2 · ${config.showSwing ? "Swing on" : "Swing off"} · ${config.showBreak ? "Trend Break on" : "Trend Break off"} · ${config.lookback}-bar repeat filter`, `Trader: aqua up / blue down / gray · Investor: lime up / red down / gray · source ${config.source.toUpperCase()}`, { ribbons, events, barColors });
 }
 
+function kk50200Ema(candles: Candle[], spec: IndicatorSpec, timeframe: Timeframe): SignalSnapshot {
+  const completed = candles.filter(candle => candle.complete);
+  const closes = completed.map(candle => candle.close);
+  const fast = ema(closes, 50), slow = ema(closes, 200);
+  const states = closes.map((close, index): RegimeState | null => index < 199 ? null
+    : close > Math.max(fast[index]!, slow[index]!) ? "bull"
+    : close < Math.min(fast[index]!, slow[index]!) ? "bear" : "neutral");
+  const unit = timeframe === "1w" ? "week" : "day", period = timeframe === "1w" ? "weekly" : "daily";
+  const fastValue = completed.length >= 50 ? fast.at(-1)! : null;
+  const slowValue = completed.length >= 200 ? slow.at(-1)! : null;
+  const ready = fastValue != null && slowValue != null;
+  // Close > EMA(next close) iff close > EMA(previous completed close), for either length.
+  const snapshot = buildSnapshot({ ...spec, displayName: indicatorDisplayName(spec, timeframe) }, completed, states, [
+    points(completed, fast.map((value, index) => index >= 49 ? value : null), `50-${unit} EMA`, "#4779e6"),
+    points(completed, slow.map((value, index) => index >= 199 ? value : null), `200-${unit} EMA`, "#ef9c24"),
+  ], { ema50: fastValue, ema200: slowValue }, ready ? Math.max(fastValue, slowValue) : null, ready ? Math.min(fastValue, slowValue) : null,
+  "Next-close thresholds from completed EMAs; touching either line is not bullish",
+  `Bullish if and only if the completed ${period} close is strictly above both the 50-${unit} EMA (blue) and 200-${unit} EMA (orange). Below both is bearish; between or touching either line is neutral.${timeframe === "1d" ? " This daily equivalent tracks a shorter trend than the weekly reference." : ""}`);
+  let completedIndex = 0;
+  snapshot.states = candles.map(candle => candle.complete ? states[completedIndex++] : null);
+  return snapshot;
+}
+
 function longSma(candles: Candle[], spec: IndicatorSpec, timeframe: Timeframe): SignalSnapshot {
   const n = timeframe === "1d" ? 200 : 30, closes = candles.map(c => c.close), avg = sma(closes, n);
   const states = closes.map((c, i): RegimeState | null => !finite(avg[i]) ? null : c >= avg[i]! ? "bull" : "bear");
@@ -888,6 +924,7 @@ export function calculateIndicators(candles: Candle[], timeframe: Timeframe, opt
         ? dailyKkSupertrend(candles, spec, kkAtrLength, kkFactor)
         : supertrend(candles, spec, kkAtrLength, kkFactor, { name: "KK Supertrend", color: "#d7a928" });
       case "kk_200_ma": return kk200MovingAverages(candles, spec, timeframe);
+      case "kk_50_200_ema": return kk50200Ema(candles, spec, timeframe);
       case "smma_ribbon": return ribbon(candles, spec);
       case "kk_ema_ribbon": return kkEmaRibbon(candles, spec, timeframe);
       case "super_guppy": return superGuppy(candles, spec, timeframe, options.superGuppy);
@@ -905,10 +942,11 @@ export function calculateIndicators(candles: Candle[], timeframe: Timeframe, opt
       default: return buildSnapshot(spec, candles, candles.map(() => null), [], {}, null, null, "Not available");
     }
   }).map(snapshot => {
-    const required: Record<string, number> = { support_band: 20, supertrend: 10, kk_supertrend: kkAtrLength, kk_200_ma: 200, smma_ribbon: 29, kk_ema_ribbon: 58, super_guppy: options.superGuppy?.ema200Filter ? 200 : 1, long_sma: timeframe === "1d" ? 200 : 30, donchian_20_10: 21, ichimoku: 78, macd: 1, psar: 2, vortex: 15, heikin_ashi: 1, golden_cross: 200, adx: 14, chandelier: 22, mayer: 200 };
+    const required: Record<string, number> = { support_band: 20, supertrend: 10, kk_supertrend: kkAtrLength, kk_200_ma: 200, kk_50_200_ema: 200, smma_ribbon: 29, kk_ema_ribbon: 58, super_guppy: options.superGuppy?.ema200Filter ? 200 : 1, long_sma: timeframe === "1d" ? 200 : 30, donchian_20_10: 21, ichimoku: 78, macd: 1, psar: 2, vortex: 15, heikin_ashi: 1, golden_cross: 200, adx: 14, chandelier: 22, mayer: 200 };
     const validStates = snapshot.states.filter(state => state != null).length;
-    const ready = snapshot.id === "mayer" ? finite(snapshot.values.multiple) : snapshot.confirmation ? validStates > 0 : snapshot.states.at(-1) != null;
-    return { ...snapshot, readiness: { ready, availableCandles: snapshot.confirmation ? candles.filter(c => c.complete).length : candles.length, requiredCandles: required[snapshot.id] ?? 1, validStates } };
+    const completedOnly = snapshot.confirmation != null || snapshot.id === "kk_50_200_ema";
+    const ready = snapshot.id === "mayer" ? finite(snapshot.values.multiple) : completedOnly ? validStates > 0 : snapshot.states.at(-1) != null;
+    return { ...snapshot, readiness: { ready, availableCandles: completedOnly ? candles.filter(c => c.complete).length : candles.length, requiredCandles: required[snapshot.id] ?? 1, validStates } };
   });
 }
 

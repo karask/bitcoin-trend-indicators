@@ -9,7 +9,7 @@ export default function MobileMatrix({ rows, selectedId, onSelect }: { rows: Mob
   const state = (value: RegimeState | null | undefined, row: MobileModel) => {
     if (!value) return "Not ready / N/A";
     if (row.role === "valuation") return row.id === "mayer" ? "Price-ratio context" : value === "bull" ? "Above baseline" : "Below baseline";
-    if (row.role === "confirmation") return value === "bull" ? "Positive" : value === "bear" ? "Negative" : "No confirmation";
+    if (row.role === "confirmation" && row.id !== "kk_50_200_ema") return value === "bull" ? "Positive" : value === "bear" ? "Negative" : "No confirmation";
     if (row.role === "exit") return value === "bull" ? "Stop intact" : "Exit condition";
     return value === "bull" ? "Bullish" : value === "bear" ? "Bearish" : "Neutral";
   };

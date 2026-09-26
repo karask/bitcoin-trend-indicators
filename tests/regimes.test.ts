@@ -54,7 +54,7 @@ test("indicator golden states and trigger classifications remain stable", () => 
   const results = calculateIndicators(history(), "1d");
   const vector = Object.fromEntries(results.map(result => [result.id, [result.state, result.thresholdKind]]));
   assert.deepEqual(vector, {
-    support_band: ["bear", "fixed"], supertrend: ["bear", "provisional"], kk_supertrend: ["bear", "provisional"], smma_ribbon: ["neutral", "conditional"], kk_200_ma: ["bull", "fixed"], kk_ema_ribbon: ["neutral", "conditional"], super_guppy: ["neutral", "conditional"], long_sma: ["bull", "fixed"],
+    support_band: ["bear", "fixed"], supertrend: ["bear", "provisional"], kk_supertrend: ["bear", "provisional"], smma_ribbon: ["neutral", "conditional"], kk_200_ma: ["bull", "fixed"], kk_50_200_ema: ["neutral", "fixed"], kk_ema_ribbon: ["neutral", "conditional"], super_guppy: ["neutral", "conditional"], long_sma: ["bull", "fixed"],
     donchian_20_10: ["neutral", "fixed"], ichimoku: ["bear", "conditional"], macd: ["bear", "conditional"],
     psar: ["bear", "provisional"], vortex: ["bear", "provisional"], heikin_ashi: ["bear", "provisional"],
     golden_cross: ["bull", "conditional"], adx: ["bear", "conditional"], chandelier: ["bull", "provisional"], mayer: ["neutral", "conditional"],
@@ -75,7 +75,7 @@ function weeklyFixture(start: number, rows: readonly OhlcRow[]): Candle[] {
 test("KK presets lead the indicator menu with fixed crypto parameters", () => {
   const kkIndex = INDICATOR_SPECS.findIndex(spec => spec.id === "kk_supertrend");
   assert.equal(kkIndex, 0);
-  for (const timeframe of ["1d", "1w"] as const) assert.deepEqual(INDICATOR_SPECS.filter(spec => spec.supportedTimeframes.includes(timeframe)).slice(0, 5).map(spec => spec.id), ["kk_supertrend", "kk_ema_ribbon", "kk_200_ma", "support_band", "supertrend"]);
+  for (const timeframe of ["1d", "1w"] as const) assert.deepEqual(INDICATOR_SPECS.filter(spec => spec.supportedTimeframes.includes(timeframe)).slice(0, 6).map(spec => spec.id), ["kk_supertrend", "kk_ema_ribbon", "kk_200_ma", "kk_50_200_ema", "support_band", "supertrend"]);
   assert.equal(KK_SUPERTREND_ATR_LENGTH, 10);
   assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3, sui: 3, jup: 3, op: 3, bonk: 3, ada: 3, atom: 3, hype: 3, dot: 3, bnb: 3, zec: 3, avax: 3, ray: 3 });
   assert.equal(KK_SUPERTREND_EQUITY_FACTOR, 3);

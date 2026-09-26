@@ -20,6 +20,7 @@ import { loadCommodityHistory, requestJson, historyIsCurrent, type SyncStatus as
 import { resolveInitialTheme } from "../../lib/chart-interaction";
 import {
   INDICATOR_SPECS,
+  indicatorDisplayName,
   calculateIndicators,
   familyAgreement,
   familyRows as getFamilyRows,
@@ -118,6 +119,7 @@ function titleState(state: RegimeState | null | undefined) {
 
 function roleStateLabel(role: IndicatorRole, id: string, state: RegimeState | null | undefined) {
   if (!state) return undefined;
+  if (id === "kk_50_200_ema") return titleState(state);
   if (id === "kk_200_ma") return state === "bull" ? "Above SMA" : state === "bear" ? "Below SMA" : "At SMA";
   if (role === "confirmation") return state === "bull" ? "Positive" : state === "bear" ? "Negative" : "No confirmation";
   if (role === "exit") return state === "bull" ? "Stop intact" : state === "bear" ? "Exit condition" : "N/A";
@@ -132,6 +134,7 @@ function StateBadge({ state, compact = false, label }: { state: RegimeState | nu
 
 function nextCondition(signal: SignalSnapshot) {
   if (signal.readiness?.ready === false) return "Insufficient history";
+  if (signal.id === "kk_50_200_ema" && signal.bullTrigger != null) return `Bullish only above ${formatPrice(signal.bullTrigger)}`;
   if (signal.confirmation) return signal.confirmation.pending ? `${signal.confirmation.pending === "bull" ? "Bullish" : "Bearish"} ${signal.confirmation.count}/5 pending` : "5 consecutive daily confirmations";
   if (signal.thresholdKind === "conditional") return "Conditional";
   if (signal.state === "bull" && signal.bearTrigger != null) return `Below ${formatPrice(signal.bearTrigger)}`;
@@ -287,7 +290,7 @@ export default function CommodityDashboard() {
     setTheme(next);
   };
 
-  const triggerLabels = calculation?.selected.role === "exit" ? ["SHORT EXIT ABOVE", "LONG EXIT BELOW"] : calculation?.selected.role === "confirmation" ? ["POSITIVE ABOVE", "NEGATIVE BELOW"] : calculation?.selected.confirmation ? ["BULLISH CONFIRMATION ABOVE", "BEARISH CONFIRMATION BELOW"] : ["BULLISH ABOVE", "BEARISH BELOW"];
+  const triggerLabels = calculation?.selected.role === "exit" ? ["SHORT EXIT ABOVE", "LONG EXIT BELOW"] : calculation?.selected.role === "confirmation" && calculation.selected.id !== "kk_50_200_ema" ? ["POSITIVE ABOVE", "NEGATIVE BELOW"] : calculation?.selected.confirmation ? ["BULLISH CONFIRMATION ABOVE", "BEARISH CONFIRMATION BELOW"] : ["BULLISH ABOVE", "BEARISH BELOW"];
   const triggerCard = (label: string, value: number | null, variant: string) => <div className={`trigger ${variant}`}><span>{label}</span><strong>{value == null ? "Conditional" : formatPrice(value)}</strong><small>{calculation?.selected.thresholdKind} · completed {timeframe === "1d" ? "session" : "week"}</small></div>;
 
   return <main className="app-shell stock-shell commodity-shell">
@@ -296,7 +299,7 @@ export default function CommodityDashboard() {
     <>
       <div className="proxy-note"><strong>Futures, not spot</strong>{COMMODITY_CAVEAT} Validated history starts January 2019; older inconsistent and missing provider bars are excluded.</div>
       {error && <div className="data-banner danger"><strong>Commodity data unavailable</strong><span>{error}</span><button type="button" onClick={refreshHistory}>Retry</button></div>}
-      <section className="command-row" aria-label="Commodity research controls"><div className="control-group asset-control"><label htmlFor="commodity">Commodity</label><select id="commodity" value={commodityId} onChange={event => chooseCommodity(event.target.value as CommodityId)}>{COMMODITIES.map(item => <option key={item.id} value={item.id}>{item.symbol} · {item.label}</option>)}</select></div><div className="control-group stock-provider"><span className="control-label">Data provider</span><div className="provider-value">Yahoo Finance · {activeCommodity.exchange}</div></div><div className="control-group grow"><label htmlFor="commodity-indicator">Indicator</label><select id="commodity-indicator" value={indicator} onChange={event => { setIndicator(event.target.value); }}>{options.map(item => <option key={item.id} value={item.id}>{item.displayName}{item.id === "kk_supertrend" ? ` · ${calibrationStatus(undefined, timeframe, undefined, commodityId)}` : ""}</option>)}</select></div><div className="segmented" aria-label="Timeframe"><button type="button" aria-pressed={timeframe === "1d"} className={timeframe === "1d" ? "active" : ""} onClick={() => chooseTimeframe("1d")}>1D</button><button type="button" aria-pressed={timeframe === "1w"} className={timeframe === "1w" ? "active" : ""} onClick={() => chooseTimeframe("1w")}>1W</button></div></section>
+      <section className="command-row" aria-label="Commodity research controls"><div className="control-group asset-control"><label htmlFor="commodity">Commodity</label><select id="commodity" value={commodityId} onChange={event => chooseCommodity(event.target.value as CommodityId)}>{COMMODITIES.map(item => <option key={item.id} value={item.id}>{item.symbol} · {item.label}</option>)}</select></div><div className="control-group stock-provider"><span className="control-label">Data provider</span><div className="provider-value">Yahoo Finance · {activeCommodity.exchange}</div></div><div className="control-group grow"><label htmlFor="commodity-indicator">Indicator</label><select id="commodity-indicator" value={indicator} onChange={event => { setIndicator(event.target.value); }}>{options.map(item => <option key={item.id} value={item.id}>{indicatorDisplayName(item, timeframe)}{item.id === "kk_supertrend" ? ` · ${calibrationStatus(undefined, timeframe, undefined, commodityId)}` : ""}</option>)}</select></div><div className="segmented" aria-label="Timeframe"><button type="button" aria-pressed={timeframe === "1d"} className={timeframe === "1d" ? "active" : ""} onClick={() => chooseTimeframe("1d")} title={indicator === "kk_50_200_ema" ? "Daily equivalent: 50/200-day EMAs" : undefined}>1D</button><button type="button" aria-pressed={timeframe === "1w"} className={timeframe === "1w" ? "active" : ""} onClick={() => chooseTimeframe("1w")} title={indicator === "kk_50_200_ema" ? "Reference view: 50/200-week EMAs" : undefined}>1W</button></div></section>
       <section className="close-countdown market-status-strip commodity-status-strip" aria-live="polite" aria-label={`${marketClock.title}: ${marketClock.remaining} remaining`}><div className="confirmation-status"><p className="eyebrow">CONFIRMATION CLOCK · {activeCommodity.exchange}</p><strong>{marketClock.title}</strong><span>{marketClock.boundary}</span></div><div className="countdown-value"><b>{marketClock.remaining}</b><small>remaining</small></div><div className="snapshot-status"><span>DATA SNAPSHOT · YAHOO FINANCE</span><b>{history ? formatDate(history.retrievedAt, true) : "—"}</b><small title={cacheMessage ?? undefined}>{history ? `completed through ${formatDate(history.daily.at(-1)?.time)}` : "loading stored history…"}</small></div><div className="spot-price"><span>CURRENT {activeCommodity.symbol} FUTURES QUOTE · USD / OZ</span><b>{quote ? formatPrice(quote.price) : "—"}</b><small>{quote ? `${quoteError ? "quote update failed · " : ""}${quote.contractLabel} · as of ${formatDate(quote.quoteTime, true)} · ${quoteAge(quote.retrievedAt, clock)}` : quoteError ? "quote unavailable" : "fetching current price…"}</small></div></section>
 
       <SyncStatus status={syncState} isCurrent={isCurrent} hasHistory={Boolean(history)} onRefresh={refreshHistory} cacheMessage={cacheMessage} />

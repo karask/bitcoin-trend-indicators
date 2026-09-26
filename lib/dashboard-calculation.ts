@@ -19,6 +19,7 @@ function flips(candles: Candle[], states: SignalSnapshot["states"]) {
 function nextCondition(signal: SignalSnapshot, denomination: string): string {
   const format = (value: number) => formatPrice(value, denomination);
   if (signal.readiness?.ready === false) return "Insufficient history";
+  if (signal.id === "kk_50_200_ema" && signal.bullTrigger != null) return `Bullish only above ${format(signal.bullTrigger)}`;
   if (signal.confirmation) return signal.confirmation.pending ? `${signal.confirmation.pending === "bull" ? "Bullish" : "Bearish"} ${signal.confirmation.count}/5 pending` : "5 consecutive daily confirmations";
   if (signal.thresholdKind === "conditional") return "Conditional";
   if (signal.state === "bull" && signal.bearTrigger != null) return `Below ${format(signal.bearTrigger)}`;
@@ -113,7 +114,15 @@ export function buildDashboardPayload(asset: AssetId, source: SourceId, timefram
     candles: visibleCandles,
     selected: selectedView,
     matrix,
-    supporting: signals.filter(signal => signal.role !== "regime").map(signal => slimMatrix(signal, selectedDataset.candles, selectedDataset.denomination)),
+    supporting: signals.filter(signal => signal.role !== "regime").map(signal => {
+      const other = counterpart.find(item => item.id === signal.id);
+      const ownState = signal.readiness?.ready === false ? null : signal.state;
+      const otherState = other?.readiness?.ready === false ? null : other?.state ?? null;
+      return { ...slimMatrix(signal, selectedDataset.candles, selectedDataset.denomination),
+        dailyState: timeframe === "1d" ? ownState : otherState,
+        weeklyState: timeframe === "1w" ? ownState : otherState,
+      };
+    }),
     familyAgreement: familyAgreement(signals),
     backtests: comparison.backtests,
     comparison,

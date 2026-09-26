@@ -33,7 +33,7 @@ export function overviewState(signal: SignalSnapshot | undefined, supported: boo
   if (signal.confirmation?.pending) return `${state === "bull" ? "Bullish" : "Bearish"} · ${signal.confirmation.pending === "bull" ? "Bullish" : "Bearish"} ${signal.confirmation.count}/5 pending`;
   if (signal.id === "mayer") return `${signal.values.multiple!.toFixed(2)}× 200D price ratio`;
   if (signal.role === "valuation") return state === "bull" ? "Above baseline" : "Below baseline";
-  if (signal.role === "confirmation") return state === "bull" ? "Positive" : state === "bear" ? "Negative" : "No confirmation";
+  if (signal.role === "confirmation" && signal.id !== "kk_50_200_ema") return state === "bull" ? "Positive" : state === "bear" ? "Negative" : "No confirmation";
   if (signal.role === "exit") return state === "bull" ? "Stop intact" : "Exit condition";
   return state === "bull" ? "Bullish" : state === "bear" ? "Bearish" : "Neutral";
 }
@@ -41,6 +41,10 @@ export function overviewState(signal: SignalSnapshot | undefined, supported: boo
 /** Conditional models do not have a guaranteed one-price reversal. */
 export function overviewLevels(signal: SignalSnapshot | undefined): Array<{ label: string; price: number }> {
   if (!signal?.readiness?.ready || signal.thresholdKind === "conditional") return [];
+  if (signal.id === "kk_50_200_ema") return [
+    { label: signal.overlays[0].name, price: signal.values.ema50! },
+    { label: signal.overlays[1].name, price: signal.values.ema200! },
+  ];
   if (signal.id === "kk_200_ma") return signal.values.sma != null ? [{ label: signal.overlays[0]?.name ?? "200 SMA", price: signal.values.sma }] : [];
   const levels = [];
   if (signal.confirmation) {
