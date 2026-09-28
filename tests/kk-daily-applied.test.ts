@@ -5,16 +5,16 @@ import { KK_DAILY_EVIDENCE } from "../lib/kk-daily-evidence.ts";
 import { calculateIndicators, KK_SUPERTREND_PRESETS, KK_SUPERTREND_STOCK_PRESETS, KK_SUPERTREND_COMMODITY_PRESETS, type Candle, type IndicatorCalculationOptions } from "../lib/regimes.ts";
 import { buildResearch } from "../lib/research.ts";
 
-test("approved daily assignments use compact independent families and leave every weekly preset unchanged", () => {
-  const crypto = { btc: [15,2], eth: [15,4], sol: [15,2], doge: [15,5], link: [15,4], xmr: [15,3], jup: [15,3], bonk: [15,3], ada: [15,5], atom: [15,5], hype: [15,4], dot: [15,5], bnb: [15,4], zec: [15,3], sui: [10,3], op: [10,3], avax: [10,3], ray: [10,3] };
-  const stocks = { tsla: [30,4], googl: [15,3], nvda: [30,2], mu: [15,3], sndk: [30,4], spcx: [15,4], bmnr: [15,3], mstr: [10,3] };
+test("historical daily assignments and September 28 additions use their recorded families", () => {
+  const crypto = { btc: [15,2], eth: [15,4], sol: [15,2], doge: [15,5], link: [15,4], xmr: [15,3], jup: [15,3], bonk: [15,3], ada: [15,5], atom: [15,5], hype: [15,4], dot: [15,5], bnb: [15,4], zec: [15,3], sui: [10,3], op: [10,3], avax: [10,3], ray: [10,3], vvv: [10,3], qnt: [50,4] };
+  const stocks = { tsla: [30,4], googl: [15,3], nvda: [30,2], mu: [15,3], sndk: [30,4], spcx: [15,4], bmnr: [15,3], mstr: [10,3], crcl: [50,6], intc: [10,3], mrvl: [10,3], amd: [10,3], amzn: [10,3], meta: [10,3], bot: [10,3], strc: [30,4], pltr: [10,3] };
   for (const [id, preset] of Object.entries(KK_SUPERTREND_PRESETS)) {
     assert.deepEqual([preset["1d"].atrLength,preset["1d"].factor],crypto[id as keyof typeof crypto]);
     assert.deepEqual(preset["1w"],{atrLength:["btc","eth","sol"].includes(id)?10:15,factor:id==="btc"?3:2});
   }
   for (const [id, preset] of Object.entries(KK_SUPERTREND_STOCK_PRESETS)) {
     assert.deepEqual([preset["1d"].atrLength,preset["1d"].factor],stocks[id as keyof typeof stocks]);
-    assert.deepEqual(preset["1w"],{atrLength:id==="spcx"?10:15,factor:id==="spcx"?3:2});
+    assert.deepEqual(preset["1w"],{atrLength:["spcx","bot","strc"].includes(id)?10:15,factor:["spcx","bot","strc"].includes(id)?3:2});
   }
   assert.deepEqual(KK_SUPERTREND_COMMODITY_PRESETS,{gold:{"1d":{atrLength:15,factor:4},"1w":{atrLength:10,factor:2}},silver:{"1d":{atrLength:15,factor:3},"1w":{atrLength:15,factor:2}}});
 });

@@ -1,5 +1,5 @@
 export type SourceId = "bitstamp" | "binance" | "kraken" | "coinbase";
-export type AssetId = "btc" | "eth" | "sol" | "doge" | "link" | "xmr" | "sui" | "jup" | "op" | "bonk" | "ada" | "atom" | "hype" | "dot" | "bnb" | "zec" | "avax" | "ray";
+export type AssetId = "btc" | "eth" | "sol" | "doge" | "link" | "xmr" | "sui" | "jup" | "op" | "bonk" | "ada" | "atom" | "hype" | "dot" | "bnb" | "zec" | "avax" | "ray" | "vvv" | "qnt";
 
 export interface AssetDefinition {
   id: AssetId;
@@ -48,9 +48,13 @@ export const ASSETS: AssetDefinition[] = [
   { id: "zec", label: "Zcash", symbol: "ZEC", defaultSource: "binance" },
   { id: "avax", label: "Avalanche", symbol: "AVAX", defaultSource: "coinbase" },
   { id: "ray", label: "Raydium", symbol: "RAY", defaultSource: "kraken" },
+  { id: "vvv", label: "Venice Token", symbol: "VVV", defaultSource: "coinbase" },
+  { id: "qnt", label: "Quant", symbol: "QNT", defaultSource: "coinbase" },
 ];
 
 export const SOURCES: SourceDefinition[] = [
+  { asset: "vvv", id: "coinbase", label: "Coinbase Exchange", market: "VVV/USD", denomination: "USD", providerSymbol: "VVV-USD", historyStart: Date.UTC(2025, 0, 28), historyNote: "VVV/USD history from January 28, 2025; a USD venue proxy for the TradingView composite weekly reference." },
+  { asset: "qnt", id: "coinbase", label: "Coinbase Exchange", market: "QNT/USD", denomination: "USD", providerSymbol: "QNT-USD", historyStart: Date.UTC(2021, 5, 24), historyNote: "QNT/USD history from June 24, 2021; a USD venue proxy for the TradingView composite weekly and daily references." },
   { asset: "avax", id: "coinbase", label: "Coinbase Exchange", market: "AVAX/USD", denomination: "USD", providerSymbol: "AVAX-USD", historyStart: Date.UTC(2021, 8, 30), historyNote: "AVAX/USD history from September 30, 2021; matches the weekly screenshot venue." },
   { asset: "ray", id: "kraken", label: "Kraken", market: "RAY/USD", denomination: "USD", providerSymbol: "RAYUSD", historyStart: Date.UTC(2024, 9, 2), historyNote: "RAY/USD validation history from Kraken's latest public REST window; the calibration screenshot uses TradingView's composite CRYPTO:RAYUSD feed." },
   { asset: "bnb", id: "binance", label: "Binance", market: "BNB/USDT", denomination: "USDT", providerSymbol: "BNBUSDT", historyStart: Date.UTC(2017, 0, 1), historyNote: "Long-history BNB/USDT series; USDT quote differs from the screenshot's USD feed." },

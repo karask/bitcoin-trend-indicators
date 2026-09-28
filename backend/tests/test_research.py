@@ -11,7 +11,7 @@ from backend.bitcoin_regime.service import ResearchService
 def test_new_usd_markets_and_rate_limit_cooldown(monkeypatch):
     from urllib.error import HTTPError
     from backend.bitcoin_regime import providers
-    expected = {"jup": "kraken", "op": "coinbase", "bonk": "coinbase", "ada": "coinbase", "atom": "coinbase", "hype": "kraken", "dot": "coinbase"}
+    expected = {"jup": "kraken", "op": "coinbase", "bonk": "coinbase", "ada": "coinbase", "atom": "coinbase", "hype": "kraken", "dot": "coinbase", "vvv": "coinbase", "qnt": "coinbase"}
     for asset, source in expected.items():
         assert list(providers.MARKETS[asset]) == [source]
         assert providers.MARKETS[asset][source][0] == f"{asset.upper()}/USD"

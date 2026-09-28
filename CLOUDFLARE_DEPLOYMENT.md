@@ -24,7 +24,7 @@ You do **not** need to repeat the first-deployment commands below. They are reta
 - Pages Functions expose the authenticated JSON APIs, current quotes, and a same-origin on-demand sync that writes only validated completed candles when the selected D1 snapshot is behind.
 - Cloudflare D1 stores normalized, completed daily and weekly candles.
 - The browser keeps full per-market history in IndexedDB, requests only overlapping D1 tails on later visits, and calculates indicators and backtests from that complete local series.
-- One small Worker refreshes completed candles after market close, sequentially within five existing cron slots: BTC/JUP/OP at 00:15, ETH/BONK/ADA at 00:25, SOL/ATOM/HYPE at 00:35, DOGE/DOT at 00:45, and LINK/XMR/SUI at 01:30 UTC. The 01:30 trigger then refreshes stored Yahoo Finance histories Tuesday through Saturday. Crypto requests are paced per provider; rate limits stop requests for that provider until its cooldown ends.
+- One small Worker refreshes completed candles after market close, sequentially within five existing cron slots: BTC/JUP/OP/RAY at 00:15, ETH/BONK/ADA/VVV at 00:25, SOL/ATOM/HYPE/AVAX at 00:35, DOGE/DOT/BNB/QNT at 00:45, and LINK/XMR/SUI/ZEC at 01:30 UTC. The 01:30 trigger then refreshes stored Yahoo Finance histories Tuesday through Saturday. Crypto requests are paced per provider; rate limits stop requests for that provider until its cooldown ends.
 - Local development continues to use `data/bitcoin-regime.sqlite`; hosted and local databases are intentionally separate.
 - Pages middleware requires a passwordless 30-day email session before serving either dashboard or any market-data API. D1 stores verified emails, HMAC-protected challenges, hashed sessions, and hashed abuse-control counters.
 - Resend delivers six-digit login codes from `login@auth.kkarasavvas.com`; Cloudflare Turnstile protects code requests from automated quota exhaustion.
@@ -84,6 +84,8 @@ After a code change:
 npm run cf:deploy:pages
 npm run cf:deploy:refresh
 ```
+
+For the September 28 additions, `node --experimental-strip-types scripts/seed-kk-september28.ts` prepares only the eleven new assets from the audited fixtures. Check hosted `provider_snapshots` first, then apply each missing asset’s `data/cloudflare-seed/september28-<asset>.sql` with `npx wrangler d1 execute crypto-regime-data --remote --config=wrangler.jsonc --file=<file>`. Do not overwrite newer hosted histories with the fixed September 28 archive. VVV and QNT include daily and weekly histories; stocks store daily history and aggregate weeks in the app. Deploy the updated refresh Worker as well as Pages.
 
 Schema and full-history seed commands are only needed for schema changes, a new database, a new asset/venue, or a deliberate history rebuild. The Cron Worker normally adds only recent completed candles.
 

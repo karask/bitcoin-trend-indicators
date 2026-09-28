@@ -1,0 +1,2500 @@
+[
+  {
+    "asset": "crcl",
+    "timeframe": "1w",
+    "target": 62.45,
+    "targetState": "bull",
+    "imageLastFlipDate": "2026-09-08",
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/weekly/crcl-1w-40m27s.png",
+    "imageSha256": "04e282f1dc0368322c7e0be29cd6a931f4ccb6586a49282ac4a71e02c5fd7a08",
+    "videoTimestamp": "40:27",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2427s",
+    "source": "yahoo",
+    "bars": 68,
+    "through": "2026-09-21",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 107.82292584245391,
+        "state": "bear",
+        "errorPct": 72.65480519207992,
+        "lastFlip": "2026-06-29",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 107.82292584245391,
+          "state": "bear",
+          "errorPct": 72.65480519207992,
+          "lastFlip": "2026-06-29",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 65.22860474940897,
+        "state": "bull",
+        "errorPct": 4.449327060702912,
+        "lastFlip": "2026-08-31",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 2,
+          "value": 65.22860474940897,
+          "state": "bull",
+          "errorPct": 4.449327060702912,
+          "lastFlip": "2026-08-31",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 62.50072386794214,
+        "state": "bull",
+        "errorPct": 0.08122316724121781,
+        "lastFlip": "2026-08-31",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": 62.50072386794214,
+          "state": "bull",
+          "errorPct": 0.08122316724121781,
+          "lastFlip": "2026-08-31",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 113.63891395319622,
+        "state": "bear",
+        "errorPct": 81.96783659438947,
+        "lastFlip": "2026-07-13",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 113.63891395319622,
+          "state": "bear",
+          "errorPct": 81.96783659438947,
+          "lastFlip": "2026-07-13",
+          "confirmation": null,
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "vvv",
+    "timeframe": "1w",
+    "target": 23.258,
+    "targetState": "bull",
+    "imageLastFlipDate": "2026-09-14",
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/weekly/vvv-1w-40m34s.png",
+    "imageSha256": "3f4aac1c3db016b37e39aa5baba2afa8feddb423d0c44fde789377bd1d731dab",
+    "videoTimestamp": "40:34",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2434s",
+    "source": "coinbase",
+    "bars": 86,
+    "through": "2026-09-21",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 17.121425985359217,
+        "state": "bull",
+        "errorPct": -26.384788092874633,
+        "lastFlip": "2026-01-05",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 11.655634428176903,
+          "state": "bull",
+          "errorPct": -49.88548272346331,
+          "lastFlip": "2026-01-05",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 21.912950656906144,
+        "state": "bull",
+        "errorPct": -5.783168557459173,
+        "lastFlip": "2026-09-07",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 2,
+          "value": 16.289772952117936,
+          "state": "bull",
+          "errorPct": -29.960560013251623,
+          "lastFlip": "2026-09-07",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 23.134247894621993,
+        "state": "bull",
+        "errorPct": -0.5320840372259328,
+        "lastFlip": "2026-09-07",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": 17.48588702995213,
+          "state": "bull",
+          "errorPct": -24.817752902433,
+          "lastFlip": "2026-09-07",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 18.953371841932988,
+        "state": "bull",
+        "errorPct": -18.508161312524773,
+        "lastFlip": "2026-01-05",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 13.4498055449282,
+          "state": "bull",
+          "errorPct": -42.171272057235356,
+          "lastFlip": "2026-01-05",
+          "confirmation": null,
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "bot",
+    "timeframe": "1w",
+    "target": 7.86,
+    "targetState": "bull",
+    "imageLastFlipDate": "2026-09-21",
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/weekly/bot-1w-41m18s.png",
+    "imageSha256": "6fc4e6e6cafb08ed7d81f0ea2272d95fe68c595aef84248a6ed1c24b2dac040e",
+    "videoTimestamp": "41:18",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2478s",
+    "source": "yahoo",
+    "bars": 20,
+    "through": "2026-09-21",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 53.243488780804526,
+        "state": "bear",
+        "errorPct": 577.3980760916606,
+        "lastFlip": null,
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 53.42943296625444,
+          "state": "bear",
+          "errorPct": 579.7637781966214,
+          "lastFlip": null,
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 44.862955476139845,
+        "state": "bear",
+        "errorPct": 470.7755149636112,
+        "lastFlip": null,
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 2,
+          "value": 44.862955476139845,
+          "state": "bear",
+          "errorPct": 470.7755149636112,
+          "lastFlip": null,
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 47.59965501093986,
+        "state": "bear",
+        "errorPct": 505.59357520279724,
+        "lastFlip": null,
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": 47.59965501093986,
+          "state": "bear",
+          "errorPct": 505.59357520279724,
+          "lastFlip": null,
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 57.53448226845447,
+        "state": "bear",
+        "errorPct": 631.9908685554003,
+        "lastFlip": null,
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 57.53448226845447,
+          "state": "bear",
+          "errorPct": 631.9908685554003,
+          "lastFlip": null,
+          "confirmation": null,
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "sndk",
+    "timeframe": "1w",
+    "target": 1808.89,
+    "targetState": "bear",
+    "imageLastFlipDate": "2026-07-20",
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/weekly/sndk-1w-41m52s.png",
+    "imageSha256": "726c36649182af157685b8621f481a16994fbc7fdc2e8b1151c4c34e5e556cd2",
+    "videoTimestamp": "41:52",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2512s",
+    "source": "yahoo",
+    "bars": 83,
+    "through": "2026-09-21",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 2273.2898018844758,
+        "state": "bear",
+        "errorPct": 25.67319195111233,
+        "lastFlip": "2026-07-13",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 2273.2898018844758,
+          "state": "bear",
+          "errorPct": 25.67319195111233,
+          "lastFlip": "2026-07-13",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 1925.7232000356141,
+        "state": "bear",
+        "errorPct": 6.458833872463998,
+        "lastFlip": "2026-07-13",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 2,
+          "value": 1925.7232000356141,
+          "state": "bear",
+          "errorPct": 6.458833872463998,
+          "lastFlip": "2026-07-13",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 1808.8773646481945,
+        "state": "bear",
+        "errorPct": -0.0006985141056459199,
+        "lastFlip": "2026-07-13",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": 1808.8773646481945,
+          "state": "bear",
+          "errorPct": -0.0006985141056459199,
+          "lastFlip": "2026-07-13",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 2098.0210488033463,
+        "state": "bear",
+        "errorPct": 15.983893371257851,
+        "lastFlip": "2026-07-13",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 2098.0210488033463,
+          "state": "bear",
+          "errorPct": 15.983893371257851,
+          "lastFlip": "2026-07-13",
+          "confirmation": null,
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "intc",
+    "timeframe": "1w",
+    "target": 119.42,
+    "targetState": "bear",
+    "imageLastFlipDate": "2026-07-20",
+    "pendingDirection": "bull",
+    "pendingCount": 1,
+    "image": "data/kk-research-2026-09-28-video/weekly/intc-1w-42m14s.png",
+    "imageSha256": "eb8856bc65472b5cf285f41a6da1b3d292276a6e4205545052328b25b65f427a",
+    "videoTimestamp": "42:14",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2534s",
+    "source": "yahoo",
+    "bars": 1447,
+    "through": "2026-09-21",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 84.53100434517695,
+        "state": "bull",
+        "errorPct": -29.215370670593742,
+        "lastFlip": "2025-09-15",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 84.53100434517695,
+          "state": "bull",
+          "errorPct": -29.215370670593742,
+          "lastFlip": "2025-09-15",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 89.96484912602173,
+        "state": "bull",
+        "errorPct": -24.665174069651876,
+        "lastFlip": "2026-09-21",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 2,
+          "value": 121.6786390408823,
+          "state": "bear",
+          "errorPct": 1.891340680691922,
+          "lastFlip": "2026-07-13",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 91.43675426544456,
+        "state": "bull",
+        "errorPct": -23.432629153035865,
+        "lastFlip": "2026-09-21",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": 119.42206453434129,
+          "state": "bear",
+          "errorPct": 0.0017288011566529704,
+          "lastFlip": "2026-07-13",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 134.42309771703927,
+        "state": "bear",
+        "errorPct": 12.563304067190817,
+        "lastFlip": "2026-07-27",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 134.42309771703927,
+          "state": "bear",
+          "errorPct": 12.563304067190817,
+          "lastFlip": "2026-07-27",
+          "confirmation": null,
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "mu",
+    "timeframe": "1w",
+    "target": 1097.54,
+    "targetState": "bear",
+    "imageLastFlipDate": "2026-07-20",
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/weekly/mu-1w-42m25s.png",
+    "imageSha256": "1e13727c8c80a3e449001cfd06578e442fb571101f6b31522560c640e106a3d5",
+    "videoTimestamp": "42:25",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2545s",
+    "source": "yahoo",
+    "bars": 1447,
+    "through": "2026-09-21",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 725.1301853797604,
+        "state": "bull",
+        "errorPct": -33.931320463968476,
+        "lastFlip": "2025-06-09",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 725.1301853797604,
+          "state": "bull",
+          "errorPct": -33.931320463968476,
+          "lastFlip": "2025-06-09",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 1143.238266008778,
+        "state": "bear",
+        "errorPct": 4.163699364832096,
+        "lastFlip": "2026-07-13",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 2,
+          "value": 1143.238266008778,
+          "state": "bear",
+          "errorPct": 4.163699364832096,
+          "lastFlip": "2026-07-13",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 1097.5369005446348,
+        "state": "bear",
+        "errorPct": -0.00028240021914260893,
+        "lastFlip": "2026-07-13",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": 1097.5369005446348,
+          "state": "bear",
+          "errorPct": -0.00028240021914260893,
+          "lastFlip": "2026-07-13",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 795.4075261618719,
+        "state": "bull",
+        "errorPct": -27.528151487702324,
+        "lastFlip": "2025-06-02",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 795.4075261618719,
+          "state": "bull",
+          "errorPct": -27.528151487702324,
+          "lastFlip": "2025-06-02",
+          "confirmation": null,
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "mrvl",
+    "timeframe": "1w",
+    "target": 249.77,
+    "targetState": "bear",
+    "imageLastFlipDate": "2026-07-06",
+    "pendingDirection": "bull",
+    "pendingCount": 1,
+    "image": "data/kk-research-2026-09-28-video/weekly/mrvl-1w-42m43s.png",
+    "imageSha256": "496e37860b7d0b7fc3d7b4d0135c2483b9d1ad324782f3abad39971dab9f9bb1",
+    "videoTimestamp": "42:43",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2563s",
+    "source": "yahoo",
+    "bars": 1369,
+    "through": "2026-09-21",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 300.38137833415925,
+        "state": "bear",
+        "errorPct": 20.263193471657615,
+        "lastFlip": "2026-07-13",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 300.38137833415925,
+          "state": "bear",
+          "errorPct": 20.263193471657615,
+          "lastFlip": "2026-07-13",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 188.0079307061775,
+        "state": "bull",
+        "errorPct": -24.72757708845038,
+        "lastFlip": "2026-09-21",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 2,
+          "value": 260.96258555610615,
+          "state": "bear",
+          "errorPct": 4.481156886778281,
+          "lastFlip": "2026-07-13",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 191.40689493787482,
+        "state": "bull",
+        "errorPct": -23.366739425121185,
+        "lastFlip": "2026-09-21",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": 249.76597132598602,
+          "state": "bear",
+          "errorPct": -0.0016129535228337488,
+          "lastFlip": "2026-06-29",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 283.5864569889791,
+        "state": "bear",
+        "errorPct": 13.539038711205942,
+        "lastFlip": "2026-07-13",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 283.5864569889791,
+          "state": "bear",
+          "errorPct": 13.539038711205942,
+          "lastFlip": "2026-07-13",
+          "confirmation": null,
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "amd",
+    "timeframe": "1w",
+    "target": 438.38,
+    "targetState": "bull",
+    "imageLastFlipDate": "2026-04-13",
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/weekly/amd-1w-43m05s.png",
+    "imageSha256": "5220564ea1ec6bca68970042a2d290cf6a4baefca5e9b958626c62732be77259",
+    "videoTimestamp": "43:05",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2585s",
+    "source": "yahoo",
+    "bars": 1447,
+    "through": "2026-09-21",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 418.45829637898635,
+        "state": "bull",
+        "errorPct": -4.5443915372539,
+        "lastFlip": "2026-04-13",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 368.9835597472518,
+          "state": "bull",
+          "errorPct": -15.830202165415441,
+          "lastFlip": "2026-04-13",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 482.5172008411992,
+        "state": "bull",
+        "errorPct": 10.0682514807243,
+        "lastFlip": "2026-04-13",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 2,
+          "value": 423.5923723510324,
+          "state": "bull",
+          "errorPct": -3.37324413727077,
+          "lastFlip": "2026-04-13",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 490.77197691333686,
+        "state": "bull",
+        "errorPct": 11.951269883055083,
+        "lastFlip": "2026-04-06",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": 438.38252726464003,
+          "state": "bull",
+          "errorPct": 0.0005765008987745901,
+          "lastFlip": "2026-04-06",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 430.8404604871928,
+        "state": "bull",
+        "errorPct": -1.7198639337577482,
+        "lastFlip": "2026-04-13",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 391.1687921176632,
+          "state": "bull",
+          "errorPct": -10.769471208161141,
+          "lastFlip": "2026-04-13",
+          "confirmation": null,
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "nvda",
+    "timeframe": "1w",
+    "target": 192.15,
+    "targetState": "bull",
+    "imageLastFlipDate": "2026-09-08",
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/weekly/nvda-1w-43m17s.png",
+    "imageSha256": "5db75f28799b963f6dc955ef3a12f148795f9804df40bdbce590d28f531fbcf8",
+    "videoTimestamp": "43:17",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2597s",
+    "source": "yahoo",
+    "bars": 1444,
+    "through": "2026-09-21",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 177.3789871269808,
+        "state": "bull",
+        "errorPct": -7.687230222752639,
+        "lastFlip": "2025-06-23",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 176.53090134112063,
+          "state": "bull",
+          "errorPct": -8.128596751953875,
+          "lastFlip": "2025-06-23",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 193.43099009555883,
+        "state": "bull",
+        "errorPct": 0.6666615121305286,
+        "lastFlip": "2026-08-31",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 2,
+          "value": 191.08215552252392,
+          "state": "bull",
+          "errorPct": -0.5557348308488641,
+          "lastFlip": "2026-08-31",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 193.62133239687233,
+        "state": "bull",
+        "errorPct": 0.7657207373782615,
+        "lastFlip": "2026-08-31",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": 192.1515617753103,
+          "state": "bull",
+          "errorPct": 0.0008127896488741015,
+          "lastFlip": "2026-08-31",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 178.97362933923097,
+        "state": "bull",
+        "errorPct": -6.857335758922211,
+        "lastFlip": "2025-06-16",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 178.97362933923097,
+          "state": "bull",
+          "errorPct": -6.857335758922211,
+          "lastFlip": "2025-06-16",
+          "confirmation": null,
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "amzn",
+    "timeframe": "1w",
+    "target": 242.65,
+    "targetState": "bull",
+    "imageLastFlipDate": "2026-08-03",
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/weekly/amzn-1w-43m24s.png",
+    "imageSha256": "8618c6d69b6f6dc21d309fedcc76ac791a7ce6c3a0c0f7486d8109b6eb148d59",
+    "videoTimestamp": "43:24",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2604s",
+    "source": "yahoo",
+    "bars": 1447,
+    "through": "2026-09-21",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 224.5694975179295,
+        "state": "bull",
+        "errorPct": -7.451268280268087,
+        "lastFlip": "2026-04-13",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 224.5694975179295,
+          "state": "bull",
+          "errorPct": -7.451268280268087,
+          "lastFlip": "2026-04-13",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 240.39439503864523,
+        "state": "bull",
+        "errorPct": -0.9295713832082275,
+        "lastFlip": "2026-07-27",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 2,
+          "value": 240.39439503864523,
+          "state": "bull",
+          "errorPct": -0.9295713832082275,
+          "lastFlip": "2026-07-27",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 242.65368749406795,
+        "state": "bull",
+        "errorPct": 0.001519676104666523,
+        "lastFlip": "2026-07-27",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": 242.65368749406795,
+          "state": "bull",
+          "errorPct": 0.001519676104666523,
+          "lastFlip": "2026-07-27",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 226.10218861129363,
+        "state": "bull",
+        "errorPct": -6.819621425388989,
+        "lastFlip": "2026-04-13",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 226.10218861129363,
+          "state": "bull",
+          "errorPct": -6.819621425388989,
+          "lastFlip": "2026-04-13",
+          "confirmation": null,
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "meta",
+    "timeframe": "1w",
+    "target": 670.63,
+    "targetState": "bear",
+    "imageLastFlipDate": "2026-08-24",
+    "pendingDirection": "bull",
+    "pendingCount": 1,
+    "image": "data/kk-research-2026-09-28-video/weekly/meta-1w-43m50s.png",
+    "imageSha256": "16d5a5fb53963c2e70faf0c32561b89eac3e2ebfa78521a7e61c1bb55382d376",
+    "videoTimestamp": "43:50",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2630s",
+    "source": "yahoo",
+    "bars": 749,
+    "through": "2026-09-21",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 550.5784483107249,
+        "state": "bull",
+        "errorPct": -17.901309468600434,
+        "lastFlip": "2026-09-21",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 696.6907862988442,
+          "state": "bear",
+          "errorPct": 3.886015582190505,
+          "lastFlip": "2025-10-27",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 610.2889626921759,
+        "state": "bull",
+        "errorPct": -8.997664480835043,
+        "lastFlip": "2026-07-06",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 2,
+          "value": 562.3438561163066,
+          "state": "bull",
+          "errorPct": -16.146928095029068,
+          "lastFlip": "2026-07-06",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 615.3366597887311,
+        "state": "bull",
+        "errorPct": -8.244984598253712,
+        "lastFlip": "2026-09-21",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": 671.012103216424,
+          "state": "bear",
+          "errorPct": 0.05697675565123905,
+          "lastFlip": "2026-08-17",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 558.1499939555575,
+        "state": "bull",
+        "errorPct": -16.772289644728456,
+        "lastFlip": "2026-09-21",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 699.1678345650072,
+          "state": "bear",
+          "errorPct": 4.255376968672331,
+          "lastFlip": "2025-11-03",
+          "confirmation": null,
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "googl",
+    "timeframe": "1w",
+    "target": 380.37,
+    "targetState": "bear",
+    "imageLastFlipDate": null,
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/weekly/googl-1w-44m38s.png",
+    "imageSha256": "ab91fbbe3bf05d3dfebe191b10257ec2c17cde95e6f4b27331f10c0517df94ea",
+    "videoTimestamp": "44:38",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2678s",
+    "source": "yahoo",
+    "bars": 1153,
+    "through": "2026-09-21",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 402.28363511616897,
+        "state": "bear",
+        "errorPct": 5.761136555503588,
+        "lastFlip": "2026-07-20",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 402.28363511616897,
+          "state": "bear",
+          "errorPct": 5.761136555503588,
+          "lastFlip": "2026-07-20",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 379.9757569475632,
+        "state": "bear",
+        "errorPct": -0.10364725200115998,
+        "lastFlip": "2026-06-22",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 2,
+          "value": 379.9757569475632,
+          "state": "bear",
+          "errorPct": -0.10364725200115998,
+          "lastFlip": "2026-06-22",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 380.37026372783794,
+        "state": "bear",
+        "errorPct": 0.00006933455265478727,
+        "lastFlip": "2026-06-22",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": 380.37026372783794,
+          "state": "bear",
+          "errorPct": 0.00006933455265478727,
+          "lastFlip": "2026-06-22",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 402.8753952865811,
+        "state": "bear",
+        "errorPct": 5.916711435334321,
+        "lastFlip": "2026-07-20",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 402.8753952865811,
+          "state": "bear",
+          "errorPct": 5.916711435334321,
+          "lastFlip": "2026-07-20",
+          "confirmation": null,
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "tsla",
+    "timeframe": "1w",
+    "target": 383.88,
+    "targetState": "bear",
+    "imageLastFlipDate": "2026-07-27",
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/weekly/tsla-1w-44m42s.png",
+    "imageSha256": "daac225be5be939356113deeffd59cae5b21fc9a3339bc764067de229f4aaead",
+    "videoTimestamp": "44:42",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2682s",
+    "source": "yahoo",
+    "bars": 847,
+    "through": "2026-09-21",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 424.7776193838307,
+        "state": "bear",
+        "errorPct": 10.653751011730407,
+        "lastFlip": "2026-03-16",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 424.7776193838307,
+          "state": "bear",
+          "errorPct": 10.653751011730407,
+          "lastFlip": "2026-03-16",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 385.5817470696892,
+        "state": "bear",
+        "errorPct": 0.4433018312204773,
+        "lastFlip": "2026-07-20",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 2,
+          "value": 385.5817470696892,
+          "state": "bear",
+          "errorPct": 0.4433018312204773,
+          "lastFlip": "2026-07-20",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 383.88395618999493,
+        "state": "bear",
+        "errorPct": 0.0010305798674004052,
+        "lastFlip": "2026-07-20",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": 383.88395618999493,
+          "state": "bear",
+          "errorPct": 0.0010305798674004052,
+          "lastFlip": "2026-07-20",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 422.2309330642893,
+        "state": "bear",
+        "errorPct": 9.990344134700768,
+        "lastFlip": "2026-03-16",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 422.2309330642893,
+          "state": "bear",
+          "errorPct": 9.990344134700768,
+          "lastFlip": "2026-03-16",
+          "confirmation": null,
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "pltr",
+    "timeframe": "1w",
+    "target": 141.97,
+    "targetState": "bull",
+    "imageLastFlipDate": "2026-08-10",
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/weekly/pltr-1w-44m55s.png",
+    "imageSha256": "843c61cdb36d35b1d4126118e3a508a8b166cdd386ea794024fee0ecdd369ac6",
+    "videoTimestamp": "44:55",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2695s",
+    "source": "yahoo",
+    "bars": 312,
+    "through": "2026-09-21",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 133.0628008079,
+        "state": "bull",
+        "errorPct": -6.2740009805592685,
+        "lastFlip": "2026-08-03",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 122.87111641483767,
+          "state": "bull",
+          "errorPct": -13.452760150146037,
+          "lastFlip": "2026-08-03",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 150.61519840236951,
+        "state": "bull",
+        "errorPct": 6.089454393441929,
+        "lastFlip": "2026-08-03",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 2,
+          "value": 141.4590757788371,
+          "state": "bull",
+          "errorPct": -0.35988182092194787,
+          "lastFlip": "2026-08-03",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 150.35957837114,
+        "state": "bull",
+        "errorPct": 5.909402247756579,
+        "lastFlip": "2026-08-03",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": 141.965451896765,
+          "state": "bull",
+          "errorPct": -0.003203566411924541,
+          "lastFlip": "2026-08-03",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 132.67937076105568,
+        "state": "bull",
+        "errorPct": -6.54407919908736,
+        "lastFlip": "2026-08-03",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 123.63068059172949,
+          "state": "bull",
+          "errorPct": -12.917742768381002,
+          "lastFlip": "2026-08-03",
+          "confirmation": null,
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "spcx",
+    "timeframe": "1w",
+    "target": 158.13,
+    "targetState": "bear",
+    "imageLastFlipDate": "2026-09-21",
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/weekly/spcx-1w-45m12s.png",
+    "imageSha256": "8f3d91f644d0f52986e691e7a4c115a3ee16b781ee5b6ba3f13ccc1f05eefc14",
+    "videoTimestamp": "45:12",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2712s",
+    "source": "yahoo",
+    "bars": 15,
+    "through": "2026-09-21",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 211.5302899169922,
+        "state": "bear",
+        "errorPct": 33.769866512990696,
+        "lastFlip": null,
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 211.5302899169922,
+          "state": "bear",
+          "errorPct": 33.769866512990696,
+          "lastFlip": null,
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 187.0851931762695,
+        "state": "bear",
+        "errorPct": 18.31100561327359,
+        "lastFlip": null,
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 2,
+          "value": 187.0851931762695,
+          "state": "bear",
+          "errorPct": 18.31100561327359,
+          "lastFlip": null,
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 194.8010009765625,
+        "state": "bear",
+        "errorPct": 23.19041356893854,
+        "lastFlip": null,
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": null,
+          "state": "neutral",
+          "errorPct": null,
+          "lastFlip": null,
+          "confirmation": null,
+          "ready": false
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 216.1989990234375,
+        "state": "bear",
+        "errorPct": 36.72231646331341,
+        "lastFlip": null,
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": null,
+          "state": "neutral",
+          "errorPct": null,
+          "lastFlip": null,
+          "confirmation": null,
+          "ready": false
+        }
+      }
+    ]
+  },
+  {
+    "asset": "qnt",
+    "timeframe": "1w",
+    "target": 160.41,
+    "targetState": "bull",
+    "imageLastFlipDate": "2026-09-28",
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/weekly/qnt-1w-51m01s.png",
+    "imageSha256": "73dd57fd03d31eedf03fa14a15add40f2648ad975b4f8d566d4d0636c758ea64",
+    "videoTimestamp": "51:01",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=3061s",
+    "source": "coinbase",
+    "bars": 274,
+    "through": "2026-09-21",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 105.04537949724322,
+        "state": "bull",
+        "errorPct": -34.51444455006345,
+        "lastFlip": "2026-09-21",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 79.32069109789572,
+          "state": "bear",
+          "errorPct": -50.551280407770264,
+          "lastFlip": "2026-01-26",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 10,
+        "factor": 2,
+        "value": 142.72525299816215,
+        "state": "bull",
+        "errorPct": -11.024716041292848,
+        "lastFlip": "2026-09-21",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 2,
+          "value": 72.19546073193047,
+          "state": "bear",
+          "errorPct": -54.99316705197277,
+          "lastFlip": "2025-10-13",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 161.19356493432667,
+        "state": "bull",
+        "errorPct": 0.4884763632732936,
+        "lastFlip": "2026-09-21",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": 74.90611992092676,
+          "state": "bear",
+          "errorPct": -53.303335252835396,
+          "lastFlip": "2025-10-13",
+          "confirmation": null,
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 132.74784740149002,
+        "state": "bull",
+        "errorPct": -17.244655943214248,
+        "lastFlip": "2026-09-21",
+        "confirmation": null,
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 83.38667988139014,
+          "state": "bear",
+          "errorPct": -48.01653270906419,
+          "lastFlip": "2026-01-26",
+          "confirmation": null,
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "strc",
+    "timeframe": "1d",
+    "target": 94.11,
+    "targetState": "bull",
+    "imageLastFlipDate": "2026-07-07",
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/other-timeframes/strc-1d-40m01s.png",
+    "imageSha256": "e3bd3418a56cdb9345e243a6fdb3c86cf39ad396add93021d1c21bbb720a8b78",
+    "videoTimestamp": "40:01",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2401s",
+    "source": "yahoo",
+    "bars": 292,
+    "through": "2026-09-25",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 96.5155280897041,
+        "state": "bull",
+        "errorPct": 2.556081276914357,
+        "lastFlip": "2026-07-08",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 96.5155280897041,
+          "state": "bull",
+          "errorPct": 2.556081276914357,
+          "lastFlip": "2026-07-08",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 96.02503247183243,
+        "state": "bull",
+        "errorPct": 2.034887335918012,
+        "lastFlip": "2026-07-06",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 96.02503247183243,
+          "state": "bull",
+          "errorPct": 2.034887335918012,
+          "lastFlip": "2026-07-06",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 95.08171011503113,
+        "state": "bull",
+        "errorPct": 1.0325258899491319,
+        "lastFlip": "2026-07-08",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 95.08171011503113,
+          "state": "bull",
+          "errorPct": 1.0325258899491319,
+          "lastFlip": "2026-07-08",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 30,
+        "factor": 2,
+        "value": 96.23701616543207,
+        "state": "bull",
+        "errorPct": 2.2601383120094187,
+        "lastFlip": "2026-07-06",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 96.23701616543207,
+          "state": "bull",
+          "errorPct": 2.2601383120094187,
+          "lastFlip": "2026-07-06",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 93.58123336905408,
+        "state": "bull",
+        "errorPct": -0.5618601965210135,
+        "lastFlip": "2026-07-06",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 93.58123336905408,
+          "state": "bull",
+          "errorPct": -0.5618601965210135,
+          "lastFlip": "2026-07-06",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 50,
+        "factor": 6,
+        "value": 90.21998800185958,
+        "state": "bull",
+        "errorPct": -4.133473592753612,
+        "lastFlip": "2026-07-06",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 90.21998800185958,
+          "state": "bull",
+          "errorPct": -4.133473592753612,
+          "lastFlip": "2026-07-06",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "crcl",
+    "timeframe": "1d",
+    "target": 57.74,
+    "targetState": "bull",
+    "imageLastFlipDate": "2026-09-11",
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/other-timeframes/crcl-1d-40m10s.png",
+    "imageSha256": "4f5a2c29330818aff879f1bf3054dd72c8c09524142c832b8fe3cb133e936584",
+    "videoTimestamp": "40:10",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2410s",
+    "source": "yahoo",
+    "bars": 329,
+    "through": "2026-09-25",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 78.63926628157122,
+        "state": "bull",
+        "errorPct": 36.195473296798106,
+        "lastFlip": "2026-08-19",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 78.63926628157122,
+          "state": "bull",
+          "errorPct": 36.195473296798106,
+          "lastFlip": "2026-08-19",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 79.87304382627721,
+        "state": "bull",
+        "errorPct": 38.332254635048855,
+        "lastFlip": "2026-08-25",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 79.87304382627721,
+          "state": "bull",
+          "errorPct": 38.332254635048855,
+          "lastFlip": "2026-08-25",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 73.18322474566453,
+        "state": "bull",
+        "errorPct": 26.746146078393718,
+        "lastFlip": "2026-08-26",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 73.18322474566453,
+          "state": "bull",
+          "errorPct": 26.746146078393718,
+          "lastFlip": "2026-08-26",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 30,
+        "factor": 2,
+        "value": 95.39882237195977,
+        "state": "bear",
+        "errorPct": 65.22137577409035,
+        "lastFlip": "2026-09-21",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 95.39882237195977,
+          "state": "bear",
+          "errorPct": 65.22137577409035,
+          "lastFlip": "2026-09-21",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 73.90148584597456,
+        "state": "bull",
+        "errorPct": 27.99010364734076,
+        "lastFlip": "2026-08-27",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 73.90148584597456,
+          "state": "bull",
+          "errorPct": 27.99010364734076,
+          "lastFlip": "2026-08-27",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 50,
+        "factor": 6,
+        "value": 59.08227780492383,
+        "state": "bull",
+        "errorPct": 2.3246931155590955,
+        "lastFlip": "2026-09-10",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 59.08227780492383,
+          "state": "bull",
+          "errorPct": 2.3246931155590955,
+          "lastFlip": "2026-09-10",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "bot",
+    "timeframe": "1d",
+    "target": 18.62,
+    "targetState": "bull",
+    "imageLastFlipDate": "2026-06-10",
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/other-timeframes/bot-1d-41m24s.png",
+    "imageSha256": "2f8b1b798df45ae878a861efa8c4eb807acfe54ab769a3b0e0833fbebf4a1c44",
+    "videoTimestamp": "41:24",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2484s",
+    "source": "yahoo",
+    "bars": 96,
+    "through": "2026-09-25",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 31.187956380085247,
+        "state": "bear",
+        "errorPct": 67.49708045158562,
+        "lastFlip": null,
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 31.187956380085247,
+          "state": "bear",
+          "errorPct": 67.49708045158562,
+          "lastFlip": null,
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 32.280032048723676,
+        "state": "bear",
+        "errorPct": 73.362148489386,
+        "lastFlip": null,
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 32.280032048723676,
+          "state": "bear",
+          "errorPct": 73.362148489386,
+          "lastFlip": null,
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 34.223376128543194,
+        "state": "bear",
+        "errorPct": 83.79901250560253,
+        "lastFlip": null,
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 34.223376128543194,
+          "state": "bear",
+          "errorPct": 83.79901250560253,
+          "lastFlip": null,
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 30,
+        "factor": 2,
+        "value": 32.632890824895924,
+        "state": "bear",
+        "errorPct": 75.25720099299636,
+        "lastFlip": null,
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 32.632890824895924,
+          "state": "bear",
+          "errorPct": 75.25720099299636,
+          "lastFlip": null,
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 38.81578184052671,
+        "state": "bear",
+        "errorPct": 108.46284554525623,
+        "lastFlip": null,
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 38.81578184052671,
+          "state": "bear",
+          "errorPct": 108.46284554525623,
+          "lastFlip": null,
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 50,
+        "factor": 6,
+        "value": 51.189813368578825,
+        "state": "bear",
+        "errorPct": 174.91843914381752,
+        "lastFlip": null,
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 51.189813368578825,
+          "state": "bear",
+          "errorPct": 174.91843914381752,
+          "lastFlip": null,
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "spcx",
+    "timeframe": "1d",
+    "target": 115.88,
+    "targetState": "bull",
+    "imageLastFlipDate": "2026-09-11",
+    "pendingDirection": null,
+    "pendingCount": 0,
+    "image": "data/kk-research-2026-09-28-video/other-timeframes/spcx-1d-45m22s.png",
+    "imageSha256": "53533456597938a69df5f44fc1568dd5c96f53ed5267a0602ac1c137ae5e403f",
+    "videoTimestamp": "45:22",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2722s",
+    "source": "yahoo",
+    "bars": 73,
+    "through": "2026-09-25",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 133.56831045825632,
+        "state": "bull",
+        "errorPct": 15.26433418903721,
+        "lastFlip": "2026-08-14",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 133.56831045825632,
+          "state": "bull",
+          "errorPct": 15.26433418903721,
+          "lastFlip": "2026-08-14",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 132.16583203285066,
+        "state": "bull",
+        "errorPct": 14.054049044572547,
+        "lastFlip": "2026-08-18",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 132.16583203285066,
+          "state": "bull",
+          "errorPct": 14.054049044572547,
+          "lastFlip": "2026-08-18",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 124.59944087941287,
+        "state": "bull",
+        "errorPct": 7.524543389206828,
+        "lastFlip": "2026-09-14",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 124.59944087941287,
+          "state": "bull",
+          "errorPct": 7.524543389206828,
+          "lastFlip": "2026-09-14",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 30,
+        "factor": 2,
+        "value": 136.56628631880182,
+        "state": "bull",
+        "errorPct": 17.85147248774752,
+        "lastFlip": "2026-08-14",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 136.56628631880182,
+          "state": "bull",
+          "errorPct": 17.85147248774752,
+          "lastFlip": "2026-08-14",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 159.83984667628317,
+        "state": "bear",
+        "errorPct": 37.93566333818017,
+        "lastFlip": null,
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 159.83984667628317,
+          "state": "bear",
+          "errorPct": 37.93566333818017,
+          "lastFlip": null,
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 50,
+        "factor": 6,
+        "value": 206.3070419577203,
+        "state": "bear",
+        "errorPct": 78.03507245229572,
+        "lastFlip": null,
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 206.3227042549695,
+          "state": "bear",
+          "errorPct": 78.04858841471307,
+          "lastFlip": null,
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      }
+    ]
+  },
+  {
+    "asset": "qnt",
+    "timeframe": "1d",
+    "target": 227.68,
+    "targetState": "bull",
+    "imageLastFlipDate": "2026-09-10",
+    "pendingDirection": "bear",
+    "pendingCount": 1,
+    "image": "data/kk-research-2026-09-28-video/other-timeframes/qnt-1d-47m30s.png",
+    "imageSha256": "ed688893c7eedb87ae1f6f8c71eb8270ee75f4422b06085f301d1aedfed2404b",
+    "videoTimestamp": "47:30",
+    "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2850s",
+    "source": "coinbase",
+    "bars": 1922,
+    "through": "2026-09-27",
+    "candidates": [
+      {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 159.49298247678274,
+        "state": "bull",
+        "errorPct": -29.948619783563444,
+        "lastFlip": "2026-08-24",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 91.44664719642526,
+          "state": "bull",
+          "errorPct": -59.83545010698117,
+          "lastFlip": "2026-08-24",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 2,
+        "value": 212.82498586757728,
+        "state": "bull",
+        "errorPct": -6.524514288660721,
+        "lastFlip": "2026-09-25",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 2,
+          "value": 110.0317705724042,
+          "state": "bull",
+          "errorPct": -51.67262360663906,
+          "lastFlip": "2026-09-25",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 189.0924788013659,
+        "state": "bull",
+        "errorPct": -16.948138263630586,
+        "lastFlip": "2026-08-24",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 100.5626558586063,
+          "state": "bull",
+          "errorPct": -55.83158122865149,
+          "lastFlip": "2026-08-24",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 165.35997173515455,
+        "state": "bull",
+        "errorPct": -27.37176223860043,
+        "lastFlip": "2026-08-25",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 91.0935411448084,
+          "state": "bull",
+          "errorPct": -59.990538850663924,
+          "lastFlip": "2026-08-25",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 15,
+        "factor": 5,
+        "value": 141.62746466894316,
+        "state": "bull",
+        "errorPct": -37.79538621357029,
+        "lastFlip": "2026-08-25",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 15,
+          "factor": 5,
+          "value": 81.6244264310105,
+          "state": "bull",
+          "errorPct": -64.14949647267633,
+          "lastFlip": "2026-08-25",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      },
+      {
+        "atrLength": 50,
+        "factor": 4,
+        "value": 222.98577640749136,
+        "state": "bull",
+        "errorPct": -2.0617637001531297,
+        "lastFlip": "2026-09-12",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "preceding": {
+          "atrLength": 50,
+          "factor": 4,
+          "value": 109.14283306886871,
+          "state": "bull",
+          "errorPct": -52.06305645253483,
+          "lastFlip": "2026-09-12",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true
+        }
+      }
+    ]
+  }
+]

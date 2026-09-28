@@ -1,8 +1,8 @@
 import type { Candle } from "./regimes.ts";
 import { isXnasSessionComplete, isXnasSessionDate, xnasDateEpoch, xnasDateKey, xnasSessionsBetween } from "./xnas-calendar.ts";
 
-export type StockId = "tsla" | "googl" | "nvda" | "spcx" | "mu" | "sndk" | "bmnr" | "mstr";
-export type StockSymbol = "TSLA" | "GOOGL" | "NVDA" | "SPCX" | "MU" | "SNDK" | "BMNR" | "MSTR";
+export type StockId = "tsla" | "googl" | "nvda" | "spcx" | "mu" | "sndk" | "bmnr" | "mstr" | "crcl" | "intc" | "mrvl" | "amd" | "amzn" | "meta" | "bot" | "strc" | "pltr";
+export type StockSymbol = "TSLA" | "GOOGL" | "NVDA" | "SPCX" | "MU" | "SNDK" | "BMNR" | "MSTR" | "CRCL" | "INTC" | "MRVL" | "AMD" | "AMZN" | "META" | "BOT" | "STRC" | "PLTR";
 
 export interface StockDefinition {
   id: StockId;
@@ -28,6 +28,16 @@ export const STOCKS: readonly StockDefinition[] = [
   // Yahoo's available BMNR series starts here; do not invent earlier OTC candles.
   { id: "bmnr", company: "Bitmine Immersion Technologies", ticker: "BMNR", label: "Bitmine", symbol: "BMNR", exchange: "NYSE", currency: "USD", provider: "yahoo", calendar: "XNYS", historyStart: "2025-06-05" },
   { id: "mstr", company: "Strategy", ticker: "MSTR", label: "Strategy (MicroStrategy)", symbol: "MSTR", exchange: "NASDAQ", currency: "USD", provider: "yahoo", calendar: "XNAS", historyStart: "1999-01-04" },
+  // September 28 additions; older listings use the supported calendar start.
+  { id: "crcl", company: "Circle Internet Group", ticker: "CRCL", label: "Circle Internet Group", symbol: "CRCL", exchange: "NYSE", currency: "USD", provider: "yahoo", calendar: "XNYS", historyStart: "2025-06-05" },
+  { id: "intc", company: "Intel", ticker: "INTC", label: "Intel", symbol: "INTC", exchange: "NASDAQ", currency: "USD", provider: "yahoo", calendar: "XNAS", historyStart: "1999-01-04" },
+  { id: "mrvl", company: "Marvell Technology", ticker: "MRVL", label: "Marvell Technology", symbol: "MRVL", exchange: "NASDAQ", currency: "USD", provider: "yahoo", calendar: "XNAS", historyStart: "2000-06-30" },
+  { id: "amd", company: "Advanced Micro Devices", ticker: "AMD", label: "Advanced Micro Devices", symbol: "AMD", exchange: "NASDAQ", currency: "USD", provider: "yahoo", calendar: "XNAS", historyStart: "1999-01-04" },
+  { id: "amzn", company: "Amazon", ticker: "AMZN", label: "Amazon", symbol: "AMZN", exchange: "NASDAQ", currency: "USD", provider: "yahoo", calendar: "XNAS", historyStart: "1999-01-04" },
+  { id: "meta", company: "Meta Platforms", ticker: "META", label: "Meta Platforms", symbol: "META", exchange: "NASDAQ", currency: "USD", provider: "yahoo", calendar: "XNAS", historyStart: "2012-05-18" },
+  { id: "bot", company: "RoboStrategy", ticker: "BOT", label: "RoboStrategy", symbol: "BOT", exchange: "NASDAQ", currency: "USD", provider: "yahoo", calendar: "XNAS", historyStart: "2026-05-11" },
+  { id: "strc", company: "Strategy Stretch preferred stock", ticker: "STRC", label: "Strategy Stretch preferred stock", symbol: "STRC", exchange: "NASDAQ", currency: "USD", provider: "yahoo", calendar: "XNAS", historyStart: "2025-07-30" },
+  { id: "pltr", company: "Palantir Technologies", ticker: "PLTR", label: "Palantir Technologies", symbol: "PLTR", exchange: "NASDAQ", currency: "USD", provider: "yahoo", calendar: "XNAS", historyStart: "2020-09-30" },
 ];
 
 export const STOCK_DATA_ADJUSTMENT = "split-adjusted" as const;

@@ -8,9 +8,9 @@ import type { CloudflareEnv, D1Database, D1PreparedStatement } from "../function
 const DAY = 86_400_000;
 export const CRON_ASSETS: Record<string, readonly AssetId[]> = {
   "15 0 * * *": ["btc", "jup", "op", "ray"],
-  "25 0 * * *": ["eth", "bonk", "ada"],
+  "25 0 * * *": ["eth", "bonk", "ada", "vvv"],
   "35 0 * * *": ["sol", "atom", "hype", "avax"],
-  "45 0 * * *": ["doge", "dot", "bnb"],
+  "45 0 * * *": ["doge", "dot", "bnb", "qnt"],
   "30 1 * * *": ["link", "xmr", "sui", "zec"],
 };
 const STOCK_REFRESH_CRON = "30 1 * * *";

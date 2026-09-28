@@ -60,6 +60,8 @@ MARKETS = {
     "atom": {"coinbase": ("ATOM/USD", "ATOM-USD", datetime(2020, 1, 14, tzinfo=timezone.utc))},
     "hype": {"kraken": ("HYPE/USD", "HYPEUSD", datetime(2026, 1, 28, tzinfo=timezone.utc))},
     "dot": {"coinbase": ("DOT/USD", "DOT-USD", datetime(2021, 6, 16, tzinfo=timezone.utc))},
+    "vvv": {"coinbase": ("VVV/USD", "VVV-USD", datetime(2025, 1, 28, tzinfo=timezone.utc))},
+    "qnt": {"coinbase": ("QNT/USD", "QNT-USD", datetime(2021, 6, 24, tzinfo=timezone.utc))},
 }
 
 

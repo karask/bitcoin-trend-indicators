@@ -1,0 +1,787 @@
+{
+  "video": {
+    "id": "L_CvF4pDmOY",
+    "title": "BITCOIN: BIG BIG MOVE COMING!!! (october)",
+    "channel": "Ivan on Tech",
+    "uploadDate": "20260928",
+    "durationSeconds": 3375,
+    "url": "https://www.youtube.com/watch?v=L_CvF4pDmOY"
+  },
+  "reviewedRange": "40:00\u201356:15",
+  "reviewedAt": "2026-09-28T11:06:26.204040+00:00",
+  "method": "10-second visual overview plus one-second header transition scan; selected full-resolution frames individually checked for printed 1W/1D/1h labels. Timestamps are chosen capture times, not first appearances. Only displayed charts count; watchlist-only entries do not.",
+  "catalogs": {
+    "lib/markets.ts": {
+      "sha256": "14dde35cc0e823e522222dbb9d3677cfb3fc3f2982e894a95a87bfad7a8498d9",
+      "symbols": [
+        "ADA",
+        "ATOM",
+        "AVAX",
+        "BNB",
+        "BONK",
+        "BTC",
+        "DOGE",
+        "DOT",
+        "ETH",
+        "HYPE",
+        "JUP",
+        "LINK",
+        "OP",
+        "RAY",
+        "SOL",
+        "SUI",
+        "XMR",
+        "ZEC"
+      ]
+    },
+    "lib/stocks.ts": {
+      "sha256": "cfb985927d08f3a413395608eb47935702a70470fd2a828f00dec4381af43e38",
+      "symbols": [
+        "BMNR",
+        "GOOGL",
+        "MSTR",
+        "MU",
+        "NVDA",
+        "SNDK",
+        "SPCX",
+        "TSLA"
+      ]
+    },
+    "lib/commodities.ts": {
+      "sha256": "5311c613441c0f8c4f74fb9ad134c13bff8701902ad9c094d0f8cd02594c53b4",
+      "symbols": [
+        "GC=F",
+        "SI=F"
+      ]
+    }
+  },
+  "weeklyCharts": [
+    {
+      "asset": "Circle Internet Group",
+      "symbol": "CRCL",
+      "timeframe": "1W",
+      "timestamp": "40:27",
+      "timestampSeconds": 2427,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2427s",
+      "feed": "NYSE",
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/weekly/crcl-1w-40m27s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/crcl-1w-40m27s.png",
+      "imageSha256": "04e282f1dc0368322c7e0be29cd6a931f4ccb6586a49282ac4a71e02c5fd7a08",
+      "fullFrameSha256": "f1c2edd2aa8c3e2a45cd64ced92030dba5457b5ec62631c4c74a492078b74aa2",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Venice Token",
+      "symbol": "VVV",
+      "timeframe": "1W",
+      "timestamp": "40:34",
+      "timestampSeconds": 2434,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2434s",
+      "feed": "CRYPTO:VVVUSD",
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/weekly/vvv-1w-40m34s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/vvv-1w-40m34s.png",
+      "imageSha256": "3f4aac1c3db016b37e39aa5baba2afa8feddb423d0c44fde789377bd1d731dab",
+      "fullFrameSha256": "9d116abe0eabe6f1ec610beed57196a33cf48fb59cf938ac26af282b5b92984d",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Fetch.ai",
+      "symbol": "FET",
+      "timeframe": "1W",
+      "timestamp": "40:43",
+      "timestampSeconds": 2443,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2443s",
+      "feed": "BINANCE:FETUSDT",
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/weekly/fet-1w-40m43s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/fet-1w-40m43s.png",
+      "imageSha256": "403ca444c40099aa8c4045421cc843573b11163ce873a74ced8a518b9d9440ad",
+      "fullFrameSha256": "bc956dc239e347863c7f4b2343aa5f013557ab2f66a57e57247a823471a84f8d",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Bittensor",
+      "symbol": "TAO",
+      "timeframe": "1W",
+      "timestamp": "40:56",
+      "timestampSeconds": 2456,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2456s",
+      "feed": "MEXC:TAOUSDT",
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/weekly/tao-1w-40m56s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/tao-1w-40m56s.png",
+      "imageSha256": "09abb11b4727e2c33d7dce38446842b2c4e6c2611e80c0c7818f08430cb16700",
+      "fullFrameSha256": "ef64fc002baa9cd53d9ce6e299b8e539578ed4a0a115b9c0494989824b3ba2e3",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "RoboStrategy",
+      "symbol": "BOT",
+      "timeframe": "1W",
+      "timestamp": "41:18",
+      "timestampSeconds": 2478,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2478s",
+      "feed": "NASDAQ",
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/weekly/bot-1w-41m18s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/bot-1w-41m18s.png",
+      "imageSha256": "6fc4e6e6cafb08ed7d81f0ea2272d95fe68c595aef84248a6ed1c24b2dac040e",
+      "fullFrameSha256": "2e7afd10b37f87feb42cd8e940d50dd8fd19e44c373f8bdfd39c472b084d269d",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Sandisk",
+      "symbol": "SNDK",
+      "timeframe": "1W",
+      "timestamp": "41:52",
+      "timestampSeconds": 2512,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2512s",
+      "feed": "NASDAQ",
+      "inProjectList": true,
+      "catalogFile": "lib/stocks.ts",
+      "image": "data/kk-research-2026-09-28-video/weekly/sndk-1w-41m52s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/sndk-1w-41m52s.png",
+      "imageSha256": "726c36649182af157685b8621f481a16994fbc7fdc2e8b1151c4c34e5e556cd2",
+      "fullFrameSha256": "0bf36daab45118d7ce6ea8fe4ef9cf3f76375e716d3b18aa06201a066af7b3c7",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Astera Labs",
+      "symbol": "ALAB",
+      "timeframe": "1W",
+      "timestamp": "42:06",
+      "timestampSeconds": 2526,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2526s",
+      "feed": "NASDAQ",
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/weekly/alab-1w-42m06s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/alab-1w-42m06s.png",
+      "imageSha256": "ce1e2c4e94965701abfa1c52652ca38126af4cbaf59457a10c52da55c1519134",
+      "fullFrameSha256": "52e7b348cc48c9988eaeb3dbe62c5885675f408966f8b1824fd890bebd0a48e6",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Intel",
+      "symbol": "INTC",
+      "timeframe": "1W",
+      "timestamp": "42:14",
+      "timestampSeconds": 2534,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2534s",
+      "feed": "NASDAQ",
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/weekly/intc-1w-42m14s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/intc-1w-42m14s.png",
+      "imageSha256": "eb8856bc65472b5cf285f41a6da1b3d292276a6e4205545052328b25b65f427a",
+      "fullFrameSha256": "d320e6cf8bc5bb6ca0ffb3e8b82e10857353ec49d3553c918450432ea5805ce0",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Micron Technology",
+      "symbol": "MU",
+      "timeframe": "1W",
+      "timestamp": "42:25",
+      "timestampSeconds": 2545,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2545s",
+      "feed": "NASDAQ",
+      "inProjectList": true,
+      "catalogFile": "lib/stocks.ts",
+      "image": "data/kk-research-2026-09-28-video/weekly/mu-1w-42m25s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/mu-1w-42m25s.png",
+      "imageSha256": "1e13727c8c80a3e449001cfd06578e442fb571101f6b31522560c640e106a3d5",
+      "fullFrameSha256": "2b9e2888b673c9435329bbfafd4e63fa6fc002624782bef37057757d35e6c6a4",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Marvell Technology",
+      "symbol": "MRVL",
+      "timeframe": "1W",
+      "timestamp": "42:43",
+      "timestampSeconds": 2563,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2563s",
+      "feed": "NASDAQ",
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/weekly/mrvl-1w-42m43s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/mrvl-1w-42m43s.png",
+      "imageSha256": "496e37860b7d0b7fc3d7b4d0135c2483b9d1ad324782f3abad39971dab9f9bb1",
+      "fullFrameSha256": "bff5d2ba5ac1a48cf1ee5dee55e014ba9226ddf6325187bef9ff4452af7468eb",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Advanced Micro Devices",
+      "symbol": "AMD",
+      "timeframe": "1W",
+      "timestamp": "43:05",
+      "timestampSeconds": 2585,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2585s",
+      "feed": "NASDAQ",
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/weekly/amd-1w-43m05s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/amd-1w-43m05s.png",
+      "imageSha256": "5220564ea1ec6bca68970042a2d290cf6a4baefca5e9b958626c62732be77259",
+      "fullFrameSha256": "1654f02873bebc1ccad6ba16fc7c7a12312bef3eb51e276c8b6cfb83a1025bad",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "NVIDIA",
+      "symbol": "NVDA",
+      "timeframe": "1W",
+      "timestamp": "43:17",
+      "timestampSeconds": 2597,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2597s",
+      "feed": "NASDAQ",
+      "inProjectList": true,
+      "catalogFile": "lib/stocks.ts",
+      "image": "data/kk-research-2026-09-28-video/weekly/nvda-1w-43m17s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/nvda-1w-43m17s.png",
+      "imageSha256": "5db75f28799b963f6dc955ef3a12f148795f9804df40bdbce590d28f531fbcf8",
+      "fullFrameSha256": "2e617a1b95ddfeeeb01e00cf0f696eed4049177433a365ea64c5ac155a94afee",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Amazon",
+      "symbol": "AMZN",
+      "timeframe": "1W",
+      "timestamp": "43:24",
+      "timestampSeconds": 2604,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2604s",
+      "feed": "NASDAQ",
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/weekly/amzn-1w-43m24s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/amzn-1w-43m24s.png",
+      "imageSha256": "8618c6d69b6f6dc21d309fedcc76ac791a7ce6c3a0c0f7486d8109b6eb148d59",
+      "fullFrameSha256": "c8544758284b70a3072ae07446ef2fd5a3fcf5936f94c4db0aa3a039d0c32441",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Meta Platforms",
+      "symbol": "META",
+      "timeframe": "1W",
+      "timestamp": "43:50",
+      "timestampSeconds": 2630,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2630s",
+      "feed": "NASDAQ",
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/weekly/meta-1w-43m50s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/meta-1w-43m50s.png",
+      "imageSha256": "16d5a5fb53963c2e70faf0c32561b89eac3e2ebfa78521a7e61c1bb55382d376",
+      "fullFrameSha256": "a0b2e9d9dcab0626e8c0d51a575fba8fbfe0630422e2df4dfb6f21b1050b3928",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Alphabet Class A (Google)",
+      "symbol": "GOOGL",
+      "timeframe": "1W",
+      "timestamp": "44:38",
+      "timestampSeconds": 2678,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2678s",
+      "feed": "NASDAQ",
+      "inProjectList": true,
+      "catalogFile": "lib/stocks.ts",
+      "image": "data/kk-research-2026-09-28-video/weekly/googl-1w-44m38s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/googl-1w-44m38s.png",
+      "imageSha256": "ab91fbbe3bf05d3dfebe191b10257ec2c17cde95e6f4b27331f10c0517df94ea",
+      "fullFrameSha256": "c19fd224cba009887f4372987c438c4687525adf0cbd903786fd0b8a3d9d606e",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Tesla",
+      "symbol": "TSLA",
+      "timeframe": "1W",
+      "timestamp": "44:42",
+      "timestampSeconds": 2682,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2682s",
+      "feed": "NASDAQ",
+      "inProjectList": true,
+      "catalogFile": "lib/stocks.ts",
+      "image": "data/kk-research-2026-09-28-video/weekly/tsla-1w-44m42s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/tsla-1w-44m42s.png",
+      "imageSha256": "daac225be5be939356113deeffd59cae5b21fc9a3339bc764067de229f4aaead",
+      "fullFrameSha256": "f197f716d5e8121d70cb6e89cafeb51a921b2fe1dfdfe666f70ba6096812efa7",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Palantir Technologies",
+      "symbol": "PLTR",
+      "timeframe": "1W",
+      "timestamp": "44:55",
+      "timestampSeconds": 2695,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2695s",
+      "feed": "NASDAQ",
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/weekly/pltr-1w-44m55s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/pltr-1w-44m55s.png",
+      "imageSha256": "843c61cdb36d35b1d4126118e3a508a8b166cdd386ea794024fee0ecdd369ac6",
+      "fullFrameSha256": "02d37ea13ea6ae7bedbcb6ebefacecd9bc8379c79aa4c601022bc0555a0b9129",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "SpaceX (Space Exploration Technologies)",
+      "symbol": "SPCX",
+      "timeframe": "1W",
+      "timestamp": "45:12",
+      "timestampSeconds": 2712,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2712s",
+      "feed": "NASDAQ",
+      "inProjectList": true,
+      "catalogFile": "lib/stocks.ts",
+      "image": "data/kk-research-2026-09-28-video/weekly/spcx-1w-45m12s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/spcx-1w-45m12s.png",
+      "imageSha256": "8f3d91f644d0f52986e691e7a4c115a3ee16b781ee5b6ba3f13ccc1f05eefc14",
+      "fullFrameSha256": "232151e8c46a36286a7f82960ed48d00f5547b010ef76ad934b946505eabac38",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Render",
+      "symbol": "RENDER",
+      "timeframe": "1W",
+      "timestamp": "46:55",
+      "timestampSeconds": 2815,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2815s",
+      "feed": "CRYPTO:RENDERUSD",
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/weekly/render-1w-46m55s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/render-1w-46m55s.png",
+      "imageSha256": "5d66b0464c260d52af18d140945432b22b3cc4760371ea83f182bc92a400cc3e",
+      "fullFrameSha256": "35f7ec1eca7e678ca14319d4b31e5647d5bf45710fb382574072bb7673f53d38",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Quant",
+      "symbol": "QNT",
+      "timeframe": "1W",
+      "timestamp": "51:01",
+      "timestampSeconds": 3061,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=3061s",
+      "feed": "CRYPTO:QNTUSD",
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/weekly/qnt-1w-51m01s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/qnt-1w-51m01s.png",
+      "imageSha256": "73dd57fd03d31eedf03fa14a15add40f2648ad975b4f8d566d4d0636c758ea64",
+      "fullFrameSha256": "3379b17208f33577f0b9adfb76c97a08457a2c24388c368cdb6f8f7fc530684b",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    }
+  ],
+  "otherTimeframes": [
+    {
+      "asset": "Strategy Stretch preferred stock",
+      "symbol": "STRC",
+      "timeframe": "1D",
+      "timestamp": "40:01",
+      "timestampSeconds": 2401,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2401s",
+      "feed": null,
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/other-timeframes/strc-1d-40m01s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/strc-1d-40m01s.png",
+      "imageSha256": "e3bd3418a56cdb9345e243a6fdb3c86cf39ad396add93021d1c21bbb720a8b78",
+      "fullFrameSha256": "d51a727ef6b3c91674e64c18d412f3bbe203dc224132e17dd2ba9df06ca80f37",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Circle Internet Group",
+      "symbol": "CRCL",
+      "timeframe": "1D",
+      "timestamp": "40:10",
+      "timestampSeconds": 2410,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2410s",
+      "feed": null,
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/other-timeframes/crcl-1d-40m10s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/crcl-1d-40m10s.png",
+      "imageSha256": "4f5a2c29330818aff879f1bf3054dd72c8c09524142c832b8fe3cb133e936584",
+      "fullFrameSha256": "3220b21de75a593ded2497dcf67ddbdc3fa8f67cc0ebddb6bf17d58406db5c70",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "RoboStrategy",
+      "symbol": "BOT",
+      "timeframe": "1D",
+      "timestamp": "41:24",
+      "timestampSeconds": 2484,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2484s",
+      "feed": null,
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/other-timeframes/bot-1d-41m24s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/bot-1d-41m24s.png",
+      "imageSha256": "2f8b1b798df45ae878a861efa8c4eb807acfe54ab769a3b0e0833fbebf4a1c44",
+      "fullFrameSha256": "eb827f9ed664be23eaf49bdd47480369db4495e8dd8ea9253e2a13a1399ec8bf",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "RoboStrategy",
+      "symbol": "BOT",
+      "timeframe": "1h",
+      "timestamp": "41:35",
+      "timestampSeconds": 2495,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2495s",
+      "feed": null,
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/other-timeframes/bot-1h-41m35s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/bot-1h-41m35s.png",
+      "imageSha256": "e515299efc02f8dc2d1b3c0e830b100d3d4d3c62948f5d44ad9b81d35dec2754",
+      "fullFrameSha256": "5a2f8fc8026829470afe9e3dacf30604434ef57b75e0daa438c5bd80a3064e38",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Sandisk",
+      "symbol": "SNDK",
+      "timeframe": "1h",
+      "timestamp": "41:46",
+      "timestampSeconds": 2506,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2506s",
+      "feed": null,
+      "inProjectList": true,
+      "catalogFile": "lib/stocks.ts",
+      "image": "data/kk-research-2026-09-28-video/other-timeframes/sndk-1h-41m46s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/sndk-1h-41m46s.png",
+      "imageSha256": "cb0d39c76a1fb7115a2ed4489250bcd51e9349394dfd6d1f20f145e1175b2932",
+      "fullFrameSha256": "583deab256b0a7163494685000c95d347132fc9f94f4abcc7b7f6f63a66eb2e0",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "SpaceX (Space Exploration Technologies)",
+      "symbol": "SPCX",
+      "timeframe": "1h",
+      "timestamp": "45:16",
+      "timestampSeconds": 2716,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2716s",
+      "feed": null,
+      "inProjectList": true,
+      "catalogFile": "lib/stocks.ts",
+      "image": "data/kk-research-2026-09-28-video/other-timeframes/spcx-1h-45m16s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/spcx-1h-45m16s.png",
+      "imageSha256": "f74686dd821310c2c4b9ad7188b031ee80f6a3c084e0eccd5d268553fd687546",
+      "fullFrameSha256": "259d71a38ff5b4fcd4edecc8f6ed50397e6e1c3c99273275276c5cdb77bd2b64",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "SpaceX (Space Exploration Technologies)",
+      "symbol": "SPCX",
+      "timeframe": "1D",
+      "timestamp": "45:22",
+      "timestampSeconds": 2722,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2722s",
+      "feed": null,
+      "inProjectList": true,
+      "catalogFile": "lib/stocks.ts",
+      "image": "data/kk-research-2026-09-28-video/other-timeframes/spcx-1d-45m22s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/spcx-1d-45m22s.png",
+      "imageSha256": "53533456597938a69df5f44fc1568dd5c96f53ed5267a0602ac1c137ae5e403f",
+      "fullFrameSha256": "1ce687851064f838cfac00bffb0dd52ce49179bbc76507722b2f5b2ccf021e2d",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Quant",
+      "symbol": "QNT",
+      "timeframe": "1D",
+      "timestamp": "47:30",
+      "timestampSeconds": 2850,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2850s",
+      "feed": null,
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/other-timeframes/qnt-1d-47m30s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/qnt-1d-47m30s.png",
+      "imageSha256": "ed688893c7eedb87ae1f6f8c71eb8270ee75f4422b06085f301d1aedfed2404b",
+      "fullFrameSha256": "c5e849dbe1266ab17ac46a55d28e6029eb8363764c4f6737542dcb066d911d56",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "Quant",
+      "symbol": "QNT",
+      "timeframe": "1h",
+      "timestamp": "47:58",
+      "timestampSeconds": 2878,
+      "videoUrl": "https://www.youtube.com/watch?v=L_CvF4pDmOY&t=2878s",
+      "feed": null,
+      "inProjectList": false,
+      "catalogFile": null,
+      "image": "data/kk-research-2026-09-28-video/other-timeframes/qnt-1h-47m58s.png",
+      "fullFrame": "data/kk-research-2026-09-28-video/full-frames/qnt-1h-47m58s.png",
+      "imageSha256": "c6da39b929d8d9325f68695432ef41d53bd8e71fa3476e4d946ad7033a8e8ed3",
+      "fullFrameSha256": "538baf55068b93bcaaed3f8607fedf8179c66d1fa5122be58ecb1ccc6f0aa9fc",
+      "cropBox": [
+        0,
+        0,
+        865,
+        1080
+      ],
+      "originalDimensions": [
+        1920,
+        1080
+      ]
+    }
+  ]
+}

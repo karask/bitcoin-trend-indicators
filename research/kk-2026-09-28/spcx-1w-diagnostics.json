@@ -1,0 +1,242 @@
+[
+  {
+    "length": 5,
+    "factor": 1,
+    "value": 135.8603315057275,
+    "state": "bull",
+    "error": -14.083139501848175,
+    "flip": "2026-08-10"
+  },
+  {
+    "length": 5,
+    "factor": 2,
+    "value": 165.2611943359375,
+    "state": "bear",
+    "error": 4.509703621031735,
+    "flip": null
+  },
+  {
+    "length": 5,
+    "factor": 3,
+    "value": 191.4067908935547,
+    "state": "bear",
+    "error": 21.043945420574662,
+    "flip": null
+  },
+  {
+    "length": 5,
+    "factor": 4,
+    "value": 216.5836983911525,
+    "state": "bear",
+    "error": 36.965596908336494,
+    "flip": null
+  },
+  {
+    "length": 5,
+    "factor": 5,
+    "value": 232.7283717682375,
+    "state": "bear",
+    "error": 47.17534419037344,
+    "flip": null
+  },
+  {
+    "length": 5,
+    "factor": 6,
+    "value": 248.87304514532252,
+    "state": "bear",
+    "error": 57.38509147241038,
+    "flip": null
+  },
+  {
+    "length": 7,
+    "factor": 1,
+    "value": 133.6229793619653,
+    "state": "bull",
+    "error": -15.498021019436347,
+    "flip": "2026-08-24"
+  },
+  {
+    "length": 7,
+    "factor": 2,
+    "value": 168.0557076590402,
+    "state": "bear",
+    "error": 6.276928893341038,
+    "flip": null
+  },
+  {
+    "length": 7,
+    "factor": 3,
+    "value": 195.5985608782087,
+    "state": "bear",
+    "error": 23.694783329038582,
+    "flip": null
+  },
+  {
+    "length": 7,
+    "factor": 4,
+    "value": 223.14141409737724,
+    "state": "bear",
+    "error": 41.11263776473613,
+    "flip": null
+  },
+  {
+    "length": 7,
+    "factor": 5,
+    "value": 243.91513248704854,
+    "state": "bear",
+    "error": 54.24975177831439,
+    "flip": null
+  },
+  {
+    "length": 7,
+    "factor": 6,
+    "value": 262.29715800789575,
+    "state": "bear",
+    "error": 65.8743805779395,
+    "flip": null
+  },
+  {
+    "length": 10,
+    "factor": 1,
+    "value": 162.64009643554687,
+    "state": "bear",
+    "error": 2.8521447135564815,
+    "flip": null
+  },
+  {
+    "length": 10,
+    "factor": 2,
+    "value": 187.0851931762695,
+    "state": "bear",
+    "error": 18.31100561327359,
+    "flip": null
+  },
+  {
+    "length": 10,
+    "factor": 3,
+    "value": 211.5302899169922,
+    "state": "bear",
+    "error": 33.769866512990696,
+    "flip": null
+  },
+  {
+    "length": 10,
+    "factor": 4,
+    "value": 233.49466639074706,
+    "state": "bear",
+    "error": 47.65994206712645,
+    "flip": null
+  },
+  {
+    "length": 10,
+    "factor": 5,
+    "value": 253.86708176773072,
+    "state": "bear",
+    "error": 60.543275638860884,
+    "flip": null
+  },
+  {
+    "length": 10,
+    "factor": 6,
+    "value": 274.2394971447144,
+    "state": "bear",
+    "error": 73.42660921059534,
+    "flip": null
+  },
+  {
+    "length": 14,
+    "factor": 1,
+    "value": 171.92142159598214,
+    "state": "bear",
+    "error": 8.721571868704325,
+    "flip": null
+  },
+  {
+    "length": 14,
+    "factor": 2,
+    "value": 193.97284807477678,
+    "state": "bear",
+    "error": 22.666697068726236,
+    "flip": null
+  },
+  {
+    "length": 14,
+    "factor": 3,
+    "value": 216.02427455357144,
+    "state": "bear",
+    "error": 36.61182226874815,
+    "flip": null
+  },
+  {
+    "length": 14,
+    "factor": 4,
+    "value": 237.41030323262117,
+    "state": "bear",
+    "error": 50.13615584178914,
+    "flip": null
+  },
+  {
+    "length": 14,
+    "factor": 5,
+    "value": 258.76162782007333,
+    "state": "bear",
+    "error": 63.638542857189236,
+    "flip": null
+  },
+  {
+    "length": 14,
+    "factor": 6,
+    "value": 280.1129524075255,
+    "state": "bear",
+    "error": 77.14092987258931,
+    "flip": null
+  },
+  {
+    "length": 15,
+    "factor": 1,
+    "value": 173.4030029296875,
+    "state": "bear",
+    "error": 9.658510674563647,
+    "flip": null
+  },
+  {
+    "length": 15,
+    "factor": 2,
+    "value": 194.8010009765625,
+    "state": "bear",
+    "error": 23.19041356893854,
+    "flip": null
+  },
+  {
+    "length": 15,
+    "factor": 3,
+    "value": 216.1989990234375,
+    "state": "bear",
+    "error": 36.72231646331341,
+    "flip": null
+  },
+  {
+    "length": 15,
+    "factor": 4,
+    "value": 237.5969970703125,
+    "state": "bear",
+    "error": 50.2542193576883,
+    "flip": null
+  },
+  {
+    "length": 15,
+    "factor": 5,
+    "value": 258.9949951171875,
+    "state": "bear",
+    "error": 63.78612225206317,
+    "flip": null
+  },
+  {
+    "length": 15,
+    "factor": 6,
+    "value": 280.3929931640625,
+    "state": "bear",
+    "error": 77.31802514643806,
+    "flip": null
+  }
+]

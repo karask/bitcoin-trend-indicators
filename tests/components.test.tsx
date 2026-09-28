@@ -3,6 +3,7 @@ import test from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import ChartExplorer from "../app/ChartExplorer";
 import CalibrationPanel from "../app/CalibrationPanel";
+import KKCalibrationWarning from "../app/KKCalibrationWarning";
 import ResearchPanel from "../app/ResearchPanel";
 import SignalReadiness from "../app/SignalReadiness";
 import DailyConfirmation from "../app/DailyConfirmation";
@@ -88,12 +89,47 @@ test("calibration notebook exposes versioned evidence and uncalibrated equity la
   assert.match(hype, /KuCoin USDT/);
   assert.match(hype, /shorter history/);
   const calibratedStock = renderToStaticMarkup(<CalibrationPanel stock="tsla" timeframe="1w" values={{ atrLength: 15, factor: 2 }} />);
-  assert.match(calibratedStock, /Weekly screenshot checked · September 21/);
+  assert.match(calibratedStock, /Weekly screenshot checked · September 28/);
   assert.match(calibratedStock, /383\.88/);
   assert.doesNotMatch(calibratedStock, /<details[^>]*\bopen=/);
   const spcx = renderToStaticMarkup(<CalibrationPanel stock="spcx" timeframe="1d" values={{ atrLength: 10, factor: 3 }} />);
   assert.match(spcx, /Ignored reference/);
   assert.doesNotMatch(spcx, /Archived reference check passes/);
+});
+
+test("September 28 notebook discloses timing differences and unresolved calibrations", () => {
+  const intel = renderToStaticMarkup(<CalibrationPanel stock="intc" timeframe="1w" values={{ atrLength: 15, factor: 2 }} />);
+  assert.match(intel, /timing difference/);
+  assert.match(intel, /preceding completed week/);
+  assert.match(intel, /live model still includes every completed week/);
+  assert.match(intel, /Source chart at/);
+  for (const timeframe of ["1d", "1w"] as const) {
+    const bot = renderToStaticMarkup(<CalibrationPanel stock="bot" timeframe={timeframe} values={{ atrLength: 10, factor: 3 }} />);
+    assert.match(bot, /calibration unresolved/);
+    assert.doesNotMatch(bot, /Reference check passes/);
+  }
+  const quant = renderToStaticMarkup(<CalibrationPanel asset="qnt" timeframe="1d" values={{ atrLength: 50, factor: 4 }} />);
+  assert.match(quant, /Approximate daily screenshot fit/);
+  assert.match(quant, /Coinbase USD proxy/);
+  assert.match(quant, /not a confirmation match/);
+});
+
+test("KK confidence warnings distinguish timeframes and never label other indicators", () => {
+  for (const asset of ["strc", "crcl", "qnt", "spcx"]) {
+    const html = renderToStaticMarkup(<KKCalibrationWarning asset={asset} timeframe="1d" />);
+    assert.match(html, /Low-confidence KK calibration/);
+    assert.match(html, /Treat this KK signal as unverified/);
+  }
+  for (const timeframe of ["1d", "1w"] as const) assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="bot" timeframe={timeframe} />), /Unreliable KK calibration/);
+  assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="intc" timeframe="1w" />), /KK timing mismatch/);
+  assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="strc" timeframe="1w" />), /Uncalibrated KK/);
+  assert.equal(renderToStaticMarkup(<KKCalibrationWarning asset="crcl" timeframe="1w" />), "");
+  assert.equal(renderToStaticMarkup(<KKCalibrationWarning asset="bot" timeframe="1d" indicator="supertrend" />), "");
+  const overview = renderToStaticMarkup(<AssetOverview />);
+  for (const symbol of ["STRC", "CRCL", "QNT", "SPCX", "BOT"]) {
+    const row = overview.split("<tr").find(row => row.includes(`<strong>${symbol}</strong>`));
+    assert.ok(row?.includes("kk-reliability-badge"), `${symbol} must be flagged before history loads`);
+  }
 });
 
 test("research renders matched dates, benchmark, costs, curves, ledger and full windows", () => {

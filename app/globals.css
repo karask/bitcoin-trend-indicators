@@ -162,3 +162,7 @@ button:disabled { opacity:.5; cursor:not-allowed; }
 .kk-200-orange { color:#bd6310; font-weight:700; }
 [data-theme="dark"] .kk-200-blue { color:#78bdff; }
 [data-theme="dark"] .kk-200-orange { color:#ffb568; }
+
+.kk-reliability-badge { display:block; width:fit-content; margin-top:6px; padding:4px 7px; border:1px solid var(--amber); border-radius:5px; background:var(--amber-soft); color:var(--ink); font-size:.75rem; font-weight:700; line-height:1.4; white-space:normal; }
+.kk-reliability-warning { margin:14px 0; }
+.kk-reliability-warning p { margin:6px 0 0; }
