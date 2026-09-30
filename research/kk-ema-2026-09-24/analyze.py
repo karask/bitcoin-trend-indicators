@@ -6,7 +6,7 @@ HERE=Path(__file__).resolve().parent
 META=json.loads((HERE/'provenance.json').read_text())
 DAY=86_400_000
 SNAPSHOT=int(datetime(2026,9,24,tzinfo=timezone.utc).timestamp()*1000)
-DIGITS={'eth':2,'sol':2,'ray':3,'doge':5,'hype':3,'zec':2,'link':3}
+DIGITS={'eth':2,'sol':2,'ray':4,'doge':5,'hype':3,'zec':2,'link':3}
 
 def ema(xs,n):
  v=xs[0];alpha=2/(n+1)

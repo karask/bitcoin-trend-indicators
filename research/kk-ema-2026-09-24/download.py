@@ -14,7 +14,7 @@ SNAPSHOT=int(datetime(2026,9,24,tzinfo=timezone.utc).timestamp()*1000)
 CONFIG={
  'eth':dict(file='image.png',feed='binance-spot',symbol='ETHUSDT',mode='partial',values=[2481.69,2342.95],ohlc=[2684.70,2704.08,2600.15,2640.75],clock='10:39:44'),
  'sol':dict(file='image(1).png',feed='coinbase-proxy',symbol='SOL-USD',mode='partial',values=[103.15,96.63],ohlc=[114.99,116.08,112.55,113.12],clock='10:40:07'),
- 'ray':dict(file='image(2).png',feed='binance-proxy',symbol='RAYUSDT',mode='partial',values=[1.343,1.263],ohlc=[1.977,2.163,1.972,1.992],clock='10:40:42'),
+ 'ray':dict(file='image(2).png',feed='binance-proxy',symbol='RAYUSDT',mode='partial',values=[1.3443,1.1263],ohlc=[1.9777,2.1633,1.9172,1.9292],clock='10:40:42'),
  'doge':dict(file='image(3).png',feed='coinbase',symbol='DOGE-USD',mode='partial',values=[0.08629,0.08374],ohlc=[0.09271,0.09516,0.09138,0.09235],clock='10:40:58'),
  'hype':dict(file='image(4).png',feed='hyperliquid',symbol='HYPE',mode='historical',date='2025-12-04',values=[36.420,38.591],ohlc=[34.690,36.179,33.098,33.548],clock='10:41:42'),
  'zec':dict(file='image(5).png',feed='binance-proxy',symbol='ZECUSDT',mode='historical',date='2025-09-20',values=[46.21,44.26],ohlc=[48.97,51.19,48.53,50.66],clock='10:42:19'),

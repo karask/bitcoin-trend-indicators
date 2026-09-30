@@ -22,6 +22,8 @@ The charts show the **22 September 2026 daily candle in progress**; the files we
 
 The five matching-symbol crosshair OHLC candles (BTC, ETH, DOGE, SUI, JUP) match the screenshot headers. SOL and RAY have different OHLC candles on the available venues, so their boundary discrepancies are expected feed differences, not evidence for different EMA lengths. The Bitstamp JUP slow-line difference is about 0.0002% of the printed value, consistent with one historical candle or feed revision; the screenshot does not establish the cause.
 
+Follow-up on 30 September: removing Bitstamp's flat zero-volume daily rows reproduces both JUP values at this crosshair, **0.515302 / 0.512712**, after rounding. The September 30 JUP screenshot also matches both boundaries under this treatment. This supports synthetic no-trade bars as the explanation for the one-digit discrepancy above; the original calendar-day comparison is retained as a record of that method.
+
 Among integer Close EMA lengths 20–75, the shared 32-period fast line has mean relative error **0.001128%** across the five matching-symbol observations; the next-best 33 period has **0.206913%**. The shared 58-period slow line has **0.001466%** versus **0.173438%** for the next-best 59 period. This is a fit to five historical pairs, not a trading-performance result. Close also fits each matching-symbol pair much better than Open, HL2, HLC3 or OHLC4. All seven retrieved histories are daily-continuous through their crosshair dates.
 
 ## Implication for the app
