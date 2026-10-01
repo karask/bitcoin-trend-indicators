@@ -248,7 +248,7 @@ export default function RegimeChart({ candles, selected, denomination, timeframe
       <div className="chart-tooltip-ohlc"><span>O <b>{formatPrice(inspected.open, denomination)}</b></span><span>H <b>{formatPrice(inspected.high, denomination)}</b></span><span>L <b>{formatPrice(inspected.low, denomination)}</b></span><span>C <b>{formatPrice(inspected.close, denomination)}</b></span></div>
       <div className="chart-tooltip-summary"><span className={`tooltip-state ${selected.states[selection.index] ?? "unavailable"}`}>{stateLabel(selected.states[selection.index])}</span><b className={tooltip.change != null && tooltip.change < 0 ? "negative" : ""}>{tooltip.change == null ? "—" : `${tooltip.change > 0 ? "+" : ""}${(tooltip.change * 100).toFixed(2)}%`}</b></div>
       {(tooltip.overlays.length > 0 || tooltip.ribbons.length > 0) && <dl>{[...tooltip.overlays, ...tooltip.ribbons].map(item => <div key={item.label}><dt>{item.label}</dt><dd>{item.value}</dd></div>)}</dl>}
-      {(tooltip.flip || tooltip.events.length > 0) && <div className="chart-tooltip-events">{tooltip.flip && <span>Confirmed flip: {stateLabel(tooltip.flip.from)} → {stateLabel(tooltip.flip.to)}</span>}{tooltip.events.map(event => <span key={event}>{event}</span>)}</div>}
+      {(tooltip.flip || tooltip.events.length > 0) && <div className="chart-tooltip-events">{tooltip.flip && <span>Confirmed flip: {stateLabel(tooltip.flip.to)}</span>}{tooltip.events.map(event => <span key={event}>{event}</span>)}</div>}
     </aside>}
     <span className="sr-only" aria-live="polite">{selection && inspected ? `${periodLabel(inspected.time, timeframe)}. Close ${formatPrice(inspected.close, denomination)}. ${stateLabel(selected.states[selection.index])}.` : ""}</span>
   </div>;
