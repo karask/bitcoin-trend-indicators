@@ -54,7 +54,8 @@ export const KK_SUPERTREND_ATR_LENGTH = 10;
 export const KK_SUPERTREND_FACTORS = { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3, sui: 3, jup: 3, op: 3, bonk: 3, ada: 3, atom: 3, hype: 3, dot: 3, bnb: 3, zec: 3, avax: 3, ray: 3, vvv: 3, qnt: 3 } as const satisfies Record<AssetId, number>;
 export const KK_SUPERTREND_EQUITY_FACTOR = 3;
 export const KK_SUPERTREND_PRESETS = {
-  vvv: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  // October 4 daily review: compact families; weekly presets remain unchanged.
+  vvv: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
   // Daily 50/4 is an approximate September 28 composite-feed fit.
   qnt: { "1d": { atrLength: 50, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
   avax: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
@@ -62,43 +63,43 @@ export const KK_SUPERTREND_PRESETS = {
   zec: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
   btc: { "1d": { atrLength: 15, factor: 2 }, "1w": { atrLength: 10, factor: 3 } },
   eth: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 10, factor: 2 } },
-  sol: { "1d": { atrLength: 15, factor: 2 }, "1w": { atrLength: 10, factor: 2 } },
-  doge: { "1d": { atrLength: 15, factor: 5 }, "1w": { atrLength: 15, factor: 2 } },
+  sol: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 10, factor: 2 } },
+  doge: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
   link: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
-  xmr: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  sui: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  xmr: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  sui: { "1d": { atrLength: 15, factor: 2 }, "1w": { atrLength: 15, factor: 2 } },
   jup: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  op: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  op: { "1d": { atrLength: 15, factor: 2 }, "1w": { atrLength: 15, factor: 2 } },
   bonk: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
   ada: { "1d": { atrLength: 15, factor: 5 }, "1w": { atrLength: 15, factor: 2 } },
   atom: { "1d": { atrLength: 15, factor: 5 }, "1w": { atrLength: 15, factor: 2 } },
   hype: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
   dot: { "1d": { atrLength: 15, factor: 5 }, "1w": { atrLength: 15, factor: 2 } },
-  // Daily remains uncalibrated; weekly is fitted to ray7.png.
+  // Daily level/timing tradeoff remains unresolved; weekly is fitted to ray7.png.
   ray: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
 } as const satisfies Record<AssetId, Record<Timeframe, { atrLength: number; factor: number }>>;
 
 export const KK_SUPERTREND_STOCK_PRESETS = {
   // BOT could not be fitted; STRC has no weekly reference. Both retain 10/3 there.
   crcl: { "1d": { atrLength: 50, factor: 6 }, "1w": { atrLength: 15, factor: 2 } },
-  intc: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  mrvl: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  amd: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  amzn: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  meta: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  intc: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
+  mrvl: { "1d": { atrLength: 30, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
+  amd: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
+  amzn: { "1d": { atrLength: 50, factor: 6 }, "1w": { atrLength: 15, factor: 2 } },
+  meta: { "1d": { atrLength: 30, factor: 2 }, "1w": { atrLength: 15, factor: 2 } },
   bot: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 10, factor: 3 } },
   strc: { "1d": { atrLength: 30, factor: 4 }, "1w": { atrLength: 10, factor: 3 } },
-  pltr: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
-  mstr: { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  pltr: { "1d": { atrLength: 30, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
+  mstr: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
   tsla: { "1d": { atrLength: 30, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
-  googl: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  googl: { "1d": { atrLength: 50, factor: 6 }, "1w": { atrLength: 15, factor: 2 } },
   nvda: { "1d": { atrLength: 30, factor: 2 }, "1w": { atrLength: 15, factor: 2 } },
   mu: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
   sndk: { "1d": { atrLength: 30, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
   // Daily is an approximate grouped fit with five-close confirmation.
   // September 28 weekly reference remains unresolved with the available IPO history.
   spcx: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 10, factor: 3 } },
-  bmnr: { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } },
+  bmnr: { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } },
 } as const satisfies Record<StockId, Record<Timeframe, { atrLength: number; factor: number }>>;
 
 // Approximate Yahoo-feed fits to September 9 weekly screenshots, not recovered
@@ -242,7 +243,7 @@ export interface BacktestSummary {
 }
 
 const BASE_INDICATOR_SPECS: Array<Omit<IndicatorSpec, "guidance">> = [
-  { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { dailyCryptoFamily: "15/2,15/3,15/4,15/5; QNT 50/4", dailyStockFamily: "15/3,15/4,30/2,30/4; CRCL 50/6", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-09-28", dailyConfirmations: 5 }, thresholdKind: "provisional", description: "Asset- and timeframe-specific SuperTrend presets. Daily and weekly presets are calibrated separately against archived screenshots, with unresolved references identified in the calibration notebook.", disclaimer: "Daily presets are approximate screenshot fits, not recovered private formulas. Most use compact asset-class families; September 28 adds CRCL 50/6 and QNT 50/4 after joint level-and-flip-date review. Both directions require five consecutive completed daily confirmations and reset on failure. The ATR trail continues during confirmation. SUI/OP/BOT, short-history SPCX weekly, and screenshot counter alignment remain unresolved; new assets without daily references retain 10/3. Weekly reference checks remain separate. Venue and history differences can change the trail.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
+  { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { dailyCryptoFamily: "10/3,15/2,15/3,15/4,15/5; QNT 50/4", dailyStockFamily: "10/3,15/3,15/4,30/2,30/4,50/6", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-10-04", dailyConfirmations: 5 }, thresholdKind: "provisional", description: "Asset- and timeframe-specific SuperTrend presets. Daily and weekly presets are calibrated separately against archived screenshots, with unresolved references identified in the calibration notebook.", disclaimer: "Daily presets are approximate screenshot fits, not recovered private formulas. October 4 reviewed October 3 charts within existing compact integer families; no new parameter pairs were added. Both directions require five consecutive completed daily confirmations and reset on failure. The ATR trail continues during confirmation. Unresolved level, reversal-timing and pending-counter discrepancies are listed per asset in the notebook; NVDA and BOT daily states do not match their screenshots. Weekly reference checks remain separate. Venue and history differences can change the trail.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
   { id: "kk_ema_ribbon", displayName: "KK EMA Ribbon", shortName: "KK EMA Ribbon", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { lengths: "32/34/48/58", boundaries: "32/58", source: "Close", calibrationDate: "2026-09-30", colourRule: "provisional alignment" }, thresholdKind: "conditional", description: "Closing-price EMA 32/58 ribbon with hidden 34/48 averages: gold for full bullish alignment, purple for bearish alignment, grey otherwise.", disclaimer: "September 14–30, 2026 daily checks support Close EMA32/58. All eleven September 30 references are within the accepted 0.2% per-boundary tolerance: BTC, ETH, DOGE, SUI and LINK match displayed rounding on matching venue histories; SOL and QNT also round exactly on Coinbase proxies. JUP rounds exactly on Bitstamp after omitting flat zero-volume days. ZEC, RAY and HYPE differ by less than 0.04% on proxy feeds. The earlier RAY EMA40 claim was a transcription error, corrected against the archived screenshot. The 34/48 colour rule is provisional. Weekly uses the same lengths in weeks and is uncalibrated. Remaining assets are uncalibrated; this does not claim to reproduce a private formula." },
   { id: "kk_200_ma", displayName: "KK 200 Moving Averages", shortName: "KK 200 MA", role: "confirmation", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { daily: 200, weekly: 200, method: "SMA of completed closes" }, thresholdKind: "fixed", description: "Price versus the 200-day SMA on 1D or 200-week SMA on 1W. The filled range compares price with the active average; on the combined weekly chart it compares price with the 200-day SMA while retaining the 200-week SMA as context.", disclaimer: "A transparent chart interpretation inspired by the supplied screenshot. Its original color formula is not visible, so the blue/orange rule here is explicitly defined rather than claimed as a replica." },
   { id: "kk_50_200_ema", displayName: "KK 50/200 week EMA", shortName: "KK 50/200 EMA", role: "confirmation", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { fast: 50, slow: 200, method: "EMA of completed closes", primaryTimeframe: "1W", dailyEquivalent: "50/200-day EMA" }, thresholdKind: "fixed", description: "Bullish if and only if the completed close is strictly above both the 50-period and 200-period EMAs. Below both is bearish; between or touching either line is neutral.", sourceUrl: "https://www.tradingview.com/support/solutions/43000592270-exponential-moving-average/" },

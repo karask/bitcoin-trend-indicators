@@ -36,8 +36,8 @@ test("fifty archive records distinguish weekly checks, unreadable targets and un
   const prefix=calculateIndicators(cs.slice(0,-1),row.timeframe,options)[0];
   assert.deepEqual(prefix.states,signal.states.slice(0,-1));
  }
- assert.match(calibrationStatus("sui","1d"),/unresolved/);
- assert.match(calibrationStatus(undefined,"1d","tsla"),/Approximate daily/);
+ assert.match(calibrationStatus("sui","1d"),/October 3/);
+ assert.match(calibrationStatus(undefined,"1d","tsla"),/October [34]/);
  assert.match(calibrationStatus(undefined,"1d",undefined,"gold"),/Approximate daily/);
 });
 test("archive research preserves ordinary indicator calculations and next-open execution across asset classes",()=>{

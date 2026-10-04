@@ -9,10 +9,11 @@ import { KK_BATCH_EVIDENCE } from "./kk-batch-evidence.ts";
 import { KK_ARCHIVE_EVIDENCE } from "./kk-archive-evidence.ts";
 import { KK_DAILY_EVIDENCE } from "./kk-daily-evidence.ts";
 import { KK_SEPTEMBER28_EVIDENCE } from "./kk-september28-evidence.ts";
+import { KK_OCTOBER3_EVIDENCE } from "./kk-october3-evidence.ts";
 import { KK_RAY_EVIDENCE } from "./kk-ray-evidence.ts";
 import { ETH_KK_CALIBRATION, SOL_KK_CALIBRATION, XMR_KK_CALIBRATION, DOGE_KK_CALIBRATION, LINK_KK_CALIBRATION, SUI_KK_CALIBRATION, type OhlcRow } from "./kk-reference-data.ts";
 
-export const KK_CALIBRATION_VERSION = "2026-09-28";
+export const KK_CALIBRATION_VERSION = "2026-10-04";
 type Reference = { id: string; asset: AssetId; label: string; venue: string; denomination: string; start: number; rows: readonly OhlcRow[]; target: number; state: "bull" | "bear"; flipCandle: number; tolerance: number; previous: { atrLength: number; factor: number }; reason: string };
 export const KK_REFERENCES: Reference[] = [
   { id: "eth-original", asset: "eth", label: "Original ETH weekly reference", venue: "Bitfinex", denomination: "USD", start: Date.UTC(2025, 0, 20), rows: ETH_KK_CALIBRATION, target: 1709.38, state: "bull", flipCandle: Date.UTC(2026, 7, 17), tolerance: .01, previous: { atrLength: 10, factor: 3 }, reason: "Multiplier 3 → 2, ATR unchanged: a closer trail reproduces the bullish state and bearish reversal level." },
@@ -25,6 +26,12 @@ export const KK_REFERENCES: Reference[] = [
 ];
 
 export function calibrationStatus(asset: AssetId | undefined, timeframe: Timeframe, stock?: StockId, commodity?: CommodityId) {
+  const october = timeframe === "1d" ? KK_OCTOBER3_EVIDENCE.find(row => row.asset === (commodity ?? stock ?? asset)) : undefined;
+  if (october) {
+    if (october.status === "skipped") return "Daily chart unscored · latest flip unreadable · reviewed October 4";
+    if (october.status === "unresolved") return "Daily screenshot reviewed · calibration unresolved · October 4";
+    return "Approximate daily screenshot fit · October 3 chart · reviewed October 4";
+  }
   const video = KK_SEPTEMBER28_EVIDENCE.find(row => row.asset === (commodity ?? stock ?? asset) && row.timeframe === timeframe);
   if (video) {
     if (video.status === "unresolved") return `${timeframe === "1w" ? "Weekly" : "Daily"} screenshot reviewed · calibration unresolved · September 28`;

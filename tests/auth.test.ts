@@ -326,6 +326,9 @@ test("Resend authentication, rate, and server failures are sanitized", async t =
 });
 
 test("Cloudflare middleware protects pages and APIs while leaving auth pages public", async t => {
+  // Middleware and the fixed auth runtime must read the same clock so fixture
+  // sessions do not expire merely because the test is run more than 30 days later.
+  t.mock.method(Date, "now", () => Date.UTC(2026, 7, 29, 12));
   const db = database();
   t.after(() => db.close());
   const env = { REGIME_DB: d1(db) };

@@ -48,7 +48,7 @@ test("all 16 weekly and five daily references replay without concealing failed f
     const f = fixture(row.asset), candles = row.timeframe === "1w" ? f.weekly : f.daily;
     assert.ok(Object.values(f.quality).every(n => n === 0));
     assert.ok(candles.every(c => c.complete && c.time < cutoff));
-    const options = { ...optionsFor(row.asset), indicatorIds: ["kk_supertrend"] };
+    const options = { ...optionsFor(row.asset), indicatorIds: ["kk_supertrend"], kkSupertrendAtrLength: row.preset.atrLength, kkSupertrendFactor: row.preset.factor };
     const actual = calculateIndicators(candles, row.timeframe, options)[0];
     assert.equal(actual.values.supertrend, row.value, row.asset);
     assert.equal(actual.state, row.state, row.asset);
@@ -69,8 +69,12 @@ test("all 16 weekly and five daily references replay without concealing failed f
     }
     const asset = row.source === "coinbase" ? row.asset as "vvv" | "qnt" : undefined;
     const stock = asset ? undefined : row.asset as keyof typeof KK_SUPERTREND_STOCK_PRESETS;
-    assert.match(calibrationStatus(asset, row.timeframe, stock), /September 28/);
-    if (row.status === "unresolved") assert.match(calibrationStatus(asset, row.timeframe, stock), /unresolved/);
+    if (row.timeframe === "1w") {
+      assert.match(calibrationStatus(asset, row.timeframe, stock), /September 28/);
+      if (row.status === "unresolved") assert.match(calibrationStatus(asset, row.timeframe, stock), /unresolved/);
+    } else {
+      assert.match(calibrationStatus(asset, row.timeframe, stock), /October [34]/, "New daily evidence takes precedence without rewriting archived results");
+    }
     const before = calculateIndicators(candles.slice(-300), row.timeframe, { ...optionsFor(row.asset), kkSupertrendAtrLength: row.previous.atrLength, kkSupertrendFactor: row.previous.factor });
     const after = calculateIndicators(candles.slice(-300), row.timeframe, optionsFor(row.asset));
     assert.deepEqual(after.filter(s => s.id !== "kk_supertrend"), before.filter(s => s.id !== "kk_supertrend"));

@@ -57,10 +57,10 @@ test("new coins have one verified USD venue, separate weekly and daily KK preset
     for (const tf of ["1d", "1w"] as const) {
       const signals = calculateIndicators(daily, tf, { asset });
       const kk = signals.find(signal => signal.id === "kk_supertrend")!, standard = signals.find(signal => signal.id === "supertrend")!;
-      assert.equal(kk.values.atrLength, tf === "1w" || !["op", "ray"].includes(asset) ? 15 : 10); assert.equal(kk.values.factor, tf === "1w" ? 2 : ["ada","atom","dot"].includes(asset) ? 5 : asset==="hype" ? 4 : 3);
+      assert.equal(kk.values.atrLength, tf === "1d" && asset === "ray" ? 10 : 15); assert.equal(kk.values.factor, tf === "1w" || asset === "op" ? 2 : ["ada","atom","dot"].includes(asset) ? 5 : asset==="hype" ? 4 : 3);
       if (tf === "1d") assert.equal(kk.confirmation!.required,5);
-      if (tf === "1d" && asset === "op") assert.equal(kk.values.supertrend, standard.values.supertrend);
-      assert.match(calibrationStatus(asset, tf), tf === "1w" ? /Screenshot-calibrated|Weekly screenshot checked/ : asset === "op" ? /calibration unresolved/ : asset === "ray" ? /Uncalibrated daily/ : /Approximate daily/);
+      if (tf === "1d" && asset === "ray") assert.equal(kk.values.supertrend, standard.values.supertrend);
+      assert.match(calibrationStatus(asset, tf), tf === "1w" ? /Screenshot-calibrated|Weekly screenshot checked/ : /October [34]/);
     }
   }
   assert.equal(marketDefinition("jup", "kraken").providerSymbol, "JUPUSD");

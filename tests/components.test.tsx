@@ -109,17 +109,21 @@ test("September 28 notebook discloses timing differences and unresolved calibrat
     assert.doesNotMatch(bot, /Reference check passes/);
   }
   const quant = renderToStaticMarkup(<CalibrationPanel asset="qnt" timeframe="1d" values={{ atrLength: 50, factor: 4 }} />);
-  assert.match(quant, /Approximate daily screenshot fit/);
+  assert.match(quant, /calibration unresolved/);
+  assert.match(quant, /reviewed October 4/);
+  assert.match(quant, /Archived video reference/);
   assert.match(quant, /Coinbase USD proxy/);
   assert.match(quant, /not a confirmation match/);
 });
 
 test("KK confidence warnings distinguish timeframes and never label other indicators", () => {
-  for (const asset of ["strc", "crcl", "qnt", "spcx"]) {
+  for (const asset of ["strc", "crcl"]) {
     const html = renderToStaticMarkup(<KKCalibrationWarning asset={asset} timeframe="1d" />);
     assert.match(html, /Low-confidence KK calibration/);
     assert.match(html, /Treat this KK signal as unverified/);
   }
+  for (const asset of ["qnt", "spcx"]) assert.match(renderToStaticMarkup(<KKCalibrationWarning asset={asset} timeframe="1d" />), /Unreliable KK calibration/);
+  assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="link" timeframe="1d" />), /Unscored current chart/);
   for (const timeframe of ["1d", "1w"] as const) assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="bot" timeframe={timeframe} />), /Unreliable KK calibration/);
   assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="intc" timeframe="1w" />), /KK timing mismatch/);
   assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="strc" timeframe="1w" />), /Uncalibrated KK/);

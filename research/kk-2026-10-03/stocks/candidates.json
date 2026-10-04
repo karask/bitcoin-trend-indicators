@@ -1,0 +1,4098 @@
+{
+  "reviewedAt": "2026-10-04",
+  "imageCaptureDate": "2026-10-03",
+  "asOf": "2026-10-04T00:00:00.000Z",
+  "timeframe": "1d",
+  "officialConfirmationCloses": 5,
+  "family": [
+    [
+      10,
+      3
+    ],
+    [
+      15,
+      3
+    ],
+    [
+      15,
+      4
+    ],
+    [
+      30,
+      2
+    ],
+    [
+      30,
+      4
+    ],
+    [
+      50,
+      6
+    ]
+  ],
+  "observations": [
+    {
+      "asset": "tsla",
+      "ticker": "TSLA",
+      "timeframe": "1d",
+      "image": "21-TSLA.jpg",
+      "imageSha256": "62e36ff00192beb03c9856112c007e9b3e8c2b1e2dd338946cfc0cc56e7348b5",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 311.71,
+      "targetState": "bull",
+      "pendingDirection": null,
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "September 2026 (coarse visual estimate)",
+      "notes": [],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 4091,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 326.9582714986711,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 4.891813383809018,
+        "lastFlip": "2026-09-10",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 326.9582714986711,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 4.891813383809018,
+        "lastFlip": "2026-09-10",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "priorReferences": [
+          {
+            "referenceDate": "2026-09-21",
+            "target": 290.35,
+            "targetState": "bull",
+            "atrLength": 30,
+            "factor": 4,
+            "value": 315.0537995056741,
+            "state": "bull",
+            "stateMatch": true,
+            "errorPct": 8.508282936343736,
+            "lastFlip": "2026-09-10",
+            "confirmation": {
+              "required": 5,
+              "count": 0,
+              "pending": null
+            },
+            "ready": true
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 345.80760971154666,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 10.938888618121556,
+          "lastFlip": "2026-08-27",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 290.35,
+              "targetState": "bull",
+              "atrLength": 10,
+              "factor": 3,
+              "value": 330.76157621216805,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 13.918228418173939,
+              "lastFlip": "2026-08-27",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 344.06114855473055,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 10.378604650069168,
+          "lastFlip": "2026-08-27",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 290.35,
+              "targetState": "bull",
+              "atrLength": 15,
+              "factor": 3,
+              "value": 331.3808659339338,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 14.131519178210361,
+              "lastFlip": "2026-08-27",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 331.36819827642455,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 6.306566448437523,
+          "lastFlip": "2026-09-10",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 290.35,
+              "targetState": "bull",
+              "atrLength": 15,
+              "factor": 4,
+              "value": 316.864485267055,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 9.131904689875991,
+              "lastFlip": "2026-09-10",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 377.46891664742776,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 21.096184481546242,
+          "lastFlip": "2026-08-19",
+          "confirmation": {
+            "required": 5,
+            "count": 4,
+            "pending": "bear"
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 290.35,
+              "targetState": "bull",
+              "atrLength": 30,
+              "factor": 2,
+              "value": 344.9919037201222,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 18.819322789778603,
+              "lastFlip": "2026-08-19",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 326.9582714986711,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 4.891813383809018,
+          "lastFlip": "2026-09-10",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 290.35,
+              "targetState": "bull",
+              "atrLength": 30,
+              "factor": 4,
+              "value": 315.0537995056741,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 8.508282936343736,
+              "lastFlip": "2026-09-10",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 404.83122784914434,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 29.8743151805025,
+          "lastFlip": "2026-07-29",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 290.35,
+              "targetState": "bull",
+              "atrLength": 50,
+              "factor": 6,
+              "value": 404.83122784914434,
+              "state": "bear",
+              "stateMatch": false,
+              "errorPct": 39.4286991042343,
+              "lastFlip": "2026-07-29",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset": "googl",
+      "ticker": "GOOGL",
+      "timeframe": "1d",
+      "image": "22-GOOGL.jpg",
+      "imageSha256": "d5e3b8ad94c4eb5e588173fd5dfa58ec374722b77e42f076aad9fb5759db2351",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 370.44,
+      "targetState": "bear",
+      "pendingDirection": null,
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "June 2026 (coarse visual estimate)",
+      "notes": [],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 5566,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 330.73037517816596,
+        "state": "bull",
+        "stateMatch": false,
+        "errorPct": -10.719583420212187,
+        "lastFlip": "2026-09-25",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": {
+        "atrLength": 30,
+        "factor": 2,
+        "value": 358.2697603543052,
+        "state": "bear",
+        "stateMatch": true,
+        "errorPct": -3.285347059090482,
+        "lastFlip": "2026-09-29",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "priorReferences": [
+          {
+            "referenceDate": "2026-09-21",
+            "target": 370.44,
+            "targetState": "bear",
+            "atrLength": 30,
+            "factor": 2,
+            "value": 335.64605332091105,
+            "state": "bull",
+            "stateMatch": false,
+            "errorPct": -9.392599794592638,
+            "lastFlip": "2026-09-18",
+            "confirmation": {
+              "required": 5,
+              "count": 0,
+              "pending": null
+            },
+            "ready": true
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 330.59215116140246,
+          "state": "bull",
+          "stateMatch": false,
+          "errorPct": -10.756896889806056,
+          "lastFlip": "2026-09-25",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 370.44,
+              "targetState": "bear",
+              "atrLength": 10,
+              "factor": 3,
+              "value": 353.0335037302347,
+              "state": "bear",
+              "stateMatch": true,
+              "errorPct": -4.698870605162853,
+              "lastFlip": "2026-09-15",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 330.73037517816596,
+          "state": "bull",
+          "stateMatch": false,
+          "errorPct": -10.719583420212187,
+          "lastFlip": "2026-09-25",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 370.44,
+              "targetState": "bear",
+              "atrLength": 15,
+              "factor": 3,
+              "value": 354.7173320775427,
+              "state": "bear",
+              "stateMatch": true,
+              "errorPct": -4.244322406451051,
+              "lastFlip": "2026-09-08",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 322.91007470347,
+          "state": "bull",
+          "stateMatch": false,
+          "errorPct": -12.830667664542162,
+          "lastFlip": "2026-08-07",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 370.44,
+              "targetState": "bear",
+              "atrLength": 15,
+              "factor": 4,
+              "value": 322.91007470347,
+              "state": "bull",
+              "stateMatch": false,
+              "errorPct": -12.830667664542162,
+              "lastFlip": "2026-08-07",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 358.2697603543052,
+          "state": "bear",
+          "stateMatch": true,
+          "errorPct": -3.285347059090482,
+          "lastFlip": "2026-09-29",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 370.44,
+              "targetState": "bear",
+              "atrLength": 30,
+              "factor": 2,
+              "value": 335.64605332091105,
+              "state": "bull",
+              "stateMatch": false,
+              "errorPct": -9.392599794592638,
+              "lastFlip": "2026-09-18",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 326.87749937510955,
+          "state": "bull",
+          "stateMatch": false,
+          "errorPct": -11.759664351822273,
+          "lastFlip": "2026-08-07",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 370.44,
+              "targetState": "bear",
+              "atrLength": 30,
+              "factor": 4,
+              "value": 326.87749937510955,
+              "state": "bull",
+              "stateMatch": false,
+              "errorPct": -11.759664351822273,
+              "lastFlip": "2026-08-07",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 383.0107683536823,
+          "state": "bear",
+          "stateMatch": true,
+          "errorPct": 3.3934694832313816,
+          "lastFlip": "2026-06-29",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 370.44,
+              "targetState": "bear",
+              "atrLength": 50,
+              "factor": 6,
+              "value": 383.0107683536823,
+              "state": "bear",
+              "stateMatch": true,
+              "errorPct": 3.3934694832313816,
+              "lastFlip": "2026-06-29",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset": "nvda",
+      "ticker": "NVDA",
+      "timeframe": "1d",
+      "image": "23-NVDA.jpg",
+      "imageSha256": "922aabaaa46cba1c37624a028fe1dda38192081f380055becd59bfd5e3a68add",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 225.58,
+      "targetState": "bear",
+      "pendingDirection": "bull",
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "mid June 2026 (coarse visual estimate)",
+      "notes": [
+        "Current official trail remains magenta at 225.58. Hourglass Bullish label at right edge signals pending bullish confirmation; the confirmation count is clipped and must remain unknown."
+      ],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 6967,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 30,
+        "factor": 2,
+        "value": 222.94947406208428,
+        "state": "bull",
+        "stateMatch": false,
+        "errorPct": -1.1661166494883135,
+        "lastFlip": "2026-09-25",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": {
+        "atrLength": 50,
+        "factor": 6,
+        "value": 234.2628708649318,
+        "state": "bear",
+        "stateMatch": true,
+        "errorPct": 3.8491315120719127,
+        "lastFlip": "2026-07-02",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "priorReferences": [
+          {
+            "referenceDate": "2026-09-21",
+            "target": 225.58,
+            "targetState": "bear",
+            "atrLength": 50,
+            "factor": 6,
+            "value": 234.2628708649318,
+            "state": "bear",
+            "stateMatch": true,
+            "errorPct": 3.8491315120719127,
+            "lastFlip": "2026-07-02",
+            "confirmation": {
+              "required": 5,
+              "count": 0,
+              "pending": null
+            },
+            "ready": true
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 218.57687391880867,
+          "state": "bull",
+          "stateMatch": false,
+          "errorPct": -3.1044977751535363,
+          "lastFlip": "2026-08-11",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 225.58,
+              "targetState": "bear",
+              "atrLength": 10,
+              "factor": 3,
+              "value": 209.77825712331793,
+              "state": "bull",
+              "stateMatch": false,
+              "errorPct": -7.004939656300246,
+              "lastFlip": "2026-08-11",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 217.87836067573429,
+          "state": "bull",
+          "stateMatch": false,
+          "errorPct": -3.4141498910655765,
+          "lastFlip": "2026-08-11",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 225.58,
+              "targetState": "bear",
+              "atrLength": 15,
+              "factor": 3,
+              "value": 210.09476267791794,
+              "state": "bull",
+              "stateMatch": false,
+              "errorPct": -6.864632202359278,
+              "lastFlip": "2026-08-11",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 211.92447906992436,
+          "state": "bull",
+          "stateMatch": false,
+          "errorPct": -6.05351579487351,
+          "lastFlip": "2026-08-13",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 225.58,
+              "targetState": "bear",
+              "atrLength": 15,
+              "factor": 4,
+              "value": 202.72801700561587,
+              "state": "bull",
+              "stateMatch": false,
+              "errorPct": -10.130323164457911,
+              "lastFlip": "2026-08-13",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 222.94947406208428,
+          "state": "bull",
+          "stateMatch": false,
+          "errorPct": -1.1661166494883135,
+          "lastFlip": "2026-09-25",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 225.58,
+              "targetState": "bear",
+              "atrLength": 30,
+              "factor": 2,
+              "value": 225.0750303144508,
+              "state": "bear",
+              "stateMatch": true,
+              "errorPct": -0.22385392568011753,
+              "lastFlip": "2026-09-18",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 210.1589426310045,
+          "state": "bull",
+          "stateMatch": false,
+          "errorPct": -6.836181119334839,
+          "lastFlip": "2026-08-13",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 225.58,
+              "targetState": "bear",
+              "atrLength": 30,
+              "factor": 4,
+              "value": 203.12121246970594,
+              "state": "bull",
+              "stateMatch": false,
+              "errorPct": -9.95601894241248,
+              "lastFlip": "2026-08-13",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 234.2628708649318,
+          "state": "bear",
+          "stateMatch": true,
+          "errorPct": 3.8491315120719127,
+          "lastFlip": "2026-07-02",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 225.58,
+              "targetState": "bear",
+              "atrLength": 50,
+              "factor": 6,
+              "value": 234.2628708649318,
+              "state": "bear",
+              "stateMatch": true,
+              "errorPct": 3.8491315120719127,
+              "lastFlip": "2026-07-02",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset": "spcx",
+      "ticker": "SPCX",
+      "timeframe": "1d",
+      "image": "24-SPCX.jpg",
+      "imageSha256": "850a2355c8f1d1bf010908af012561a7c5380da1d45b510d0b3546d442040e4c",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 115.88,
+      "targetState": "bull",
+      "pendingDirection": null,
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "September 2026 (coarse visual estimate)",
+      "notes": [
+        "Visible history begins in June, per archive README."
+      ],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 78,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 126.99760904739107,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 9.594070631162467,
+        "lastFlip": "2026-09-14",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 126.99760904739107,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 9.594070631162467,
+        "lastFlip": "2026-09-14",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "priorReferences": [
+          {
+            "referenceDate": "2026-09-21",
+            "target": 115.88,
+            "targetState": "bull",
+            "atrLength": 15,
+            "factor": 4,
+            "value": 123.91106449294345,
+            "state": "bull",
+            "stateMatch": true,
+            "errorPct": 6.930500943168316,
+            "lastFlip": "2026-09-14",
+            "confirmation": {
+              "required": 5,
+              "count": 0,
+              "pending": null
+            },
+            "ready": true
+          },
+          {
+            "referenceDate": "2026-09-28",
+            "target": 115.88,
+            "targetState": "bull",
+            "atrLength": 15,
+            "factor": 4,
+            "value": 124.59944087941287,
+            "state": "bull",
+            "stateMatch": true,
+            "errorPct": 7.524543389206828,
+            "lastFlip": "2026-09-14",
+            "confirmation": {
+              "required": 5,
+              "count": 0,
+              "pending": null
+            },
+            "ready": true
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 134.7729322939547,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 16.30387667755844,
+          "lastFlip": "2026-08-14",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 115.88,
+              "targetState": "bull",
+              "atrLength": 10,
+              "factor": 3,
+              "value": 133.09963978317234,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 14.859889353790411,
+              "lastFlip": "2026-08-14",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            },
+            {
+              "referenceDate": "2026-09-28",
+              "target": 115.88,
+              "targetState": "bull",
+              "atrLength": 10,
+              "factor": 3,
+              "value": 133.56831045825632,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 15.26433418903721,
+              "lastFlip": "2026-08-14",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 133.89570587001595,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 15.546863885067275,
+          "lastFlip": "2026-08-18",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 115.88,
+              "targetState": "bull",
+              "atrLength": 15,
+              "factor": 3,
+              "value": 131.6207983697076,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 13.583705876516738,
+              "lastFlip": "2026-08-18",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            },
+            {
+              "referenceDate": "2026-09-28",
+              "target": 115.88,
+              "targetState": "bull",
+              "atrLength": 15,
+              "factor": 3,
+              "value": 132.16583203285066,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 14.054049044572547,
+              "lastFlip": "2026-08-18",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 126.99760904739107,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 9.594070631162467,
+          "lastFlip": "2026-09-14",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 115.88,
+              "targetState": "bull",
+              "atrLength": 15,
+              "factor": 4,
+              "value": 123.91106449294345,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 6.930500943168316,
+              "lastFlip": "2026-09-14",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            },
+            {
+              "referenceDate": "2026-09-28",
+              "target": 115.88,
+              "targetState": "bull",
+              "atrLength": 15,
+              "factor": 4,
+              "value": 124.59944087941287,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 7.524543389206828,
+              "lastFlip": "2026-09-14",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 137.96651225682996,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 19.059813821910577,
+          "lastFlip": "2026-08-14",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 115.88,
+              "targetState": "bull",
+              "atrLength": 30,
+              "factor": 2,
+              "value": 136.09341670468535,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 17.44340412900014,
+              "lastFlip": "2026-08-14",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            },
+            {
+              "referenceDate": "2026-09-28",
+              "target": 115.88,
+              "targetState": "bull",
+              "atrLength": 30,
+              "factor": 2,
+              "value": 136.56628631880182,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 17.85147248774752,
+              "lastFlip": "2026-08-14",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 159.83984667628317,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 37.93566333818017,
+          "lastFlip": null,
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 115.88,
+              "targetState": "bull",
+              "atrLength": 30,
+              "factor": 4,
+              "value": 159.83984667628317,
+              "state": "bear",
+              "stateMatch": false,
+              "errorPct": 37.93566333818017,
+              "lastFlip": null,
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            },
+            {
+              "referenceDate": "2026-09-28",
+              "target": 115.88,
+              "targetState": "bull",
+              "atrLength": 30,
+              "factor": 4,
+              "value": 159.83984667628317,
+              "state": "bear",
+              "stateMatch": false,
+              "errorPct": 37.93566333818017,
+              "lastFlip": null,
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 205.1120932127717,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 77.00387747046229,
+          "lastFlip": null,
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 115.88,
+              "targetState": "bull",
+              "atrLength": 50,
+              "factor": 6,
+              "value": 206.3227042549695,
+              "state": "bear",
+              "stateMatch": false,
+              "errorPct": 78.04858841471307,
+              "lastFlip": null,
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            },
+            {
+              "referenceDate": "2026-09-28",
+              "target": 115.88,
+              "targetState": "bull",
+              "atrLength": 50,
+              "factor": 6,
+              "value": 206.3070419577203,
+              "state": "bear",
+              "stateMatch": false,
+              "errorPct": 78.03507245229572,
+              "lastFlip": null,
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset": "mu",
+      "ticker": "MU",
+      "timeframe": "1d",
+      "image": "25-MU.jpg",
+      "imageSha256": "b1ca536f8472396f2f2ae100d7bcad703959b2da0cd8ef612fd3fedc002ef615",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 845.1,
+      "targetState": "bull",
+      "pendingDirection": null,
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "late September 2026 (coarse visual estimate)",
+      "notes": [],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 6980,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 948.8783259429026,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 12.280005436386542,
+        "lastFlip": "2026-09-25",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 948.8783259429026,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 12.280005436386542,
+        "lastFlip": "2026-09-25",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "priorReferences": [
+          {
+            "referenceDate": "2026-09-21",
+            "target": 987.92,
+            "targetState": "bear",
+            "atrLength": 15,
+            "factor": 3,
+            "value": 1043.1344860718873,
+            "state": "bear",
+            "stateMatch": true,
+            "errorPct": 5.588963283655279,
+            "lastFlip": "2026-07-13",
+            "confirmation": {
+              "required": 5,
+              "count": 0,
+              "pending": null
+            },
+            "ready": true
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 956.3028513962215,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 13.158543532862566,
+          "lastFlip": "2026-09-28",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 987.92,
+              "targetState": "bear",
+              "atrLength": 10,
+              "factor": 3,
+              "value": 1044.5146243882841,
+              "state": "bear",
+              "stateMatch": true,
+              "errorPct": 5.728664708507192,
+              "lastFlip": "2026-07-21",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 948.8783259429026,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 12.280005436386542,
+          "lastFlip": "2026-09-25",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 987.92,
+              "targetState": "bear",
+              "atrLength": 15,
+              "factor": 3,
+              "value": 1043.1344860718873,
+              "state": "bear",
+              "stateMatch": true,
+              "errorPct": 5.588963283655279,
+              "lastFlip": "2026-07-13",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 1127.5659826498863,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 33.4239714412361,
+          "lastFlip": "2026-07-22",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 987.92,
+              "targetState": "bear",
+              "atrLength": 15,
+              "factor": 4,
+              "value": 1127.5659826498863,
+              "state": "bear",
+              "stateMatch": true,
+              "errorPct": 14.135353333254352,
+              "lastFlip": "2026-07-22",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 981.8734827228727,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 16.184295671858084,
+          "lastFlip": "2026-08-19",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 987.92,
+              "targetState": "bear",
+              "atrLength": 30,
+              "factor": 2,
+              "value": 894.2537736352493,
+              "state": "bull",
+              "stateMatch": false,
+              "errorPct": -9.481154988739027,
+              "lastFlip": "2026-08-19",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 1099.4638694612222,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 30.098671099422813,
+          "lastFlip": "2026-07-13",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 987.92,
+              "targetState": "bear",
+              "atrLength": 30,
+              "factor": 4,
+              "value": 1099.4638694612222,
+              "state": "bear",
+              "stateMatch": true,
+              "errorPct": 11.290779563246245,
+              "lastFlip": "2026-07-13",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 1187.993401444106,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 40.574299070418405,
+          "lastFlip": "2026-07-22",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 987.92,
+              "targetState": "bear",
+              "atrLength": 50,
+              "factor": 6,
+              "value": 1187.993401444106,
+              "state": "bear",
+              "stateMatch": true,
+              "errorPct": 20.251984112489474,
+              "lastFlip": "2026-07-22",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset": "sndk",
+      "ticker": "SNDK",
+      "timeframe": "1d",
+      "image": "26-SNDK.jpg",
+      "imageSha256": "b8727967c8027c310a652de57bb11b9d3fe03736996ba36a94ea0b6fa22e18b8",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 1249.03,
+      "targetState": "bull",
+      "pendingDirection": null,
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "late August 2026 (coarse visual estimate)",
+      "notes": [],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 405,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 1326.2890530365398,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 6.185524209709925,
+        "lastFlip": "2026-08-21",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 1326.2890530365398,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 6.185524209709925,
+        "lastFlip": "2026-08-21",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "priorReferences": [
+          {
+            "referenceDate": "2026-09-21",
+            "target": 1205.8,
+            "targetState": "bull",
+            "atrLength": 30,
+            "factor": 4,
+            "value": 1205.552734240801,
+            "state": "bull",
+            "stateMatch": true,
+            "errorPct": -0.020506365831718387,
+            "lastFlip": "2026-08-21",
+            "confirmation": {
+              "required": 5,
+              "count": 0,
+              "pending": null
+            },
+            "ready": true
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 1516.512428743469,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 21.41521250438092,
+          "lastFlip": "2026-08-20",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 1205.8,
+              "targetState": "bull",
+              "atrLength": 10,
+              "factor": 3,
+              "value": 1430.1045353235304,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 18.602134294537276,
+              "lastFlip": "2026-08-20",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 1499.5310017580753,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 20.055643319862227,
+          "lastFlip": "2026-08-20",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 1205.8,
+              "targetState": "bull",
+              "atrLength": 15,
+              "factor": 3,
+              "value": 1393.4491037784778,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 15.56220797632093,
+              "lastFlip": "2026-08-20",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 1381.7263332360274,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 10.623950844737706,
+          "lastFlip": "2026-09-28",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 1205.8,
+              "targetState": "bull",
+              "atrLength": 15,
+              "factor": 4,
+              "value": 1825.064737984485,
+              "state": "bear",
+              "stateMatch": false,
+              "errorPct": 51.35716851753897,
+              "lastFlip": "2026-07-13",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 1589.6170301803793,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 27.268122477472858,
+          "lastFlip": "2026-08-10",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 1205.8,
+              "targetState": "bull",
+              "atrLength": 30,
+              "factor": 2,
+              "value": 1486.5863646789944,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 23.286313209404085,
+              "lastFlip": "2026-08-10",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 1326.2890530365398,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 6.185524209709925,
+          "lastFlip": "2026-08-21",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 1205.8,
+              "targetState": "bull",
+              "atrLength": 30,
+              "factor": 4,
+              "value": 1205.552734240801,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": -0.020506365831718387,
+              "lastFlip": "2026-08-21",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 1933.4348814106665,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 54.794911364071844,
+          "lastFlip": "2026-07-13",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 1205.8,
+              "targetState": "bull",
+              "atrLength": 50,
+              "factor": 6,
+              "value": 1933.4365580668923,
+              "state": "bear",
+              "stateMatch": false,
+              "errorPct": 60.34471372258188,
+              "lastFlip": "2026-07-13",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset": "bmnr",
+      "ticker": "BMNR",
+      "timeframe": "1d",
+      "image": "27-BMNR.jpg",
+      "imageSha256": "5f74aa9921b95c119bdff2d915e2f937c11b25086a3f2168cc99d7c22d1d7430",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 21.51,
+      "targetState": "bull",
+      "pendingDirection": null,
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "late August 2026 (coarse visual estimate)",
+      "notes": [],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 334,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 15,
+        "factor": 3,
+        "value": 23.106889582074647,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 7.423940409459062,
+        "lastFlip": "2026-07-27",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 21.379186122148518,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": -0.6081537789469293,
+        "lastFlip": "2026-07-31",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "priorReferences": [
+          {
+            "referenceDate": "2026-09-21",
+            "target": 21.51,
+            "targetState": "bull",
+            "atrLength": 15,
+            "factor": 4,
+            "value": 20.54724501869519,
+            "state": "bull",
+            "stateMatch": true,
+            "errorPct": -4.475848355670909,
+            "lastFlip": "2026-07-31",
+            "confirmation": {
+              "required": 5,
+              "count": 0,
+              "pending": null
+            },
+            "ready": true
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 22.84217953268881,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 6.193303266800587,
+          "lastFlip": "2026-07-24",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 21.51,
+              "targetState": "bull",
+              "atrLength": 10,
+              "factor": 3,
+              "value": 21.656221607078344,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 0.6797843192856368,
+              "lastFlip": "2026-07-24",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 23.106889582074647,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 7.423940409459062,
+          "lastFlip": "2026-07-27",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 21.51,
+              "targetState": "bull",
+              "atrLength": 15,
+              "factor": 3,
+              "value": 21.912308687727446,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 1.8703332762782132,
+              "lastFlip": "2026-07-27",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 21.379186122148518,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -0.6081537789469293,
+          "lastFlip": "2026-07-31",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 21.51,
+              "targetState": "bull",
+              "atrLength": 15,
+              "factor": 4,
+              "value": 20.54724501869519,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": -4.475848355670909,
+              "lastFlip": "2026-07-31",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 25.175726613260622,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 17.041964729245084,
+          "lastFlip": "2026-07-20",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 21.51,
+              "targetState": "bull",
+              "atrLength": 30,
+              "factor": 2,
+              "value": 22.69971134262759,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 5.530968584972529,
+              "lastFlip": "2026-07-20",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 22.061453264668213,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 2.5637064838131662,
+          "lastFlip": "2026-08-11",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 21.51,
+              "targetState": "bull",
+              "atrLength": 30,
+              "factor": 4,
+              "value": 20.817223676396807,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": -3.2207174505029967,
+              "lastFlip": "2026-08-11",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 18.958283498396284,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -11.862931202248806,
+          "lastFlip": "2026-08-27",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-21",
+              "target": 21.51,
+              "targetState": "bull",
+              "atrLength": 50,
+              "factor": 6,
+              "value": 17.4984665890654,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": -18.64962069239703,
+              "lastFlip": "2026-08-27",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset": "mstr",
+      "ticker": "MSTR",
+      "timeframe": "1d",
+      "image": "28-MSTR.jpg",
+      "imageSha256": "3502a7a0a6339f8c694ae0a092f90e7b5123cd6c167284b785f7e435f3fe8adf",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 125.3,
+      "targetState": "bull",
+      "pendingDirection": null,
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "late August 2026 (coarse visual estimate)",
+      "notes": [],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 6980,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 139.83588680839438,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 11.600867365039402,
+        "lastFlip": "2026-08-26",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 132.04023556057442,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 5.379278180825553,
+        "lastFlip": "2026-08-27",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "priorReferences": []
+      },
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 139.83588680839438,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 11.600867365039402,
+          "lastFlip": "2026-08-26",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 141.3351769756066,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 12.79742775387598,
+          "lastFlip": "2026-08-26",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 132.04023556057442,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 5.379278180825553,
+          "lastFlip": "2026-08-27",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 151.7643025914952,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 21.120752267753563,
+          "lastFlip": "2026-08-26",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 134.30860396228732,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 7.189628062479914,
+          "lastFlip": "2026-08-28",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 116.13442179405651,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -7.314906788462483,
+          "lastFlip": "2026-09-10",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        }
+      ]
+    },
+    {
+      "asset": "crcl",
+      "ticker": "CRCL",
+      "timeframe": "1d",
+      "image": "29-CRCL.jpg",
+      "imageSha256": "41de8a30d6abb171f149c3bef4dbbdc84ff394037cf6364d400e9287041091ee",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 57.74,
+      "targetState": "bull",
+      "pendingDirection": null,
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "September 2026 (coarse visual estimate)",
+      "notes": [],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 334,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 50,
+        "factor": 6,
+        "value": 59.08227780492383,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 2.3246931155590955,
+        "lastFlip": "2026-09-10",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": {
+        "atrLength": 50,
+        "factor": 6,
+        "value": 59.08227780492383,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 2.3246931155590955,
+        "lastFlip": "2026-09-10",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "priorReferences": [
+          {
+            "referenceDate": "2026-09-28",
+            "target": 57.74,
+            "targetState": "bull",
+            "atrLength": 50,
+            "factor": 6,
+            "value": 59.08227780492383,
+            "state": "bull",
+            "stateMatch": true,
+            "errorPct": 2.3246931155590955,
+            "lastFlip": "2026-09-10",
+            "confirmation": {
+              "required": 5,
+              "count": 0,
+              "pending": null
+            },
+            "ready": true
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 78.63926628157122,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 36.195473296798106,
+          "lastFlip": "2026-08-19",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 57.74,
+              "targetState": "bull",
+              "atrLength": 10,
+              "factor": 3,
+              "value": 78.63926628157122,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 36.195473296798106,
+              "lastFlip": "2026-08-19",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 79.87304382627721,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 38.332254635048855,
+          "lastFlip": "2026-08-25",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 57.74,
+              "targetState": "bull",
+              "atrLength": 15,
+              "factor": 3,
+              "value": 79.87304382627721,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 38.332254635048855,
+              "lastFlip": "2026-08-25",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 73.18322474566453,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 26.746146078393718,
+          "lastFlip": "2026-08-26",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 57.74,
+              "targetState": "bull",
+              "atrLength": 15,
+              "factor": 4,
+              "value": 73.18322474566453,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 26.746146078393718,
+              "lastFlip": "2026-08-26",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 95.39882237195977,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 65.22137577409035,
+          "lastFlip": "2026-09-21",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 57.74,
+              "targetState": "bull",
+              "atrLength": 30,
+              "factor": 2,
+              "value": 95.39882237195977,
+              "state": "bear",
+              "stateMatch": false,
+              "errorPct": 65.22137577409035,
+              "lastFlip": "2026-09-21",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 73.90148584597456,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 27.99010364734076,
+          "lastFlip": "2026-08-27",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 57.74,
+              "targetState": "bull",
+              "atrLength": 30,
+              "factor": 4,
+              "value": 73.90148584597456,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 27.99010364734076,
+              "lastFlip": "2026-08-27",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 59.08227780492383,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 2.3246931155590955,
+          "lastFlip": "2026-09-10",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 57.74,
+              "targetState": "bull",
+              "atrLength": 50,
+              "factor": 6,
+              "value": 59.08227780492383,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 2.3246931155590955,
+              "lastFlip": "2026-09-10",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset": "intc",
+      "ticker": "INTC",
+      "timeframe": "1d",
+      "image": "30-INTC.jpg",
+      "imageSha256": "ac44683699a103e3457ca679bb3759411711b3f39f282efef6285ff05cce02e5",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 99.8,
+      "targetState": "bull",
+      "pendingDirection": null,
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "late September 2026 (coarse visual estimate)",
+      "notes": [],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 6980,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 105.85250235209583,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 6.064631615326488,
+        "lastFlip": "2026-09-14",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 99.82753581419476,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 0.027590996187143446,
+        "lastFlip": "2026-09-25",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "priorReferences": []
+      },
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 105.85250235209583,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 6.064631615326488,
+          "lastFlip": "2026-09-14",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 106.09190144102938,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 6.304510461953283,
+          "lastFlip": "2026-09-14",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 99.82753581419476,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 0.027590996187143446,
+          "lastFlip": "2026-09-25",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 111.78864406055757,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 12.01266939935628,
+          "lastFlip": "2026-09-14",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 98.69228979958196,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -1.1099300605391216,
+          "lastFlip": "2026-09-25",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 85.34451883513992,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -14.484450064990051,
+          "lastFlip": "2026-09-30",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        }
+      ]
+    },
+    {
+      "asset": "mrvl",
+      "ticker": "MRVL",
+      "timeframe": "1d",
+      "image": "31-MRVL.jpg",
+      "imageSha256": "3dddc3709373aa9ce9c8df49d314b581529032988c842345f5c514942e02e5ba",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 206.14,
+      "targetState": "bull",
+      "pendingDirection": null,
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "late August 2026 (coarse visual estimate)",
+      "notes": [],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 6603,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 238.59349075143655,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 15.743422310777412,
+        "lastFlip": "2026-08-21",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 216.1661569445322,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 4.8637610092811645,
+        "lastFlip": "2026-08-26",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "priorReferences": []
+      },
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 238.59349075143655,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 15.743422310777412,
+          "lastFlip": "2026-08-21",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 236.3190322657202,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 14.640066103483186,
+          "lastFlip": "2026-08-21",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 223.1603769646452,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 8.256707560223742,
+          "lastFlip": "2026-08-26",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 245.98057755673875,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 19.326951371271363,
+          "lastFlip": "2026-09-24",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 216.1661569445322,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 4.8637610092811645,
+          "lastFlip": "2026-08-26",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 273.40116991716604,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 32.62887839195017,
+          "lastFlip": "2026-07-09",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        }
+      ]
+    },
+    {
+      "asset": "amd",
+      "ticker": "AMD",
+      "timeframe": "1d",
+      "image": "32-AMD.jpg",
+      "imageSha256": "c5a7bb749d718fb6ed591c181aa5b10c7b88dbfe7afa4a015861f8b8d9753e36",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 540.92,
+      "targetState": "bull",
+      "pendingDirection": null,
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "late September 2026 (coarse visual estimate)",
+      "notes": [],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 6980,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 565.3254725593282,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 4.511845108209767,
+        "lastFlip": "2026-09-15",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": {
+        "atrLength": 15,
+        "factor": 4,
+        "value": 539.7227980375327,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": -0.22132699150840818,
+        "lastFlip": "2026-09-23",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "priorReferences": []
+      },
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 565.3254725593282,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 4.511845108209767,
+          "lastFlip": "2026-09-15",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 564.0433497488526,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 4.274818780753664,
+          "lastFlip": "2026-09-15",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 539.7227980375327,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -0.22132699150840818,
+          "lastFlip": "2026-09-23",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 585.0240222480077,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 8.153520344599507,
+          "lastFlip": "2026-08-10",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 533.043039613203,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -1.4562154083407886,
+          "lastFlip": "2026-09-24",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 480.29294090695555,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -11.208137819463948,
+          "lastFlip": "2026-04-21",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        }
+      ]
+    },
+    {
+      "asset": "amzn",
+      "ticker": "AMZN",
+      "timeframe": "1d",
+      "image": "33-AMZN.jpg",
+      "imageSha256": "1f23622199bfa727362899546ffc18570e16e9f3e2e03d4b72f255b25333f6d8",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 233.26,
+      "targetState": "bull",
+      "pendingDirection": null,
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "early August 2026 (coarse visual estimate)",
+      "notes": [],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 6980,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 262.7285627865032,
+        "state": "bear",
+        "stateMatch": false,
+        "errorPct": 12.633354534212128,
+        "lastFlip": "2026-09-21",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": {
+        "atrLength": 50,
+        "factor": 6,
+        "value": 235.27305668372594,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 0.8630098103943773,
+        "lastFlip": "2026-08-06",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "priorReferences": []
+      },
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 262.7285627865032,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 12.633354534212128,
+          "lastFlip": "2026-09-21",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 263.6695272117624,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 13.036751784173205,
+          "lastFlip": "2026-09-15",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 243.448520702868,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 4.367881635457427,
+          "lastFlip": "2026-08-06",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 259.1294191032575,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 11.090379449222954,
+          "lastFlip": "2026-08-19",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 272.00883820651495,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 16.611865817763416,
+          "lastFlip": "2026-09-22",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 235.27305668372594,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 0.8630098103943773,
+          "lastFlip": "2026-08-06",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        }
+      ]
+    },
+    {
+      "asset": "meta",
+      "ticker": "META",
+      "timeframe": "1d",
+      "image": "34-META.jpg",
+      "imageSha256": "31f6e19a0f700bd59bde51734e529a4371c782cc08ea91e5f07e7f131733bba5",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 713.35,
+      "targetState": "bull",
+      "pendingDirection": null,
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "September 2026 (coarse visual estimate)",
+      "notes": [],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 3614,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 675.3142466601332,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": -5.331990374972562,
+        "lastFlip": "2026-09-10",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": {
+        "atrLength": 30,
+        "factor": 2,
+        "value": 713.012738577015,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": -0.04727853409756122,
+        "lastFlip": "2026-09-09",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "priorReferences": []
+      },
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 675.3142466601332,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -5.331990374972562,
+          "lastFlip": "2026-09-10",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 681.6728112762806,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -4.440623638286867,
+          "lastFlip": "2026-09-10",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 655.0920788534003,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -8.166807478320571,
+          "lastFlip": "2026-09-15",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 713.012738577015,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -0.04727853409756122,
+          "lastFlip": "2026-09-09",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 664.6104686091082,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -6.832484950009365,
+          "lastFlip": "2026-09-15",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 623.9353020174526,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -12.534477883584128,
+          "lastFlip": "2026-09-18",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        }
+      ]
+    },
+    {
+      "asset": "bot",
+      "ticker": "BOT",
+      "timeframe": "1d",
+      "image": "35-BOT.jpg",
+      "imageSha256": "abdcb9fd46163bad967084cfd32f42ef59847a3d5fc0c3d30742fe0154e1581c",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 18.62,
+      "targetState": "bull",
+      "pendingDirection": null,
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "June 2026 (coarse visual estimate)",
+      "notes": [
+        "Visible history begins in May, per archive README."
+      ],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 101,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 31.187956380085247,
+        "state": "bear",
+        "stateMatch": false,
+        "errorPct": 67.49708045158562,
+        "lastFlip": null,
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": null,
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 31.187956380085247,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 67.49708045158562,
+          "lastFlip": null,
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 18.62,
+              "targetState": "bull",
+              "atrLength": 10,
+              "factor": 3,
+              "value": 31.187956380085247,
+              "state": "bear",
+              "stateMatch": false,
+              "errorPct": 67.49708045158562,
+              "lastFlip": null,
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 32.05078470832757,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 72.13095976545418,
+          "lastFlip": null,
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 18.62,
+              "targetState": "bull",
+              "atrLength": 15,
+              "factor": 3,
+              "value": 32.280032048723676,
+              "state": "bear",
+              "stateMatch": false,
+              "errorPct": 73.362148489386,
+              "lastFlip": null,
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 33.8827128427115,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 81.96945672777387,
+          "lastFlip": null,
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 18.62,
+              "targetState": "bull",
+              "atrLength": 15,
+              "factor": 4,
+              "value": 34.223376128543194,
+              "state": "bear",
+              "stateMatch": false,
+              "errorPct": 83.79901250560253,
+              "lastFlip": null,
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 31.968982733978564,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 71.69163659494396,
+          "lastFlip": null,
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 18.62,
+              "targetState": "bull",
+              "atrLength": 30,
+              "factor": 2,
+              "value": 32.632890824895924,
+              "state": "bear",
+              "stateMatch": false,
+              "errorPct": 75.25720099299636,
+              "lastFlip": null,
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 37.382965162781346,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 100.76780431139282,
+          "lastFlip": null,
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 18.62,
+              "targetState": "bull",
+              "atrLength": 30,
+              "factor": 4,
+              "value": 38.81578184052671,
+              "state": "bear",
+              "stateMatch": false,
+              "errorPct": 108.46284554525623,
+              "lastFlip": null,
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 48.70962902188887,
+          "state": "bear",
+          "stateMatch": false,
+          "errorPct": 161.5984372818951,
+          "lastFlip": null,
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 18.62,
+              "targetState": "bull",
+              "atrLength": 50,
+              "factor": 6,
+              "value": 51.189813368578825,
+              "state": "bear",
+              "stateMatch": false,
+              "errorPct": 174.91843914381752,
+              "lastFlip": null,
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset": "strc",
+      "ticker": "STRC",
+      "timeframe": "1d",
+      "image": "36-STRC.jpg",
+      "imageSha256": "db9656fe1d2361b6707d34b8b50b8d81c02315033d90d28d7370e8261d26d836",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 95.31,
+      "targetState": "bull",
+      "pendingDirection": null,
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "early July 2026 (coarse visual estimate)",
+      "notes": [],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 297,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 94.94959263461867,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": -0.3781422362620246,
+        "lastFlip": "2026-07-06",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 94.94959263461867,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": -0.3781422362620246,
+        "lastFlip": "2026-07-06",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "priorReferences": [
+          {
+            "referenceDate": "2026-09-28",
+            "target": 94.11,
+            "targetState": "bull",
+            "atrLength": 30,
+            "factor": 4,
+            "value": 93.58123336905408,
+            "state": "bull",
+            "stateMatch": true,
+            "errorPct": -0.5618601965210135,
+            "lastFlip": "2026-07-06",
+            "confirmation": {
+              "required": 5,
+              "count": 0,
+              "pending": null
+            },
+            "ready": true
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 97.63760236666783,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 2.4421386703051384,
+          "lastFlip": "2026-07-08",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 94.11,
+              "targetState": "bull",
+              "atrLength": 10,
+              "factor": 3,
+              "value": 96.5155280897041,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 2.556081276914357,
+              "lastFlip": "2026-07-08",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 97.21283672207983,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 1.9964712224108894,
+          "lastFlip": "2026-07-06",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 94.11,
+              "targetState": "bull",
+              "atrLength": 15,
+              "factor": 3,
+              "value": 96.02503247183243,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 2.034887335918012,
+              "lastFlip": "2026-07-06",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 96.43378255041958,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 1.1790814714296216,
+          "lastFlip": "2026-07-08",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 94.11,
+              "targetState": "bull",
+              "atrLength": 15,
+              "factor": 4,
+              "value": 95.08171011503113,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 1.0325258899491319,
+              "lastFlip": "2026-07-08",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 97.24979593583961,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 2.035249119546334,
+          "lastFlip": "2026-07-06",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 94.11,
+              "targetState": "bull",
+              "atrLength": 30,
+              "factor": 2,
+              "value": 96.23701616543207,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": 2.2601383120094187,
+              "lastFlip": "2026-07-06",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 94.94959263461867,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -0.3781422362620246,
+          "lastFlip": "2026-07-06",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 94.11,
+              "targetState": "bull",
+              "atrLength": 30,
+              "factor": 4,
+              "value": 93.58123336905408,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": -0.5618601965210135,
+              "lastFlip": "2026-07-06",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 91.63886536401868,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -3.8517832714104694,
+          "lastFlip": "2026-07-06",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": [
+            {
+              "referenceDate": "2026-09-28",
+              "target": 94.11,
+              "targetState": "bull",
+              "atrLength": 50,
+              "factor": 6,
+              "value": 90.21998800185958,
+              "state": "bull",
+              "stateMatch": true,
+              "errorPct": -4.133473592753612,
+              "lastFlip": "2026-07-06",
+              "confirmation": {
+                "required": 5,
+                "count": 0,
+                "pending": null
+              },
+              "ready": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset": "pltr",
+      "ticker": "PLTR",
+      "timeframe": "1d",
+      "image": "37-PLTR.jpg",
+      "imageSha256": "5c81f8546be129545c0cbc0ffaad8d43182104010daf047b9a28c0ed4c5f0747",
+      "reviewedAt": "2026-10-04",
+      "imageCaptureDate": "2026-10-03",
+      "target": 160.21,
+      "targetState": "bull",
+      "pendingDirection": null,
+      "pendingCount": null,
+      "pendingCountScored": false,
+      "visualLastOfficialFlipWindow": "early August 2026 (coarse visual estimate)",
+      "notes": [],
+      "through": "2026-10-02",
+      "source": "yahoo",
+      "adjustment": "split-adjusted",
+      "bars": 1509,
+      "quality": {
+        "gaps": 0,
+        "duplicates": 0,
+        "malformed": 0,
+        "unexpectedSessions": 0
+      },
+      "current": {
+        "atrLength": 10,
+        "factor": 3,
+        "value": 173.62357029515047,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 8.372492538012889,
+        "lastFlip": "2026-07-09",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true
+      },
+      "bestStateMatch": {
+        "atrLength": 30,
+        "factor": 4,
+        "value": 164.25128709568648,
+        "state": "bull",
+        "stateMatch": true,
+        "errorPct": 2.5224936618728266,
+        "lastFlip": "2026-08-10",
+        "confirmation": {
+          "required": 5,
+          "count": 0,
+          "pending": null
+        },
+        "ready": true,
+        "priorReferences": []
+      },
+      "candidates": [
+        {
+          "atrLength": 10,
+          "factor": 3,
+          "value": 173.62357029515047,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 8.372492538012889,
+          "lastFlip": "2026-07-09",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 15,
+          "factor": 3,
+          "value": 172.51324541739527,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 7.679449108916581,
+          "lastFlip": "2026-07-09",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 15,
+          "factor": 4,
+          "value": 166.1776616755049,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 3.7248996164439774,
+          "lastFlip": "2026-08-10",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 30,
+          "factor": 2,
+          "value": 177.88564186937646,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 11.032795624103642,
+          "lastFlip": "2026-09-25",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 30,
+          "factor": 4,
+          "value": 164.25128709568648,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": 2.5224936618728266,
+          "lastFlip": "2026-08-10",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        },
+        {
+          "atrLength": 50,
+          "factor": 6,
+          "value": 149.60883236653575,
+          "state": "bull",
+          "stateMatch": true,
+          "errorPct": -6.617044899484592,
+          "lastFlip": "2026-08-10",
+          "confirmation": {
+            "required": 5,
+            "count": 0,
+            "pending": null
+          },
+          "ready": true,
+          "priorReferences": []
+        }
+      ]
+    }
+  ]
+}

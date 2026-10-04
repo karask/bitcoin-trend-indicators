@@ -79,11 +79,11 @@ test("KK presets lead the indicator menu with fixed crypto parameters", () => {
   assert.equal(KK_SUPERTREND_ATR_LENGTH, 10);
   assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3, sui: 3, jup: 3, op: 3, bonk: 3, ada: 3, atom: 3, hype: 3, dot: 3, bnb: 3, zec: 3, avax: 3, ray: 3, vvv: 3, qnt: 3 });
   assert.equal(KK_SUPERTREND_EQUITY_FACTOR, 3);
-  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { dailyCryptoFamily: "15/2,15/3,15/4,15/5; QNT 50/4", dailyStockFamily: "15/3,15/4,30/2,30/4; CRCL 50/6", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-09-28", dailyConfirmations: 5 });
-  assert.deepEqual(KK_SUPERTREND_PRESETS.doge, { "1d": { atrLength: 15, factor: 5 }, "1w": { atrLength: 15, factor: 2 } });
+  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { dailyCryptoFamily: "10/3,15/2,15/3,15/4,15/5; QNT 50/4", dailyStockFamily: "10/3,15/3,15/4,30/2,30/4,50/6", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-10-04", dailyConfirmations: 5 });
+  assert.deepEqual(KK_SUPERTREND_PRESETS.doge, { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.link, { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } });
-  assert.deepEqual(KK_SUPERTREND_PRESETS.xmr, { "1d": { atrLength: 15, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
-  assert.deepEqual(KK_SUPERTREND_PRESETS.sui, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
+  assert.deepEqual(KK_SUPERTREND_PRESETS.xmr, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
+  assert.deepEqual(KK_SUPERTREND_PRESETS.sui, { "1d": { atrLength: 15, factor: 2 }, "1w": { atrLength: 15, factor: 2 } });
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /approximate screenshot fits/i);
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /not recovered private formulas/i);
 });
@@ -216,14 +216,17 @@ test("Weekly BTC KK Supertrend remains point-for-point identical to SuperTrend 1
   assert.deepEqual(kk.values, standard.values);
 });
 
-test("unresolved daily SUI and OP retain the uncalibrated SuperTrend 10/3 preset", () => {
+test("daily SUI and OP use reviewed KK 15/2 while standard SuperTrend retains its own trail", () => {
   for (const asset of ["sui", "op"] as const) {
     const results = calculateIndicators(history(), "1d", { asset });
     const standard = results.find(item => item.id === "supertrend")!;
     const kk = results.find(item => item.id === "kk_supertrend")!;
-    assert.equal(kk.values.factor, 3, asset);
+    assert.equal(kk.values.atrLength, 15, asset);
+    assert.equal(kk.values.factor, 2, asset);
     assert.equal(kk.confirmation!.required, 5, asset);
-    assert.deepEqual(kk.overlays[0].points, standard.overlays[0].points, asset);
+    assert.notDeepEqual(kk.overlays[0].points, standard.overlays[0].points, asset);
+    const baseline = calculateIndicators(history(), "1d", { asset, kkSupertrendAtrLength: 10, kkSupertrendFactor: 3 });
+    assert.deepEqual(results.filter(s => s.id !== "kk_supertrend"), baseline.filter(s => s.id !== "kk_supertrend"), asset);
   }
 });
 

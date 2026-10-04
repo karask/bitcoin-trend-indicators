@@ -1,0 +1,130 @@
+# Daily KK Supertrend — review 4 October 2026
+
+The 37 screenshots in TradingView-37-charts.zip were captured on **3 October 2026**, not today. All are daily: 20 crypto and 17 stocks, no commodities. Comparison uses **completed candles through 2 October**. Crypto's 3 October screenshot candle was unfinished and cannot count toward official confirmations. Stocks' latest completed session was Friday 2 October. A separate latest-data check includes the subsequently completed 3 October crypto candle; no future candle enters the screenshot fit.
+
+## Outcome
+
+15 daily presets changed; 22 retained (including unreadable LINK). Only KK Supertrend changed. Weekly, commodities, all other indicators, and the five-consecutive-close rule in both directions are unchanged. No new parameter pairs or decimals. No database changes, remote writes, commit, push or deployment.
+
+| Asset | Before → applied ATR/factor | Image flip | Calculated flip | Error | State: image/model | Review |
+|---|---|---:|---:|---:|---|---|
+| SOL | 15/2 → 15/4 | 101.15 | 101.428546 | 0.28% | bull/bull | approximate |
+| DOGE | 15/5 → 15/4 | 0.079837 | 0.079812732 | -0.03% | bull/bull | approximate |
+| XMR | 15/3 → 10/3 | 455.7 | 457.274875 | 0.35% | bull/bull | approximate |
+| SUI | 10/3 → 15/2 | 1.0447 | 1.05955382 | 1.42% | bull/bull | approximate |
+| OP | 10/3 → 15/2 | 0.1158 | 0.123152482 | 6.35% | bull/bull | unresolved |
+| VVV | 10/3 → 15/3 | 22.464 | 23.119666 | 2.92% | bull/bull | approximate |
+| GOOGL | 15/3 → 50/6 | 370.44 | 383.010768 | 3.39% | bear/bear | approximate |
+| BMNR | 15/3 → 15/4 | 21.51 | 21.3791861 | -0.61% | bull/bull | unresolved |
+| MSTR | 10/3 → 15/4 | 125.3 | 132.040236 | 5.38% | bull/bull | unresolved |
+| INTC | 10/3 → 15/4 | 99.8 | 99.8275358 | 0.03% | bull/bull | approximate |
+| MRVL | 10/3 → 30/4 | 206.14 | 216.166157 | 4.86% | bull/bull | approximate |
+| AMD | 10/3 → 15/4 | 540.92 | 539.722798 | -0.22% | bull/bull | approximate |
+| AMZN | 10/3 → 50/6 | 233.26 | 235.273057 | 0.86% | bull/bull | approximate |
+| META | 10/3 → 30/2 | 713.35 | 713.012739 | -0.05% | bull/bull | approximate |
+| PLTR | 10/3 → 30/4 | 160.21 | 164.251287 | 2.52% | bull/bull | approximate |
+
+## Complete comparison
+
+### Crypto
+
+| Asset | Before → applied ATR/factor | Image flip | Calculated flip | Error | State: image/model | Review |
+|---|---|---:|---:|---:|---|---|
+| BTC | 15/2 → 15/2 | 80,775.05 | 81,056.7187 | 0.35% | bull/bull | unresolved |
+| ETH | 15/4 → 15/4 | 2,369.63 | 2,345.9436 | -1.00% | bull/bull | approximate |
+| SOL | 15/2 → 15/4 | 101.15 | 101.428546 | 0.28% | bull/bull | approximate |
+| DOGE | 15/5 → 15/4 | 0.079837 | 0.079812732 | -0.03% | bull/bull | approximate |
+| LINK | 15/4 → 15/4 | unreadable | 11.6857974 | not scored | bull/bull | skipped |
+| XMR | 15/3 → 10/3 | 455.7 | 457.274875 | 0.35% | bull/bull | approximate |
+| SUI | 10/3 → 15/2 | 1.0447 | 1.05955382 | 1.42% | bull/bull | approximate |
+| JUP | 15/3 → 15/3 | 0.2872 | 0.275564667 | -4.05% | bull/bull | unresolved |
+| OP | 10/3 → 15/2 | 0.1158 | 0.123152482 | 6.35% | bull/bull | unresolved |
+| BONK | 15/3 → 15/3 | 0.0000022517 | 0.00000292226755 | 29.78% | bull/bull | unresolved |
+| ADA | 15/5 → 15/5 | 0.20226 | 0.17888023 | -11.56% | bull/bull | unresolved |
+| ATOM | 15/5 → 15/5 | 1.4589 | 1.42399628 | -2.39% | bull/bull | approximate |
+| HYPE | 15/4 → 15/4 | 75.9 | 75.6479181 | -0.33% | bull/bull | approximate |
+| DOT | 15/5 → 15/5 | 0.955 | 0.828752104 | -13.22% | bull/bull | unresolved |
+| BNB | 15/4 → 15/4 | 704.06 | 691.862628 | -1.73% | bull/bull | approximate |
+| ZEC | 15/3 → 15/3 | 1,251.54 | 1,236.39433 | -1.21% | bull/bull | unresolved |
+| AVAX | 10/3 → 10/3 | 9.777 | 9.09246993 | -7.00% | bull/bull | unresolved |
+| RAY | 10/3 → 10/3 | 1.6165 | 1.52820267 | -5.46% | bull/bull | unresolved |
+| VVV | 10/3 → 15/3 | 22.464 | 23.119666 | 2.92% | bull/bull | approximate |
+| QNT | 50/4 → 50/4 | 227.68 | 239.68612 | 5.27% | bull/bull | unresolved |
+
+### Stocks
+
+| Asset | Before → applied ATR/factor | Image flip | Calculated flip | Error | State: image/model | Review |
+|---|---|---:|---:|---:|---|---|
+| TSLA | 30/4 → 30/4 | 311.71 | 326.958271 | 4.89% | bull/bull | approximate |
+| GOOGL | 15/3 → 50/6 | 370.44 | 383.010768 | 3.39% | bear/bear | approximate |
+| NVDA | 30/2 → 30/2 | 225.58 | 222.949474 | -1.17% | bear/bull | unresolved |
+| SPCX | 15/4 → 15/4 | 115.88 | 126.997609 | 9.59% | bull/bull | unresolved |
+| MU | 15/3 → 15/3 | 845.1 | 948.878326 | 12.28% | bull/bull | unresolved |
+| SNDK | 30/4 → 30/4 | 1,249.03 | 1,326.28905 | 6.19% | bull/bull | unresolved |
+| BMNR | 15/3 → 15/4 | 21.51 | 21.3791861 | -0.61% | bull/bull | unresolved |
+| MSTR | 10/3 → 15/4 | 125.3 | 132.040236 | 5.38% | bull/bull | unresolved |
+| CRCL | 50/6 → 50/6 | 57.74 | 59.0822778 | 2.32% | bull/bull | approximate |
+| INTC | 10/3 → 15/4 | 99.8 | 99.8275358 | 0.03% | bull/bull | approximate |
+| MRVL | 10/3 → 30/4 | 206.14 | 216.166157 | 4.86% | bull/bull | approximate |
+| AMD | 10/3 → 15/4 | 540.92 | 539.722798 | -0.22% | bull/bull | approximate |
+| AMZN | 10/3 → 50/6 | 233.26 | 235.273057 | 0.86% | bull/bull | approximate |
+| META | 10/3 → 30/2 | 713.35 | 713.012739 | -0.05% | bull/bull | approximate |
+| BOT | 10/3 → 10/3 | 18.62 | 31.1879564 | 67.50% | bull/bear | unresolved |
+| STRC | 30/4 → 30/4 | 95.31 | 94.9495926 | -0.38% | bull/bull | approximate |
+| PLTR | 10/3 → 30/4 | 160.21 | 164.251287 | 2.52% | bull/bull | approximate |
+
+## Decisions and limitations
+
+- **BTC**: Retain 15/2: closest compact level fit (+0.35%), but the July 9 confirmed reversal is later than the screenshot's approximate mid/late-June reversal. A near-exact level is not a validated timing match.
+- **ETH**: Retain 15/4: closest compact-family level; July reversal agrees approximately. Composite screenshot and Bitstamp USD are different feeds.
+- **SOL**: 15/2 → 15/4 improves the latest error from +10.70% to +0.28% and moves the confirmed reversal from August 23 to July 6, matching the visible early-July reversal. September 21 level error worsens from +0.89% to -9.33%; this is conflicting cross-date evidence, not recovery of a fixed private formula.
+- **DOGE**: 15/5 → 15/4 closely matches the latest level and preserves the August 24 reversal. September 21 error worsens from +6.45% to +12.05%; the newest level alone does not validate all earlier charts.
+- **LINK**: Keep 15/4. The current right-edge flip value is unreadable. The header's 9.060 belongs to the historical candle under the cursor, not the current reversal target. No numeric calibration was performed.
+- **XMR**: 15/3 → 10/3 improves the latest and earlier level comparisons; confirmed reversal moves only one day, August 11 → August 10. The visual reversal window is approximate, not an exact date validation. October 3's completed candle subsequently raises the live trail; do not use that later value to fit the screenshot.
+- **SUI**: 10/3 → 15/2 improves the level and moves the reversal from August 24 to September 22, matching late September. It also preserves the prior September 21 bearish state; the old preset did not.
+- **JUP**: Keep 15/3. Best same-regime compact level approximation on both the default USD feed (-4.05%) and screenshot Binance USDT feed (-4.46%). The model's late-August reversal does not reproduce the visible early-July reversal.
+- **OP**: 10/3 → 15/2 is a timing-led compromise: September 22 matches the visible late-September reversal instead of September 10. Level error increases slightly in magnitude (-6.22% → +6.35%). 15/3's closer level still gives the wrong reversal timing.
+- **BONK**: Keep 15/3 despite +29.78% level error. Closest-level 15/5 (+3.79%) moves the matching September 25 reversal to August 26 and breaks the earlier bearish reference. No tested family matches both level and timing.
+- **ADA**: Keep 15/5 despite -11.56% level error. The August 7 reversal matches the visible early-August change; closer-level 10/3 would move it to July 7 and worsen the earlier reference.
+- **ATOM**: Retain 15/5: closest same-regime family level and mid-August reversal. Five completed confirmations remain required.
+- **HYPE**: Retain 15/4: close level match and approximately matching late-August reversal. Kraken USD is a proxy for the composite screenshot.
+- **DOT**: Keep 15/5. None of the compact candidates matches the visible early/mid-September reversal. Closest-level 10/3 improves -13.22% to +2.78%, but keeps an August reversal and worsens the earlier level error from +3.17% to +16.06%.
+- **BNB**: Retain 15/4. Switching to 10/3 provides only marginal latest-level improvement while degrading the earlier reference and timing evidence.
+- **ZEC**: Retain 15/3: good latest-level approximation (-1.21%), but the model's July 16 reversal conflicts with the visible late-August reversal. Level-only agreement is insufficient.
+- **AVAX**: Keep 10/3. No tested compact preset reproduces the visible early/mid-September reversal. Closer levels under 15/2 or 15/3 still put that reversal in the wrong period.
+- **RAY**: Keep 10/3 with -5.46% level error and matching late-August reversal. Closer-level 15/3 creates an unwanted September 19 bearish / September 25 bullish sequence absent from the screenshot.
+- **VVV**: 10/3 → 15/3 is timing-led: moves the reversal from July 30 to August 22, matching late August. Latest-level error is slightly larger in magnitude (-2.52% → +2.92%).
+- **QNT**: Retain the existing 50/4 exception, +5.27%. Its September 12 reversal is near the visual early-September window. Closer-level 15/2 introduces September 19/25 whipsaws and worsens the earlier reference.
+- **TSLA**: Retain 30/4: closest same-regime family level (+4.89%) and September reversal. No more parameter families were introduced.
+- **GOOGL**: 15/3 → 50/6 restores the screenshot's bearish state and continuous bearish regime since June, also matching the earlier September 21 bearish reference. 30/2 is slightly closer in price but only turns bearish September 29, contradicting the visible history.
+- **NVDA**: Retain 30/2; no tested preset matches the screenshot's bearish regime plus pending bullish confirmation. The model is already bullish. 50/6 is bearish at 234.26 (+3.85%) but has no pending bullish confirmation and a July 2 reversal instead of mid-June. The clipped screenshot counter is unknown, never guessed; neither candidate is validated.
+- **SPCX**: Retain 15/4: closest same-regime compact candidate, but +9.59% level error remains with short IPO history. No new confirmation or initialization rule was inferred.
+- **MU**: Retain 15/3: closest bullish family candidate and late-September reversal, but +12.28% level error remains. Other tested families are farther away or have the wrong official regime.
+- **SNDK**: Retain 30/4: closest bullish family candidate and late-August reversal. The earlier level matched closely; the current +6.19% difference shows this is not a stable formula-level replication.
+- **BMNR**: 15/3 → 15/4 improves latest-level error +7.42% → -0.61% and pooled absolute error across both references, but the July 31 reversal is earlier than the visible late-August reversal. 50/6 matches August timing but misses the level by -11.86%. Timing remains unresolved.
+- **MSTR**: 10/3 → 15/4 improves +11.60% → +5.38% while keeping the late-August reversal. This is a level approximation with a material residual, not an exact fit.
+- **CRCL**: Retain 50/6: best family fit across September 28 and this reference; September reversal and bullish state agree approximately.
+- **INTC**: 10/3 → 15/4 gives a near-exact level (+0.03%) and late-September reversal, matching both visible features.
+- **MRVL**: 10/3 → 30/4 improves +15.74% → +4.86%, preserving the visible late-August reversal within the existing equity family.
+- **AMD**: 10/3 → 15/4 improves +4.51% → -0.22% and moves the reversal into the visible late-September window.
+- **AMZN**: 10/3 → 50/6 restores the bullish screenshot regime, gives +0.86% level error, and matches the early-August reversal. Reuses an existing equity preset; no new pair.
+- **META**: 10/3 → 30/2 gives -0.05% level error and preserves the early-September reversal.
+- **BOT**: Retain 10/3. Every tested family is bearish, whereas the screenshot is bullish. Short available history and unknown private initialization/trailing behavior prevent a reliable fit; do not hardcode a screenshot value.
+- **STRC**: Retain 30/4: -0.38% latest-level error, consistent with the earlier reference and early-July reversal. Weekly still has no reference.
+- **PLTR**: 10/3 → 30/4 improves +8.37% → +2.52% and moves the reversal to the visible first half of August.
+
+## Date and source controls
+
+Crypto uses the application's default exchange as a proxy for CRYPTO composite USD, with an additional Binance USDT check for JUP. Stocks use Yahoo split-adjusted history versus TradingView ADJ screenshots; feeds/adjustments can differ. Histories passed provider quality checks. Provider tails were paced; there was no broad reseed. Image hashes, feed metadata and partial-candle observations are in observations.json; fixed candles, candidates and previous-reference checks are alongside this report. Partial OHLC diagnostics never advance an official confirmation. Coarse image reversal windows are not claimed as exact dates.
+
+On 4 October, latest completed crypto data runs through 3 October. With applied presets, only XMR's level changes between the two cutoffs: **457.27487496 → 461.95903717**, still bullish. Stocks still end 2 October. Calibration dates do not freeze live dashboards or suppress newer completed candles.
+
+## Patterns
+
+Daily crypto stays within 10/3, 15/2, 15/3, 15/4, 15/5 plus the existing QNT 50/4 exception. Daily equities stay within 10/3, 15/3, 15/4, 30/2, 30/4, 50/6. The 50/6 equity setting now groups GOOGL, AMZN and CRCL; 15/4 groups several otherwise very different crypto and stocks. These are empirical groups, **not a market-cap rule**: capitalization was not measured and no large/mid/small cutoffs can be inferred. Cross-date level disagreements and correct prices with wrong reversal histories suggest ATR/factor alone may not recover the private indicator's trailing/confirmation behavior. Preserve these discrepancies for future same-feed, dated charts instead of adding an asset-specific decimal for every image.
+
+## Research and verification
+
+backtests.json records normal app research on completed reference candles for every asset: next-session-open execution, 5/15/30-bps sensitivity, matched buy-and-hold, and rolling four-year windows when enough history exists; annualization is 365 for crypto and 252 for stocks. Parameters were not selected by returns. Short-history assets cannot manufacture four-year tests; historical returns are descriptive and in-sample.
+
+Reproduce offline with: node --experimental-strip-types scripts/apply-kk-october3-evidence.ts. The separate fetch scripts require explicit --fetch only for missing cached provider responses.

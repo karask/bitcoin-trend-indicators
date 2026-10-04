@@ -27,14 +27,14 @@ test("AVAX and MSTR have separated providers, weekly calibration and normal rese
  assert.equal(marketDefinition("avax","coinbase").providerSymbol,"AVAX-USD");
  assert.equal(stockDefinition("MSTR").exchange,"NASDAQ");
  assert.match(calibrationStatus(undefined,"1w","mstr"),/September 21/);
- assert.match(calibrationStatus(undefined,"1d","mstr"),/Uncalibrated/);
+ assert.match(calibrationStatus(undefined,"1d","mstr"),/October [34]/);
  for(const asset of ["avax","mstr"] as const){
   const candles=fixture(asset),options=asset==="mstr"?{market:"equity" as const,stock:asset}:{asset};
   const signals=calculateIndicators(candles,"1w",options);
   const baseline=calculateIndicators(candles,"1w",{...options,kkSupertrendAtrLength:10,kkSupertrendFactor:3});
   assert.deepEqual(signals.filter(s=>s.id!=="kk_supertrend"),baseline.filter(s=>s.id!=="kk_supertrend"));
   const daily=calculateIndicators(candles,"1d",{...options,indicatorIds:["kk_supertrend"]})[0];
-  assert.deepEqual([daily.values.atrLength,daily.values.factor],[10,3]);
+  assert.deepEqual([daily.values.atrLength,daily.values.factor],asset==="mstr"?[15,4]:[10,3]);
   const r=buildResearch(candles,signals,"kk_supertrend","1w",asset==="mstr"?{market:"equity"}:{});
   assert.ok(r.detail&&r.benchmark);
   // The common research window starts after the longest indicator warmup.

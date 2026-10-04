@@ -58,7 +58,7 @@ test("weekly references remain valid alongside daily presets; generic futures ba
     assert.equal(calibrationStatus(undefined,"1w",undefined,asset),"Weekly screenshot checked · September 21");
     assert.equal(calibrationStatus(undefined,"1d",undefined,asset),"Approximate daily family fit · September 22");
   }
-  assert.equal(calibrationStatus(undefined,"1d","bmnr"),"Approximate daily family fit · September 22");
+  assert.match(calibrationStatus(undefined,"1d","bmnr"),/October [34]/);
   const defaultKk=calculateIndicators(candlesFor("gold"),"1w",{market:"commodity",indicatorIds:["kk_supertrend"]})[0];
   assert.deepEqual([defaultKk.values.atrLength,defaultKk.values.factor],[10,3]);
 });

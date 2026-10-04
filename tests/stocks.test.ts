@@ -67,7 +67,7 @@ test("Bitmine has NYSE provenance, bounded history and its own separate weekly a
   assert.equal(history.candles.length, 2);
   assert.equal(history.quality.gaps, 0);
   for (const timeframe of ["1d", "1w"] as const) {
-    assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.bmnr[timeframe], { atrLength: 15, factor: timeframe === "1w" ? 2 : 3 });
+    assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.bmnr[timeframe], { atrLength: 15, factor: timeframe === "1w" ? 2 : 4 });
     const indicators = calculateIndicators(history.candles, timeframe, { market: "equity", stock: "bmnr" });
     assert.equal(indicators.find(item => item.id === "kk_supertrend")!.readiness?.ready, false);
   }
