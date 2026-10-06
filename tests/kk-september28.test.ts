@@ -73,7 +73,7 @@ test("all 16 weekly and five daily references replay without concealing failed f
       assert.match(calibrationStatus(asset, row.timeframe, stock), /September 28/);
       if (row.status === "unresolved") assert.match(calibrationStatus(asset, row.timeframe, stock), /unresolved/);
     } else {
-      assert.match(calibrationStatus(asset, row.timeframe, stock), /October [34]/, "New daily evidence takes precedence without rewriting archived results");
+      assert.match(calibrationStatus(asset, row.timeframe, stock), /October [56]/, "New daily evidence takes precedence without rewriting archived results");
     }
     const before = calculateIndicators(candles.slice(-300), row.timeframe, { ...optionsFor(row.asset), kkSupertrendAtrLength: row.previous.atrLength, kkSupertrendFactor: row.previous.factor });
     const after = calculateIndicators(candles.slice(-300), row.timeframe, optionsFor(row.asset));

@@ -56,9 +56,9 @@ test("weekly references remain valid alongside daily presets; generic futures ba
   for(const asset of ["gold","silver"] as const) {
     assert.deepEqual(KK_SUPERTREND_COMMODITY_PRESETS[asset]["1d"],{atrLength:15,factor:asset==="gold"?4:3});
     assert.equal(calibrationStatus(undefined,"1w",undefined,asset),"Weekly screenshot checked · September 21");
-    assert.equal(calibrationStatus(undefined,"1d",undefined,asset),"Approximate daily family fit · September 22");
+    assert.match(calibrationStatus(undefined,"1d",undefined,asset),/calibration unresolved.*October 6/);
   }
-  assert.match(calibrationStatus(undefined,"1d","bmnr"),/October [34]/);
+  assert.match(calibrationStatus(undefined,"1d","bmnr"),/October [56]/);
   const defaultKk=calculateIndicators(candlesFor("gold"),"1w",{market:"commodity",indicatorIds:["kk_supertrend"]})[0];
   assert.deepEqual([defaultKk.values.atrLength,defaultKk.values.factor],[10,3]);
 });

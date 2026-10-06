@@ -110,7 +110,7 @@ test("September 28 notebook discloses timing differences and unresolved calibrat
   }
   const quant = renderToStaticMarkup(<CalibrationPanel asset="qnt" timeframe="1d" values={{ atrLength: 50, factor: 4 }} />);
   assert.match(quant, /calibration unresolved/);
-  assert.match(quant, /reviewed October 4/);
+  assert.match(quant, /reviewed October 6/);
   assert.match(quant, /Archived video reference/);
   assert.match(quant, /Coinbase USD proxy/);
   assert.match(quant, /not a confirmation match/);
@@ -123,7 +123,7 @@ test("KK confidence warnings distinguish timeframes and never label other indica
     assert.match(html, /Treat this KK signal as unverified/);
   }
   for (const asset of ["qnt", "spcx"]) assert.match(renderToStaticMarkup(<KKCalibrationWarning asset={asset} timeframe="1d" />), /Unreliable KK calibration/);
-  assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="link" timeframe="1d" />), /Unscored current chart/);
+  assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="link" timeframe="1d" />), /Unreliable KK calibration/);
   for (const timeframe of ["1d", "1w"] as const) assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="bot" timeframe={timeframe} />), /Unreliable KK calibration/);
   assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="intc" timeframe="1w" />), /KK timing mismatch/);
   assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="strc" timeframe="1w" />), /Uncalibrated KK/);
@@ -182,8 +182,10 @@ test("metals and Bitmine notebooks disclose approximate fits and keep daily cali
     assert.ok(weekly.includes(`${commodity}.jpeg`));
     assert.match(weekly, /back-adjusted/);
     assert.doesNotMatch(weekly, /<details[^>]*\bopen=/);
-    const daily = renderToStaticMarkup(<CalibrationPanel commodity={commodity} timeframe="1d" values={{ atrLength: 10, factor: 3 }} />);
-    assert.match(daily, /Approximate daily family fit · September 22/);
+    const daily = renderToStaticMarkup(<CalibrationPanel commodity={commodity} timeframe="1d" values={{ atrLength: 15, factor: commodity === "gold" ? 4 : 3 }} />);
+    assert.match(daily, /calibration unresolved.*October 5 chart.*October 6/);
+    assert.match(daily, /Printed last-flip date/);
+    assert.match(daily, /Model confirmation/);
     assert.match(daily, /does not validate this daily preset/);
   }
   const bmnr = renderToStaticMarkup(<CalibrationPanel stock="bmnr" timeframe="1w" values={{ atrLength: 15, factor: 2 }} />);

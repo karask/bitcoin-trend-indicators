@@ -1,0 +1,822 @@
+{
+  "archive": "TradingView-MoneyLine-39-charts-2026-10-05.zip",
+  "captureDate": "2026-10-05",
+  "reviewedAt": "2026-10-06",
+  "timeframe": "1d",
+  "captureClockUTC": "08:38–08:50 crypto/stocks; 14:15–14:16 futures",
+  "comparison": "Crypto completed through October 4; stocks and Yahoo futures through October 2. October 5 candles are partial at capture. Latest completed October 5 values are separate diagnostics.",
+  "charts": [
+    {
+      "asset": "btc",
+      "assetClass": "crypto",
+      "image": "01-BTC.jpg",
+      "imageSha256": "bf915078a32e2ef93d5466fc7a5f5612554e73b3b3c7089a4e5abb7a68109eb7",
+      "target": 80859.48,
+      "targetState": "bull",
+      "targetLastFlip": "2026-06-18",
+      "targetLastFlipPrice": 64442.85,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 86516.61,
+        "high": 86978.45,
+        "low": 85404.99,
+        "close": 86233.02
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 2
+      },
+      "note": ""
+    },
+    {
+      "asset": "eth",
+      "assetClass": "crypto",
+      "image": "02-ETH.jpg",
+      "imageSha256": "efdc9ec6da0efab4c76031b67dfa9755116b8fde01b6f6e034ff009df08fa218",
+      "target": 2369.63,
+      "targetState": "bull",
+      "targetLastFlip": "2026-07-19",
+      "targetLastFlipPrice": 1861.19,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 2726.66,
+        "high": 2737.26,
+        "low": 2694.42,
+        "close": 2720.15
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "sol",
+      "assetClass": "crypto",
+      "image": "03-SOL.jpg",
+      "imageSha256": "a3840b740d0ee720a03ad77920f5fa402a1ace499208e5804fcc172003a707ef",
+      "target": 101.15,
+      "targetState": "bull",
+      "targetLastFlip": "2026-07-04",
+      "targetLastFlipPrice": 82.27,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 121.58,
+        "high": 122.04,
+        "low": 120.02,
+        "close": 121.09
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "doge",
+      "assetClass": "crypto",
+      "image": "04-DOGE.jpg",
+      "imageSha256": "d9255a580f28a04bb03e9e6a6900fcb47f0bfe4dd39b5f61909680fbfdef9e2e",
+      "target": 0.079837,
+      "targetState": "bull",
+      "targetLastFlip": "2026-08-26",
+      "targetLastFlipPrice": 0.085669,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 0.095899,
+        "high": 0.09708,
+        "low": 0.094771,
+        "close": 0.09695
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "link",
+      "assetClass": "crypto",
+      "image": "05-LINK.jpg",
+      "imageSha256": "4d8276be93545283ad6debfa5b78d71bc8117657aa850d0eb60f49a3ed393cd6",
+      "target": 12.435,
+      "targetState": "bull",
+      "targetLastFlip": "2026-08-20",
+      "targetLastFlipPrice": 10.546,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 14.275,
+        "high": 14.277,
+        "low": 14.04,
+        "close": 14.129
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "xmr",
+      "assetClass": "crypto",
+      "image": "06-XMR.jpg",
+      "imageSha256": "7fb1809605c93c82b90526a2d8847407dc131e55fd6ba3e9b7c26a4a25c8aee9",
+      "target": 455.7,
+      "targetState": "bull",
+      "targetLastFlip": "2026-08-20",
+      "targetLastFlipPrice": 422.08,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 546.72,
+        "high": 548.66,
+        "low": 535.13,
+        "close": 543.12
+      },
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "note": ""
+    },
+    {
+      "asset": "sui",
+      "assetClass": "crypto",
+      "image": "07-SUI.jpg",
+      "imageSha256": "7e55d6b4488caf4aea5e96968ee86f3966d44502970c99a8c2cbd0eed8ea38f7",
+      "target": 1.0447,
+      "targetState": "bull",
+      "targetLastFlip": "2026-09-23",
+      "targetLastFlipPrice": 1.0235,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 1.2082,
+        "high": 1.2507,
+        "low": 1.2037,
+        "close": 1.2256
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 2
+      },
+      "note": ""
+    },
+    {
+      "asset": "jup",
+      "assetClass": "crypto",
+      "image": "08-JUP.jpg",
+      "imageSha256": "49434785af241651e6491c383fc1c2a6d96d612755597936ca508123ce7fd0b7",
+      "target": 0.2872,
+      "targetState": "bull",
+      "targetLastFlip": "2026-07-04",
+      "targetLastFlipPrice": 0.243,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 0.3351,
+        "high": 0.3407,
+        "low": 0.3264,
+        "close": 0.3367
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 3
+      },
+      "note": ""
+    },
+    {
+      "asset": "op",
+      "assetClass": "crypto",
+      "image": "09-OP.jpg",
+      "imageSha256": "3de87af81fca3ba07312fbc5bb52b93d4e119839b79945496319eb44b4687ee1",
+      "target": 0.1158,
+      "targetState": "bull",
+      "targetLastFlip": "2026-09-23",
+      "targetLastFlipPrice": 0.1352,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 0.1342,
+        "high": 0.13664,
+        "low": 0.13025,
+        "close": 0.1354
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 2
+      },
+      "note": ""
+    },
+    {
+      "asset": "bonk",
+      "assetClass": "crypto",
+      "image": "10-BONK.jpg",
+      "imageSha256": "0811740b8707a7ebb678e5c42a01b7ee4720d4faed6a6f4e15e0b6224897a380",
+      "target": 0.0000024636,
+      "targetState": "bull",
+      "targetLastFlip": "2026-09-26",
+      "targetLastFlipPrice": 0.0000037477,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 0.0000039182,
+        "high": 0.0000040625,
+        "low": 0.000003903,
+        "close": 0.000004041
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 3
+      },
+      "note": ""
+    },
+    {
+      "asset": "ada",
+      "assetClass": "crypto",
+      "image": "11-ADA.jpg",
+      "imageSha256": "2085cbcebec9328194f7976fda6c4712ef1e4fdc70320777f051b9ee4605abf2",
+      "target": 0.20217,
+      "targetState": "bull",
+      "targetLastFlip": "2026-08-07",
+      "targetLastFlipPrice": 0.20099,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 0.25967,
+        "high": 0.27462,
+        "low": 0.25784,
+        "close": 0.27287
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 5
+      },
+      "note": ""
+    },
+    {
+      "asset": "atom",
+      "assetClass": "crypto",
+      "image": "12-ATOM.jpg",
+      "imageSha256": "a82115d15d717688958c1bce06de3d6740ff470c1a0ab6185ca8ff83c9d37b87",
+      "target": 1.4589,
+      "targetState": "bull",
+      "targetLastFlip": "2026-08-15",
+      "targetLastFlipPrice": 1.5101,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 1.7504,
+        "high": 1.7761,
+        "low": 1.7301,
+        "close": 1.7739
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 5
+      },
+      "note": ""
+    },
+    {
+      "asset": "hype",
+      "assetClass": "crypto",
+      "image": "13-HYPE.jpg",
+      "imageSha256": "20d996e1d81b2d6154c2f9ac1c76774e0244f13f8a04fc9aacebdf6fdf16df3d",
+      "target": 75.9,
+      "targetState": "bull",
+      "targetLastFlip": "2026-08-24",
+      "targetLastFlipPrice": 82.271,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 90.548,
+        "high": 93.721,
+        "low": 90.013,
+        "close": 93.294
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "dot",
+      "assetClass": "crypto",
+      "image": "14-DOT.jpg",
+      "imageSha256": "d8515479fe09f16c596f16c71cf93646fdbaa249d0c1b736cf6edb310de4b534",
+      "target": 0.955,
+      "targetState": "bull",
+      "targetLastFlip": "2026-09-10",
+      "targetLastFlipPrice": 1.1225,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 1.2051,
+        "high": 1.2393,
+        "low": 1.1913,
+        "close": 1.225
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 5
+      },
+      "note": ""
+    },
+    {
+      "asset": "bnb",
+      "assetClass": "crypto",
+      "image": "15-BNB.jpg",
+      "imageSha256": "9c47239e730d29ee05a751bc98c4cfe14ae9014280ec11cda0a8602668250a16",
+      "target": 704.06,
+      "targetState": "bull",
+      "targetLastFlip": "2026-08-25",
+      "targetLastFlipPrice": 704.21,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 795.29,
+        "high": 809.7,
+        "low": 788.4,
+        "close": 789.88
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "zec",
+      "assetClass": "crypto",
+      "image": "16-ZEC.jpg",
+      "imageSha256": "d702bb4526734fd228e70a101a3af46f9be3aa73d1a1cf0e017f53f052c8b534",
+      "target": 1251.54,
+      "targetState": "bull",
+      "targetLastFlip": "2026-08-26",
+      "targetLastFlipPrice": 767.79,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 1352.25,
+        "high": 1356.18,
+        "low": 1311.17,
+        "close": 1335.75
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 3
+      },
+      "note": ""
+    },
+    {
+      "asset": "avax",
+      "assetClass": "crypto",
+      "image": "17-AVAX.jpg",
+      "imageSha256": "8c924b2e3a4d2a6763741d7127b0d3755c3a1c662a34645e80b79d0ac873501c",
+      "target": 9.777,
+      "targetState": "bull",
+      "targetLastFlip": "2026-09-10",
+      "targetLastFlipPrice": 7.799,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 11.103,
+        "high": 11.103,
+        "low": 10.829,
+        "close": 11.024
+      },
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "note": ""
+    },
+    {
+      "asset": "ray",
+      "assetClass": "crypto",
+      "image": "18-RAY.jpg",
+      "imageSha256": "ce5b8b78e429ae9876b21e0bc9e7bae67517e1a116a966c9629c8dfe6e43d795",
+      "target": 1.6165,
+      "targetState": "bull",
+      "targetLastFlip": "2026-08-26",
+      "targetLastFlipPrice": 0.7849,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 2.111,
+        "high": 2.1157,
+        "low": 2.0524,
+        "close": 2.0636
+      },
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "note": ""
+    },
+    {
+      "asset": "vvv",
+      "assetClass": "crypto",
+      "image": "19-VVV.jpg",
+      "imageSha256": "3ad99d07d230bd4a1f2f712867039a49d8e53cd8ca9eb7aade7aa4d63eac2245",
+      "target": 22.464,
+      "targetState": "bull",
+      "targetLastFlip": "2026-08-26",
+      "targetLastFlipPrice": 17.343,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 30.018,
+        "high": 30.233,
+        "low": 29.218,
+        "close": 29.863
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 3
+      },
+      "note": ""
+    },
+    {
+      "asset": "qnt",
+      "assetClass": "crypto",
+      "image": "20-QNT.jpg",
+      "imageSha256": "7ba48ebee48c4fb147ef5a3ef115c8072566006ae718d3bc6608f23b91ad2e03",
+      "target": 227.68,
+      "targetState": "bull",
+      "targetLastFlip": "2026-09-10",
+      "targetLastFlipPrice": 67.17,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 252.48,
+        "high": 258.28,
+        "low": 245.32,
+        "close": 252.87
+      },
+      "previous": {
+        "atrLength": 50,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "tsla",
+      "assetClass": "stock",
+      "image": "21-TSLA.jpg",
+      "imageSha256": "e6c53d5cfbbd95c389b3091b2272042a63c73600488022cd7ff4144778ec701d",
+      "target": 311.71,
+      "targetState": "bull",
+      "targetLastFlip": "2026-09-08",
+      "targetLastFlipPrice": 357.1,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 30,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "googl",
+      "assetClass": "stock",
+      "image": "22-GOOGL.jpg",
+      "imageSha256": "06b0971ad9e9481577eaab4c63e4e416f6c4763a4cb343fbb663a37d57cb9f85",
+      "target": 370.44,
+      "targetState": "bear",
+      "targetLastFlip": "2026-06-08",
+      "targetLastFlipPrice": 365.18,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 50,
+        "factor": 6
+      },
+      "note": ""
+    },
+    {
+      "asset": "nvda",
+      "assetClass": "stock",
+      "image": "23-NVDA.jpg",
+      "imageSha256": "4faaa7136266196604844f084b21446860f37f9bcbdb227bf34187f24c0fb7c6",
+      "target": 225.58,
+      "targetState": "bear",
+      "targetLastFlip": "2026-06-12",
+      "targetLastFlipPrice": 204.86,
+      "pendingDirection": "bull",
+      "pendingCount": 5,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 30,
+        "factor": 2
+      },
+      "note": "Table reads BEARISH and Bullish 5/5 simultaneously. Score the printed bearish state; do not infer an official bullish flip or alter the five-close rule."
+    },
+    {
+      "asset": "spcx",
+      "assetClass": "stock",
+      "image": "24-SPCX.jpg",
+      "imageSha256": "b9801bd86beceaa60f72c8d6de629b3ebfa77ac35507a26e473f479065bf6471",
+      "target": 115.88,
+      "targetState": "bull",
+      "targetLastFlip": "2026-09-11",
+      "targetLastFlipPrice": 150.01,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "mu",
+      "assetClass": "stock",
+      "image": "25-MU.jpg",
+      "imageSha256": "ce929ece8b2739badc9125e75b0b339b64cdecfe8cbad225ff1390c787754c6f",
+      "target": 845.1,
+      "targetState": "bull",
+      "targetLastFlip": "2026-09-25",
+      "targetLastFlipPrice": 1095.83,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 15,
+        "factor": 3
+      },
+      "note": ""
+    },
+    {
+      "asset": "sndk",
+      "assetClass": "stock",
+      "image": "26-SNDK.jpg",
+      "imageSha256": "7b2a3b4b842ae9870f90d2bfe4ede917539ed4c09eed1392afeda600eed8d62b",
+      "target": 1249.03,
+      "targetState": "bull",
+      "targetLastFlip": "2026-08-20",
+      "targetLastFlipPrice": 1569,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 30,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "bmnr",
+      "assetClass": "stock",
+      "image": "27-BMNR.jpg",
+      "imageSha256": "7f109c55078bd2137f39f142cc3dfb3f52a611a5e619f1d30b3c84ced32ab66e",
+      "target": 21.51,
+      "targetState": "bull",
+      "targetLastFlip": "2026-08-26",
+      "targetLastFlipPrice": 24.24,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "mstr",
+      "assetClass": "stock",
+      "image": "28-MSTR.jpg",
+      "imageSha256": "084c3cbff27d7ffab301f626f71b44dcc5e036f41192c25f9180aba8b73205a6",
+      "target": 125.3,
+      "targetState": "bull",
+      "targetLastFlip": "2026-08-28",
+      "targetLastFlipPrice": 134,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "crcl",
+      "assetClass": "stock",
+      "image": "29-CRCL.jpg",
+      "imageSha256": "b828ea3e53bdc69cc20678a3ca94ac7b21bd815b98064f4290258d90b376c006",
+      "target": 57.74,
+      "targetState": "bull",
+      "targetLastFlip": "2026-09-11",
+      "targetLastFlipPrice": 92,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 50,
+        "factor": 6
+      },
+      "note": ""
+    },
+    {
+      "asset": "intc",
+      "assetClass": "stock",
+      "image": "30-INTC.jpg",
+      "imageSha256": "6369e8d6d71a18b2fc0d8ebf0decd92bfb485dcb7011a9c73dbee3964edfb019",
+      "target": 99.8,
+      "targetState": "bull",
+      "targetLastFlip": "2026-09-24",
+      "targetLastFlipPrice": 120.61,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "mrvl",
+      "assetClass": "stock",
+      "image": "31-MRVL.jpg",
+      "imageSha256": "5f46becf7b0ac14a0343c7fae46e26f08ebe5dcf9983c81c20eaa50393c7d2b0",
+      "target": 206.14,
+      "targetState": "bull",
+      "targetLastFlip": "2026-08-26",
+      "targetLastFlipPrice": 240,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 30,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "amd",
+      "assetClass": "stock",
+      "image": "32-AMD.jpg",
+      "imageSha256": "d02dae2d8e938ce980c5e158a0a7344b78ced3b8a9acf3fd8edd2a34b15f0ad4",
+      "target": 540.92,
+      "targetState": "bull",
+      "targetLastFlip": "2026-09-25",
+      "targetLastFlipPrice": 634.53,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "amzn",
+      "assetClass": "stock",
+      "image": "33-AMZN.jpg",
+      "imageSha256": "de002168ebab442fae8f28059c42d0fefaa6c84c86c2d17046d78d849c2be66d",
+      "target": 233.26,
+      "targetState": "bull",
+      "targetLastFlip": "2026-08-07",
+      "targetLastFlipPrice": 272.87,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 50,
+        "factor": 6
+      },
+      "note": ""
+    },
+    {
+      "asset": "meta",
+      "assetClass": "stock",
+      "image": "34-META.jpg",
+      "imageSha256": "971dc544e013f70e7cf57e99f86e161151baf7bf432cb49dfd9ec7b0740c455f",
+      "target": 713.35,
+      "targetState": "bull",
+      "targetLastFlip": "2026-09-21",
+      "targetLastFlipPrice": 680.3,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 30,
+        "factor": 2
+      },
+      "note": ""
+    },
+    {
+      "asset": "bot",
+      "assetClass": "stock",
+      "image": "35-BOT.jpg",
+      "imageSha256": "af0e28b8c01e0a616a7ab8a6560de85b6cdafbe08e692f3daf7d17063a409453",
+      "target": 18.62,
+      "targetState": "bull",
+      "targetLastFlip": "2026-06-10",
+      "targetLastFlipPrice": 38.91,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "note": ""
+    },
+    {
+      "asset": "strc",
+      "assetClass": "stock",
+      "image": "36-STRC.jpg",
+      "imageSha256": "79187ba8628bcb43667802b1dc5b977a4b0a62478030bfe59e8e0de322ea46e5",
+      "target": 95.31,
+      "targetState": "bull",
+      "targetLastFlip": "2026-07-07",
+      "targetLastFlipPrice": 89,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 30,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "pltr",
+      "assetClass": "stock",
+      "image": "37-PLTR.jpg",
+      "imageSha256": "0b744a6047847e061382aabe9aac1fae9fec5e47b50187517be606b17f0bb762",
+      "target": 160.21,
+      "targetState": "bull",
+      "targetLastFlip": "2026-08-11",
+      "targetLastFlipPrice": 174.18,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": null,
+      "previous": {
+        "atrLength": 30,
+        "factor": 4
+      },
+      "note": ""
+    },
+    {
+      "asset": "gold",
+      "assetClass": "commodity",
+      "image": "38-GC-Gold-futures.jpg",
+      "imageSha256": "e74c178126185ac43008d47a49633ae62a8a39d2cf0a50117f4744e436e58382",
+      "target": 4658.1,
+      "targetState": "bear",
+      "targetLastFlip": "2026-10-04",
+      "targetLastFlipPrice": 4169.4,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 4169.4,
+        "high": 4198.9,
+        "low": 4152.3,
+        "close": 4167.7
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "note": "TradingView COMEX continuous futures show B-ADJ and settlement basis; Yahoo's continuous history may differ. Gold's printed last flip falls on Sunday October 4, unlike Yahoo's session-date bars."
+    },
+    {
+      "asset": "silver",
+      "assetClass": "commodity",
+      "image": "39-SI-Silver-futures.jpg",
+      "imageSha256": "ee1b27a9ed7a4aba7c925c562efe7462ef6bfdb5221a98f244155a5f48646786",
+      "target": 71.285,
+      "targetState": "bear",
+      "targetLastFlip": "2026-02-05",
+      "targetLastFlipPrice": 70.36,
+      "pendingDirection": null,
+      "pendingCount": null,
+      "partialCandle": {
+        "open": 60.7,
+        "high": 62.4,
+        "low": 60.645,
+        "close": 61.58
+      },
+      "previous": {
+        "atrLength": 15,
+        "factor": 3
+      },
+      "note": "TradingView COMEX continuous futures show B-ADJ and settlement basis; Yahoo's continuous history may differ. Gold's printed last flip falls on Sunday October 4, unlike Yahoo's session-date bars."
+    }
+  ]
+}

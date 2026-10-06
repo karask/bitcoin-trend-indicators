@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import { KK_OCTOBER5_EVIDENCE } from "../lib/kk-october5-evidence.ts";
 import { KK_OCTOBER3_EVIDENCE } from "../lib/kk-october3-evidence.ts";
 import { calculateIndicators, KK_SUPERTREND_PRESETS, KK_SUPERTREND_STOCK_PRESETS, type Candle, type IndicatorCalculationOptions } from "../lib/regimes.ts";
 import { buildResearch } from "../lib/research.ts";
@@ -12,7 +13,7 @@ const observations = JSON.parse(readFileSync(new URL("../research/kk-2026-10-03/
 const cutoff = Date.UTC(2026, 9, 3);
 
 test("October 4 review retains October 3 capture and completed October 2 reference dates", () => {
-  assert.equal(KK_CALIBRATION_VERSION, "2026-10-04");
+  assert.equal(KK_CALIBRATION_VERSION, "2026-10-06");
   assert.equal(observations.captureDate, "2026-10-03");
   assert.equal(KK_OCTOBER3_EVIDENCE.length, 37);
   assert.equal(new Set(KK_OCTOBER3_EVIDENCE.map(r => r.asset)).size, 37);
@@ -75,9 +76,10 @@ test("all 37 daily presets reproduce fixed evidence without repainting or changi
     assert.equal(latest.state, row.latestState);
     if (row.asset !== "xmr") assert.equal(row.latestValue, row.value);
     const status = calibrationStatus(options.asset, "1d", options.stock);
-    assert.match(status, /October 4/);
-    if (row.status === "approximate") assert.match(status, /October 3 chart/);
-    assert.match(kkCalibrationWarning(row.asset, "1d")!.label, row.status === "skipped" ? /Unscored/ : row.status === "unresolved" ? /Unreliable/ : /Low-confidence/);
+    assert.match(status, /October 6/);
+    assert.match(status, /October 5 chart/);
+    const latestEvidence = KK_OCTOBER5_EVIDENCE.find(r => r.asset === row.asset)!;
+    assert.match(kkCalibrationWarning(row.asset, "1d")!.label, latestEvidence.status === "unresolved" ? /Unreliable/ : /Low-confidence/);
 
     const research = buildResearch(candles, signals, "kk_supertrend", "1d", options);
     assert.equal(research.periodsPerYear, row.assetClass === "crypto" ? 365 : 252);

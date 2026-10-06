@@ -79,7 +79,7 @@ test("KK presets lead the indicator menu with fixed crypto parameters", () => {
   assert.equal(KK_SUPERTREND_ATR_LENGTH, 10);
   assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3, sui: 3, jup: 3, op: 3, bonk: 3, ada: 3, atom: 3, hype: 3, dot: 3, bnb: 3, zec: 3, avax: 3, ray: 3, vvv: 3, qnt: 3 });
   assert.equal(KK_SUPERTREND_EQUITY_FACTOR, 3);
-  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { dailyCryptoFamily: "10/3,15/2,15/3,15/4,15/5; QNT 50/4", dailyStockFamily: "10/3,15/3,15/4,30/2,30/4,50/6", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-10-04", dailyConfirmations: 5 });
+  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { dailyCryptoFamily: "10/3,15/2,15/3,15/4,15/5; QNT 50/4", dailyStockFamily: "10/3,15/3,15/4,30/2,30/4,50/6", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-10-06", dailyConfirmations: 5 });
   assert.deepEqual(KK_SUPERTREND_PRESETS.doge, { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.link, { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.xmr, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
