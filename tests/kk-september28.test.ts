@@ -70,8 +70,9 @@ test("all 16 weekly and five daily references replay without concealing failed f
     const asset = row.source === "coinbase" ? row.asset as "vvv" | "qnt" : undefined;
     const stock = asset ? undefined : row.asset as keyof typeof KK_SUPERTREND_STOCK_PRESETS;
     if (row.timeframe === "1w") {
-      assert.match(calibrationStatus(asset, row.timeframe, stock), /September 28/);
-      if (row.status === "unresolved") assert.match(calibrationStatus(asset, row.timeframe, stock), /unresolved/);
+      assert.match(calibrationStatus(asset, row.timeframe, stock), /^Weekly rule 15\/2 · /);
+      if (row.status === "unresolved") assert.match(calibrationStatus(asset, row.timeframe, stock), /screenshot unresolved/);
+      if (row.status === "timing-difference") assert.match(calibrationStatus(asset, row.timeframe, stock), /timing difference/);
     } else {
       assert.match(calibrationStatus(asset, row.timeframe, stock), /October [56]/, "New daily evidence takes precedence without rewriting archived results");
     }
@@ -112,5 +113,5 @@ test("daily selections consider reversal timing, preserve five-close confirmatio
     assert.equal(row.status, "unresolved");
     assert.notEqual(row.state, row.targetState);
   }
-  assert.match(calibrationStatus(undefined, "1w", "strc"), /Uncalibrated/);
+  assert.equal(calibrationStatus(undefined, "1w", "strc"), "Weekly rule 15/2 · applied without calibration · October 8");
 });

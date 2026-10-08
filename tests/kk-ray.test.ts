@@ -19,7 +19,7 @@ test("ray7 weekly screenshot fits the shared KK 15/2 family on Kraken USD", () =
   assert.equal(kk.lastFlip, Date.UTC(2026, 7, 31));
   assert.equal(kk.lastFlip! + 7 * 86_400_000, Date.UTC(2026, 8, 7));
   assert.equal(candles.at(-1)!.time, Date.UTC(2026, 8, 14));
-  assert.match(calibrationStatus("ray", "1w"), /September 22/);
+  assert.equal(calibrationStatus("ray", "1w"), "Weekly rule 15/2 · screenshot-checked · October 8");
   assert.match(calibrationStatus("ray", "1d"), /October [56]/);
 });
 

@@ -12,11 +12,10 @@ export function kkCalibrationWarning(asset: string, timeframe: Timeframe): { lab
   if (october?.status === "skipped") return { label: "Unscored current chart", detail: october.note };
   if (october) return { label: "Low-confidence KK calibration", detail: october.note };
   const reference = KK_SEPTEMBER28_EVIDENCE.find(row => row.asset === asset && row.timeframe === timeframe);
-  if (reference?.status === "unresolved") return { label: "Unreliable KK calibration", detail: reference.note };
+  if (reference?.status === "unresolved") return { label: "Unreliable KK calibration", detail: timeframe === "1w" ? `${reference.note} October 8: weekly now applies the 15/2 class rule; this short-history screenshot still does not match.` : reference.note };
   if (reference?.status === "timing-difference") return { label: "KK timing mismatch", detail: reference.note };
   if (reference && timeframe === "1d") return { label: "Low-confidence KK calibration", detail: reference.note };
-  if ((asset === "strc" && timeframe === "1w") || (timeframe === "1d" && ["vvv", "intc", "mrvl", "amd", "amzn", "meta", "pltr"].includes(asset))) {
-    return { label: "Uncalibrated KK", detail: "No reference chart was supplied for this timeframe. The default ATR 10 / multiplier 3 is unverified." };
-  }
+  // Assets added without a daily screenshot: weekly follows the rule, daily has no fitted preset.
+  if (timeframe === "1d") return { label: "Uncalibrated KK", detail: "No daily reference chart has been reviewed. The default ATR 10 / multiplier 3 is unverified; weekly uses the October 8 class rule." };
   return null;
 }

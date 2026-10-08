@@ -70,26 +70,26 @@ test("readiness has honest copy, not a neutral badge or invented test returns", 
   assert.match(html, /Not a neutral signal/);
 });
 
-test("calibration notebook exposes versioned evidence and uncalibrated equity labeling", () => {
+test("calibration notebook exposes versioned evidence and the rule-based weekly preset", () => {
   const sui = renderToStaticMarkup(<CalibrationPanel asset="sui" timeframe="1w" values={selected.values} />);
-  assert.match(sui, /Weekly screenshot checked · September 21/);
+  assert.match(sui, /Weekly rule 15\/2 · screenshot-checked · October 8/);
   assert.match(sui, /sui-weekly-supertrend\.png/);
   assert.match(sui, /Reference check passes/);
   assert.match(sui, /1\.0413/);
-  assert.match(sui, /market-cap rule/);
+  assert.match(sui, /Weekly rule · October 8/);
   assert.match(sui, /Open calibration notebook/);
   assert.doesNotMatch(sui, /<details[^>]*\bopen=/);
-  const stock = renderToStaticMarkup(<CalibrationPanel timeframe="1w" values={{ atrLength: 10, factor: 3 }} />);
-  assert.match(stock, /Uncalibrated equity preset/);
-  assert.match(stock, /identical to standard SuperTrend 10\/3/);
+  const stock = renderToStaticMarkup(<CalibrationPanel timeframe="1w" values={{ atrLength: 15, factor: 2 }} />);
+  assert.match(stock, /Weekly rule 15\/2 · applied without calibration/);
+  assert.match(stock, /applies ATR 15 \/ multiplier 2 without calibration/);
   assert.doesNotMatch(stock, /Reference check passes/);
   assert.doesNotMatch(stock, /<details[^>]*\bopen=/);
   const hype = renderToStaticMarkup(<CalibrationPanel asset="hype" timeframe="1w" values={{ atrLength: 15, factor: 2 }} />);
-  assert.match(hype, /Weekly screenshot checked · September 21/);
+  assert.match(hype, /Weekly rule 15\/2 · screenshot-checked/);
   assert.match(hype, /KuCoin USDT/);
   assert.match(hype, /shorter history/);
   const calibratedStock = renderToStaticMarkup(<CalibrationPanel stock="tsla" timeframe="1w" values={{ atrLength: 15, factor: 2 }} />);
-  assert.match(calibratedStock, /Weekly screenshot checked · September 28/);
+  assert.match(calibratedStock, /Weekly rule 15\/2 · screenshot-checked/);
   assert.match(calibratedStock, /383\.88/);
   assert.doesNotMatch(calibratedStock, /<details[^>]*\bopen=/);
   const spcx = renderToStaticMarkup(<CalibrationPanel stock="spcx" timeframe="1d" values={{ atrLength: 10, factor: 3 }} />);
@@ -104,8 +104,8 @@ test("September 28 notebook discloses timing differences and unresolved calibrat
   assert.match(intel, /live model still includes every completed week/);
   assert.match(intel, /Source chart at/);
   for (const timeframe of ["1d", "1w"] as const) {
-    const bot = renderToStaticMarkup(<CalibrationPanel stock="bot" timeframe={timeframe} values={{ atrLength: 10, factor: 3 }} />);
-    assert.match(bot, /calibration unresolved/);
+    const bot = renderToStaticMarkup(<CalibrationPanel stock="bot" timeframe={timeframe} values={timeframe === "1w" ? { atrLength: 15, factor: 2 } : { atrLength: 10, factor: 3 }} />);
+    assert.match(bot, timeframe === "1w" ? /screenshot unresolved/ : /calibration unresolved/);
     assert.doesNotMatch(bot, /Reference check passes/);
   }
   const quant = renderToStaticMarkup(<CalibrationPanel asset="qnt" timeframe="1d" values={{ atrLength: 50, factor: 4 }} />);
@@ -126,7 +126,8 @@ test("KK confidence warnings distinguish timeframes and never label other indica
   assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="link" timeframe="1d" />), /Unreliable KK calibration/);
   for (const timeframe of ["1d", "1w"] as const) assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="bot" timeframe={timeframe} />), /Unreliable KK calibration/);
   assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="intc" timeframe="1w" />), /KK timing mismatch/);
-  assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="strc" timeframe="1w" />), /Uncalibrated KK/);
+  // STRC has no weekly screenshot; the weekly class rule needs no warning.
+  assert.equal(renderToStaticMarkup(<KKCalibrationWarning asset="strc" timeframe="1w" />), "");
   assert.equal(renderToStaticMarkup(<KKCalibrationWarning asset="crcl" timeframe="1w" />), "");
   assert.equal(renderToStaticMarkup(<KKCalibrationWarning asset="bot" timeframe="1d" indicator="supertrend" />), "");
   const overview = renderToStaticMarkup(<AssetOverview />);
@@ -169,7 +170,7 @@ test("both labs keep distinct controls with accessible timeframes and non-pollin
 
 test("commodity lab is distinct, clearly labelled futures, with accessible controls and shared status UI", () => {
   const html = renderToStaticMarkup(<CommodityDashboard />);
-  for (const text of ["Gold futures", "Silver futures", "GC=F", "SI=F", "Futures, not spot", "USD per troy ounce", "Weekly screenshot checked · September 21", "Check for updates", "CONFIRMATION CLOCK", "DATA SNAPSHOT", "FUTURES QUOTE", "not exchange settlement"]) assert.ok(html.includes(text), text);
+  for (const text of ["Gold futures", "Silver futures", "GC=F", "SI=F", "Futures, not spot", "USD per troy ounce", "Weekly rule 15/2 · screenshot-checked · October 8", "Check for updates", "CONFIRMATION CLOCK", "DATA SNAPSHOT", "FUTURES QUOTE", "not exchange settlement"]) assert.ok(html.includes(text), text);
   assert.doesNotMatch(html, /NASDAQ|XNAS|Tiingo|Market source|Binance|Kraken|ADJUSTED CLOSE/);
   assert.match(html, /aria-pressed="true"/);
   assert.match(html, /href="\/commodities\/" aria-current="page"/);

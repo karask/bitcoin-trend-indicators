@@ -1,4 +1,4 @@
-import { calculateIndicators, KK_SUPERTREND_PRESETS, type Candle, type Timeframe } from "./regimes.ts";
+import { calculateIndicators, kkSupertrendPreset, KK_SUPERTREND_PRESETS, type Candle, type Timeframe } from "./regimes.ts";
 import type { AssetId } from "./markets.ts";
 import type { StockId } from "./stocks.ts";
 import type { CommodityId } from "./commodities.ts";
@@ -14,7 +14,7 @@ import { KK_OCTOBER5_EVIDENCE } from "./kk-october5-evidence.ts";
 import { KK_RAY_EVIDENCE } from "./kk-ray-evidence.ts";
 import { ETH_KK_CALIBRATION, SOL_KK_CALIBRATION, XMR_KK_CALIBRATION, DOGE_KK_CALIBRATION, LINK_KK_CALIBRATION, SUI_KK_CALIBRATION, type OhlcRow } from "./kk-reference-data.ts";
 
-export const KK_CALIBRATION_VERSION = "2026-10-06";
+export const KK_CALIBRATION_VERSION = "2026-10-08";
 type Reference = { id: string; asset: AssetId; label: string; venue: string; denomination: string; start: number; rows: readonly OhlcRow[]; target: number; state: "bull" | "bear"; flipCandle: number; tolerance: number; previous: { atrLength: number; factor: number }; reason: string };
 export const KK_REFERENCES: Reference[] = [
   { id: "eth-original", asset: "eth", label: "Original ETH weekly reference", venue: "Bitfinex", denomination: "USD", start: Date.UTC(2025, 0, 20), rows: ETH_KK_CALIBRATION, target: 1709.38, state: "bull", flipCandle: Date.UTC(2026, 7, 17), tolerance: .01, previous: { atrLength: 10, factor: 3 }, reason: "Multiplier 3 → 2, ATR unchanged: a closer trail reproduces the bullish state and bearish reversal level." },
@@ -26,33 +26,41 @@ export const KK_REFERENCES: Reference[] = [
   { id: "sui-weekly", asset: "sui", label: "sui-weekly-supertrend.png", venue: "Coinbase", denomination: "USD", start: Date.UTC(2024, 4, 13), rows: SUI_KK_CALIBRATION, target: 1.0413, state: "bear", flipCandle: Date.UTC(2025, 9, 27), tolerance: .0002, previous: { atrLength: 10, factor: 3 }, reason: "ATR 10 → 15 and multiplier 3 → 2: fits the bearish regime, reversal threshold, and historical flip timing." },
 ];
 
+/** Any archived weekly screenshot for this identity, whatever preset was current at its review. */
+export function hasWeeklyScreenshot(id: string): boolean {
+  return KK_REFERENCES.some(row => row.asset === id)
+    || KK_BATCH_EVIDENCE.some(row => row.asset === id && row.timeframe === "1w" && !row.ignored)
+    || [...KK_SEPTEMBER17_EVIDENCE, ...KK_SEPTEMBER21_EVIDENCE, ...KK_RAY_EVIDENCE].some(row => row.asset === id)
+    || [...KK_ARCHIVE_EVIDENCE, ...KK_SEPTEMBER28_EVIDENCE, ...KK_FOLLOWUP_EVIDENCE].some(row => row.asset === id && row.timeframe === "1w" && !("status" in row && row.status === "skipped"));
+}
+
+function weeklyRuleStatus(asset: AssetId | undefined, stock?: StockId, commodity?: CommodityId) {
+  // Without a crypto asset, the caller is an equity context (matching the daily fallback).
+  const preset = kkSupertrendPreset("1w", { market: commodity ? "commodity" : stock || !asset ? "equity" : "crypto", asset, stock, commodity });
+  const id = commodity ?? stock ?? asset ?? "";
+  const video = KK_SEPTEMBER28_EVIDENCE.find(row => row.asset === id && row.timeframe === "1w");
+  const evidence = video?.status === "unresolved" ? "screenshot unresolved" : video?.status === "timing-difference" ? "screenshot timing difference" : hasWeeklyScreenshot(id) ? "screenshot-checked" : "applied without calibration";
+  return `Weekly rule ${preset.atrLength}/${preset.factor} · ${evidence} · October 8`;
+}
+
 export function calibrationStatus(asset: AssetId | undefined, timeframe: Timeframe, stock?: StockId, commodity?: CommodityId) {
-  const latestDaily = timeframe === "1d" ? KK_OCTOBER5_EVIDENCE.find(row => row.asset === (commodity ?? stock ?? asset)) : undefined;
+  if (timeframe === "1w") return weeklyRuleStatus(asset, stock, commodity);
+  const id = commodity ?? stock ?? asset;
+  const latestDaily = KK_OCTOBER5_EVIDENCE.find(row => row.asset === id);
   if (latestDaily) return `${latestDaily.status === "unresolved" ? "Daily screenshot reviewed · calibration unresolved" : "Approximate daily screenshot fit"} · October 5 chart · reviewed October 6`;
-  const october = timeframe === "1d" ? KK_OCTOBER3_EVIDENCE.find(row => row.asset === (commodity ?? stock ?? asset)) : undefined;
+  const october = KK_OCTOBER3_EVIDENCE.find(row => row.asset === id);
   if (october) {
     if (october.status === "skipped") return "Daily chart unscored · latest flip unreadable · reviewed October 4";
     if (october.status === "unresolved") return "Daily screenshot reviewed · calibration unresolved · October 4";
     return "Approximate daily screenshot fit · October 3 chart · reviewed October 4";
   }
-  const video = KK_SEPTEMBER28_EVIDENCE.find(row => row.asset === (commodity ?? stock ?? asset) && row.timeframe === timeframe);
-  if (video) {
-    if (video.status === "unresolved") return `${timeframe === "1w" ? "Weekly" : "Daily"} screenshot reviewed · calibration unresolved · September 28`;
-    if (video.status === "timing-difference") return "Weekly screenshot reviewed · timing difference · September 28";
-    return timeframe === "1d" ? "Approximate daily screenshot fit · September 28" : "Weekly screenshot checked · September 28";
-  }
-  if (timeframe === "1d" && KK_DAILY_EVIDENCE.some(row => row.asset === (commodity ?? stock ?? asset))) return "Approximate daily family fit · September 22";
-  const archive = KK_ARCHIVE_EVIDENCE.find(row => row.asset === (commodity ?? stock ?? asset) && row.timeframe === timeframe);
-  if (archive?.status === "daily-unresolved") return "Daily screenshot reviewed · calibration unresolved";
-  if (archive?.status === "weekly-retained") return "Weekly screenshot checked · September 21";
-  if (timeframe === "1w" && KK_SEPTEMBER21_EVIDENCE.some(row => row.asset === (stock ?? asset))) return "Weekly screenshot checked · September 21";
-  if (timeframe === "1w" && KK_SEPTEMBER17_EVIDENCE.some(row => row.asset === asset)) return "Weekly screenshot checked · September 17";
-  if (timeframe === "1w" && KK_RAY_EVIDENCE.some(row => row.asset === asset)) return "Weekly screenshot checked · September 22";
-  if (KK_FOLLOWUP_EVIDENCE.some(row => row.asset === (commodity ?? stock ?? asset) && row.timeframe === timeframe)) return "Approximate weekly screenshot fit";
+  const video = KK_SEPTEMBER28_EVIDENCE.find(row => row.asset === id && row.timeframe === "1d");
+  if (video) return video.status === "unresolved" ? "Daily screenshot reviewed · calibration unresolved · September 28" : "Approximate daily screenshot fit · September 28";
+  if (KK_DAILY_EVIDENCE.some(row => row.asset === id)) return "Approximate daily family fit · September 22";
+  if (KK_ARCHIVE_EVIDENCE.find(row => row.asset === id && row.timeframe === "1d")?.status === "daily-unresolved") return "Daily screenshot reviewed · calibration unresolved";
   if (commodity) return "Uncalibrated futures preset";
-  if (KK_BATCH_EVIDENCE.some(row => row.asset === (stock ?? asset) && row.timeframe === timeframe && !row.ignored)) return `Screenshot-calibrated ${timeframe === "1w" ? "weekly" : "daily"} preset`;
+  if (KK_BATCH_EVIDENCE.some(row => row.asset === (stock ?? asset) && row.timeframe === "1d" && !row.ignored)) return "Screenshot-calibrated daily preset";
   if (!asset) return "Uncalibrated equity preset";
-  if (timeframe === "1w") return asset === "btc" ? "Legacy screenshot preset · reference not archived" : KK_REFERENCES.some(reference => reference.asset === asset) ? "Screenshot-calibrated weekly preset" : "Uncalibrated weekly preset";
   return ["btc", "eth", "sol"].includes(asset) ? "Inherited preset · no separate daily reference" : "Uncalibrated daily preset";
 }
 

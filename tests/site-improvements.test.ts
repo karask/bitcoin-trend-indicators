@@ -169,8 +169,8 @@ test("every archived KK reference passes without changing any preset", () => {
   for (const reference of KK_REFERENCES) assert.equal(evaluateReference(reference).matched, true, reference.id);
   assert.match(calibrationStatus("sui", "1d"), /October 5/);
   assert.match(calibrationStatus("sol", "1d"), /October 5/);
-  assert.match(calibrationStatus(undefined, "1w"), /Uncalibrated equity/);
-  assert.match(calibrationStatus("btc", "1w"), /Weekly screenshot checked/);
+  assert.equal(calibrationStatus(undefined, "1w"), "Weekly rule 15/2 · applied without calibration · October 8");
+  assert.equal(calibrationStatus("btc", "1w"), "Weekly rule 10/3 · screenshot-checked · October 8");
 });
 
 test("freshness checks expected candles, not the retrieval timestamp", () => {

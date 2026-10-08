@@ -6,7 +6,7 @@ import test from "node:test";
 import { DatabaseSync } from "node:sqlite";
 import { ensureMarketSchema } from "../db/index.ts";
 import { ASSETS, MIN_SOURCE_CANDLES, SOURCES, aggregateWeekly, marketDefinition, parseSpotPrice, resolveSourceForAsset, sourcesForAsset, validateCandles, type MarketDataset } from "../lib/market-data.ts";
-import { backtest, buyAndHold, calculateIndicators, INDICATOR_SPECS, KK_SUPERTREND_ATR_LENGTH, KK_SUPERTREND_EQUITY_FACTOR, KK_SUPERTREND_FACTORS, KK_SUPERTREND_PRESETS, type Candle, type SignalSnapshot } from "../lib/regimes.ts";
+import { backtest, buyAndHold, calculateIndicators, INDICATOR_SPECS, KK_SUPERTREND_PRESETS, KK_WEEKLY_RULES, type Candle, type SignalSnapshot } from "../lib/regimes.ts";
 import { completedBoundary, confirmationClock } from "../lib/confirmation-clock.ts";
 import { nearestCandleIndex, periodLabel, priceAtY, resolveInitialTheme } from "../lib/chart-interaction.ts";
 
@@ -76,10 +76,8 @@ test("KK presets lead the indicator menu with fixed crypto parameters", () => {
   const kkIndex = INDICATOR_SPECS.findIndex(spec => spec.id === "kk_supertrend");
   assert.equal(kkIndex, 0);
   for (const timeframe of ["1d", "1w"] as const) assert.deepEqual(INDICATOR_SPECS.filter(spec => spec.supportedTimeframes.includes(timeframe)).slice(0, 6).map(spec => spec.id), ["kk_supertrend", "kk_ema_ribbon", "kk_200_ma", "kk_50_200_ema", "support_band", "supertrend"]);
-  assert.equal(KK_SUPERTREND_ATR_LENGTH, 10);
-  assert.deepEqual(KK_SUPERTREND_FACTORS, { btc: 3, eth: 2, sol: 2, doge: 3, link: 3, xmr: 3, sui: 3, jup: 3, op: 3, bonk: 3, ada: 3, atom: 3, hype: 3, dot: 3, bnb: 3, zec: 3, avax: 3, ray: 3, vvv: 3, qnt: 3 });
-  assert.equal(KK_SUPERTREND_EQUITY_FACTOR, 3);
-  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { dailyCryptoFamily: "10/3,15/2,15/3,15/4,15/5; QNT 50/4", dailyStockFamily: "10/3,15/3,15/4,30/2,30/4,50/6", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-10-06", dailyConfirmations: 5 });
+  assert.deepEqual(Object.fromEntries(Object.entries(KK_SUPERTREND_PRESETS).map(([id, preset]) => [id, preset["1w"]])), Object.fromEntries(ASSETS.map(asset => [asset.id, asset.id === "btc" ? KK_WEEKLY_RULES.bitcoin : ["eth", "sol", "bnb"].includes(asset.id) ? KK_WEEKLY_RULES.largeCapCrypto : KK_WEEKLY_RULES.standard])));
+  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { weeklyRule: "BTC 10/3; crypto ≥$50B 10/2; all other crypto, stocks and commodities 15/2", weeklyRevision: "2026-10-08", dailyCryptoFamily: "10/3,15/2,15/3,15/4,15/5; QNT 50/4", dailyStockFamily: "10/3,15/3,15/4,30/2,30/4,50/6", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-10-06", dailyConfirmations: 5 });
   assert.deepEqual(KK_SUPERTREND_PRESETS.doge, { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.link, { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.xmr, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
@@ -230,7 +228,7 @@ test("daily SUI and OP use reviewed KK 15/2 while standard SuperTrend retains it
   }
 });
 
-test("equity market context runs every applicable indicator and uses the uncalibrated factor-three KK preset", () => {
+test("equity market context runs every applicable indicator; unidentified stocks use weekly 15/2 and daily 10/3", () => {
   const candles = history();
   for (const timeframe of ["1d", "1w"] as const) {
     const results = calculateIndicators(candles, timeframe, { market: "equity" });
@@ -239,11 +237,12 @@ test("equity market context runs every applicable indicator and uses the uncalib
     assert.ok(results.every(result => result.states.length === candles.length), timeframe);
     const standard = results.find(item => item.id === "supertrend")!;
     const kk = results.find(item => item.id === "kk_supertrend")!;
-    assert.equal(kk.values.factor, 3, timeframe);
-    if (timeframe === "1w") assert.deepEqual(kk.states, standard.states, timeframe);
-    else assert.equal(kk.confirmation!.required,5);
-    assert.deepEqual(kk.overlays[0].points, standard.overlays[0].points, timeframe);
-    if (timeframe === "1w") assert.deepEqual({ state: kk.state, flip: kk.lastFlip, bull: kk.bullTrigger, bear: kk.bearTrigger }, { state: standard.state, flip: standard.lastFlip, bull: standard.bullTrigger, bear: standard.bearTrigger }, timeframe);
+    if (timeframe === "1w") assert.deepEqual([kk.values.atrLength, kk.values.factor], [15, 2]);
+    else {
+      assert.deepEqual([kk.values.atrLength, kk.values.factor], [10, 3]);
+      assert.equal(kk.confirmation!.required,5);
+      assert.deepEqual(kk.overlays[0].points, standard.overlays[0].points, timeframe);
+    }
   }
   const mayer = calculateIndicators(candles, "1d", { market: "equity" }).find(item => item.id === "mayer")!;
   assert.ok(Number.isFinite(mayer.values.multiple));

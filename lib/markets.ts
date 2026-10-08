@@ -6,6 +6,8 @@ export interface AssetDefinition {
   label: string;
   symbol: string;
   defaultSource: SourceId;
+  /** Circulating market cap of at least about $50B; selects the large-cap weekly KK Supertrend rule. */
+  largeCap?: boolean;
 }
 
 export interface SourceDefinition {
@@ -31,8 +33,8 @@ export function minimumSourceCandles(asset: AssetId, timeframe: "1d" | "1w"): nu
 
 export const ASSETS: AssetDefinition[] = [
   { id: "btc", label: "Bitcoin", symbol: "BTC", defaultSource: "bitstamp" },
-  { id: "eth", label: "Ethereum", symbol: "ETH", defaultSource: "bitstamp" },
-  { id: "sol", label: "Solana", symbol: "SOL", defaultSource: "coinbase" },
+  { id: "eth", label: "Ethereum", symbol: "ETH", defaultSource: "bitstamp", largeCap: true },
+  { id: "sol", label: "Solana", symbol: "SOL", defaultSource: "coinbase", largeCap: true },
   { id: "doge", label: "Dogecoin", symbol: "DOGE", defaultSource: "coinbase" },
   { id: "link", label: "Chainlink", symbol: "LINK", defaultSource: "coinbase" },
   { id: "xmr", label: "Monero", symbol: "XMR", defaultSource: "kraken" },
@@ -44,7 +46,7 @@ export const ASSETS: AssetDefinition[] = [
   { id: "atom", label: "Cosmos", symbol: "ATOM", defaultSource: "coinbase" },
   { id: "hype", label: "Hyperliquid", symbol: "HYPE", defaultSource: "kraken" },
   { id: "dot", label: "Polkadot", symbol: "DOT", defaultSource: "coinbase" },
-  { id: "bnb", label: "BNB", symbol: "BNB", defaultSource: "binance" },
+  { id: "bnb", label: "BNB", symbol: "BNB", defaultSource: "binance", largeCap: true },
   { id: "zec", label: "Zcash", symbol: "ZEC", defaultSource: "binance" },
   { id: "avax", label: "Avalanche", symbol: "AVAX", defaultSource: "coinbase" },
   { id: "ray", label: "Raydium", symbol: "RAY", defaultSource: "kraken" },

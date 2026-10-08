@@ -7,15 +7,20 @@ import { marketDefinition } from "../lib/markets.ts";
 import { buildResearch } from "../lib/research.ts";
 
 const fixtures = JSON.parse(readFileSync(new URL("../research/kk-2026-09-17/fixtures.json", import.meta.url), "utf8")) as {asset:string;candles:Candle[]}[];
-test("six weekly screenshots retain shared presets and reproduce archived completed levels", () => {
+test("six weekly screenshots reproduce archived completed levels under reviewed presets and the weekly rule", () => {
   for(const row of KK_SEPTEMBER17_EVIDENCE) {
     const candles=fixtures.find(f=>f.asset===row.asset)!.candles;
     assert.equal(candles.at(-1)!.time,Date.UTC(2026,8,7));
-    const kk=calculateIndicators(candles,"1w",{asset:row.asset,indicatorIds:["kk_supertrend"]})[0];
+    const reviewed={kkSupertrendAtrLength:row.atrLength,kkSupertrendFactor:row.factor};
+    const kk=calculateIndicators(candles,"1w",{asset:row.asset,indicatorIds:["kk_supertrend"],...reviewed})[0];
     assert.equal(kk.state,row.targetState);
     assert.ok(Math.abs(kk.values.supertrend!-row.value)<1e-9);
     assert.ok(Math.abs(kk.values.supertrend!/row.target-1)<0.005);
-    const prefix=calculateIndicators(candles.slice(0,-1),"1w",{asset:row.asset,indicatorIds:["kk_supertrend"]})[0];
+    // The October 8 weekly rule (BNB moved to large-cap 10/2) still reproduces the screenshot.
+    const rule=calculateIndicators(candles,"1w",{asset:row.asset,indicatorIds:["kk_supertrend"]})[0];
+    assert.equal(rule.state,row.targetState);
+    assert.ok(Math.abs(rule.values.supertrend!/row.target-1)<0.01,row.asset);
+    const prefix=calculateIndicators(candles.slice(0,-1),"1w",{asset:row.asset,indicatorIds:["kk_supertrend"],...reviewed})[0];
     assert.deepEqual(prefix.states,kk.states.slice(0,-1));
   }
 });

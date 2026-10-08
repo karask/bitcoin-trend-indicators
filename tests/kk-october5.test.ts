@@ -9,7 +9,7 @@ import { kkCalibrationWarning } from "../lib/kk-reliability.ts";
 
 const cutoff=Date.UTC(2026,9,5);
 test("October 5 chart tables distinguish dates, readable LINK and NVDA's contradictory counter",()=>{
-  assert.equal(KK_CALIBRATION_VERSION,"2026-10-06");
+  assert.equal(KK_CALIBRATION_VERSION,"2026-10-08");
   assert.equal(KK_OCTOBER5_EVIDENCE.length,39);
   assert.equal(new Set(KK_OCTOBER5_EVIDENCE.map(r=>r.asset)).size,39);
   assert.deepEqual(["crypto","stock","commodity"].map(c=>KK_OCTOBER5_EVIDENCE.filter(r=>r.assetClass===c).length),[20,17,2]);

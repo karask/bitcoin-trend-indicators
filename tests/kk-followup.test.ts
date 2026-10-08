@@ -16,7 +16,7 @@ test("three weekly screenshots reproduce approximate levels, states and document
     assert.equal(candles.length,row.candles);
     assert.equal(candles.at(-1)!.time,row.through);
     assert.ok(row.through < Date.UTC(2026,8,7), "Current partial week is excluded");
-    const kk = calculateIndicators(candles,"1w",{...options,indicatorIds:["kk_supertrend"]})[0];
+    const kk = calculateIndicators(candles,"1w",{...options,indicatorIds:["kk_supertrend"],kkSupertrendAtrLength:row.preset.atrLength,kkSupertrendFactor:row.preset.factor})[0];
     assert.equal(kk.values.supertrend,row.value);
     assert.equal(kk.state,row.targetState);
     assert.equal(kk.lastFlip,row.lastFlip);
@@ -29,6 +29,11 @@ test("three weekly screenshots reproduce approximate levels, states and document
   }
   const silver = calculateIndicators(candlesFor("silver"),"1w",{market:"commodity",commodity:"silver",indicatorIds:["kk_supertrend"],kkSupertrendAtrLength:7,kkSupertrendFactor:3})[0];
   assert.equal(silver.lastFlip,Date.UTC(2026,2,16),"Rejected numerical fit has the wrong reversal month");
+  // October 8 rule: gold moves from 10/2 to 15/2 and stays within 0.3% on these Yahoo futures.
+  const gold = calculateIndicators(candlesFor("gold"),"1w",{...optionsFor("gold"),indicatorIds:["kk_supertrend"]})[0];
+  assert.deepEqual([gold.values.atrLength,gold.values.factor],[15,2]);
+  assert.equal(gold.state,"bull");
+  assert.ok(Math.abs(gold.values.supertrend!/4123.7-1) < .003);
 });
 
 test("shared presets accept documented deviations and preserve reference regimes and timing", () => {
@@ -52,15 +57,15 @@ test("weekly references remain valid alongside daily presets; generic futures ba
     }
   }
   assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.tsla["1w"],{atrLength:15,factor:2});
-  assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.spcx["1w"],{atrLength:10,factor:3});
+  assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.spcx["1w"],{atrLength:15,factor:2});
   for(const asset of ["gold","silver"] as const) {
     assert.deepEqual(KK_SUPERTREND_COMMODITY_PRESETS[asset]["1d"],{atrLength:15,factor:asset==="gold"?4:3});
-    assert.equal(calibrationStatus(undefined,"1w",undefined,asset),"Weekly screenshot checked · September 21");
+    assert.equal(calibrationStatus(undefined,"1w",undefined,asset),"Weekly rule 15/2 · screenshot-checked · October 8");
     assert.match(calibrationStatus(undefined,"1d",undefined,asset),/calibration unresolved.*October 6/);
   }
   assert.match(calibrationStatus(undefined,"1d","bmnr"),/October [56]/);
   const defaultKk=calculateIndicators(candlesFor("gold"),"1w",{market:"commodity",indicatorIds:["kk_supertrend"]})[0];
-  assert.deepEqual([defaultKk.values.atrLength,defaultKk.values.factor],[10,3]);
+  assert.deepEqual([defaultKk.values.atrLength,defaultKk.values.factor],[15,2]);
 });
 
 test("calibrated KK stays non-repainting with next-open execution, costs, benchmark and honest short-history research", () => {

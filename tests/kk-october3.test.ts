@@ -13,7 +13,7 @@ const observations = JSON.parse(readFileSync(new URL("../research/kk-2026-10-03/
 const cutoff = Date.UTC(2026, 9, 3);
 
 test("October 4 review retains October 3 capture and completed October 2 reference dates", () => {
-  assert.equal(KK_CALIBRATION_VERSION, "2026-10-06");
+  assert.equal(KK_CALIBRATION_VERSION, "2026-10-08");
   assert.equal(observations.captureDate, "2026-10-03");
   assert.equal(KK_OCTOBER3_EVIDENCE.length, 37);
   assert.equal(new Set(KK_OCTOBER3_EVIDENCE.map(r => r.asset)).size, 37);

@@ -12,12 +12,16 @@ const fixture=(asset:string):Candle[]=>JSON.parse(readFileSync(new URL(`../resea
 test("nine weekly screenshots preserve the established family and explicit MSTR timing difference",()=>{
  for(const row of KK_SEPTEMBER21_EVIDENCE){
   const candles=fixture(row.asset),options=row.asset==="mstr"?{market:"equity" as const,stock:"mstr" as const}:{asset:row.asset};
-  const kk=calculateIndicators(candles,"1w",{...options,indicatorIds:["kk_supertrend"]})[0];
+  const reviewed={kkSupertrendAtrLength:row.atrLength,kkSupertrendFactor:row.factor};
+  const kk=calculateIndicators(candles,"1w",{...options,indicatorIds:["kk_supertrend"],...reviewed})[0];
   assert.equal(candles.at(-1)!.time,Date.UTC(2026,8,14));
   assert.equal(kk.values.supertrend,row.value);
   assert.equal(kk.state,row.targetState);
   assert.ok(Math.abs(kk.values.supertrend!/row.target-1)<(row.asset==="mstr"?.034:.005));
-  const prefix=calculateIndicators(candles.slice(0,-1),"1w",{...options,indicatorIds:["kk_supertrend"]})[0];
+  const rule=calculateIndicators(candles,"1w",{...options,indicatorIds:["kk_supertrend"]})[0];
+  assert.equal(rule.state,row.targetState);
+  assert.ok(Math.abs(rule.values.supertrend!/row.target-1)<(row.asset==="mstr"?.034:.01),row.asset);
+  const prefix=calculateIndicators(candles.slice(0,-1),"1w",{...options,indicatorIds:["kk_supertrend"],...reviewed})[0];
   assert.deepEqual(prefix.states,kk.states.slice(0,-1));
   if(row.asset==="mstr")assert.ok(Math.abs(prefix.values.supertrend!-90.66)<.005,"Screenshot matches the preceding completed week; do not force the current level");
   if(row.asset==="avax")assert.equal(kk.lastFlip,Date.UTC(2026,8,14));
@@ -26,7 +30,7 @@ test("nine weekly screenshots preserve the established family and explicit MSTR 
 test("AVAX and MSTR have separated providers, weekly calibration and normal research execution",()=>{
  assert.equal(marketDefinition("avax","coinbase").providerSymbol,"AVAX-USD");
  assert.equal(stockDefinition("MSTR").exchange,"NASDAQ");
- assert.match(calibrationStatus(undefined,"1w","mstr"),/September 21/);
+ assert.equal(calibrationStatus(undefined,"1w","mstr"),"Weekly rule 15/2 · screenshot-checked · October 8");
  assert.match(calibrationStatus(undefined,"1d","mstr"),/October [56]/);
  for(const asset of ["avax","mstr"] as const){
   const candles=fixture(asset),options=asset==="mstr"?{market:"equity" as const,stock:asset}:{asset};
