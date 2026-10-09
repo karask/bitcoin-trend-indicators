@@ -4,6 +4,7 @@ import { useState } from "react";
 import { formatDate, formatPct, formatPrice } from "../lib/display";
 import type { EquityPoint } from "../lib/regimes";
 import type { Research } from "../lib/research";
+import type { FlipDirectionStats, FlipScorecard } from "../lib/flip-scorecard";
 
 function PerformanceChart({ strategy, benchmark }: { strategy: EquityPoint[]; benchmark: EquityPoint[] }) {
   const max = Math.max(1, ...strategy.map(point => point.equity), ...benchmark.map(point => point.equity));
@@ -20,6 +21,33 @@ function PerformanceChart({ strategy, benchmark }: { strategy: EquityPoint[]; be
   </svg><figcaption><span className="bull-text">━ Selected strategy</span><span>┄ Buy and hold</span><span>Open-to-open valuation · costs included · no forced final sale</span></figcaption></figure>;
 }
 
+function FlipSide({ stats, unit }: { stats: FlipDirectionStats; unit: string }) {
+  const buy = stats.direction === "bull";
+  return <div><h3>{buy ? "Buy flips" : "Sell flips"} · {stats.flips}</h3><dl>
+    {stats.horizons.map(h => <div key={h.bars}><dt>Right after {h.bars} {unit}</dt><dd>{formatPct(h.hitRate)} · median {formatPct(h.medianReturn)} ({h.scored})</dd></div>)}
+    <div><dt>{buy ? "Bull regimes ending higher" : "Bear regimes ending lower"}</dt><dd>{formatPct(stats.winRate)} · median {formatPct(stats.medianRegimeReturn)} ({stats.completed})</dd></div>
+    <div><dt>Reversed within {unit === "weeks" ? 4 : 10} {unit}</dt><dd>{formatPct(stats.whipsawRate)}</dd></div>
+    <div><dt>{buy ? "Entry above recent low" : "Exit below recent high"}</dt><dd>{formatPct(stats.medianLagPct)} · {stats.medianLagBars ?? "—"} {unit} after it</dd></div>
+  </dl></div>;
+}
+
+function FlipScorecardCard({ cards, selectedId, unit }: { cards: FlipScorecard[]; selectedId?: string; unit: string }) {
+  const middle = (stats: FlipDirectionStats) => stats.horizons[stats.horizons.length >> 1];
+  const selected = cards.find(card => card.indicatorId === selectedId);
+  const bars = cards[0] ? middle(cards[0].bull).bars : null;
+  return <article className="research-card wide"><div className="section-heading"><div><p className="eyebrow">FLIP SCORECARD · SAME DATES</p><h2>How good are the buy and sell flips?</h2></div><span className="assumption-pill">next open · {bars} {unit}</span></div>
+    <p>A buy flip is right when the price is higher {bars} {unit} after the next open; a sell flip is right when it is lower. Ranked by the average of both. Lag shows how far price had already moved from the recent low (buys) or high (sells) when the flip executed.</p>
+    {cards.length ? <div className="scorecard-scroll"><div className="backtest-table scorecard-table"><div className="backtest-head"><span>Model</span><span>Buys</span><span>Buys right</span><span>After buy</span><span>Sells</span><span>Sells right</span><span>After sell</span><span>Quick reversals</span><span>Buy lag</span></div>{cards.map(card => {
+      const buy = middle(card.bull), sell = middle(card.bear);
+      const flips = card.bull.flips + card.bear.flips;
+      const quick = flips ? ((card.bull.whipsawRate ?? 0) * card.bull.flips + (card.bear.whipsawRate ?? 0) * card.bear.flips) / flips : null;
+      return <div className={`backtest-row ${card.indicatorId === selectedId ? "selected" : ""}`} key={card.indicatorId}><strong>{card.displayName}</strong><span data-label="Buys">{card.bull.flips}</span><b data-label="Buys right">{formatPct(buy.hitRate)}</b><span data-label="After buy">{formatPct(buy.medianReturn)}</span><span data-label="Sells">{card.bear.flips}</span><b data-label="Sells right">{formatPct(sell.hitRate)}</b><span data-label="After sell">{formatPct(sell.medianReturn)}</span><span data-label="Quick reversals">{formatPct(quick)}</span><span data-label="Buy lag">{formatPct(card.bull.medianLagPct)}</span></div>;
+    })}</div></div> : <p>Insufficient history to score flips on a shared window.</p>}
+    {selected && <details className="execution-details"><summary>{selected.displayName} · all horizons and completed regimes</summary><div className="scorecard-sides"><FlipSide stats={selected.bull} unit={unit} /><FlipSide stats={selected.bear} unit={unit} /></div><p>Counts in brackets are the flips with enough later history to score. Medians are price changes from the execution open, before costs.</p></details>}
+    <p>Descriptive history for this market and venue only; past hit rates do not forecast future flips.</p>
+  </article>;
+}
+
 export default function ResearchPanel({ research, selectedName, denomination = "USD" }: { research: Research; selectedName: string; denomination?: string }) {
   const [showAllTrades, setShowAllTrades] = useState(false);
   const { detail, benchmark } = research;
@@ -34,6 +62,7 @@ export default function ResearchPanel({ research, selectedName, denomination = "
       {!!research.excluded.length && <p>Not ranked: {research.excluded.join(", ")} — insufficient or discontinuous signal history.</p>}
       <p>Descriptive single-source results, not a performance forecast or a universal ranking. Changing the asset or timeframe can change the shared evaluation start.</p>
     </article>
+    <FlipScorecardCard cards={research.scorecards} selectedId={detail?.summary.indicatorId} unit={research.periodsPerYear === 52 ? "weeks" : research.periodsPerYear === 252 ? "sessions" : "days"} />
     {!detail || !benchmark ? <article className="research-card wide"><h2>{selectedName}</h2><p>No allocation backtest: the selected indicator either has insufficient history or is supporting context, not a regime model.</p></article> : <>
       <article className="research-card"><p className="eyebrow">COST SENSITIVITY · {selectedName.toUpperCase()}</p><h2>5 / 15 / 30 bps turnover</h2><dl>{research.sensitivity.map(row => <div key={row.costBps}><dt>{row.costBps} bps</dt><dd>{formatPct(row.result?.cagr)} CAGR · {row.result?.calmar?.toFixed(2) ?? "—"} Calmar</dd></div>)}</dl><p>0.05% / 0.15% / 0.30% per unit of exposure changed. Every test starts in cash and charges its initial entry. Bull: 100%; neutral: 50%; bear: 0%. No cash yield, shorts, or leverage.</p></article>
       <article className="research-card"><p className="eyebrow">BUY-AND-HOLD COMPARISON · SAME DATES</p><h2>{selectedName} vs holding</h2><dl><div><dt>Strategy / holding CAGR</dt><dd>{formatPct(detail.summary.cagr)} / {formatPct(benchmark.summary.cagr)}</dd></div><div><dt>Strategy / holding max DD</dt><dd>{formatPct(detail.summary.maxDrawdown)} / {formatPct(benchmark.summary.maxDrawdown)}</dd></div><div><dt>Strategy / holding total return</dt><dd>{formatPct(detail.summary.totalReturn)} / {formatPct(benchmark.summary.totalReturn)}</dd></div></dl><p>Identical next-open measurement window, price basis, annualization, and 15-bps cost model.</p></article>

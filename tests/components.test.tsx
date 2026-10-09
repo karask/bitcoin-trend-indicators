@@ -143,6 +143,9 @@ test("research renders matched dates, benchmark, costs, curves, ledger and full 
   for (const text of ["COMMON DATES", "15 bps", "5 / 15 / 30", "BUY-AND-HOLD", "Growth and drawdown", "Execution ledger", "ROLLING FOUR-YEAR", "overlap"]) assert.ok(html.includes(text), text);
   assert.match(html, /data-label="CAGR"/);
   assert.match(html, /<details/);
+  for (const text of ["FLIP SCORECARD", "How good are the buy and sell flips?", "13 weeks", "all horizons and completed regimes"]) assert.ok(html.includes(text), text);
+  assert.match(html, /data-label="Buys right"/);
+  assert.equal((html.match(/data-label="Buys right"/g) ?? []).length, research.scorecards.length);
   const unavailable = buildResearch(candles.slice(0, 5), calculateIndicators(candles.slice(0, 5), "1w"), "ichimoku", "1w");
   const empty = renderToStaticMarkup(<ResearchPanel research={unavailable} selectedName="Ichimoku" />);
   assert.match(empty, /No allocation backtest/);

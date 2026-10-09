@@ -1,4 +1,5 @@
 import { backtest, backtestDetail, type AnnualizationOptions, type Candle, type SignalSnapshot, type Timeframe } from "./regimes.ts";
+import { flipScorecard, scorecardRank } from "./flip-scorecard.ts";
 
 /** All eligible regime models use identical open-to-open intervals after warmup. */
 export function researchWindow(candles: Candle[], signals: SignalSnapshot[]) {
@@ -20,6 +21,8 @@ export function buildResearch(candles: Candle[], signals: SignalSnapshot[], sele
   const detail = selected ? backtestDetail(candles, selected, timeframe, 15, settings) : null;
   const benchmark = benchmarkSignal ? backtestDetail(candles, benchmarkSignal, timeframe, 15, settings) : null;
   const backtests = window ? backtest(candles, window.comparable, timeframe, 15, settings) : [];
+  // Same models and evaluation start as the backtests; ranked by mean buy/sell hit rate at the middle horizon.
+  const scorecards = window ? window.comparable.map(signal => flipScorecard(candles, signal, timeframe, window.startIndex)).sort((a, b) => (scorecardRank(b) ?? -1) - (scorecardRank(a) ?? -1)) : [];
   const sensitivity = [5, 15, 30].map(costBps => ({ costBps, result: selected ? backtestDetail(candles, selected, timeframe, costBps, settings)?.summary ?? null : null }));
   const rolling = [];
   const windowSize = periodsPerYear * 4;
@@ -32,7 +35,7 @@ export function buildResearch(candles: Candle[], signals: SignalSnapshot[], sele
     }
   }
   return {
-    periodsPerYear, backtests, sensitivity, detail, benchmark, rolling,
+    periodsPerYear, backtests, scorecards, sensitivity, detail, benchmark, rolling,
     start: window ? candles[window.startIndex].time : null,
     end: window ? candles[window.endIndex].time : null,
     observations: window ? window.endIndex - window.startIndex : 0,

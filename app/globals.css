@@ -166,3 +166,7 @@ button:disabled { opacity:.5; cursor:not-allowed; }
 .kk-reliability-badge { display:block; width:fit-content; margin-top:6px; padding:4px 7px; border:1px solid var(--amber); border-radius:5px; background:var(--amber-soft); color:var(--ink); font-size:.75rem; font-weight:700; line-height:1.4; white-space:normal; }
 .kk-reliability-warning { margin:14px 0; }
 .kk-reliability-warning p { margin:6px 0 0; }
+
+@media(min-width:621px){ .scorecard-scroll { overflow-x:auto; }.scorecard-table { min-width:760px; }.scorecard-table .backtest-head,.scorecard-table .backtest-row { grid-template-columns:1.4fr repeat(8,.6fr); } }
+.scorecard-sides { display:grid; grid-template-columns:1fr 1fr; gap:20px; }.scorecard-sides h3 { margin:6px 0 0; font-size:.875rem; }
+@media(max-width:620px){ .scorecard-sides { grid-template-columns:1fr; } }
