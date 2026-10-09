@@ -23,9 +23,11 @@ test("TSLA.jpeg weekly reference confirms the existing KK 15/2 preset without ch
   assert.ok(candles.at(-1)!.time < Date.UTC(2026, 8, 7));
 });
 
-test("September reference audit reproduces nineteen resolved charts within documented precision", () => {
+test("September reference audit reproduces nineteen resolved weekly charts within documented precision", () => {
   assert.equal(fixtures.length,20);
-  assert.equal(KK_BATCH_EVIDENCE.filter(r=>!r.ignored).length,19);
+  // The ignored SPCX daily chart was retired with the other September daily screenshots.
+  assert.equal(KK_BATCH_EVIDENCE.length,19);
+  assert.ok(KK_BATCH_EVIDENCE.every(r=>r.timeframe==="1w"&&!r.ignored));
   for(const row of KK_BATCH_EVIDENCE) {
     const candles=candlesFor(fixtures.find(f=>f.asset===row.asset)!);
     assert.equal(candles.length,row.candles);
@@ -35,7 +37,7 @@ test("September reference audit reproduces nineteen resolved charts within docum
       if(i)assert.equal(candles[i].time-candles[i-1].time,7*86_400_000);
       assert.ok(candles[i].time<Date.UTC(2026,8,7),"No partial screenshot candle in confirmed fixtures");
     }
-    const result=calculateIndicators(candles,row.timeframe,{...optionsFor(row.asset),indicatorIds:["kk_supertrend"],...(row.timeframe==="1d"?{kkSupertrendLegacySingleClose:true,kkSupertrendAtrLength:row.preset.atrLength,kkSupertrendFactor:row.preset.factor}:{})})[0];
+    const result=calculateIndicators(candles,row.timeframe,{...optionsFor(row.asset),indicatorIds:["kk_supertrend"],kkSupertrendAtrLength:row.preset.atrLength,kkSupertrendFactor:row.preset.factor})[0];
     assert.equal(result.values.supertrend,row.value,row.asset);
     assert.equal(result.lastFlip,row.lastFlip,row.asset);
     assert.equal(result.state,row.state,row.asset);
@@ -49,7 +51,7 @@ test("September reference audit reproduces nineteen resolved charts within docum
 });
 
 test("calibration changes KK only and keeps stock identity outside crypto",()=>{
-  for(const fixture of fixtures) {
+  for(const fixture of fixtures.filter(f=>KK_BATCH_EVIDENCE.some(r=>r.asset===f.asset))) {
     const candles=candlesFor(fixture), options=optionsFor(fixture.asset);
     const previous=KK_BATCH_EVIDENCE.find(r=>r.asset===fixture.asset)!.previous;
     const before=calculateIndicators(candles,fixture.timeframe,{...options,kkSupertrendAtrLength:previous.atrLength,kkSupertrendFactor:previous.factor});

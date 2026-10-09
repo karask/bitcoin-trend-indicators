@@ -93,7 +93,8 @@ test("calibration notebook exposes versioned evidence and the rule-based weekly 
   assert.match(calibratedStock, /383\.88/);
   assert.doesNotMatch(calibratedStock, /<details[^>]*\bopen=/);
   const spcx = renderToStaticMarkup(<CalibrationPanel stock="spcx" timeframe="1d" values={{ atrLength: 10, factor: 3 }} />);
-  assert.match(spcx, /Ignored reference/);
+  assert.match(spcx, /September daily screenshots were retired/);
+  assert.doesNotMatch(spcx, /Ignored reference/);
   assert.doesNotMatch(spcx, /Archived reference check passes/);
 });
 
@@ -111,9 +112,12 @@ test("September 28 notebook discloses timing differences and unresolved calibrat
   const quant = renderToStaticMarkup(<CalibrationPanel asset="qnt" timeframe="1d" values={{ atrLength: 50, factor: 4 }} />);
   assert.match(quant, /calibration unresolved/);
   assert.match(quant, /reviewed October 6/);
-  assert.match(quant, /Archived video reference/);
-  assert.match(quant, /Coinbase USD proxy/);
-  assert.match(quant, /not a confirmation match/);
+  assert.match(quant, /September daily screenshots were retired/);
+  assert.doesNotMatch(quant, /Video reference · September 28/);
+  const quantWeekly = renderToStaticMarkup(<CalibrationPanel asset="qnt" timeframe="1w" values={{ atrLength: 15, factor: 2 }} />);
+  assert.match(quantWeekly, /Video reference · September 28 · weekly/);
+  assert.match(quantWeekly, /Coinbase USD proxy/);
+  assert.doesNotMatch(quantWeekly, /September daily screenshots were retired/);
 });
 
 test("KK confidence warnings distinguish timeframes and never label other indicators", () => {

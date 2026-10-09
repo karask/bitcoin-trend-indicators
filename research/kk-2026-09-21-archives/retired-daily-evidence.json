@@ -1,0 +1,871 @@
+{
+  "reason": "Retired 2026-10-09 at Kostas's request: September daily charts disagree with the October daily charts (only 8-9 of 22-25 assets share a setting), while October 3 and 5 agree for 32 of 36. Daily presets were left unchanged. No longer used by the app, warnings or tests.",
+  "archiveDaily": [
+    {
+      "asset": "btc",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 9.48 PM.jpeg",
+      "imageSha256": "b35332316d7bf058684707217a73a79b44541b7d0610af5df4f6beaeb9960b5b",
+      "target": 76922,
+      "targetState": "bull",
+      "pending": null,
+      "source": "bitstamp",
+      "through": "2026-09-20",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 74552.80859349303,
+      "state": "bull",
+      "errorPct": -3.079991948346339,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "eth",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 9.50 PM.jpeg",
+      "imageSha256": "ad161f33d943aadd1e59c4a498bd1937d11a363a5f1606c09af6d54d418c095a",
+      "target": 2275.9,
+      "targetState": "bull",
+      "pending": null,
+      "source": "bitstamp",
+      "through": "2026-09-20",
+      "atrLength": 10,
+      "factor": 2,
+      "value": 2425.9704495135734,
+      "state": "bull",
+      "errorPct": 6.593894701593794,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "sol",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 9.53 PM.jpeg",
+      "imageSha256": "9d79abf4f0aa19eb406266858e534b64b3b9d905e47daf6067e920c1388eea7b",
+      "target": 101.04,
+      "targetState": "bull",
+      "pending": null,
+      "source": "coinbase",
+      "through": "2026-09-20",
+      "atrLength": 10,
+      "factor": 2,
+      "value": 101.44671856262352,
+      "state": "bull",
+      "errorPct": 0.40253222745794126,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "doge",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 9.56 PM.jpeg",
+      "imageSha256": "b3de5fcdfabd860f0f4b26d1c4eded777b06bd561c542b12c51782895e2895a8",
+      "target": 0.06573,
+      "targetState": "bull",
+      "pending": null,
+      "source": "coinbase",
+      "through": "2026-09-20",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 0.07529312308187677,
+      "state": "bull",
+      "errorPct": 14.549099470373928,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "link",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 9.57 PM.jpeg",
+      "imageSha256": "4dc643d6d1db90296bfc56d5b67d58b02f99c9c64e15833b53ba76605049ac59",
+      "target": 10.751,
+      "targetState": "bull",
+      "pending": null,
+      "source": "coinbase",
+      "through": "2026-09-20",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 12.850469426567855,
+      "state": "bear",
+      "errorPct": 19.528131583739714,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "xmr",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 9.59 PM.jpeg",
+      "imageSha256": "eb57d7c9bbb0972715cb21f5119e79af59c1c714d300674cc4259c990d409bf4",
+      "target": 450.51,
+      "targetState": "bull",
+      "pending": null,
+      "source": "kraken",
+      "through": "2026-09-20",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 448.9575376707363,
+      "state": "bull",
+      "errorPct": -0.3446010808336508,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "sui",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.01 PM.jpeg",
+      "imageSha256": "c2a27253c280cf49b616007fb939b98e1366e95239d2fdd349635aefccb957ec",
+      "target": 0.7885,
+      "targetState": "bear",
+      "pending": 4,
+      "source": "coinbase",
+      "through": "2026-09-20",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 0.6879550676340889,
+      "state": "bull",
+      "errorPct": -12.751418182106677,
+      "status": "daily-unresolved",
+      "note": "Bullish 4/5 is pending, not a confirmed bullish regime. Current implementation has no five-bar confirmation counter."
+    },
+    {
+      "asset": "jup",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.06 PM.jpeg",
+      "imageSha256": "4d804ca228071a7a2d24c8a762b8fcc1933eda4fc4b624753a71efb3a965f2c7",
+      "target": 0.23513,
+      "targetState": "bull",
+      "pending": null,
+      "source": "bitstamp",
+      "through": "2026-09-20",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 0.22812225061499933,
+      "state": "bull",
+      "errorPct": -2.9803722983033576,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "op",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.08 PM.jpeg",
+      "imageSha256": "4981c1ee149a0a7a387e3a9ecda7f53bafa374a4b2783ce46456e06519f11c81",
+      "target": 0.104231,
+      "targetState": "bear",
+      "pending": 4,
+      "source": "bitstamp",
+      "through": "2026-09-20",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 0.0968667100618698,
+      "state": "bull",
+      "errorPct": -7.065354777494415,
+      "status": "daily-unresolved",
+      "note": "Bullish 4/5 is pending, not a confirmed bullish regime. Current implementation has no five-bar confirmation counter."
+    },
+    {
+      "asset": "bonk",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.12 PM.jpeg",
+      "imageSha256": "a8f402d0cd6e0232f1434582a9eb90044ba3f76fbd154991247b8e3f67bae722",
+      "target": 3.22e-06,
+      "targetState": "bear",
+      "pending": 1,
+      "source": "coinbase",
+      "through": "2026-09-20",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 3.2676928999756336e-06,
+      "state": "bear",
+      "errorPct": 1.4811459619761935,
+      "status": "daily-unresolved",
+      "note": "Bullish 1/5 is pending, not a confirmed bullish regime. Current implementation has no five-bar confirmation counter."
+    },
+    {
+      "asset": "ada",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.14 PM.jpeg",
+      "imageSha256": "d719978bd6d8fe09dba52673c1bf1aff39d47b059f6447a66a18d4f120077db9",
+      "target": 0.16664,
+      "targetState": "bull",
+      "pending": null,
+      "source": "coinbase",
+      "through": "2026-09-20",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 0.18705519708651303,
+      "state": "bull",
+      "errorPct": 12.25107842445572,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "atom",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.15 PM.jpeg",
+      "imageSha256": "ca0a8a025e2a44a0928bf69e7a010259dba887c47ca953cd5f4d196daa70829d",
+      "target": 1.4559,
+      "targetState": "bull",
+      "pending": null,
+      "source": "kraken",
+      "through": "2026-09-20",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 1.80072591055563,
+      "state": "bear",
+      "errorPct": 23.68472495058933,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "hype",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.17 PM.jpeg",
+      "imageSha256": "3d004725061767b33c4736c9d7689d77f524ea4268bf57c5da0df01dff12cb6c",
+      "target": 71.48,
+      "targetState": "bull",
+      "pending": null,
+      "source": "coinbase",
+      "through": "2026-09-20",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 77.58966632917802,
+      "state": "bull",
+      "errorPct": 8.547378748150546,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "dot",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.19 PM.jpeg",
+      "imageSha256": "1d15faf2bf5591a021488b965a2012eebf60398c491c53347bdcb7de6a01834c",
+      "target": 0.7976,
+      "targetState": "bull",
+      "pending": null,
+      "source": "coinbase",
+      "through": "2026-09-20",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 0.9256651241162333,
+      "state": "bull",
+      "errorPct": 16.056309442857742,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "bnb",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.21 PM.jpeg",
+      "imageSha256": "22ec437822504f581bd5ec9fedab417669b27f72a2408a76ac6286b621543049",
+      "target": 677.44,
+      "targetState": "bull",
+      "pending": null,
+      "source": "binance",
+      "through": "2026-09-20",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 694.537266758094,
+      "state": "bull",
+      "errorPct": 2.5238053197469856,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "zec",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.23 PM.jpeg",
+      "imageSha256": "d200c895489a58b8e151ebcf571654d819f01c12fef3d45e0a78b30bfe93e4cb",
+      "target": 1206.85,
+      "targetState": "bull",
+      "pending": null,
+      "source": "coinbase",
+      "through": "2026-09-20",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 1116.2502821506187,
+      "state": "bull",
+      "errorPct": -7.507123325134135,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "tsla",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.25 PM.jpeg",
+      "imageSha256": "c64d9cc5777bc96ceef29465125ccbd282afa7c006a29b99d8496e38128d0a43",
+      "target": 290.35,
+      "targetState": "bull",
+      "pending": null,
+      "source": "yahoo",
+      "through": "2026-09-18",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 330.76157621216805,
+      "state": "bull",
+      "errorPct": 13.918228418173939,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "googl",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.27 PM.jpeg",
+      "imageSha256": "0faab05716aeea52a1175cdb3da41031d6c71d2c4e4ac2b093cdf0a9955e9fd8",
+      "target": 370.44,
+      "targetState": "bear",
+      "pending": null,
+      "source": "yahoo",
+      "through": "2026-09-18",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 353.0335037302347,
+      "state": "bear",
+      "errorPct": -4.698870605162853,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "nvda",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.28 PM.jpeg",
+      "imageSha256": "e5e1301acd3f896298dbacab45963dfce83ba746c3ff19fa829ef6faaea00b70",
+      "target": 225.58,
+      "targetState": "bear",
+      "pending": 1,
+      "source": "yahoo",
+      "through": "2026-09-18",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 209.77825712331793,
+      "state": "bull",
+      "errorPct": -7.004939656300246,
+      "status": "daily-unresolved",
+      "note": "Bullish 1/5 is pending, not a confirmed bullish regime. Current implementation has no five-bar confirmation counter."
+    },
+    {
+      "asset": "spcx",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.30 PM.jpeg",
+      "imageSha256": "dfeab0c85cdffa76a6b1c7d9f51843a560365bedd0b640505a58bb6bbabd1d0c",
+      "target": 115.88,
+      "targetState": "bull",
+      "pending": null,
+      "source": "yahoo",
+      "through": "2026-09-18",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 133.09963978317234,
+      "state": "bull",
+      "errorPct": 14.859889353790411,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "mu",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.31 PM.jpeg",
+      "imageSha256": "8c736906d31e6521e7cb19014047eee189107c36f016a9de342543ccb2aa6ec6",
+      "target": 987.92,
+      "targetState": "bear",
+      "pending": 2,
+      "source": "yahoo",
+      "through": "2026-09-18",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 1044.5146243882841,
+      "state": "bear",
+      "errorPct": 5.728664708507192,
+      "status": "daily-unresolved",
+      "note": "Bullish 2/5 is pending, not a confirmed bullish regime. Current implementation has no five-bar confirmation counter."
+    },
+    {
+      "asset": "sndk",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.33 PM.jpeg",
+      "imageSha256": "78829d457b1f98b072deb832ca35acc1660b9e1d29c6f902dcadf86653d86462",
+      "target": 1205.8,
+      "targetState": "bull",
+      "pending": null,
+      "source": "yahoo",
+      "through": "2026-09-18",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 1430.1045353235304,
+      "state": "bull",
+      "errorPct": 18.602134294537276,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "bmnr",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.34 PM.jpeg",
+      "imageSha256": "86b893f4b0024fbeff51a8dfdf7bda5f448c9e96dfea7461fbfa627dc131aee9",
+      "target": 21.51,
+      "targetState": "bull",
+      "pending": null,
+      "source": "yahoo",
+      "through": "2026-09-18",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 21.656221607078344,
+      "state": "bull",
+      "errorPct": 0.6797843192856368,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "gold",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.35 PM.jpeg",
+      "imageSha256": "f9e513c82907bdf9a4430165ae3d79def5e4f4fcf89d9fdaf3d93f840d9a2b1b",
+      "target": 4316.7,
+      "targetState": "bull",
+      "pending": null,
+      "source": "yahoo",
+      "through": "2026-09-18",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 4655.092377976165,
+      "state": "bear",
+      "errorPct": 7.839145133462266,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    },
+    {
+      "asset": "silver",
+      "timeframe": "1d",
+      "filename": "Image 21-9-26 at 10.37 PM.jpeg",
+      "imageSha256": "5ad3b661393a3c53204a6e8cd0f274831214a5a54d8ea00566ad2f2044ac75e5",
+      "target": 71.286,
+      "targetState": "bear",
+      "pending": null,
+      "source": "yahoo",
+      "through": "2026-09-18",
+      "atrLength": 10,
+      "factor": 3,
+      "value": 68.76814855868733,
+      "state": "bear",
+      "errorPct": -3.532041973617084,
+      "status": "daily-unresolved",
+      "note": "Current and closest presets are comparisons, not accepted daily calibrations. A single level cannot establish the different trailing/confirmation rules."
+    }
+  ],
+  "dailyFamilySeptember22": [
+    {
+      "asset": "btc",
+      "source": "bitstamp",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 2
+      },
+      "target": 76922,
+      "targetState": "bull",
+      "value": 76868.64369923831,
+      "state": "bull",
+      "errorPct": -0.06936416208846996,
+      "pending": null
+    },
+    {
+      "asset": "eth",
+      "source": "bitstamp",
+      "previous": {
+        "atrLength": 10,
+        "factor": 2
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "target": 2275.9,
+      "targetState": "bull",
+      "value": 2230.3535798165003,
+      "state": "bull",
+      "errorPct": -2.0012487448262117,
+      "pending": null
+    },
+    {
+      "asset": "sol",
+      "source": "coinbase",
+      "previous": {
+        "atrLength": 10,
+        "factor": 2
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 2
+      },
+      "target": 101.04,
+      "targetState": "bull",
+      "value": 101.93435523697795,
+      "state": "bull",
+      "errorPct": 0.8851496803027992,
+      "pending": null
+    },
+    {
+      "asset": "doge",
+      "source": "coinbase",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 5
+      },
+      "target": 0.06573,
+      "targetState": "bull",
+      "value": 0.06996640522827885,
+      "state": "bull",
+      "errorPct": 6.445162373769753,
+      "pending": null
+    },
+    {
+      "asset": "link",
+      "source": "coinbase",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "target": 10.751,
+      "targetState": "bull",
+      "value": 10.458645301089284,
+      "state": "bull",
+      "errorPct": -2.7193256339941962,
+      "pending": null
+    },
+    {
+      "asset": "xmr",
+      "source": "kraken",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 3
+      },
+      "target": 450.51,
+      "targetState": "bull",
+      "value": 456.0113941666108,
+      "state": "bull",
+      "errorPct": 1.2211480692128518,
+      "pending": null
+    },
+    {
+      "asset": "jup",
+      "source": "bitstamp",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 3
+      },
+      "target": 0.23513,
+      "targetState": "bull",
+      "value": 0.23290949650221748,
+      "state": "bull",
+      "errorPct": -0.9443726865064117,
+      "pending": null
+    },
+    {
+      "asset": "bonk",
+      "source": "coinbase",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 3
+      },
+      "target": 3.22e-06,
+      "targetState": "bear",
+      "value": 3.2920877759735572e-06,
+      "state": "bear",
+      "errorPct": 2.238750806632206,
+      "pending": 1
+    },
+    {
+      "asset": "ada",
+      "source": "coinbase",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 5
+      },
+      "target": 0.16664,
+      "targetState": "bull",
+      "value": 0.16123773581322642,
+      "state": "bull",
+      "errorPct": -3.2418772124181428,
+      "pending": null
+    },
+    {
+      "asset": "atom",
+      "source": "kraken",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 5
+      },
+      "target": 1.4559,
+      "targetState": "bull",
+      "value": 1.4373026783707918,
+      "state": "bull",
+      "errorPct": -1.2773763053237297,
+      "pending": null
+    },
+    {
+      "asset": "hype",
+      "source": "coinbase",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "target": 71.48,
+      "targetState": "bull",
+      "value": 73.21526394801928,
+      "state": "bull",
+      "errorPct": 2.427621639646449,
+      "pending": null
+    },
+    {
+      "asset": "dot",
+      "source": "coinbase",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 5
+      },
+      "target": 0.7976,
+      "targetState": "bull",
+      "value": 0.8228882970338682,
+      "state": "bull",
+      "errorPct": 3.1705487755602224,
+      "pending": null
+    },
+    {
+      "asset": "bnb",
+      "source": "binance",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "target": 677.44,
+      "targetState": "bull",
+      "value": 672.3354425116561,
+      "state": "bull",
+      "errorPct": -0.7535069509246539,
+      "pending": null
+    },
+    {
+      "asset": "zec",
+      "source": "coinbase",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 3
+      },
+      "target": 1206.85,
+      "targetState": "bull",
+      "value": 1162.9974709925066,
+      "state": "bull",
+      "errorPct": -3.6336354151297434,
+      "pending": null
+    },
+    {
+      "asset": "tsla",
+      "source": "yahoo",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 30,
+        "factor": 4
+      },
+      "target": 290.35,
+      "targetState": "bull",
+      "value": 315.0537995056741,
+      "state": "bull",
+      "errorPct": 8.508282936343736,
+      "pending": null
+    },
+    {
+      "asset": "googl",
+      "source": "yahoo",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 3
+      },
+      "target": 370.44,
+      "targetState": "bear",
+      "value": 354.7173320775427,
+      "state": "bear",
+      "errorPct": -4.244322406451051,
+      "pending": null
+    },
+    {
+      "asset": "nvda",
+      "source": "yahoo",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 30,
+        "factor": 2
+      },
+      "target": 225.58,
+      "targetState": "bear",
+      "value": 225.0750303144508,
+      "state": "bear",
+      "errorPct": -0.22385392568011753,
+      "pending": 1
+    },
+    {
+      "asset": "spcx",
+      "source": "yahoo",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "target": 115.88,
+      "targetState": "bull",
+      "value": 123.91106449294345,
+      "state": "bull",
+      "errorPct": 6.930500943168316,
+      "pending": null
+    },
+    {
+      "asset": "mu",
+      "source": "yahoo",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 3
+      },
+      "target": 987.92,
+      "targetState": "bear",
+      "value": 1043.1344860718873,
+      "state": "bear",
+      "errorPct": 5.588963283655279,
+      "pending": 2
+    },
+    {
+      "asset": "sndk",
+      "source": "yahoo",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 30,
+        "factor": 4
+      },
+      "target": 1205.8,
+      "targetState": "bull",
+      "value": 1205.552734240801,
+      "state": "bull",
+      "errorPct": -0.020506365831718387,
+      "pending": null
+    },
+    {
+      "asset": "bmnr",
+      "source": "yahoo",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 3
+      },
+      "target": 21.51,
+      "targetState": "bull",
+      "value": 21.912308687727446,
+      "state": "bull",
+      "errorPct": 1.8703332762782132,
+      "pending": null
+    },
+    {
+      "asset": "gold",
+      "source": "yahoo",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 4
+      },
+      "target": 4316.7,
+      "targetState": "bull",
+      "value": 4294.496257051667,
+      "state": "bull",
+      "errorPct": -0.5143684515563351,
+      "pending": null
+    },
+    {
+      "asset": "silver",
+      "source": "yahoo",
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 15,
+        "factor": 3
+      },
+      "target": 71.286,
+      "targetState": "bear",
+      "value": 68.82882158873511,
+      "state": "bear",
+      "errorPct": -3.446929847746949,
+      "pending": null
+    }
+  ]
+}

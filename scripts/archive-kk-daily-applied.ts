@@ -1,4 +1,6 @@
-/** Archive approved daily families against the original completed-candle fixtures. */
+/** Archive approved daily families against the original completed-candle fixtures.
+ * Retired 2026-10-09: these September daily records now live in
+ * research/kk-2026-09-21-archives/retired-daily-evidence.json. Do not re-run into lib/. */
 import fs from "node:fs";
 import { calculateIndicators, KK_SUPERTREND_PRESETS, KK_SUPERTREND_STOCK_PRESETS, KK_SUPERTREND_COMMODITY_PRESETS, type Candle } from "../lib/regimes.ts";
 const root = "research/kk-2026-09-21-archives";

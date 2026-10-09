@@ -1,0 +1,33 @@
+{
+  "reason": "Retired 2026-10-09 at Kostas's request: September daily charts disagree with the October daily charts (only 8-9 of 22-25 assets share a setting), while October 3 and 5 agree for 32 of 36. Daily presets were left unchanged. No longer used by the app, warnings or tests.",
+  "batchDaily": [
+    {
+      "asset": "spcx",
+      "market": "equity",
+      "timeframe": "1d",
+      "filename": "Image 8-9-26 at 7.26 PM.jpeg",
+      "venue": "NASDAQ",
+      "target": 142.76,
+      "targetState": "bear",
+      "tolerance": 0.0051,
+      "previous": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "preset": {
+        "atrLength": 10,
+        "factor": 3
+      },
+      "value": 128.4434071422401,
+      "state": "bull",
+      "previousValue": 128.4434071422401,
+      "previousState": "bull",
+      "lastFlip": 1786320000000,
+      "through": 1788480000000,
+      "candles": 59,
+      "atrRatio": 0.046505801503662125,
+      "ignored": true,
+      "note": "Ignored at the user’s request on 9 September. No calibration or confirmation-rule change."
+    }
+  ]
+}

@@ -85,34 +85,6 @@ export const KK_BATCH_EVIDENCE = [
     "note": null
   },
   {
-    "asset": "spcx",
-    "market": "equity",
-    "timeframe": "1d",
-    "filename": "Image 8-9-26 at 7.26 PM.jpeg",
-    "venue": "NASDAQ",
-    "target": 142.76,
-    "targetState": "bear",
-    "tolerance": 0.0051,
-    "previous": {
-      "atrLength": 10,
-      "factor": 3
-    },
-    "preset": {
-      "atrLength": 10,
-      "factor": 3
-    },
-    "value": 128.4434071422401,
-    "state": "bull",
-    "previousValue": 128.4434071422401,
-    "previousState": "bull",
-    "lastFlip": 1786320000000,
-    "through": 1788480000000,
-    "candles": 59,
-    "atrRatio": 0.046505801503662125,
-    "ignored": true,
-    "note": "Ignored at the user’s request on 9 September. No calibration or confirmation-rule change."
-  },
-  {
     "asset": "mu",
     "market": "equity",
     "timeframe": "1w",
@@ -232,7 +204,7 @@ export const KK_BATCH_EVIDENCE = [
     "venue": "Binance USDT",
     "target": 0.1552,
     "targetState": "bear",
-    "tolerance": 0.000051,
+    "tolerance": 5.1e-05,
     "previous": {
       "atrLength": 10,
       "factor": 3
@@ -260,7 +232,7 @@ export const KK_BATCH_EVIDENCE = [
     "venue": "Binance USDT",
     "target": 0.1476,
     "targetState": "bull",
-    "tolerance": 0.000051,
+    "tolerance": 5.1e-05,
     "previous": {
       "atrLength": 10,
       "factor": 3
@@ -286,9 +258,9 @@ export const KK_BATCH_EVIDENCE = [
     "timeframe": "1w",
     "filename": "Image 8-9-26 at 8.02 PM.jpeg",
     "venue": "Binance USDT",
-    "target": 0.00000506,
+    "target": 5.06e-06,
     "targetState": "bear",
-    "tolerance": 5.1e-9,
+    "tolerance": 5.1e-09,
     "previous": {
       "atrLength": 10,
       "factor": 3
@@ -297,9 +269,9 @@ export const KK_BATCH_EVIDENCE = [
       "atrLength": 15,
       "factor": 2
     },
-    "value": 0.000005055497492659654,
+    "value": 5.055497492659654e-06,
     "state": "bear",
-    "previousValue": 0.000005290980023549608,
+    "previousValue": 5.290980023549608e-06,
     "previousState": "bear",
     "lastFlip": 1758499200000,
     "through": 1788134400000,
@@ -316,7 +288,7 @@ export const KK_BATCH_EVIDENCE = [
     "venue": "Binance USDT",
     "target": 0.2573,
     "targetState": "bear",
-    "tolerance": 0.000051,
+    "tolerance": 5.1e-05,
     "previous": {
       "atrLength": 10,
       "factor": 3
@@ -540,7 +512,7 @@ export const KK_BATCH_EVIDENCE = [
     "venue": "Coinbase USD",
     "target": 1.0413,
     "targetState": "bear",
-    "tolerance": 0.000051,
+    "tolerance": 5.1e-05,
     "previous": {
       "atrLength": 15,
       "factor": 2

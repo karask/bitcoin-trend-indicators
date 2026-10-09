@@ -7,7 +7,6 @@ import { KK_SEPTEMBER17_EVIDENCE } from "./kk-september17-evidence.ts";
 import { KK_SEPTEMBER21_EVIDENCE } from "./kk-september21-evidence.ts";
 import { KK_BATCH_EVIDENCE } from "./kk-batch-evidence.ts";
 import { KK_ARCHIVE_EVIDENCE } from "./kk-archive-evidence.ts";
-import { KK_DAILY_EVIDENCE } from "./kk-daily-evidence.ts";
 import { KK_SEPTEMBER28_EVIDENCE } from "./kk-september28-evidence.ts";
 import { KK_OCTOBER3_EVIDENCE } from "./kk-october3-evidence.ts";
 import { KK_OCTOBER5_EVIDENCE } from "./kk-october5-evidence.ts";
@@ -54,12 +53,8 @@ export function calibrationStatus(asset: AssetId | undefined, timeframe: Timefra
     if (october.status === "unresolved") return "Daily screenshot reviewed · calibration unresolved · October 4";
     return "Approximate daily screenshot fit · October 3 chart · reviewed October 4";
   }
-  const video = KK_SEPTEMBER28_EVIDENCE.find(row => row.asset === id && row.timeframe === "1d");
-  if (video) return video.status === "unresolved" ? "Daily screenshot reviewed · calibration unresolved · September 28" : "Approximate daily screenshot fit · September 28";
-  if (KK_DAILY_EVIDENCE.some(row => row.asset === id)) return "Approximate daily family fit · September 22";
-  if (KK_ARCHIVE_EVIDENCE.find(row => row.asset === id && row.timeframe === "1d")?.status === "daily-unresolved") return "Daily screenshot reviewed · calibration unresolved";
+  // September daily screenshots were retired on October 9; only October daily charts remain as evidence.
   if (commodity) return "Uncalibrated futures preset";
-  if (KK_BATCH_EVIDENCE.some(row => row.asset === (stock ?? asset) && row.timeframe === "1d" && !row.ignored)) return "Screenshot-calibrated daily preset";
   if (!asset) return "Uncalibrated equity preset";
   return ["btc", "eth", "sol"].includes(asset) ? "Inherited preset · no separate daily reference" : "Uncalibrated daily preset";
 }

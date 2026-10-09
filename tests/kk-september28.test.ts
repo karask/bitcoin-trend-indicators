@@ -41,11 +41,13 @@ test("September 28 catalog routes all eleven additions to verified providers", a
   assert.equal(ASSETS.length, 20);
 });
 
-test("all 16 weekly and five daily references replay without concealing failed fits", () => {
-  assert.equal(KK_SEPTEMBER28_EVIDENCE.filter(r => r.timeframe === "1w").length, 16);
-  assert.equal(KK_SEPTEMBER28_EVIDENCE.filter(r => r.timeframe === "1d").length, 5);
+test("all 16 weekly references replay without concealing failed fits; daily ones are retired", () => {
+  assert.equal(KK_SEPTEMBER28_EVIDENCE.length, 16);
+  assert.ok(KK_SEPTEMBER28_EVIDENCE.every(r => r.timeframe === "1w"));
+  const retired = JSON.parse(readFileSync(new URL("../research/kk-2026-09-28/retired-daily-evidence.json", import.meta.url), "utf8"));
+  assert.deepEqual(retired.videoDaily.map((r: { asset: string }) => r.asset), ["strc", "crcl", "bot", "spcx", "qnt"]);
   for (const row of KK_SEPTEMBER28_EVIDENCE) {
-    const f = fixture(row.asset), candles = row.timeframe === "1w" ? f.weekly : f.daily;
+    const f = fixture(row.asset), candles = f.weekly;
     assert.ok(Object.values(f.quality).every(n => n === 0));
     assert.ok(candles.every(c => c.complete && c.time < cutoff));
     const options = { ...optionsFor(row.asset), indicatorIds: ["kk_supertrend"], kkSupertrendAtrLength: row.preset.atrLength, kkSupertrendFactor: row.preset.factor };
@@ -69,13 +71,9 @@ test("all 16 weekly and five daily references replay without concealing failed f
     }
     const asset = row.source === "coinbase" ? row.asset as "vvv" | "qnt" : undefined;
     const stock = asset ? undefined : row.asset as keyof typeof KK_SUPERTREND_STOCK_PRESETS;
-    if (row.timeframe === "1w") {
-      assert.match(calibrationStatus(asset, row.timeframe, stock), /^Weekly rule 15\/2 · /);
-      if (row.status === "unresolved") assert.match(calibrationStatus(asset, row.timeframe, stock), /screenshot unresolved/);
-      if (row.status === "timing-difference") assert.match(calibrationStatus(asset, row.timeframe, stock), /timing difference/);
-    } else {
-      assert.match(calibrationStatus(asset, row.timeframe, stock), /October [56]/, "New daily evidence takes precedence without rewriting archived results");
-    }
+    assert.match(calibrationStatus(asset, row.timeframe, stock), /^Weekly rule 15\/2 · /);
+    if (row.status === "unresolved") assert.match(calibrationStatus(asset, row.timeframe, stock), /screenshot unresolved/);
+    if (row.status === "timing-difference") assert.match(calibrationStatus(asset, row.timeframe, stock), /timing difference/);
     const before = calculateIndicators(candles.slice(-300), row.timeframe, { ...optionsFor(row.asset), kkSupertrendAtrLength: row.previous.atrLength, kkSupertrendFactor: row.previous.factor });
     const after = calculateIndicators(candles.slice(-300), row.timeframe, optionsFor(row.asset));
     assert.deepEqual(after.filter(s => s.id !== "kk_supertrend"), before.filter(s => s.id !== "kk_supertrend"));

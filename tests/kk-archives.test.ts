@@ -9,31 +9,31 @@ import {aggregateCommodityWeeks} from "../lib/commodities.ts";
 import {buildResearch} from "../lib/research.ts";
 import {calibrationStatus} from "../lib/kk-calibration.ts";
 const cutoff=Date.UTC(2026,8,21);
-function candles(row:typeof KK_ARCHIVE_EVIDENCE[number]){
- const metal=row.asset==="gold"||row.asset==="silver";
- const daily:Candle[]=JSON.parse(readFileSync(new URL(`../research/kk-2026-09-21-archives/${row.asset}-${row.source}${metal?"-futures":""}.json`,import.meta.url),"utf8")).candles;
- return row.timeframe==="1d"?daily:metal?aggregateCommodityWeeks(daily,cutoff):row.source==="yahoo"?aggregateStockWeeks(daily,cutoff):aggregateWeekly(daily);
+const daily=(asset:string,source:string):Candle[]=>JSON.parse(readFileSync(new URL(`../research/kk-2026-09-21-archives/${asset}-${source}${asset==="gold"||asset==="silver"?"-futures":""}.json`,import.meta.url),"utf8")).candles;
+function weekly(row:typeof KK_ARCHIVE_EVIDENCE[number]){
+ const cs=daily(row.asset,row.source);
+ return row.asset==="gold"||row.asset==="silver"?aggregateCommodityWeeks(cs,cutoff):row.source==="yahoo"?aggregateStockWeeks(cs,cutoff):aggregateWeekly(cs);
 }
-test("fifty archive records distinguish weekly checks, unreadable targets and unresolved daily behavior",()=>{
- assert.equal(KK_ARCHIVE_EVIDENCE.length,50);
+test("twenty-five weekly archive records distinguish weekly checks from unreadable targets; daily records are retired",()=>{
+ assert.equal(KK_ARCHIVE_EVIDENCE.length,25);
  assert.equal(KK_ARCHIVE_EVIDENCE.filter(r=>r.status==="weekly-retained").length,23);
  assert.equal(KK_ARCHIVE_EVIDENCE.filter(r=>r.status==="skipped").length,2);
- assert.equal(KK_ARCHIVE_EVIDENCE.filter(r=>r.status==="daily-unresolved").length,25);
- assert.equal(KK_ARCHIVE_EVIDENCE.filter(r=>r.pending!=null).length,5);
+ const retired=JSON.parse(readFileSync(new URL("../research/kk-2026-09-21-archives/retired-daily-evidence.json",import.meta.url),"utf8"));
+ assert.equal(retired.archiveDaily.length,25);
+ assert.equal(retired.dailyFamilySeptember22.length,23);
  for(const row of KK_ARCHIVE_EVIDENCE){
+  assert.equal(row.timeframe,"1w");
   assert.match(row.imageSha256,/^[a-f0-9]{64}$/);
-  const cs=candles(row);
+  const cs=weekly(row);
   assert.ok(cs.every(c=>c.complete&&c.time<cutoff));
   if(row.status==="skipped"){assert.equal(row.value,null);assert.equal(row.errorPct,null);continue;}
-  const options={kkSupertrendLegacySingleClose:true,indicatorIds:["kk_supertrend"],kkSupertrendAtrLength:row.atrLength,kkSupertrendFactor:row.factor};
-  const signal=calculateIndicators(cs,row.timeframe,options)[0];
+  const options={indicatorIds:["kk_supertrend"],kkSupertrendAtrLength:row.atrLength,kkSupertrendFactor:row.factor};
+  const signal=calculateIndicators(cs,"1w",options)[0];
   assert.equal(signal.values.supertrend,row.value,row.asset);
   assert.equal(signal.state,row.state);
-  if(row.timeframe==="1w"){
-   assert.equal(signal.state,row.targetState);
-   assert.ok(Math.abs(signal.values.supertrend!/row.target!-1)<.04);
-  }
-  const prefix=calculateIndicators(cs.slice(0,-1),row.timeframe,options)[0];
+  assert.equal(signal.state,row.targetState);
+  assert.ok(Math.abs(signal.values.supertrend!/row.target!-1)<.04);
+  const prefix=calculateIndicators(cs.slice(0,-1),"1w",options)[0];
   assert.deepEqual(prefix.states,signal.states.slice(0,-1));
  }
  assert.match(calibrationStatus("sui","1d"),/October 5/);
@@ -42,7 +42,7 @@ test("fifty archive records distinguish weekly checks, unreadable targets and un
 });
 test("archive research preserves ordinary indicator calculations and next-open execution across asset classes",()=>{
  for(const asset of ["btc","sol","tsla","gold"] as const){
-  const row=KK_ARCHIVE_EVIDENCE.find(r=>r.asset===asset&&r.timeframe==="1d")!,cs=candles(row);
+  const row=KK_ARCHIVE_EVIDENCE.find(r=>r.asset===asset)!,cs=daily(asset,row.source);
   const options:IndicatorCalculationOptions=asset==="tsla"?{market:"equity",stock:asset}:asset==="gold"?{market:"commodity",commodity:asset}:{asset};
   const signals=calculateIndicators(cs,"1d",options);
   const alternative=calculateIndicators(cs,"1d",{...options,kkSupertrendAtrLength:15,kkSupertrendFactor:2});
