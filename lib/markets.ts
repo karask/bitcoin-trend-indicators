@@ -6,8 +6,8 @@ export interface AssetDefinition {
   label: string;
   symbol: string;
   defaultSource: SourceId;
-  /** Circulating market cap of at least about $50B; selects the large-cap weekly KK Supertrend rule. */
-  largeCap?: boolean;
+  /** Circulating market cap in USD billions (CoinGecko, 12 Oct 2026). Selects the weekly and daily KK Supertrend tiers; set it when adding a coin. */
+  marketCapB: number;
 }
 
 export interface SourceDefinition {
@@ -32,26 +32,26 @@ export function minimumSourceCandles(asset: AssetId, timeframe: "1d" | "1w"): nu
 }
 
 export const ASSETS: AssetDefinition[] = [
-  { id: "btc", label: "Bitcoin", symbol: "BTC", defaultSource: "bitstamp" },
-  { id: "eth", label: "Ethereum", symbol: "ETH", defaultSource: "bitstamp", largeCap: true },
-  { id: "sol", label: "Solana", symbol: "SOL", defaultSource: "coinbase", largeCap: true },
-  { id: "doge", label: "Dogecoin", symbol: "DOGE", defaultSource: "coinbase" },
-  { id: "link", label: "Chainlink", symbol: "LINK", defaultSource: "coinbase" },
-  { id: "xmr", label: "Monero", symbol: "XMR", defaultSource: "kraken" },
-  { id: "sui", label: "Sui", symbol: "SUI", defaultSource: "coinbase" },
-  { id: "jup", label: "Jupiter", symbol: "JUP", defaultSource: "kraken" },
-  { id: "op", label: "Optimism", symbol: "OP", defaultSource: "coinbase" },
-  { id: "bonk", label: "Bonk", symbol: "BONK", defaultSource: "coinbase" },
-  { id: "ada", label: "Cardano", symbol: "ADA", defaultSource: "coinbase" },
-  { id: "atom", label: "Cosmos", symbol: "ATOM", defaultSource: "coinbase" },
-  { id: "hype", label: "Hyperliquid", symbol: "HYPE", defaultSource: "kraken" },
-  { id: "dot", label: "Polkadot", symbol: "DOT", defaultSource: "coinbase" },
-  { id: "bnb", label: "BNB", symbol: "BNB", defaultSource: "binance", largeCap: true },
-  { id: "zec", label: "Zcash", symbol: "ZEC", defaultSource: "binance" },
-  { id: "avax", label: "Avalanche", symbol: "AVAX", defaultSource: "coinbase" },
-  { id: "ray", label: "Raydium", symbol: "RAY", defaultSource: "kraken" },
-  { id: "vvv", label: "Venice Token", symbol: "VVV", defaultSource: "coinbase" },
-  { id: "qnt", label: "Quant", symbol: "QNT", defaultSource: "coinbase" },
+  { id: "btc", label: "Bitcoin", symbol: "BTC", defaultSource: "bitstamp", marketCapB: 1681 },
+  { id: "eth", label: "Ethereum", symbol: "ETH", defaultSource: "bitstamp", marketCapB: 312.5 },
+  { id: "sol", label: "Solana", symbol: "SOL", defaultSource: "coinbase", marketCapB: 66 },
+  { id: "doge", label: "Dogecoin", symbol: "DOGE", defaultSource: "coinbase", marketCapB: 13.7 },
+  { id: "link", label: "Chainlink", symbol: "LINK", defaultSource: "coinbase", marketCapB: 10.3 },
+  { id: "xmr", label: "Monero", symbol: "XMR", defaultSource: "kraken", marketCapB: 10 },
+  { id: "sui", label: "Sui", symbol: "SUI", defaultSource: "coinbase", marketCapB: 4.6 },
+  { id: "jup", label: "Jupiter", symbol: "JUP", defaultSource: "kraken", marketCapB: 1.2 },
+  { id: "op", label: "Optimism", symbol: "OP", defaultSource: "coinbase", marketCapB: 0.32 },
+  { id: "bonk", label: "Bonk", symbol: "BONK", defaultSource: "coinbase", marketCapB: 0.3 },
+  { id: "ada", label: "Cardano", symbol: "ADA", defaultSource: "coinbase", marketCapB: 9.5 },
+  { id: "atom", label: "Cosmos", symbol: "ATOM", defaultSource: "coinbase", marketCapB: 1 },
+  { id: "hype", label: "Hyperliquid", symbol: "HYPE", defaultSource: "kraken", marketCapB: 19.5 },
+  { id: "dot", label: "Polkadot", symbol: "DOT", defaultSource: "coinbase", marketCapB: 2.2 },
+  { id: "bnb", label: "BNB", symbol: "BNB", defaultSource: "binance", marketCapB: 100.2 },
+  { id: "zec", label: "Zcash", symbol: "ZEC", defaultSource: "binance", marketCapB: 22.3 },
+  { id: "avax", label: "Avalanche", symbol: "AVAX", defaultSource: "coinbase", marketCapB: 4.9 },
+  { id: "ray", label: "Raydium", symbol: "RAY", defaultSource: "kraken", marketCapB: 0.65 },
+  { id: "vvv", label: "Venice Token", symbol: "VVV", defaultSource: "coinbase", marketCapB: 1.2 },
+  { id: "qnt", label: "Quant", symbol: "QNT", defaultSource: "coinbase", marketCapB: 3.5 },
 ];
 
 export const SOURCES: SourceDefinition[] = [

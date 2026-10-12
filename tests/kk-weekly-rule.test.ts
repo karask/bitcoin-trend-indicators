@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { calculateIndicators, KK_DAILY_UNCALIBRATED, KK_SUPERTREND_COMMODITY_PRESETS, KK_SUPERTREND_PRESETS, KK_SUPERTREND_STOCK_PRESETS, KK_WEEKLY_RULES, kkSupertrendPreset, kkWeeklyRule, type Candle } from "../lib/regimes.ts";
+import { calculateIndicators, KK_DAILY_UNCALIBRATED, KK_SUPERTREND_COMMODITY_PRESETS, KK_SUPERTREND_PRESETS, KK_SUPERTREND_STOCK_PRESETS, KK_WEEKLY_LARGE_CAP_B, KK_WEEKLY_RULES, kkSupertrendPreset, kkWeeklyRule, type Candle } from "../lib/regimes.ts";
 import { ASSETS, type AssetId } from "../lib/markets.ts";
 import type { StockId } from "../lib/stocks.ts";
 import type { CommodityId } from "../lib/commodities.ts";
@@ -14,10 +14,10 @@ const weekly: Candle[] = Array.from({ length: 120 }, (_, i) => ({ ...daily[i], t
 
 test("weekly KK follows one class rule: BTC 10/3, large-cap crypto 10/2, everything else 15/2", () => {
   assert.deepEqual(KK_WEEKLY_RULES, { bitcoin: { atrLength: 10, factor: 3 }, largeCapCrypto: { atrLength: 10, factor: 2 }, standard: { atrLength: 15, factor: 2 } });
-  assert.deepEqual(ASSETS.filter(asset => asset.largeCap).map(asset => asset.id), ["eth", "sol", "bnb"]);
+  assert.deepEqual(ASSETS.filter(asset => asset.marketCapB >= KK_WEEKLY_LARGE_CAP_B).map(asset => asset.id), ["btc", "eth", "sol", "bnb"]);
   assert.deepEqual(kkWeeklyRule("crypto", "btc"), KK_WEEKLY_RULES.bitcoin);
   for (const asset of ["eth", "sol", "bnb"] as const) assert.deepEqual(kkWeeklyRule("crypto", asset), KK_WEEKLY_RULES.largeCapCrypto);
-  for (const asset of ASSETS.filter(item => item.id !== "btc" && !item.largeCap)) assert.deepEqual(KK_SUPERTREND_PRESETS[asset.id]["1w"], KK_WEEKLY_RULES.standard, asset.id);
+  for (const asset of ASSETS.filter(item => item.marketCapB < KK_WEEKLY_LARGE_CAP_B)) assert.deepEqual(KK_SUPERTREND_PRESETS[asset.id]["1w"], KK_WEEKLY_RULES.standard, asset.id);
   for (const preset of [...Object.values(KK_SUPERTREND_STOCK_PRESETS), ...Object.values(KK_SUPERTREND_COMMODITY_PRESETS)]) assert.deepEqual(preset["1w"], KK_WEEKLY_RULES.standard);
 });
 

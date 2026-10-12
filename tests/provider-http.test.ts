@@ -3,7 +3,7 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import { createProviderClient, ProviderCooldownError, retryAfterMs } from "../lib/provider-http.ts";
 import { ASSETS, marketDefinition, minimumSourceCandles, sourcesForAsset } from "../lib/markets.ts";
-import { calculateIndicators, type Candle } from "../lib/regimes.ts";
+import { calculateIndicators, KK_SUPERTREND_PRESETS, type Candle } from "../lib/regimes.ts";
 import { calibrationStatus } from "../lib/kk-calibration.ts";
 import { CRON_ASSETS } from "../worker/refresh.ts";
 import { formatPrice } from "../lib/display.ts";
@@ -57,10 +57,11 @@ test("new coins have one verified USD venue, separate weekly and daily KK preset
     for (const tf of ["1d", "1w"] as const) {
       const signals = calculateIndicators(daily, tf, { asset });
       const kk = signals.find(signal => signal.id === "kk_supertrend")!, standard = signals.find(signal => signal.id === "supertrend")!;
-      assert.equal(kk.values.atrLength, tf === "1d" && asset === "ray" ? 10 : 15); assert.equal(kk.values.factor, tf === "1w" || asset === "op" ? 2 : ["ada","atom","dot"].includes(asset) ? 5 : asset==="hype" ? 4 : 3);
+      assert.deepEqual([kk.values.atrLength, kk.values.factor], [KK_SUPERTREND_PRESETS[asset][tf].atrLength, KK_SUPERTREND_PRESETS[asset][tf].factor]);
+      if (tf === "1w") assert.deepEqual(KK_SUPERTREND_PRESETS[asset][tf], { atrLength: 15, factor: 2 });
       if (tf === "1d") assert.equal(kk.confirmation!.required,5);
-      if (tf === "1d" && asset === "ray") assert.equal(kk.values.supertrend, standard.values.supertrend);
-      assert.match(calibrationStatus(asset, tf), tf === "1w" ? /^Weekly rule 15\/2 · screenshot-checked/ : /October [56]/);
+      assert.notEqual(kk.values.supertrend, standard.values.supertrend);
+      assert.match(calibrationStatus(asset, tf), tf === "1w" ? /^Weekly rule 15\/2 · screenshot-checked/ : /October 12/);
     }
   }
   assert.equal(marketDefinition("jup", "kraken").providerSymbol, "JUPUSD");

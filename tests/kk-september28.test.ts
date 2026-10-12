@@ -82,8 +82,8 @@ test("all 16 weekly references replay without concealing failed fits; daily ones
 
 test("daily selections consider reversal timing, preserve five-close confirmation and ignore unfinished candles", () => {
   assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.strc["1d"], { atrLength: 30, factor: 4 });
-  assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.crcl["1d"], { atrLength: 50, factor: 6 });
-  assert.deepEqual(KK_SUPERTREND_PRESETS.qnt["1d"], { atrLength: 50, factor: 4 });
+  assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.crcl["1d"], { atrLength: 10, factor: 6 });
+  assert.deepEqual(KK_SUPERTREND_PRESETS.qnt["1d"], { atrLength: 21, factor: 2.5 });
   for (const asset of ["strc", "crcl", "bot", "spcx", "qnt"]) {
     const candles = fixture(asset).daily, options = { ...optionsFor(asset), indicatorIds: ["kk_supertrend"] };
     const kk = calculateIndicators(candles, "1d", options)[0];
@@ -94,8 +94,9 @@ test("daily selections consider reversal timing, preserve five-close confirmatio
     assert.deepEqual(withPartial.confirmation, kk.confirmation);
     assert.equal(withPartial.state, kk.state);
   }
-  for (const [asset, executionDate] of [["strc", "2026-07-07"], ["crcl", "2026-09-11"]]) {
-    const candles = fixture(asset).daily, options = optionsFor(asset), signals = calculateIndicators(candles, "1d", options);
+  // Historical replay of the September 28 selections (STRC 30/4, CRCL 50/6); October 12 later refitted CRCL.
+  for (const [asset, executionDate, atrLength, factor] of [["strc", "2026-07-07", 30, 4], ["crcl", "2026-09-11", 50, 6]] as const) {
+    const candles = fixture(asset).daily, options = { ...optionsFor(asset), kkSupertrendAtrLength: atrLength, kkSupertrendFactor: factor }, signals = calculateIndicators(candles, "1d", options);
     const kk = signals.find(s => s.id === "kk_supertrend")!;
     const signalIndex = candles.findIndex(c => c.time === kk.lastFlip);
     assert.equal(new Date(candles[signalIndex + 1].time).toISOString().slice(0, 10), executionDate);

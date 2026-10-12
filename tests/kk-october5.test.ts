@@ -3,13 +3,15 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { KK_OCTOBER5_EVIDENCE } from "../lib/kk-october5-evidence.ts";
+import { KK_OCTOBER12_EVIDENCE } from "../lib/kk-october12-evidence.ts";
 import { calculateIndicators, KK_SUPERTREND_PRESETS, KK_SUPERTREND_STOCK_PRESETS, KK_SUPERTREND_COMMODITY_PRESETS, type Candle, type IndicatorCalculationOptions } from "../lib/regimes.ts";
 import { calibrationStatus, KK_CALIBRATION_VERSION } from "../lib/kk-calibration.ts";
 import { kkCalibrationWarning } from "../lib/kk-reliability.ts";
 
 const cutoff=Date.UTC(2026,9,5);
+const october12Warning = (asset: string) => { const row = KK_OCTOBER12_EVIDENCE.find(r => r.asset === asset)!; return row.status === "october-fit" ? null : row.status === "tier" ? /Low-confidence/ : /Unreliable/; };
 test("October 5 chart tables distinguish dates, readable LINK and NVDA's contradictory counter",()=>{
-  assert.equal(KK_CALIBRATION_VERSION,"2026-10-08");
+  assert.equal(KK_CALIBRATION_VERSION,"2026-10-12");
   assert.equal(KK_OCTOBER5_EVIDENCE.length,39);
   assert.equal(new Set(KK_OCTOBER5_EVIDENCE.map(r=>r.asset)).size,39);
   assert.deepEqual(["crypto","stock","commodity"].map(c=>KK_OCTOBER5_EVIDENCE.filter(r=>r.assetClass===c).length),[20,17,2]);
@@ -39,6 +41,7 @@ test("39 quality-checked fixtures reproduce reference and later levels with corr
     const cs=all.filter(c=>c.complete&&c.time<cutoff);
     assert.equal(new Date(cs.at(-1)!.time).toISOString().slice(0,10),row.through);
     const options:IndicatorCalculationOptions=row.assetClass==="crypto"?{asset:row.asset as keyof typeof KK_SUPERTREND_PRESETS}:row.assetClass==="stock"?{market:"equity",stock:row.asset as keyof typeof KK_SUPERTREND_STOCK_PRESETS}:{market:"commodity",commodity:row.asset as keyof typeof KK_SUPERTREND_COMMODITY_PRESETS};
+    Object.assign(options,{kkSupertrendAtrLength:row.preset.atrLength,kkSupertrendFactor:row.preset.factor});
     const signal=calculateIndicators(cs,"1d",{...options,indicatorIds:["kk_supertrend"]})[0];
     assert.equal(signal.values.supertrend,row.value,row.asset);assert.equal(signal.state,row.state,row.asset);assert.equal(signal.confirmation!.required,5);
     const flipIndex=signal.lastFlip==null?-1:cs.findIndex(c=>c.time===signal.lastFlip);
@@ -50,7 +53,8 @@ test("39 quality-checked fixtures reproduce reference and later levels with corr
     assert.equal(latest.values.supertrend,row.latestValue);assert.equal(latest.state,row.latestState);
     const prefix=calculateIndicators(cs.slice(0,-1),"1d",{...options,indicatorIds:["kk_supertrend"]})[0];
     assert.deepEqual(prefix.states,signal.states.slice(0,-1));
-    assert.match(calibrationStatus(options.asset,"1d",options.stock,options.commodity),/October 5 chart.*October 6/);
-    assert.match(kkCalibrationWarning(row.asset,"1d")!.label,row.status==="unresolved"?/Unreliable/:/Low-confidence/);
+    assert.match(calibrationStatus(options.asset,"1d",options.stock,options.commodity),/October 12/);
+    const expectedWarning=october12Warning(row.asset);
+    if(expectedWarning)assert.match(kkCalibrationWarning(row.asset,"1d")!.label,expectedWarning);else assert.equal(kkCalibrationWarning(row.asset,"1d"),null);
   }
 });

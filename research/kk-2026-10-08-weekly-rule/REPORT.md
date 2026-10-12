@@ -5,7 +5,7 @@ Per-asset weekly calibration is replaced by one class rule. New assets receive i
 | Group | Weekly ATR / multiplier |
 |---|---|
 | BTC | 10 / 3 |
-| Crypto with circulating market cap ≥ ~$50B (`largeCap: true` in `lib/markets.ts`: ETH, SOL, BNB) | 10 / 2 |
+| Crypto with circulating market cap ≥ ~$50B (`marketCapB` ≥ 50 in `lib/markets.ts`: ETH, SOL, BNB) | 10 / 2 |
 | Every other crypto, every stock, every commodity | 15 / 2 |
 
 Daily KK is unchanged. No single daily rule fits the daily screenshots, so daily presets stay per-asset. Assets added without a daily screenshot use the unverified 10/3 baseline and are flagged as uncalibrated.

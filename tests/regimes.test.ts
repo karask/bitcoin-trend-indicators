@@ -77,12 +77,12 @@ test("KK presets lead the indicator menu with fixed crypto parameters", () => {
   assert.equal(kkIndex, 0);
   for (const timeframe of ["1d", "1w"] as const) assert.deepEqual(INDICATOR_SPECS.filter(spec => spec.supportedTimeframes.includes(timeframe)).slice(0, 6).map(spec => spec.id), ["kk_supertrend", "kk_ema_ribbon", "kk_200_ma", "kk_50_200_ema", "support_band", "supertrend"]);
   assert.deepEqual(Object.fromEntries(Object.entries(KK_SUPERTREND_PRESETS).map(([id, preset]) => [id, preset["1w"]])), Object.fromEntries(ASSETS.map(asset => [asset.id, asset.id === "btc" ? KK_WEEKLY_RULES.bitcoin : ["eth", "sol", "bnb"].includes(asset.id) ? KK_WEEKLY_RULES.largeCapCrypto : KK_WEEKLY_RULES.standard])));
-  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { weeklyRule: "BTC 10/3; crypto ≥$50B 10/2; all other crypto, stocks and commodities 15/2", weeklyRevision: "2026-10-08", dailyCryptoFamily: "10/3,15/2,15/3,15/4,15/5; QNT 50/4", dailyStockFamily: "10/3,15/3,15/4,30/2,30/4,50/6", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-10-06", dailyConfirmations: 5 });
+  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { weeklyRule: "BTC 10/3; crypto ≥$50B 10/2; all other crypto, stocks and commodities 15/2", weeklyRevision: "2026-10-08", dailyCryptoRule: "per-asset October fit; otherwise BTC 15/2, ≥$12B 15/4, $8–12B 15/3.5, <$8B 15/2.5", dailyStockFamily: "per-asset October fit; unfitted presets retained", dailyRevision: "2026-10-12", dailyConfirmations: 5 });
   assert.deepEqual(KK_SUPERTREND_PRESETS.doge, { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } });
-  assert.deepEqual(KK_SUPERTREND_PRESETS.link, { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } });
-  assert.deepEqual(KK_SUPERTREND_PRESETS.xmr, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
-  assert.deepEqual(KK_SUPERTREND_PRESETS.sui, { "1d": { atrLength: 15, factor: 2 }, "1w": { atrLength: 15, factor: 2 } });
-  assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /approximate screenshot fits/i);
+  assert.deepEqual(KK_SUPERTREND_PRESETS.link, { "1d": { atrLength: 100, factor: 4.5 }, "1w": { atrLength: 15, factor: 2 } });
+  assert.deepEqual(KK_SUPERTREND_PRESETS.xmr, { "1d": { atrLength: 30, factor: 4 }, "1w": { atrLength: 15, factor: 2 } });
+  assert.deepEqual(KK_SUPERTREND_PRESETS.sui, { "1d": { atrLength: 10, factor: 2 }, "1w": { atrLength: 15, factor: 2 } });
+  assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /screenshot fits/i);
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /not recovered private formulas/i);
 });
 
@@ -214,13 +214,12 @@ test("Weekly BTC KK Supertrend remains point-for-point identical to SuperTrend 1
   assert.deepEqual(kk.values, standard.values);
 });
 
-test("daily SUI and OP use reviewed KK 15/2 while standard SuperTrend retains its own trail", () => {
+test("daily SUI and OP use their October presets while standard SuperTrend retains its own trail", () => {
   for (const asset of ["sui", "op"] as const) {
     const results = calculateIndicators(history(), "1d", { asset });
     const standard = results.find(item => item.id === "supertrend")!;
     const kk = results.find(item => item.id === "kk_supertrend")!;
-    assert.equal(kk.values.atrLength, 15, asset);
-    assert.equal(kk.values.factor, 2, asset);
+    assert.deepEqual([kk.values.atrLength, kk.values.factor], asset === "sui" ? [10, 2] : [50, 3.5], asset);
     assert.equal(kk.confirmation!.required, 5, asset);
     assert.notDeepEqual(kk.overlays[0].points, standard.overlays[0].points, asset);
     const baseline = calculateIndicators(history(), "1d", { asset, kkSupertrendAtrLength: 10, kkSupertrendFactor: 3 });
@@ -261,10 +260,9 @@ test("KK Supertrend is included in every asset backtest and cost-sensitivity pat
     assert.ok(costs[0].totalReturn >= costs[1].totalReturn && costs[1].totalReturn >= costs[2].totalReturn, asset);
     assert.equal(costs[0].turnover, costs[1].turnover, asset);
     assert.equal(costs[1].turnover, costs[2].turnover, asset);
-    if (asset === "sui" || asset === "op") {
-      const standard = backtest(candles, snapshots, "1d", 15).find(item => item.indicatorId === "supertrend")!;
-      assert.ok(costs[1].flips <= standard.flips);
-    }
+    // Five-close confirmation never flips more often than the same preset on single closes.
+    const singleClose = calculateIndicators(candles, "1d", { asset, kkSupertrendLegacySingleClose: true, indicatorIds: ["kk_supertrend"] });
+    assert.ok(costs[1].flips <= backtest(candles, singleClose, "1d", 15)[0].flips, asset);
   }
 });
 

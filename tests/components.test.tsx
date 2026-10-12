@@ -110,8 +110,9 @@ test("September 28 notebook discloses timing differences and unresolved calibrat
     assert.doesNotMatch(bot, /Reference check passes/);
   }
   const quant = renderToStaticMarkup(<CalibrationPanel asset="qnt" timeframe="1d" values={{ atrLength: 50, factor: 4 }} />);
-  assert.match(quant, /calibration unresolved/);
-  assert.match(quant, /reviewed October 6/);
+  assert.match(quant, /Daily October fit/);
+  assert.match(quant, /reviewed October 12/);
+  assert.match(quant, /Daily charts · October 3, 5, 9 and 12/);
   assert.match(quant, /September daily screenshots were retired/);
   assert.doesNotMatch(quant, /Video reference · September 28/);
   const quantWeekly = renderToStaticMarkup(<CalibrationPanel asset="qnt" timeframe="1w" values={{ atrLength: 15, factor: 2 }} />);
@@ -121,13 +122,14 @@ test("September 28 notebook discloses timing differences and unresolved calibrat
 });
 
 test("KK confidence warnings distinguish timeframes and never label other indicators", () => {
-  for (const asset of ["strc", "crcl"]) {
+  // October 12: tier-rule coins are low-confidence, unfitted stocks unreliable, October fits carry no warning.
+  for (const asset of ["zec", "ada"]) {
     const html = renderToStaticMarkup(<KKCalibrationWarning asset={asset} timeframe="1d" />);
     assert.match(html, /Low-confidence KK calibration/);
     assert.match(html, /Treat this KK signal as unverified/);
   }
-  for (const asset of ["qnt", "spcx"]) assert.match(renderToStaticMarkup(<KKCalibrationWarning asset={asset} timeframe="1d" />), /Unreliable KK calibration/);
-  assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="link" timeframe="1d" />), /Unreliable KK calibration/);
+  for (const asset of ["nvda", "spcx"]) assert.match(renderToStaticMarkup(<KKCalibrationWarning asset={asset} timeframe="1d" />), /Unreliable KK calibration/);
+  for (const asset of ["strc", "crcl", "qnt", "link"]) assert.equal(renderToStaticMarkup(<KKCalibrationWarning asset={asset} timeframe="1d" />), "");
   for (const timeframe of ["1d", "1w"] as const) assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="bot" timeframe={timeframe} />), /Unreliable KK calibration/);
   assert.match(renderToStaticMarkup(<KKCalibrationWarning asset="intc" timeframe="1w" />), /KK timing mismatch/);
   // STRC has no weekly screenshot; the weekly class rule needs no warning.
@@ -135,7 +137,7 @@ test("KK confidence warnings distinguish timeframes and never label other indica
   assert.equal(renderToStaticMarkup(<KKCalibrationWarning asset="crcl" timeframe="1w" />), "");
   assert.equal(renderToStaticMarkup(<KKCalibrationWarning asset="bot" timeframe="1d" indicator="supertrend" />), "");
   const overview = renderToStaticMarkup(<AssetOverview />);
-  for (const symbol of ["STRC", "CRCL", "QNT", "SPCX", "BOT"]) {
+  for (const symbol of ["ZEC", "ADA", "NVDA", "SPCX", "BOT"]) {
     const row = overview.split("<tr").find(row => row.includes(`<strong>${symbol}</strong>`));
     assert.ok(row?.includes("kk-reliability-badge"), `${symbol} must be flagged before history loads`);
   }
@@ -190,8 +192,8 @@ test("metals and Bitmine notebooks disclose approximate fits and keep daily cali
     assert.ok(weekly.includes(`${commodity}.jpeg`));
     assert.match(weekly, /back-adjusted/);
     assert.doesNotMatch(weekly, /<details[^>]*\bopen=/);
-    const daily = renderToStaticMarkup(<CalibrationPanel commodity={commodity} timeframe="1d" values={{ atrLength: 15, factor: commodity === "gold" ? 4 : 3 }} />);
-    assert.match(daily, /calibration unresolved.*October 5 chart.*October 6/);
+    const daily = renderToStaticMarkup(<CalibrationPanel commodity={commodity} timeframe="1d" values={commodity === "gold" ? { atrLength: 15, factor: 5 } : { atrLength: 100, factor: 5 }} />);
+    assert.match(daily, /Daily October fit.*October 12/);
     assert.match(daily, /Printed last-flip date/);
     assert.match(daily, /Model confirmation/);
     assert.match(daily, /does not validate this daily preset/);

@@ -53,17 +53,17 @@ test("weekly references remain valid alongside daily presets; generic futures ba
       const current=calculateIndicators(candles,timeframe,options);
       const previous=calculateIndicators(candles,timeframe,{...options,kkSupertrendAtrLength:10,kkSupertrendFactor:3});
       assert.deepEqual(current.filter(s=>s.id!=="kk_supertrend"),previous.filter(s=>s.id!=="kk_supertrend"));
-      if (timeframe==="1d") assert.equal(current.find(s=>s.id==="kk_supertrend")!.values.atrLength,15);
+      if (timeframe==="1d") assert.equal(current.find(s=>s.id==="kk_supertrend")!.values.atrLength,row.asset==="silver"?100:15);
     }
   }
   assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.tsla["1w"],{atrLength:15,factor:2});
   assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.spcx["1w"],{atrLength:15,factor:2});
   for(const asset of ["gold","silver"] as const) {
-    assert.deepEqual(KK_SUPERTREND_COMMODITY_PRESETS[asset]["1d"],{atrLength:15,factor:asset==="gold"?4:3});
+    assert.deepEqual(KK_SUPERTREND_COMMODITY_PRESETS[asset]["1d"],asset==="gold"?{atrLength:15,factor:5}:{atrLength:100,factor:5});
     assert.equal(calibrationStatus(undefined,"1w",undefined,asset),"Weekly rule 15/2 · screenshot-checked · October 8");
-    assert.match(calibrationStatus(undefined,"1d",undefined,asset),/calibration unresolved.*October 6/);
+    assert.match(calibrationStatus(undefined,"1d",undefined,asset),/Daily October fit.*October 12/);
   }
-  assert.match(calibrationStatus(undefined,"1d","bmnr"),/October [56]/);
+  assert.match(calibrationStatus(undefined,"1d","bmnr"),/October 12/);
   const defaultKk=calculateIndicators(candlesFor("gold"),"1w",{market:"commodity",indicatorIds:["kk_supertrend"]})[0];
   assert.deepEqual([defaultKk.values.atrLength,defaultKk.values.factor],[15,2]);
 });

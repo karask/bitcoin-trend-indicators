@@ -59,79 +59,96 @@ export interface KkPreset { atrLength: number; factor: number }
  */
 export const KK_WEEKLY_RULES = {
   bitcoin: { atrLength: 10, factor: 3 },
-  /** Crypto with a circulating market cap of at least about $50B; see AssetDefinition.largeCap. */
+  /** Crypto with a circulating market cap of at least KK_WEEKLY_LARGE_CAP_B; see AssetDefinition.marketCapB. */
   largeCapCrypto: { atrLength: 10, factor: 2 },
   standard: { atrLength: 15, factor: 2 },
 } as const satisfies Record<string, KkPreset>;
 
-/** No daily rule fits the screenshots; unreviewed assets keep this unverified baseline. */
+export const KK_WEEKLY_LARGE_CAP_B = 50;
+
+/** Stocks, futures and crypto without a known market cap have no daily rule; they keep this unverified baseline. */
 export const KK_DAILY_UNCALIBRATED: KkPreset = { atrLength: 10, factor: 3 };
+
+/**
+ * October 12, 2026 daily crypto tiers at ATR 15, from the October 3/5/9/12 charts.
+ * Used for crypto without a per-asset October fit and for new coins.
+ */
+export const KK_DAILY_CRYPTO_TIERS = {
+  bitcoin: { atrLength: 15, factor: 2 },
+  /** Market cap ≥ $12B. */
+  large: { atrLength: 15, factor: 4 },
+  /** Market cap $8–12B. */
+  mid: { atrLength: 15, factor: 3.5 },
+  /** Market cap < $8B. */
+  small: { atrLength: 15, factor: 2.5 },
+} as const satisfies Record<string, KkPreset>;
+
+const marketCapB = (asset?: AssetId) => ASSETS.find(item => item.id === asset)?.marketCapB;
 
 export function kkWeeklyRule(market: MarketContext = "crypto", asset?: AssetId): KkPreset {
   if (market !== "crypto") return KK_WEEKLY_RULES.standard;
   if (asset === "btc") return KK_WEEKLY_RULES.bitcoin;
-  return ASSETS.some(item => item.id === asset && item.largeCap) ? KK_WEEKLY_RULES.largeCapCrypto : KK_WEEKLY_RULES.standard;
+  return (marketCapB(asset) ?? 0) >= KK_WEEKLY_LARGE_CAP_B ? KK_WEEKLY_RULES.largeCapCrypto : KK_WEEKLY_RULES.standard;
 }
 
-// Daily presets are per-asset screenshot fits; assets absent here use KK_DAILY_UNCALIBRATED.
+export function kkDailyCryptoTier(asset?: AssetId): KkPreset {
+  if (asset === "btc") return KK_DAILY_CRYPTO_TIERS.bitcoin;
+  const cap = marketCapB(asset);
+  if (cap == null) return KK_DAILY_UNCALIBRATED;
+  return cap >= 12 ? KK_DAILY_CRYPTO_TIERS.large : cap >= 8 ? KK_DAILY_CRYPTO_TIERS.mid : KK_DAILY_CRYPTO_TIERS.small;
+}
+
+// Daily presets fit every October 3/5/9/12 chart within 1% (or already did and were retained).
+// Crypto absent here uses the market-cap tier; stocks and futures absent here use KK_DAILY_UNCALIBRATED.
 const KK_DAILY_CRYPTO_PRESETS: Partial<Record<AssetId, KkPreset>> = {
-  // October 4 daily review: compact families.
-  vvv: { atrLength: 15, factor: 3 },
-  // Daily 50/4 is an approximate September 28 composite-feed fit.
-  qnt: { atrLength: 50, factor: 4 },
-  avax: { atrLength: 10, factor: 3 },
-  bnb: { atrLength: 15, factor: 4 },
-  zec: { atrLength: 15, factor: 3 },
   btc: { atrLength: 15, factor: 2 },
   eth: { atrLength: 15, factor: 4 },
   sol: { atrLength: 15, factor: 4 },
   doge: { atrLength: 15, factor: 4 },
-  link: { atrLength: 15, factor: 4 },
-  xmr: { atrLength: 10, factor: 3 },
-  sui: { atrLength: 15, factor: 2 },
-  jup: { atrLength: 15, factor: 3 },
-  op: { atrLength: 15, factor: 2 },
-  bonk: { atrLength: 15, factor: 3 },
-  ada: { atrLength: 15, factor: 5 },
-  atom: { atrLength: 15, factor: 5 },
   hype: { atrLength: 15, factor: 4 },
-  dot: { atrLength: 15, factor: 5 },
-  // Daily level/timing tradeoff remains unresolved.
-  ray: { atrLength: 10, factor: 3 },
+  link: { atrLength: 100, factor: 4.5 },
+  xmr: { atrLength: 30, factor: 4 },
+  sui: { atrLength: 10, factor: 2 },
+  op: { atrLength: 50, factor: 3.5 },
+  atom: { atrLength: 5, factor: 3.5 },
+  dot: { atrLength: 50, factor: 4.5 },
+  bnb: { atrLength: 100, factor: 4 },
+  avax: { atrLength: 100, factor: 3 },
+  qnt: { atrLength: 21, factor: 2.5 },
+  // JUP, BONK, ADA, ZEC, RAY and VVV have no setting that fits all October charts: tier rule.
 };
 
 const KK_DAILY_STOCK_PRESETS: Partial<Record<StockId, KkPreset>> = {
-  crcl: { atrLength: 50, factor: 6 },
-  intc: { atrLength: 15, factor: 4 },
-  mrvl: { atrLength: 30, factor: 4 },
-  amd: { atrLength: 15, factor: 4 },
+  tsla: { atrLength: 100, factor: 4.5 },
+  googl: { atrLength: 15, factor: 5 },
+  mu: { atrLength: 100, factor: 5 },
+  sndk: { atrLength: 100, factor: 5.5 },
+  mstr: { atrLength: 10, factor: 4.5 },
+  crcl: { atrLength: 10, factor: 6 },
+  amd: { atrLength: 20, factor: 4 },
   amzn: { atrLength: 50, factor: 6 },
   meta: { atrLength: 30, factor: 2 },
-  // BOT could not be fitted; it keeps the unverified baseline.
-  bot: { atrLength: 10, factor: 3 },
-  strc: { atrLength: 30, factor: 4 },
-  pltr: { atrLength: 30, factor: 4 },
-  mstr: { atrLength: 15, factor: 4 },
-  tsla: { atrLength: 30, factor: 4 },
-  googl: { atrLength: 50, factor: 6 },
-  nvda: { atrLength: 30, factor: 2 },
-  mu: { atrLength: 15, factor: 3 },
-  sndk: { atrLength: 30, factor: 4 },
-  // Approximate grouped fit with five-close confirmation.
-  spcx: { atrLength: 15, factor: 4 },
+  intc: { atrLength: 15, factor: 4 },
   bmnr: { atrLength: 15, factor: 4 },
+  strc: { atrLength: 30, factor: 4 },
+  // No October fit: previous presets retained, flagged unresolved.
+  nvda: { atrLength: 30, factor: 2 },
+  spcx: { atrLength: 15, factor: 4 },
+  mrvl: { atrLength: 30, factor: 4 },
+  pltr: { atrLength: 30, factor: 4 },
+  bot: { atrLength: 10, factor: 3 },
 };
 
 const KK_DAILY_COMMODITY_PRESETS: Partial<Record<CommodityId, KkPreset>> = {
-  gold: { atrLength: 15, factor: 4 },
-  silver: { atrLength: 15, factor: 3 },
+  gold: { atrLength: 15, factor: 5 },
+  silver: { atrLength: 100, factor: 5 },
 };
 
 function kkPresetTable<Id extends string>(ids: readonly Id[], daily: Partial<Record<Id, KkPreset>>, weekly: (id: Id) => KkPreset): Record<Id, Record<Timeframe, KkPreset>> {
   return Object.fromEntries(ids.map(id => [id, { "1d": daily[id] ?? KK_DAILY_UNCALIBRATED, "1w": weekly(id) }])) as Record<Id, Record<Timeframe, KkPreset>>;
 }
 
-export const KK_SUPERTREND_PRESETS = kkPresetTable(ASSETS.map(asset => asset.id), KK_DAILY_CRYPTO_PRESETS, id => kkWeeklyRule("crypto", id));
+export const KK_SUPERTREND_PRESETS = kkPresetTable(ASSETS.map(asset => asset.id), Object.fromEntries(ASSETS.map(({ id }) => [id, KK_DAILY_CRYPTO_PRESETS[id] ?? kkDailyCryptoTier(id)])) as Record<AssetId, KkPreset>, id => kkWeeklyRule("crypto", id));
 export const KK_SUPERTREND_STOCK_PRESETS = kkPresetTable(STOCKS.map(stock => stock.id), KK_DAILY_STOCK_PRESETS, () => kkWeeklyRule("equity"));
 export const KK_SUPERTREND_COMMODITY_PRESETS = kkPresetTable(COMMODITIES.map(commodity => commodity.id), KK_DAILY_COMMODITY_PRESETS, () => kkWeeklyRule("commodity"));
 
@@ -141,7 +158,7 @@ export function kkSupertrendPreset(timeframe: Timeframe, options: Pick<Indicator
   const configured = market === "commodity" ? options.commodity && KK_SUPERTREND_COMMODITY_PRESETS[options.commodity]
     : market === "equity" ? options.stock && KK_SUPERTREND_STOCK_PRESETS[options.stock]
     : KK_SUPERTREND_PRESETS[options.asset ?? "btc"];
-  return configured?.[timeframe] ?? (timeframe === "1w" ? kkWeeklyRule(market, options.asset) : KK_DAILY_UNCALIBRATED);
+  return configured?.[timeframe] ?? (timeframe === "1w" ? kkWeeklyRule(market, options.asset) : market === "crypto" ? kkDailyCryptoTier(options.asset) : KK_DAILY_UNCALIBRATED);
 }
 
 export const SUPER_GUPPY_R12_DEFAULTS: SuperGuppyConfig = {
@@ -278,7 +295,7 @@ export interface BacktestSummary {
 }
 
 const BASE_INDICATOR_SPECS: Array<Omit<IndicatorSpec, "guidance">> = [
-  { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { weeklyRule: "BTC 10/3; crypto ≥$50B 10/2; all other crypto, stocks and commodities 15/2", weeklyRevision: "2026-10-08", dailyCryptoFamily: "10/3,15/2,15/3,15/4,15/5; QNT 50/4", dailyStockFamily: "10/3,15/3,15/4,30/2,30/4,50/6", dailyCommodityFamily: "15/3,15/4", dailyRevision: "2026-10-06", dailyConfirmations: 5 }, thresholdKind: "provisional", description: "SuperTrend presets by asset class and timeframe. Weekly follows one rule: BTC 10/3, crypto with a market cap of at least about $50B 10/2, and 15/2 for every other crypto, stock and commodity, including newly added assets. Daily presets are per-asset screenshot fits, with unresolved references identified in the calibration notebook.", disclaimer: "The weekly rule reproduces every archived weekly screenshot within 1% on a feed matching the chart; it is not a recovered private formula. Daily presets are approximate screenshot fits, not recovered private formulas. October 6 reviewed October 5 charts with printed reversal dates within existing compact integer families; all presets were retained. Both directions require five consecutive completed daily confirmations and reset on failure. The ATR trail continues during confirmation. Unresolved level, reversal-timing and pending-counter discrepancies are listed per asset in the notebook; NVDA and BOT daily states do not match their screenshots. Weekly reference checks remain separate. Venue and history differences can change the trail.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
+  { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { weeklyRule: "BTC 10/3; crypto ≥$50B 10/2; all other crypto, stocks and commodities 15/2", weeklyRevision: "2026-10-08", dailyCryptoRule: "per-asset October fit; otherwise BTC 15/2, ≥$12B 15/4, $8–12B 15/3.5, <$8B 15/2.5", dailyStockFamily: "per-asset October fit; unfitted presets retained", dailyRevision: "2026-10-12", dailyConfirmations: 5 }, thresholdKind: "provisional", description: "SuperTrend presets by asset class and timeframe. Weekly follows one rule: BTC 10/3, crypto with a market cap of at least about $50B 10/2, and 15/2 for every other crypto, stock and commodity, including newly added assets. Daily presets fit the October 3, 5, 9 and 12 screenshots per asset; crypto without such a fit, and new coins, use a market-cap tier at ATR 15.", disclaimer: "The weekly rule reproduces every archived weekly screenshot within 1% on a feed matching the chart; it is not a recovered private formula. Daily presets are screenshot fits, not recovered private formulas. October 12 applied settings that keep all four October charts within 1% for 28 of 39 assets; JUP, BONK, ADA, ZEC, RAY and VVV use the crypto tier rule, and NVDA, SPCX, MRVL, PLTR and BOT keep unresolved earlier presets. Both directions require five consecutive completed daily confirmations and reset on failure. The ATR trail continues during confirmation. Unresolved level, reversal-timing and pending-counter discrepancies are listed per asset in the notebook. Weekly reference checks remain separate. Venue and history differences can change the trail.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
   { id: "kk_ema_ribbon", displayName: "KK EMA Ribbon", shortName: "KK EMA Ribbon", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { lengths: "32/34/48/58", boundaries: "32/58", source: "Close", calibrationDate: "2026-09-30", colourRule: "provisional alignment" }, thresholdKind: "conditional", description: "Closing-price EMA 32/58 ribbon with hidden 34/48 averages: gold for full bullish alignment, purple for bearish alignment, grey otherwise.", disclaimer: "September 14–30, 2026 daily checks support Close EMA32/58. All eleven September 30 references are within the accepted 0.2% per-boundary tolerance: BTC, ETH, DOGE, SUI and LINK match displayed rounding on matching venue histories; SOL and QNT also round exactly on Coinbase proxies. JUP rounds exactly on Bitstamp after omitting flat zero-volume days. ZEC, RAY and HYPE differ by less than 0.04% on proxy feeds. The earlier RAY EMA40 claim was a transcription error, corrected against the archived screenshot. The 34/48 colour rule is provisional. Weekly uses the same lengths in weeks and is uncalibrated. Remaining assets are uncalibrated; this does not claim to reproduce a private formula." },
   { id: "kk_200_ma", displayName: "KK 200 Moving Averages", shortName: "KK 200 MA", role: "confirmation", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { daily: 200, weekly: 200, method: "SMA of completed closes" }, thresholdKind: "fixed", description: "Price versus the 200-day SMA on 1D or 200-week SMA on 1W. The filled range compares price with the active average; on the combined weekly chart it compares price with the 200-day SMA while retaining the 200-week SMA as context.", disclaimer: "A transparent chart interpretation inspired by the supplied screenshot. Its original color formula is not visible, so the blue/orange rule here is explicitly defined rather than claimed as a replica." },
   { id: "kk_50_200_ema", displayName: "KK 50/200 week EMA", shortName: "KK 50/200 EMA", role: "confirmation", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { fast: 50, slow: 200, method: "EMA of completed closes", primaryTimeframe: "1W", dailyEquivalent: "50/200-day EMA" }, thresholdKind: "fixed", description: "Bullish if and only if the completed close is strictly above both the 50-period and 200-period EMAs. Below both is bearish; between or touching either line is neutral.", sourceUrl: "https://www.tradingview.com/support/solutions/43000592270-exponential-moving-average/" },

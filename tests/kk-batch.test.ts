@@ -19,7 +19,7 @@ test("TSLA.jpeg weekly reference confirms the existing KK 15/2 preset without ch
   assert.equal(kk.state, "bear");
   assert.equal(kk.bullTrigger!.toFixed(2), "383.88");
   assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.tsla["1w"], { atrLength: 15, factor: 2 });
-  assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.tsla["1d"], { atrLength: 30, factor: 4 });
+  assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.tsla["1d"], { atrLength: 100, factor: 4.5 });
   assert.ok(candles.at(-1)!.time < Date.UTC(2026, 8, 7));
 });
 
@@ -67,7 +67,7 @@ test("calibration changes KK only and keeps stock identity outside crypto",()=>{
   for(const stock of STOCKS) assert.ok(!ASSETS.some(asset=>String(asset.id)===stock.id));
   for(const stock of STOCKS.filter(s=>["tsla","nvda","googl","mu","sndk"].includes(s.id))) assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS[stock.id]["1w"],{atrLength:15,factor:2});
   assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.spcx,{"1d":{atrLength:15,factor:4},"1w":{atrLength:15,factor:2}});
-  assert.match(calibrationStatus(undefined,"1d","spcx"),/calibration unresolved.*October 6/);
+  assert.match(calibrationStatus(undefined,"1d","spcx"),/calibration unresolved · October 12/);
   assert.deepEqual(KK_SUPERTREND_PRESETS.btc["1w"],{atrLength:10,factor:3});
   for(const asset of ["eth","sol","bnb"] as const) assert.deepEqual(KK_SUPERTREND_PRESETS[asset]["1w"],{atrLength:10,factor:2});
 });

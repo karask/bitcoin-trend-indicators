@@ -36,9 +36,9 @@ test("twenty-five weekly archive records distinguish weekly checks from unreadab
   const prefix=calculateIndicators(cs.slice(0,-1),"1w",options)[0];
   assert.deepEqual(prefix.states,signal.states.slice(0,-1));
  }
- assert.match(calibrationStatus("sui","1d"),/October 5/);
- assert.match(calibrationStatus(undefined,"1d","tsla"),/October [56]/);
- assert.match(calibrationStatus(undefined,"1d",undefined,"gold"),/calibration unresolved/);
+ assert.match(calibrationStatus("sui","1d"),/October 12/);
+ assert.match(calibrationStatus(undefined,"1d","tsla"),/October 12/);
+ assert.match(calibrationStatus(undefined,"1d",undefined,"gold"),/Daily October fit/);
 });
 test("archive research preserves ordinary indicator calculations and next-open execution across asset classes",()=>{
  for(const asset of ["btc","sol","tsla","gold"] as const){

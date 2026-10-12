@@ -12,7 +12,7 @@ const candles: Candle[] = JSON.parse(readFileSync(new URL("../research/kk-2026-0
 test("ray7 weekly screenshot fits the shared KK 15/2 family on Kraken USD", () => {
   const evidence = KK_RAY_EVIDENCE[0];
   const kk = calculateIndicators(candles, "1w", { asset: "ray", indicatorIds: ["kk_supertrend"] })[0];
-  assert.deepEqual(KK_SUPERTREND_PRESETS.ray, { "1d": { atrLength: 10, factor: 3 }, "1w": { atrLength: 15, factor: 2 } });
+  assert.deepEqual(KK_SUPERTREND_PRESETS.ray, { "1d": { atrLength: 15, factor: 2.5 }, "1w": { atrLength: 15, factor: 2 } });
   assert.equal(kk.state, evidence.targetState);
   assert.equal(kk.values.supertrend, evidence.value);
   assert.ok(Math.abs(kk.values.supertrend! / evidence.target - 1) < .006);
@@ -20,7 +20,7 @@ test("ray7 weekly screenshot fits the shared KK 15/2 family on Kraken USD", () =
   assert.equal(kk.lastFlip! + 7 * 86_400_000, Date.UTC(2026, 8, 7));
   assert.equal(candles.at(-1)!.time, Date.UTC(2026, 8, 14));
   assert.equal(calibrationStatus("ray", "1w"), "Weekly rule 15/2 · screenshot-checked · October 8");
-  assert.match(calibrationStatus("ray", "1d"), /October [56]/);
+  assert.equal(calibrationStatus("ray", "1d"), "Daily crypto tier 15/2.5 · no October fit · reviewed October 12");
 });
 
 test("Raydium is isolated to its verified Kraken USD venue", () => {
