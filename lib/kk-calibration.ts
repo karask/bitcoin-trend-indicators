@@ -10,11 +10,11 @@ import { KK_ARCHIVE_EVIDENCE } from "./kk-archive-evidence.ts";
 import { KK_SEPTEMBER28_EVIDENCE } from "./kk-september28-evidence.ts";
 import { KK_OCTOBER3_EVIDENCE } from "./kk-october3-evidence.ts";
 import { KK_OCTOBER5_EVIDENCE } from "./kk-october5-evidence.ts";
-import { KK_OCTOBER12_EVIDENCE } from "./kk-october12-evidence.ts";
+import { KK_OCTOBER16_EVIDENCE } from "./kk-october16-evidence.ts";
 import { KK_RAY_EVIDENCE } from "./kk-ray-evidence.ts";
 import { ETH_KK_CALIBRATION, SOL_KK_CALIBRATION, XMR_KK_CALIBRATION, DOGE_KK_CALIBRATION, LINK_KK_CALIBRATION, SUI_KK_CALIBRATION, type OhlcRow } from "./kk-reference-data.ts";
 
-export const KK_CALIBRATION_VERSION = "2026-10-12";
+export const KK_CALIBRATION_VERSION = "2026-10-16";
 type Reference = { id: string; asset: AssetId; label: string; venue: string; denomination: string; start: number; rows: readonly OhlcRow[]; target: number; state: "bull" | "bear"; flipCandle: number; tolerance: number; previous: { atrLength: number; factor: number }; reason: string };
 export const KK_REFERENCES: Reference[] = [
   { id: "eth-original", asset: "eth", label: "Original ETH weekly reference", venue: "Bitfinex", denomination: "USD", start: Date.UTC(2025, 0, 20), rows: ETH_KK_CALIBRATION, target: 1709.38, state: "bull", flipCandle: Date.UTC(2026, 7, 17), tolerance: .01, previous: { atrLength: 10, factor: 3 }, reason: "Multiplier 3 → 2, ATR unchanged: a closer trail reproduces the bullish state and bearish reversal level." },
@@ -46,10 +46,10 @@ function weeklyRuleStatus(asset: AssetId | undefined, stock?: StockId, commodity
 export function calibrationStatus(asset: AssetId | undefined, timeframe: Timeframe, stock?: StockId, commodity?: CommodityId) {
   if (timeframe === "1w") return weeklyRuleStatus(asset, stock, commodity);
   const id = commodity ?? stock ?? asset;
-  const october12 = KK_OCTOBER12_EVIDENCE.find(row => row.asset === id);
-  if (october12) return october12.status === "october-fit" ? `Daily October fit · ${october12.checks.length} charts within 1% · reviewed October 12`
-    : october12.status === "tier" ? `Daily crypto tier ${october12.preset.atrLength}/${october12.preset.factor} · no October fit · reviewed October 12`
-    : "Daily screenshot reviewed · calibration unresolved · October 12";
+  const october16 = KK_OCTOBER16_EVIDENCE.find(row => row.asset === id);
+  if (october16) return october16.status === "october-fit" ? `Daily October fit · ${october16.checks.length} charts within 1% · reviewed October 16`
+    : october16.status === "tier" ? `Daily crypto tier ${october16.preset.atrLength}/${october16.preset.factor} · no October fit · reviewed October 16`
+    : "Daily screenshot reviewed · calibration unresolved · October 16";
   if (asset && !stock && !commodity && ASSETS.some(item => item.id === asset)) {
     const tier = kkSupertrendPreset("1d", { asset });
     return `Daily crypto tier ${tier.atrLength}/${tier.factor} · applied without calibration`;

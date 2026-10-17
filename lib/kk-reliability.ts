@@ -1,15 +1,15 @@
 import { KK_SEPTEMBER28_EVIDENCE } from "./kk-september28-evidence.ts";
 import { KK_OCTOBER3_EVIDENCE } from "./kk-october3-evidence.ts";
 import { KK_OCTOBER5_EVIDENCE } from "./kk-october5-evidence.ts";
-import { KK_OCTOBER12_EVIDENCE } from "./kk-october12-evidence.ts";
+import { KK_OCTOBER16_EVIDENCE } from "./kk-october16-evidence.ts";
 import { isAssetId } from "./markets.ts";
 import type { Timeframe } from "./regimes.ts";
 
 /** Reliability belongs to the KK calibration and timeframe, not the asset or provider. */
 export function kkCalibrationWarning(asset: string, timeframe: Timeframe): { label: string; detail: string } | null {
   if (timeframe === "1d") {
-    const october12 = KK_OCTOBER12_EVIDENCE.find(row => row.asset === asset);
-    if (october12) return october12.status === "october-fit" ? null : { label: october12.status === "tier" ? "Low-confidence KK calibration" : "Unreliable KK calibration", detail: october12.note };
+    const october16 = KK_OCTOBER16_EVIDENCE.find(row => row.asset === asset);
+    if (october16) return october16.status === "october-fit" ? null : { label: october16.status === "tier" ? "Low-confidence KK calibration" : "Unreliable KK calibration", detail: october16.note };
     if (isAssetId(asset)) return { label: "Uncalibrated KK", detail: "No daily chart has been reviewed for this coin. It uses the October 12 market-cap tier at ATR 15 until its own charts are checked." };
   }
   const latestDaily = timeframe === "1d" ? KK_OCTOBER5_EVIDENCE.find(row => row.asset === asset) : undefined;

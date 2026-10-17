@@ -77,7 +77,7 @@ test("KK presets lead the indicator menu with fixed crypto parameters", () => {
   assert.equal(kkIndex, 0);
   for (const timeframe of ["1d", "1w"] as const) assert.deepEqual(INDICATOR_SPECS.filter(spec => spec.supportedTimeframes.includes(timeframe)).slice(0, 6).map(spec => spec.id), ["kk_supertrend", "kk_ema_ribbon", "kk_200_ma", "kk_50_200_ema", "support_band", "supertrend"]);
   assert.deepEqual(Object.fromEntries(Object.entries(KK_SUPERTREND_PRESETS).map(([id, preset]) => [id, preset["1w"]])), Object.fromEntries(ASSETS.map(asset => [asset.id, asset.id === "btc" ? KK_WEEKLY_RULES.bitcoin : ["eth", "sol", "bnb"].includes(asset.id) ? KK_WEEKLY_RULES.largeCapCrypto : KK_WEEKLY_RULES.standard])));
-  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { weeklyRule: "BTC 10/3; crypto ≥$50B 10/2; all other crypto, stocks and commodities 15/2", weeklyRevision: "2026-10-08", dailyCryptoRule: "per-asset October fit; otherwise BTC 15/2, ≥$12B 15/4, $8–12B 15/3.5, <$8B 15/2.5", dailyStockFamily: "per-asset October fit; unfitted presets retained", dailyRevision: "2026-10-12", dailyConfirmations: 5 });
+  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { weeklyRule: "BTC 10/3; crypto ≥$50B 10/2; all other crypto, stocks and commodities 15/2", weeklyRevision: "2026-10-08", dailyCryptoRule: "per-asset October fit; otherwise BTC 15/2, ≥$12B 15/4, $8–12B 15/3.5, <$8B 15/2.5", dailyStockFamily: "per-asset October fit; unfitted presets retained", dailyRevision: "2026-10-16", dailyConfirmations: 5, dailyTrail: "held while a reversal is pending" });
   assert.deepEqual(KK_SUPERTREND_PRESETS.doge, { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.link, { "1d": { atrLength: 100, factor: 4.5 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.xmr, { "1d": { atrLength: 30, factor: 4 }, "1w": { atrLength: 15, factor: 2 } });
@@ -240,7 +240,10 @@ test("equity market context runs every applicable indicator; unidentified stocks
     else {
       assert.deepEqual([kk.values.atrLength, kk.values.factor], [10, 3]);
       assert.equal(kk.confirmation!.required,5);
-      assert.deepEqual(kk.overlays[0].points, standard.overlays[0].points, timeframe);
+      // The held trail departs from standard 10/3 only while a reversal is pending; the archived raw-trail mechanism matches it exactly.
+      const rawTrail = calculateIndicators(candles, timeframe, { market: "equity", indicatorIds: ["kk_supertrend"], kkSupertrendRawTrailConfirmation: true })[0];
+      assert.deepEqual(rawTrail.overlays[0].points, standard.overlays[0].points, timeframe);
+      assert.equal(kk.overlays[0].points.length, standard.overlays[0].points.length);
     }
   }
   const mayer = calculateIndicators(candles, "1d", { market: "equity" }).find(item => item.id === "mayer")!;

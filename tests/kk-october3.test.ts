@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { KK_OCTOBER12_EVIDENCE } from "../lib/kk-october12-evidence.ts";
+import { KK_OCTOBER16_EVIDENCE } from "../lib/kk-october16-evidence.ts";
 import { KK_OCTOBER3_EVIDENCE } from "../lib/kk-october3-evidence.ts";
 import { calculateIndicators, KK_SUPERTREND_PRESETS, KK_SUPERTREND_STOCK_PRESETS, type Candle, type IndicatorCalculationOptions } from "../lib/regimes.ts";
 import { buildResearch } from "../lib/research.ts";
@@ -12,9 +12,9 @@ import { kkCalibrationWarning } from "../lib/kk-reliability.ts";
 const observations = JSON.parse(readFileSync(new URL("../research/kk-2026-10-03/observations.json", import.meta.url), "utf8"));
 const cutoff = Date.UTC(2026, 9, 3);
 
-const october12Warning = (asset: string) => { const row = KK_OCTOBER12_EVIDENCE.find(r => r.asset === asset)!; return row.status === "october-fit" ? null : row.status === "tier" ? /Low-confidence/ : /Unreliable/; };
+const october16Warning = (asset: string) => { const row = KK_OCTOBER16_EVIDENCE.find(r => r.asset === asset)!; return row.status === "october-fit" ? null : row.status === "tier" ? /Low-confidence/ : /Unreliable/; };
 test("October 4 review retains October 3 capture and completed October 2 reference dates", () => {
-  assert.equal(KK_CALIBRATION_VERSION, "2026-10-12");
+  assert.equal(KK_CALIBRATION_VERSION, "2026-10-16");
   assert.equal(observations.captureDate, "2026-10-03");
   assert.equal(KK_OCTOBER3_EVIDENCE.length, 37);
   assert.equal(new Set(KK_OCTOBER3_EVIDENCE.map(r => r.asset)).size, 37);
@@ -55,8 +55,8 @@ test("all 37 daily presets reproduce fixed evidence without repainting or changi
     const candles = all.filter(c => c.complete && c.time < cutoff);
     assert.equal(new Date(candles.at(-1)!.time).toISOString().slice(0, 10), row.through);
     const options: IndicatorCalculationOptions = row.assetClass === "crypto" ? { asset: row.asset as keyof typeof KK_SUPERTREND_PRESETS } : { market: "equity", stock: row.asset as keyof typeof KK_SUPERTREND_STOCK_PRESETS };
-    // Replay the preset recorded at this review; October 12 superseded it.
-    Object.assign(options, { kkSupertrendAtrLength: row.preset.atrLength, kkSupertrendFactor: row.preset.factor });
+    // Replay the preset and raw-trail mechanism recorded at this review; October 12 and 16 superseded them.
+    Object.assign(options, { kkSupertrendAtrLength: row.preset.atrLength, kkSupertrendFactor: row.preset.factor, kkSupertrendRawTrailConfirmation: true });
     const signals = calculateIndicators(candles, "1d", options);
     const kk = signals.find(s => s.id === "kk_supertrend")!;
     assert.deepEqual([kk.values.atrLength, kk.values.factor], [row.preset.atrLength, row.preset.factor], row.asset);
@@ -79,8 +79,8 @@ test("all 37 daily presets reproduce fixed evidence without repainting or changi
     assert.equal(latest.state, row.latestState);
     if (row.asset !== "xmr") assert.equal(row.latestValue, row.value);
     const status = calibrationStatus(options.asset, "1d", options.stock);
-    assert.match(status, /October 12/);
-    const expectedWarning = october12Warning(row.asset);
+    assert.match(status, /October 16/);
+    const expectedWarning = october16Warning(row.asset);
     if (expectedWarning) assert.match(kkCalibrationWarning(row.asset, "1d")!.label, expectedWarning);
     else assert.equal(kkCalibrationWarning(row.asset, "1d"), null);
 

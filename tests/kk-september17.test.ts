@@ -32,7 +32,7 @@ test("new BNB and ZEC markets support research, next-open execution and cost sen
     const baseline=calculateIndicators(candles,"1w",{asset,kkSupertrendAtrLength:10,kkSupertrendFactor:3});
     assert.deepEqual(signals.filter(s=>s.id!=="kk_supertrend"),baseline.filter(s=>s.id!=="kk_supertrend"));
     const daily=calculateIndicators(candles,"1d",{asset,indicatorIds:["kk_supertrend"]})[0];
-    assert.deepEqual([daily.values.atrLength,daily.values.factor],asset==="bnb"?[100,4]:[15,4]);
+    assert.deepEqual([daily.values.atrLength,daily.values.factor],asset==="bnb"?[100,4]:[40,4]);
     const report=buildResearch(candles,signals,"kk_supertrend","1w");
     assert.ok(report.detail && report.benchmark && report.rolling.length);
     const returns=report.sensitivity.map(s=>s.result!.totalReturn);

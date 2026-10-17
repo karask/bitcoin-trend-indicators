@@ -39,6 +39,8 @@ export interface IndicatorCalculationOptions {
   indicatorIds?: string[];
   /** Historical research reproduction only; production daily KK always uses five. */
   kkSupertrendLegacySingleClose?: boolean;
+  /** Historical replay of the pre-October 16 daily mechanism: the trail switches to the opposite band while a reversal is pending. */
+  kkSupertrendRawTrailConfirmation?: boolean;
 }
 
 export interface AnnualizationOptions {
@@ -71,7 +73,8 @@ export const KK_DAILY_UNCALIBRATED: KkPreset = { atrLength: 10, factor: 3 };
 
 /**
  * October 12, 2026 daily crypto tiers at ATR 15, from the October 3/5/9/12 charts.
- * Used for crypto without a per-asset October fit and for new coins.
+ * Used for crypto without a per-asset October fit and for new coins. On October 16
+ * the tier fit only 6 of 20 coins across five batches; it remains a fallback.
  */
 export const KK_DAILY_CRYPTO_TIERS = {
   bitcoin: { atrLength: 15, factor: 2 },
@@ -98,7 +101,7 @@ export function kkDailyCryptoTier(asset?: AssetId): KkPreset {
   return cap >= 12 ? KK_DAILY_CRYPTO_TIERS.large : cap >= 8 ? KK_DAILY_CRYPTO_TIERS.mid : KK_DAILY_CRYPTO_TIERS.small;
 }
 
-// Daily presets fit every October 3/5/9/12 chart within 1% (or already did and were retained).
+// Daily presets fit every October 3/5/9/12/16 chart within 1% with the held trail (or already did and were retained).
 // Crypto absent here uses the market-cap tier; stocks and futures absent here use KK_DAILY_UNCALIBRATED.
 const KK_DAILY_CRYPTO_PRESETS: Partial<Record<AssetId, KkPreset>> = {
   btc: { atrLength: 15, factor: 2 },
@@ -115,11 +118,12 @@ const KK_DAILY_CRYPTO_PRESETS: Partial<Record<AssetId, KkPreset>> = {
   bnb: { atrLength: 100, factor: 4 },
   avax: { atrLength: 100, factor: 3 },
   qnt: { atrLength: 21, factor: 2.5 },
-  // JUP, BONK, ADA, ZEC, RAY and VVV have no setting that fits all October charts: tier rule.
+  zec: { atrLength: 40, factor: 4 },
+  vvv: { atrLength: 20, factor: 3.5 },
+  // JUP, BONK, ADA and RAY have no setting that fits all October charts: tier rule.
 };
 
 const KK_DAILY_STOCK_PRESETS: Partial<Record<StockId, KkPreset>> = {
-  tsla: { atrLength: 100, factor: 4.5 },
   googl: { atrLength: 15, factor: 5 },
   mu: { atrLength: 100, factor: 5 },
   sndk: { atrLength: 100, factor: 5.5 },
@@ -130,9 +134,10 @@ const KK_DAILY_STOCK_PRESETS: Partial<Record<StockId, KkPreset>> = {
   meta: { atrLength: 30, factor: 2 },
   intc: { atrLength: 15, factor: 4 },
   bmnr: { atrLength: 15, factor: 4 },
-  strc: { atrLength: 30, factor: 4 },
+  strc: { atrLength: 20, factor: 4 },
+  nvda: { atrLength: 50, factor: 5 },
   // No October fit: previous presets retained, flagged unresolved.
-  nvda: { atrLength: 30, factor: 2 },
+  tsla: { atrLength: 100, factor: 4.5 },
   spcx: { atrLength: 15, factor: 4 },
   mrvl: { atrLength: 30, factor: 4 },
   pltr: { atrLength: 30, factor: 4 },
@@ -140,7 +145,8 @@ const KK_DAILY_STOCK_PRESETS: Partial<Record<StockId, KkPreset>> = {
 };
 
 const KK_DAILY_COMMODITY_PRESETS: Partial<Record<CommodityId, KkPreset>> = {
-  gold: { atrLength: 15, factor: 5 },
+  gold: { atrLength: 40, factor: 4.5 },
+  // No October fit: previous preset retained, flagged unresolved.
   silver: { atrLength: 100, factor: 5 },
 };
 
@@ -295,7 +301,7 @@ export interface BacktestSummary {
 }
 
 const BASE_INDICATOR_SPECS: Array<Omit<IndicatorSpec, "guidance">> = [
-  { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { weeklyRule: "BTC 10/3; crypto ≥$50B 10/2; all other crypto, stocks and commodities 15/2", weeklyRevision: "2026-10-08", dailyCryptoRule: "per-asset October fit; otherwise BTC 15/2, ≥$12B 15/4, $8–12B 15/3.5, <$8B 15/2.5", dailyStockFamily: "per-asset October fit; unfitted presets retained", dailyRevision: "2026-10-12", dailyConfirmations: 5 }, thresholdKind: "provisional", description: "SuperTrend presets by asset class and timeframe. Weekly follows one rule: BTC 10/3, crypto with a market cap of at least about $50B 10/2, and 15/2 for every other crypto, stock and commodity, including newly added assets. Daily presets fit the October 3, 5, 9 and 12 screenshots per asset; crypto without such a fit, and new coins, use a market-cap tier at ATR 15.", disclaimer: "The weekly rule reproduces every archived weekly screenshot within 1% on a feed matching the chart; it is not a recovered private formula. Daily presets are screenshot fits, not recovered private formulas. October 12 applied settings that keep all four October charts within 1% for 28 of 39 assets; JUP, BONK, ADA, ZEC, RAY and VVV use the crypto tier rule, and NVDA, SPCX, MRVL, PLTR and BOT keep unresolved earlier presets. Both directions require five consecutive completed daily confirmations and reset on failure. The ATR trail continues during confirmation. Unresolved level, reversal-timing and pending-counter discrepancies are listed per asset in the notebook. Weekly reference checks remain separate. Venue and history differences can change the trail.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
+  { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { weeklyRule: "BTC 10/3; crypto ≥$50B 10/2; all other crypto, stocks and commodities 15/2", weeklyRevision: "2026-10-08", dailyCryptoRule: "per-asset October fit; otherwise BTC 15/2, ≥$12B 15/4, $8–12B 15/3.5, <$8B 15/2.5", dailyStockFamily: "per-asset October fit; unfitted presets retained", dailyRevision: "2026-10-16", dailyConfirmations: 5, dailyTrail: "held while a reversal is pending" }, thresholdKind: "provisional", description: "SuperTrend presets by asset class and timeframe. Weekly follows one rule: BTC 10/3, crypto with a market cap of at least about $50B 10/2, and 15/2 for every other crypto, stock and commodity, including newly added assets. Daily presets fit the October 3, 5, 9, 12 and 16 screenshots per asset; crypto without such a fit, and new coins, use a market-cap tier at ATR 15. The daily trail holds while a reversal is pending.", disclaimer: "The weekly rule reproduces every archived weekly screenshot within 1% on a feed matching the chart; it is not a recovered private formula. Daily presets are screenshot fits, not recovered private formulas. October 16 applied settings that keep all five October charts within 1% for 29 of 39 assets; JUP, BONK, ADA and RAY use the crypto tier rule, and TSLA, SPCX, MRVL, PLTR, BOT and silver keep unresolved earlier presets. Both directions require five consecutive completed daily closes beyond the held trail and reset on failure; the trail does not move while a reversal is pending. Unresolved level, reversal-timing and pending-counter discrepancies are listed per asset in the notebook. Weekly reference checks remain separate. Venue and history differences can change the trail.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
   { id: "kk_ema_ribbon", displayName: "KK EMA Ribbon", shortName: "KK EMA Ribbon", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { lengths: "32/34/48/58", boundaries: "32/58", source: "Close", calibrationDate: "2026-09-30", colourRule: "provisional alignment" }, thresholdKind: "conditional", description: "Closing-price EMA 32/58 ribbon with hidden 34/48 averages: gold for full bullish alignment, purple for bearish alignment, grey otherwise.", disclaimer: "September 14–30, 2026 daily checks support Close EMA32/58. All eleven September 30 references are within the accepted 0.2% per-boundary tolerance: BTC, ETH, DOGE, SUI and LINK match displayed rounding on matching venue histories; SOL and QNT also round exactly on Coinbase proxies. JUP rounds exactly on Bitstamp after omitting flat zero-volume days. ZEC, RAY and HYPE differ by less than 0.04% on proxy feeds. The earlier RAY EMA40 claim was a transcription error, corrected against the archived screenshot. The 34/48 colour rule is provisional. Weekly uses the same lengths in weeks and is uncalibrated. Remaining assets are uncalibrated; this does not claim to reproduce a private formula." },
   { id: "kk_200_ma", displayName: "KK 200 Moving Averages", shortName: "KK 200 MA", role: "confirmation", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { daily: 200, weekly: 200, method: "SMA of completed closes" }, thresholdKind: "fixed", description: "Price versus the 200-day SMA on 1D or 200-week SMA on 1W. The filled range compares price with the active average; on the combined weekly chart it compares price with the 200-day SMA while retaining the 200-week SMA as context.", disclaimer: "A transparent chart interpretation inspired by the supplied screenshot. Its original color formula is not visible, so the blue/orange rule here is explicitly defined rather than claimed as a replica." },
   { id: "kk_50_200_ema", displayName: "KK 50/200 week EMA", shortName: "KK 50/200 EMA", role: "confirmation", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { fast: 50, slow: 200, method: "EMA of completed closes", primaryTimeframe: "1W", dailyEquivalent: "50/200-day EMA" }, thresholdKind: "fixed", description: "Bullish if and only if the completed close is strictly above both the 50-period and 200-period EMAs. Below both is bearish; between or touching either line is neutral.", sourceUrl: "https://www.tradingview.com/support/solutions/43000592270-exponential-moving-average/" },
@@ -610,6 +616,46 @@ function supertrend(candles: Candle[], spec: IndicatorSpec, length: number, fact
   return buildSnapshot(spec, candles, states, [points(candles, st, overlay.name, overlay.color)], { atr: atr.at(-1) ?? null, atrLength: length, supertrend: level, factor }, meta.state === "bear" ? level : null, meta.state === "bull" ? level : null, "Provisional until the open candle completes");
 }
 
+/**
+ * Daily KK with the October 16 held trail: the trail never moves against the
+ * confirmed regime while a reversal is pending, and the reversal needs five
+ * consecutive completed closes beyond that held level. A failed close resets the
+ * count; a confirmed flip starts the new trail at the standard opposite band.
+ */
+function heldTrailKkSupertrend(candles: Candle[], spec: IndicatorSpec, length: number, factor: number): SignalSnapshot {
+  // Intraday candles must not alter the ATR recurrence or the confirmation count.
+  const completed = candles.filter(c => c.complete);
+  const atr = rma(trueRanges(completed), length), trail: Array<number | null> = Array(completed.length).fill(null), states: Array<RegimeState | null> = Array(completed.length).fill(null);
+  let upper = NaN, lower = NaN, level = NaN, state: RegimeState = "bear", count = 0;
+  for (let i = 0; i < completed.length; i++) {
+    if (!finite(atr[i])) continue;
+    const c = completed[i], hl2 = (c.high + c.low) / 2, bu = hl2 + factor * atr[i]!, bl = hl2 - factor * atr[i]!;
+    if (Number.isNaN(level)) { upper = bu; lower = bl; level = bu; }
+    else {
+      upper = bu < upper || completed[i - 1].close > upper ? bu : upper;
+      lower = bl > lower || completed[i - 1].close < lower ? bl : lower;
+      if (count === 0) level = state === "bull" ? Math.max(level, bl) : Math.min(level, bu);
+      count = (state === "bull" ? c.close < level : c.close > level) ? count + 1 : 0;
+      if (count === KK_DAILY_CONFIRMATIONS) { state = state === "bull" ? "bear" : "bull"; level = state === "bull" ? lower : upper; count = 0; }
+    }
+    states[i] = state; trail[i] = level;
+  }
+  const meta = lastState(states), last = trail.at(-1) ?? null, pending: RegimeState | null = count ? (meta.state === "bull" ? "bear" : "bull") : null;
+  const direction = pending === "bull" ? "Bullish" : "Bearish";
+  const trigger = pending
+    ? `${direction} confirmation ${count}/5 · ${5 - count} more consecutive daily closes beyond the held trail required; a failed confirmation resets to 0/5`
+    : "Reversals require 5 consecutive daily closes beyond the held trail; a failed confirmation resets to 0/5";
+  const result = buildSnapshot(spec, completed, states, [points(completed, trail, "KK Supertrend", "#d7a928")],
+    { atr: atr.at(-1) ?? null, atrLength: length, supertrend: last, factor, confirmationsRequired: KK_DAILY_CONFIRMATIONS, confirmationCount: count },
+    meta.state === "bear" ? last : null, meta.state === "bull" ? last : null, trigger,
+    "Daily KK Supertrend confirms both bullish and bearish reversals after five consecutive completed daily closes beyond the trail. The trail holds while a reversal is pending, and a failed confirmation resets the count. Execution follows at the next session open.");
+  result.confirmation = { required: KK_DAILY_CONFIRMATIONS, count, pending };
+  let index = 0;
+  result.states = candles.map(c => c.complete ? states[index++] : null);
+  return result;
+}
+
+/** Pre-October 16 daily mechanism, kept for replaying archived reviews: the raw trail flips at once and the regime waits five closes. */
 function dailyKkSupertrend(candles: Candle[], spec: IndicatorSpec, length: number, factor: number): SignalSnapshot {
   // Intraday candles must not alter the ATR recurrence or the confirmation count.
   const completed = candles.filter(c => c.complete);
@@ -984,9 +1030,10 @@ export function calculateIndicators(candles: Candle[], timeframe: Timeframe, opt
     switch (spec.id) {
       case "support_band": return supportBand(candles, spec);
       case "supertrend": return supertrend(candles, spec, 10, 3, { name: "SuperTrend", color: "#8769c3" });
-      case "kk_supertrend": return timeframe === "1d" && !options.kkSupertrendLegacySingleClose
-        ? dailyKkSupertrend(candles, spec, kkAtrLength, kkFactor)
-        : supertrend(candles, spec, kkAtrLength, kkFactor, { name: "KK Supertrend", color: "#d7a928" });
+      case "kk_supertrend": return timeframe !== "1d" || options.kkSupertrendLegacySingleClose
+        ? supertrend(candles, spec, kkAtrLength, kkFactor, { name: "KK Supertrend", color: "#d7a928" })
+        : options.kkSupertrendRawTrailConfirmation ? dailyKkSupertrend(candles, spec, kkAtrLength, kkFactor)
+        : heldTrailKkSupertrend(candles, spec, kkAtrLength, kkFactor);
       case "kk_200_ma": return kk200MovingAverages(candles, spec, timeframe);
       case "kk_50_200_ema": return kk50200Ema(candles, spec, timeframe);
       case "smma_ribbon": return ribbon(candles, spec);

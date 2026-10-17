@@ -31,7 +31,7 @@ test("AVAX and MSTR have separated providers, weekly calibration and normal rese
  assert.equal(marketDefinition("avax","coinbase").providerSymbol,"AVAX-USD");
  assert.equal(stockDefinition("MSTR").exchange,"NASDAQ");
  assert.equal(calibrationStatus(undefined,"1w","mstr"),"Weekly rule 15/2 · screenshot-checked · October 8");
- assert.match(calibrationStatus(undefined,"1d","mstr"),/October 12/);
+ assert.match(calibrationStatus(undefined,"1d","mstr"),/October 16/);
  for(const asset of ["avax","mstr"] as const){
   const candles=fixture(asset),options=asset==="mstr"?{market:"equity" as const,stock:asset}:{asset};
   const signals=calculateIndicators(candles,"1w",options);
