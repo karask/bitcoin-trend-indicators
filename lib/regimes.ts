@@ -101,7 +101,7 @@ export function kkDailyCryptoTier(asset?: AssetId): KkPreset {
   return cap >= 12 ? KK_DAILY_CRYPTO_TIERS.large : cap >= 8 ? KK_DAILY_CRYPTO_TIERS.mid : KK_DAILY_CRYPTO_TIERS.small;
 }
 
-// Daily presets fit every October 3/5/9/12/16 chart within 1% with the held trail (or already did and were retained).
+// Daily presets fit every October 3/5/9/12/16/19 chart within 1% with the held trail (or already did and were retained).
 // Crypto absent here uses the market-cap tier; stocks and futures absent here use KK_DAILY_UNCALIBRATED.
 const KK_DAILY_CRYPTO_PRESETS: Partial<Record<AssetId, KkPreset>> = {
   btc: { atrLength: 15, factor: 2 },
@@ -109,17 +109,19 @@ const KK_DAILY_CRYPTO_PRESETS: Partial<Record<AssetId, KkPreset>> = {
   sol: { atrLength: 15, factor: 4 },
   doge: { atrLength: 15, factor: 4 },
   hype: { atrLength: 15, factor: 4 },
-  link: { atrLength: 100, factor: 4.5 },
+  link: { atrLength: 60, factor: 4.5 },
   xmr: { atrLength: 30, factor: 4 },
-  sui: { atrLength: 10, factor: 2 },
   op: { atrLength: 50, factor: 3.5 },
   atom: { atrLength: 5, factor: 3.5 },
   dot: { atrLength: 50, factor: 4.5 },
   bnb: { atrLength: 100, factor: 4 },
   avax: { atrLength: 100, factor: 3 },
-  qnt: { atrLength: 21, factor: 2.5 },
-  zec: { atrLength: 40, factor: 4 },
+  qnt: { atrLength: 27, factor: 3 },
   vvv: { atrLength: 20, factor: 3.5 },
+  // No October fit, but closer than the tier (which gets their state wrong): kept, flagged unresolved.
+  // Both match up to their October 16–18 flips; the chart's new bear trail is higher (ZEC −5%, SUI −19%).
+  zec: { atrLength: 40, factor: 4 },
+  sui: { atrLength: 10, factor: 2 },
   // JUP, BONK, ADA and RAY have no setting that fits all October charts: tier rule.
 };
 
@@ -146,8 +148,7 @@ const KK_DAILY_STOCK_PRESETS: Partial<Record<StockId, KkPreset>> = {
 
 const KK_DAILY_COMMODITY_PRESETS: Partial<Record<CommodityId, KkPreset>> = {
   gold: { atrLength: 40, factor: 4.5 },
-  // No October fit: previous preset retained, flagged unresolved.
-  silver: { atrLength: 100, factor: 5 },
+  silver: { atrLength: 120, factor: 5.5 },
 };
 
 function kkPresetTable<Id extends string>(ids: readonly Id[], daily: Partial<Record<Id, KkPreset>>, weekly: (id: Id) => KkPreset): Record<Id, Record<Timeframe, KkPreset>> {
@@ -301,7 +302,7 @@ export interface BacktestSummary {
 }
 
 const BASE_INDICATOR_SPECS: Array<Omit<IndicatorSpec, "guidance">> = [
-  { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { weeklyRule: "BTC 10/3; crypto ≥$50B 10/2; all other crypto, stocks and commodities 15/2", weeklyRevision: "2026-10-08", dailyCryptoRule: "per-asset October fit; otherwise BTC 15/2, ≥$12B 15/4, $8–12B 15/3.5, <$8B 15/2.5", dailyStockFamily: "per-asset October fit; unfitted presets retained", dailyRevision: "2026-10-16", dailyConfirmations: 5, dailyTrail: "held while a reversal is pending" }, thresholdKind: "provisional", description: "SuperTrend presets by asset class and timeframe. Weekly follows one rule: BTC 10/3, crypto with a market cap of at least about $50B 10/2, and 15/2 for every other crypto, stock and commodity, including newly added assets. Daily presets fit the October 3, 5, 9, 12 and 16 screenshots per asset; crypto without such a fit, and new coins, use a market-cap tier at ATR 15. The daily trail holds while a reversal is pending.", disclaimer: "The weekly rule reproduces every archived weekly screenshot within 1% on a feed matching the chart; it is not a recovered private formula. Daily presets are screenshot fits, not recovered private formulas. October 16 applied settings that keep all five October charts within 1% for 29 of 39 assets; JUP, BONK, ADA and RAY use the crypto tier rule, and TSLA, SPCX, MRVL, PLTR, BOT and silver keep unresolved earlier presets. Both directions require five consecutive completed daily closes beyond the held trail and reset on failure; the trail does not move while a reversal is pending. Unresolved level, reversal-timing and pending-counter discrepancies are listed per asset in the notebook. Weekly reference checks remain separate. Venue and history differences can change the trail.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
+  { id: "kk_supertrend", displayName: "KK Supertrend", shortName: "KK Supertrend", role: "regime", family: "ATR/trailing stop", supportedTimeframes: ["1d", "1w"], parameters: { weeklyRule: "BTC 10/3; crypto ≥$50B 10/2; all other crypto, stocks and commodities 15/2", weeklyRevision: "2026-10-08", dailyCryptoRule: "per-asset October fit; otherwise BTC 15/2, ≥$12B 15/4, $8–12B 15/3.5, <$8B 15/2.5", dailyStockFamily: "per-asset October fit; unfitted presets retained", dailyRevision: "2026-10-19", dailyConfirmations: 5, dailyTrail: "held while a reversal is pending" }, thresholdKind: "provisional", description: "SuperTrend presets by asset class and timeframe. Weekly follows one rule: BTC 10/3, crypto with a market cap of at least about $50B 10/2, and 15/2 for every other crypto, stock and commodity, including newly added assets. Daily presets fit the October 3, 5, 9, 12, 16 and 19 screenshots per asset; crypto without such a fit, and new coins, use a market-cap tier at ATR 15. The daily trail holds while a reversal is pending.", disclaimer: "The weekly rule reproduces every archived weekly screenshot within 1% on a feed matching the chart; it is not a recovered private formula. Daily presets are screenshot fits, not recovered private formulas. October 19 applied settings that keep all six October charts within 1% for 28 of 39 assets; JUP, BONK, ADA and RAY use the crypto tier rule, and ZEC, SUI, TSLA, SPCX, MRVL, PLTR and BOT keep unresolved earlier presets. Both directions require five consecutive completed daily closes beyond the held trail and reset on failure; the trail does not move while a reversal is pending. Unresolved level, reversal-timing and pending-counter discrepancies are listed per asset in the notebook. Weekly reference checks remain separate. Venue and history differences can change the trail.", sourceUrl: "https://www.tradingview.com/support/solutions/43000634738-supertrend/" },
   { id: "kk_ema_ribbon", displayName: "KK EMA Ribbon", shortName: "KK EMA Ribbon", role: "regime", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { lengths: "32/34/48/58", boundaries: "32/58", source: "Close", calibrationDate: "2026-09-30", colourRule: "provisional alignment" }, thresholdKind: "conditional", description: "Closing-price EMA 32/58 ribbon with hidden 34/48 averages: gold for full bullish alignment, purple for bearish alignment, grey otherwise.", disclaimer: "September 14–30, 2026 daily checks support Close EMA32/58. All eleven September 30 references are within the accepted 0.2% per-boundary tolerance: BTC, ETH, DOGE, SUI and LINK match displayed rounding on matching venue histories; SOL and QNT also round exactly on Coinbase proxies. JUP rounds exactly on Bitstamp after omitting flat zero-volume days. ZEC, RAY and HYPE differ by less than 0.04% on proxy feeds. The earlier RAY EMA40 claim was a transcription error, corrected against the archived screenshot. The 34/48 colour rule is provisional. Weekly uses the same lengths in weeks and is uncalibrated. Remaining assets are uncalibrated; this does not claim to reproduce a private formula." },
   { id: "kk_200_ma", displayName: "KK 200 Moving Averages", shortName: "KK 200 MA", role: "confirmation", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { daily: 200, weekly: 200, method: "SMA of completed closes" }, thresholdKind: "fixed", description: "Price versus the 200-day SMA on 1D or 200-week SMA on 1W. The filled range compares price with the active average; on the combined weekly chart it compares price with the 200-day SMA while retaining the 200-week SMA as context.", disclaimer: "A transparent chart interpretation inspired by the supplied screenshot. Its original color formula is not visible, so the blue/orange rule here is explicitly defined rather than claimed as a replica." },
   { id: "kk_50_200_ema", displayName: "KK 50/200 week EMA", shortName: "KK 50/200 EMA", role: "confirmation", family: "smoothing/order", supportedTimeframes: ["1d", "1w"], parameters: { fast: 50, slow: 200, method: "EMA of completed closes", primaryTimeframe: "1W", dailyEquivalent: "50/200-day EMA" }, thresholdKind: "fixed", description: "Bullish if and only if the completed close is strictly above both the 50-period and 200-period EMAs. Below both is bearish; between or touching either line is neutral.", sourceUrl: "https://www.tradingview.com/support/solutions/43000592270-exponential-moving-average/" },

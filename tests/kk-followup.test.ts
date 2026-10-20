@@ -53,18 +53,18 @@ test("weekly references remain valid alongside daily presets; generic futures ba
       const current=calculateIndicators(candles,timeframe,options);
       const previous=calculateIndicators(candles,timeframe,{...options,kkSupertrendAtrLength:10,kkSupertrendFactor:3});
       assert.deepEqual(current.filter(s=>s.id!=="kk_supertrend"),previous.filter(s=>s.id!=="kk_supertrend"));
-      if (timeframe==="1d") assert.equal(current.find(s=>s.id==="kk_supertrend")!.values.atrLength,row.asset==="silver"?100:row.asset==="gold"?40:15);
+      if (timeframe==="1d") assert.equal(current.find(s=>s.id==="kk_supertrend")!.values.atrLength,row.asset==="silver"?120:row.asset==="gold"?40:15);
     }
   }
   assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.tsla["1w"],{atrLength:15,factor:2});
   assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.spcx["1w"],{atrLength:15,factor:2});
   for(const asset of ["gold","silver"] as const) {
-    assert.deepEqual(KK_SUPERTREND_COMMODITY_PRESETS[asset]["1d"],asset==="gold"?{atrLength:40,factor:4.5}:{atrLength:100,factor:5});
+    assert.deepEqual(KK_SUPERTREND_COMMODITY_PRESETS[asset]["1d"],asset==="gold"?{atrLength:40,factor:4.5}:{atrLength:120,factor:5.5});
     assert.equal(calibrationStatus(undefined,"1w",undefined,asset),"Weekly rule 15/2 · screenshot-checked · October 8");
-    // October 16: gold refits to 40/4.5; silver (1.12% on the latest chart) is unresolved.
-    assert.match(calibrationStatus(undefined,"1d",undefined,asset),asset==="gold"?/Daily October fit.*October 16/:/calibration unresolved · October 16/);
+    // October 19: silver refits to 120/5.5 and joins gold (40/4.5) as an October fit.
+    assert.match(calibrationStatus(undefined,"1d",undefined,asset),/Daily October fit.*October 19/);
   }
-  assert.match(calibrationStatus(undefined,"1d","bmnr"),/October 16/);
+  assert.match(calibrationStatus(undefined,"1d","bmnr"),/October 19/);
   const defaultKk=calculateIndicators(candlesFor("gold"),"1w",{market:"commodity",indicatorIds:["kk_supertrend"]})[0];
   assert.deepEqual([defaultKk.values.atrLength,defaultKk.values.factor],[15,2]);
 });

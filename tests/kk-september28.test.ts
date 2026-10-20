@@ -84,7 +84,8 @@ test("daily selections consider reversal timing, preserve five-close confirmatio
   // October 16 refitted STRC to 20/4 with the held trail.
   assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.strc["1d"], { atrLength: 20, factor: 4 });
   assert.deepEqual(KK_SUPERTREND_STOCK_PRESETS.crcl["1d"], { atrLength: 10, factor: 6 });
-  assert.deepEqual(KK_SUPERTREND_PRESETS.qnt["1d"], { atrLength: 21, factor: 2.5 });
+  // October 19 refitted QNT to 27/3, which also reproduces its new bear trail.
+  assert.deepEqual(KK_SUPERTREND_PRESETS.qnt["1d"], { atrLength: 27, factor: 3 });
   for (const asset of ["strc", "crcl", "bot", "spcx", "qnt"]) {
     const candles = fixture(asset).daily, options = { ...optionsFor(asset), indicatorIds: ["kk_supertrend"] };
     const kk = calculateIndicators(candles, "1d", options)[0];

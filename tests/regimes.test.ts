@@ -77,9 +77,9 @@ test("KK presets lead the indicator menu with fixed crypto parameters", () => {
   assert.equal(kkIndex, 0);
   for (const timeframe of ["1d", "1w"] as const) assert.deepEqual(INDICATOR_SPECS.filter(spec => spec.supportedTimeframes.includes(timeframe)).slice(0, 6).map(spec => spec.id), ["kk_supertrend", "kk_ema_ribbon", "kk_200_ma", "kk_50_200_ema", "support_band", "supertrend"]);
   assert.deepEqual(Object.fromEntries(Object.entries(KK_SUPERTREND_PRESETS).map(([id, preset]) => [id, preset["1w"]])), Object.fromEntries(ASSETS.map(asset => [asset.id, asset.id === "btc" ? KK_WEEKLY_RULES.bitcoin : ["eth", "sol", "bnb"].includes(asset.id) ? KK_WEEKLY_RULES.largeCapCrypto : KK_WEEKLY_RULES.standard])));
-  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { weeklyRule: "BTC 10/3; crypto ≥$50B 10/2; all other crypto, stocks and commodities 15/2", weeklyRevision: "2026-10-08", dailyCryptoRule: "per-asset October fit; otherwise BTC 15/2, ≥$12B 15/4, $8–12B 15/3.5, <$8B 15/2.5", dailyStockFamily: "per-asset October fit; unfitted presets retained", dailyRevision: "2026-10-16", dailyConfirmations: 5, dailyTrail: "held while a reversal is pending" });
+  assert.deepEqual(INDICATOR_SPECS[kkIndex].parameters, { weeklyRule: "BTC 10/3; crypto ≥$50B 10/2; all other crypto, stocks and commodities 15/2", weeklyRevision: "2026-10-08", dailyCryptoRule: "per-asset October fit; otherwise BTC 15/2, ≥$12B 15/4, $8–12B 15/3.5, <$8B 15/2.5", dailyStockFamily: "per-asset October fit; unfitted presets retained", dailyRevision: "2026-10-19", dailyConfirmations: 5, dailyTrail: "held while a reversal is pending" });
   assert.deepEqual(KK_SUPERTREND_PRESETS.doge, { "1d": { atrLength: 15, factor: 4 }, "1w": { atrLength: 15, factor: 2 } });
-  assert.deepEqual(KK_SUPERTREND_PRESETS.link, { "1d": { atrLength: 100, factor: 4.5 }, "1w": { atrLength: 15, factor: 2 } });
+  assert.deepEqual(KK_SUPERTREND_PRESETS.link, { "1d": { atrLength: 60, factor: 4.5 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.xmr, { "1d": { atrLength: 30, factor: 4 }, "1w": { atrLength: 15, factor: 2 } });
   assert.deepEqual(KK_SUPERTREND_PRESETS.sui, { "1d": { atrLength: 10, factor: 2 }, "1w": { atrLength: 15, factor: 2 } });
   assert.match(INDICATOR_SPECS[kkIndex].disclaimer!, /screenshot fits/i);

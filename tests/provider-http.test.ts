@@ -61,7 +61,7 @@ test("new coins have one verified USD venue, separate weekly and daily KK preset
       if (tf === "1w") assert.deepEqual(KK_SUPERTREND_PRESETS[asset][tf], { atrLength: 15, factor: 2 });
       if (tf === "1d") assert.equal(kk.confirmation!.required,5);
       assert.notEqual(kk.values.supertrend, standard.values.supertrend);
-      assert.match(calibrationStatus(asset, tf), tf === "1w" ? /^Weekly rule 15\/2 · screenshot-checked/ : /October 16/);
+      assert.match(calibrationStatus(asset, tf), tf === "1w" ? /^Weekly rule 15\/2 · screenshot-checked/ : /October 19/);
     }
   }
   assert.equal(marketDefinition("jup", "kraken").providerSymbol, "JUPUSD");

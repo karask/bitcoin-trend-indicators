@@ -3,15 +3,15 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { KK_OCTOBER5_EVIDENCE } from "../lib/kk-october5-evidence.ts";
-import { KK_OCTOBER16_EVIDENCE } from "../lib/kk-october16-evidence.ts";
+import { KK_OCTOBER19_EVIDENCE } from "../lib/kk-october19-evidence.ts";
 import { calculateIndicators, KK_SUPERTREND_PRESETS, KK_SUPERTREND_STOCK_PRESETS, KK_SUPERTREND_COMMODITY_PRESETS, type Candle, type IndicatorCalculationOptions } from "../lib/regimes.ts";
 import { calibrationStatus, KK_CALIBRATION_VERSION } from "../lib/kk-calibration.ts";
 import { kkCalibrationWarning } from "../lib/kk-reliability.ts";
 
 const cutoff=Date.UTC(2026,9,5);
-const october16Warning = (asset: string) => { const row = KK_OCTOBER16_EVIDENCE.find(r => r.asset === asset)!; return row.status === "october-fit" ? null : row.status === "tier" ? /Low-confidence/ : /Unreliable/; };
+const october19Warning = (asset: string) => { const row = KK_OCTOBER19_EVIDENCE.find(r => r.asset === asset)!; return row.status === "october-fit" ? null : row.status === "tier" ? /Low-confidence/ : /Unreliable/; };
 test("October 5 chart tables distinguish dates, readable LINK and NVDA's contradictory counter",()=>{
-  assert.equal(KK_CALIBRATION_VERSION,"2026-10-16");
+  assert.equal(KK_CALIBRATION_VERSION,"2026-10-19");
   assert.equal(KK_OCTOBER5_EVIDENCE.length,39);
   assert.equal(new Set(KK_OCTOBER5_EVIDENCE.map(r=>r.asset)).size,39);
   assert.deepEqual(["crypto","stock","commodity"].map(c=>KK_OCTOBER5_EVIDENCE.filter(r=>r.assetClass===c).length),[20,17,2]);
@@ -54,8 +54,8 @@ test("39 quality-checked fixtures reproduce reference and later levels with corr
     assert.equal(latest.values.supertrend,row.latestValue);assert.equal(latest.state,row.latestState);
     const prefix=calculateIndicators(cs.slice(0,-1),"1d",{...options,indicatorIds:["kk_supertrend"]})[0];
     assert.deepEqual(prefix.states,signal.states.slice(0,-1));
-    assert.match(calibrationStatus(options.asset,"1d",options.stock,options.commodity),/October 16/);
-    const expectedWarning=october16Warning(row.asset);
+    assert.match(calibrationStatus(options.asset,"1d",options.stock,options.commodity),/October 19/);
+    const expectedWarning=october19Warning(row.asset);
     if(expectedWarning)assert.match(kkCalibrationWarning(row.asset,"1d")!.label,expectedWarning);else assert.equal(kkCalibrationWarning(row.asset,"1d"),null);
   }
 });
