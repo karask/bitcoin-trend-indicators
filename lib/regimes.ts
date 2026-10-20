@@ -644,7 +644,7 @@ function heldTrailKkSupertrend(candles: Candle[], spec: IndicatorSpec, length: n
   const meta = lastState(states), last = trail.at(-1) ?? null, pending: RegimeState | null = count ? (meta.state === "bull" ? "bear" : "bull") : null;
   const direction = pending === "bull" ? "Bullish" : "Bearish";
   const trigger = pending
-    ? `${direction} confirmation ${count}/5 · ${5 - count} more consecutive daily closes beyond the held trail required; a failed confirmation resets to 0/5`
+    ? `${direction} confirmation ${count}/5 completed closes · ${5 - count} more consecutive daily ${5 - count === 1 ? "close" : "closes"} beyond the held trail required; a failed confirmation resets to 0/5`
     : "Reversals require 5 consecutive daily closes beyond the held trail; a failed confirmation resets to 0/5";
   const result = buildSnapshot(spec, completed, states, [points(completed, trail, "KK Supertrend", "#d7a928")],
     { atr: atr.at(-1) ?? null, atrLength: length, supertrend: last, factor, confirmationsRequired: KK_DAILY_CONFIRMATIONS, confirmationCount: count },

@@ -170,3 +170,4 @@ button:disabled { opacity:.5; cursor:not-allowed; }
 @media(min-width:621px){ .scorecard-scroll { overflow-x:auto; }.scorecard-table { min-width:760px; }.scorecard-table .backtest-head,.scorecard-table .backtest-row { grid-template-columns:1.4fr repeat(8,.6fr); } }
 .scorecard-sides { display:grid; grid-template-columns:1fr 1fr; gap:20px; }.scorecard-sides h3 { margin:6px 0 0; font-size:.875rem; }
 @media(max-width:620px){ .scorecard-sides { grid-template-columns:1fr; } }
+.method-card b + small { display:block; margin-top:5px; color:var(--muted); font-size:.75rem; line-height:1.45; }

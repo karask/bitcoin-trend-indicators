@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { confirmDailyRegimes } from "../lib/kk-confirmation.ts";
+import { confirmDailyRegimes, openCandleConfirmationCount, openCandleConfirmationNote } from "../lib/kk-confirmation.ts";
 import { calculateIndicators, type Candle, type RegimeState } from "../lib/regimes.ts";
 import { buildResearch } from "../lib/research.ts";
 import { overviewState } from "../lib/asset-overview.ts";
@@ -81,7 +81,7 @@ test("held-trail daily KK freezes the trail while pending, flips on the fifth cl
       assert.equal(pending.state,kk.states[i-1]); assert.equal(pending.confirmation!.count,4);
       assert.equal(pending.values.supertrend,held);
       assert.equal(pending.lastFlip,calculateIndicators(cs.slice(0,i),"1d",settings).find(s=>s.id==="kk_supertrend")!.lastFlip);
-      assert.match(pending.triggerLabel,/4\/5 · 1 more consecutive daily closes beyond the held trail/);
+      assert.match(pending.triggerLabel,/4\/5 completed closes · 1 more consecutive daily close beyond the held trail/);
       assert.match(overviewState({...pending,readiness:{ready:true,availableCandles:i,requiredCandles:3,validStates:i-2}},true),/4\/5 pending/);
     }
     assert.ok(flips>=3);
@@ -112,4 +112,29 @@ test("held trail survives a failed confirmation instead of resetting to the next
   assert.equal(after.values.supertrend,held);
   const raw=calculateIndicators([...cs,...dips],"1d",{asset:"btc",kkSupertrendAtrLength:5,kkSupertrendFactor:2,indicatorIds:["kk_supertrend"],kkSupertrendRawTrailConfirmation:true})[0];
   assert.notEqual(raw.values.supertrend,held, "the raw trail resets after closes below it");
+});
+
+test("open-candle count adds today's candle only when the live quote is beyond the held trail on a later day", () => {
+  const cs=candles();
+  const settings={asset:"btc" as const,kkSupertrendAtrLength:3,kkSupertrendFactor:1,indicatorIds:["kk_supertrend"]};
+  const kk=calculateIndicators(cs,"1d",settings)[0];
+  const flip=kk.states.findIndex((s,i)=>i>6&&s!==kk.states[i-1]&&kk.states[i-1]!=null);
+  const pending=calculateIndicators(cs.slice(0,flip),"1d",settings)[0];   // four completed closes beyond the trail
+  const level=pending.values.supertrend!, last=cs[flip-1].time, beyond=pending.state==="bull"?level*.9:level*1.1, back=pending.state==="bull"?level*1.1:level*.9;
+  assert.equal(pending.confirmation!.count,4);
+  assert.equal(openCandleConfirmationCount(pending,{price:beyond,time:last+86400000+3600000}),5);
+  assert.equal(openCandleConfirmationCount(pending,{price:back,time:last+86400000+3600000}),0);
+  assert.equal(openCandleConfirmationCount(pending,{price:beyond,time:last+3600000}),null, "a quote from the last completed day is not an open candle");
+  assert.equal(openCandleConfirmationCount(pending,null),null);
+  assert.equal(openCandleConfirmationNote(pending,5),"5/5 including today's open candle");
+  assert.match(openCandleConfirmationNote(pending,0)!,/back on the (bullish|bearish) side of the trail \(0\/5 if it closes there\)/);
+  // No completed confirmation yet, but the open candle is beyond the trail: the chart would print 1/5.
+  const quiet=calculateIndicators(cs.slice(0,flip-4),"1d",settings)[0];
+  assert.equal(quiet.confirmation!.count,0);
+  const q=quiet.state==="bull"?quiet.values.supertrend!*.9:quiet.values.supertrend!*1.1;
+  assert.equal(openCandleConfirmationCount(quiet,{price:q,time:cs[flip-5].time+86400000+3600000}),1);
+  assert.equal(openCandleConfirmationNote(quiet,1),`${quiet.state==="bull"?"Bearish":"Bullish"} 1/5 including today's open candle`);
+  assert.equal(openCandleConfirmationNote(quiet,0),null);
+  // The signal itself never uses the quote.
+  assert.deepEqual(calculateIndicators(cs.slice(0,flip),"1d",settings)[0],pending);
 });
